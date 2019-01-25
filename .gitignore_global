@@ -1,0 +1,27 @@
+# Mac
+.DS_Store
+
+# WebStorm
+.idea/
+
+# npm
+npm-debug.log
+
+# yarn
+yarn-error.log
+
+# VS Code
+.vscode/
+# localhistory
+.history
+
+# Over-arching stuff
+*.ignored/
+*.ignored.*
+
+# git
+*.patch
+
+# eslint
+.eslintcache
+

@@ -47,7 +47,7 @@ echo "node --version: $(node --version)"
 echo "npm --version: $(npm --version)"
 
 echo "installing a few global npm packages"
-yarn global add serve diff-so-fancy fkill-cli npm-quick-run semantic-release-cli now
+yarn global add serve diff-so-fancy fkill-cli npm-quick-run semantic-release-cli now npmrc
 
 echo "installing apps with brew cask"
 brew cask install google-chrome slack brave-browser firefox divvy \ 

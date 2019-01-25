@@ -57,7 +57,7 @@ alias ll="ls -1a";
 alias ..="cd ../";
 alias ..l="cd ../ && ll";
 alias pg="echo 'Pinging Google' && ping www.google.com";
-alias vb="vim ~/.bash_profile";
+alias cb="code ~/.bash_profile";
 alias sb="source ~/.bash_profile";
 alias de="cd ~/Desktop";
 alias d="cd ~/code";
@@ -66,8 +66,7 @@ alias hideFiles='defaults write com.apple.finder AppleShowAllFiles NO; killall F
 alias deleteDSFiles="find . -name '.DS_Store' -type f -delete"
 alias kcd-oss="npx -p yo -p generator-kcd-oss -c 'yo kcd-oss'";
 function crapp { cp -R ~/.crapp "$@"; }
-alias npm-update="npx npm-check -u";
-alias lt="pushd ~/code/love-texts && serve || popd";
+alias yarn-update="brew upgrade yarn";
 alias flushdns="sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder"
 
 ## git aliases
@@ -79,19 +78,6 @@ alias gpush="git push";
 alias gd="git diff";
 alias ga="git add .";
 alias gsa="git reset $(git commit-tree HEAD^{tree} -m "initial commit")"
-
-## npm aliases
-alias ni="npm install";
-alias nrs="npm run start -s --";
-alias nrb="npm run build -s --";
-alias nrd="npm run dev -s --";
-alias nrt="npm run test -s --";
-alias nrtw="npm run test:watch -s --";
-alias nrv="npm run validate -s --";
-alias rmn="rm -rf node_modules";
-alias flush-npm="rm -rf node_modules && npm i && say NPM is done";
-alias nicache="npm install --prefer-offline";
-alias nioff="npm install --offline";
 
 ## yarn aliases
 alias yar="yarn run";
@@ -116,9 +102,6 @@ killport() { lsof -i tcp:"$*" | awk 'NR!=1 {print $2}' | xargs kill -9 ;}
 if [ -f "$(brew --prefix)/etc/bash_completion" ]; then
 . "$(brew --prefix)/etc/bash_completion"
 fi
-
-export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
-
 
 
 export NVM_DIR="$HOME/.nvm"

@@ -47,7 +47,7 @@ echo "node --version: $(node --version)"
 echo "npm --version: $(npm --version)"
 
 echo "installing a few global npm packages"
-yarn global add serve diff-so-fancy fkill-cli npm-quick-run semantic-release-cli now
+yarn global add serve diff-so-fancy fkill-cli npm-quick-run semantic-release-cli now npmrc
 
 echo "installing apps with brew cask"
 brew cask install google-chrome slack brave-browser firefox divvy \ 
@@ -55,12 +55,10 @@ visual-studio-code evernote adobe-photoshop-lightroom cleanmymac forklift
 
 echo "Generating an RSA token for GitHub"
 mkdir -p ~/.ssh
-rm -f ~/.ssh/{github_rsa,github_rsa.pub,config}
-ssh-keygen -f ~/.ssh/github_rsa -t rsa -b 4096 -C "hi@nathanvale.com" -N ''
-echo "Host *\n AddKeysToAgent yes\n UseKeychain yes\n IdentityFile ~/.ssh/github_rsa" >> ~/.ssh/config
+ssh-keygen -t rsa -b 4096 -C "hi@nathanvale.com"
+echo "Host *\n AddKeysToAgent yes\n UseKeychain yes\n IdentityFile ~/.ssh/id_rsa" | tee ~/.ssh/config
 eval "$(ssh-agent -s)"
-echo "run 'pbcopy < ~/.ssh/github_rsa.pub' and paste that into GitHub"
-read -rsp $'Press enter to continue...\n'
+echo "run 'pbcopy < ~/.ssh/id_rsa.pub' and paste that into GitHub"
 
 echo "cloning dotfiles"
 git clone git@github.com:nathanvale/dotfiles.git "${HOME}/dotfiles"

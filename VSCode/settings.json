@@ -1,0 +1,77 @@
+{
+  "git.allowForcePush": true,
+  "editor.suggest.localityBonus": true,
+  "editor.tabCompletion": "on",
+  "window.zoomLevel": 3,
+  "terminal.integrated.shellArgs.linux": ["-l"],
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 50,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "typescript.check.npmIsInstalled": false,
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true,
+    "**/tmp/**": true,
+    "**/logs/**": true,
+    "**/target/**": true
+  },
+  "javascript.validate.enable": false,
+  "eslint.enable": true,
+  "files.exclude": {
+    "**/node_modules/": false,
+    "**/dist/": false,
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true
+  },
+  "search.exclude": {
+    "**/node_modules/": true,
+    "**/coverage/": true,
+    "**/dist/": true,
+    "**/lib/": true
+  },
+  "http.proxyStrictSSL": false,
+  "gitlens.keymap": "chorded",
+  "gitlens.advanced.messages": {
+    "suppressResultsExplorerNotice": true,
+    "suppressShowKeyBindingsNotice": true
+  },
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "git.autofetch": true,
+  "todo-tree.tags": ["TODO", "FIXME"],
+  "todo-tree.flat": false,
+  "todo-tree.expanded": true,
+  "todo-tree.rootFolder": "packages",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "explorer.confirmDragAndDrop": false,
+  "editor.minimap.enabled": false,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "diffEditor.ignoreTrimWhitespace": false,
+  "todo-tree.defaultHighlight": {
+    "foreground": "green",
+    "type": "none"
+  },
+  "todo-tree.customHighlight": {
+    "TODO": {},
+    "FIXME": {}
+  },
+  "jest.enableInlineErrorMessages": false,
+  "jest.runAllTestsFirst": false,
+  "jest.enableSnapshotUpdateMessages": false,
+  "jest.enableSnapshotPreviews": false,
+  "cSpell.userWords": ["describedby", "formik"],
+  "workbench.colorTheme": "Material Theme Lighter",
+  "workbench.iconTheme": "eq-material-theme-icons-light",
+  "sync.gist": "1a51829e656236dce1ee07b82cce71b2",
+  "circle.apiKey": "7b9188032dfacca048dcafa879b59de02cf742cc",
+  "cSpell.language": "en",
+  "sync.autoUpload": false,
+  "sync.autoDownload": false,
+  "prettier.requireConfig": true
+}

@@ -1,4 +1,5 @@
 {
+
   "git.allowForcePush": true,
   "editor.suggest.localityBonus": true,
   "editor.tabCompletion": "on",

@@ -62,7 +62,7 @@ alias yoff="yarn add --offline"
 alias ypm="echo \"Installing deps without lockfile and ignoring engines\" && yarn install --no-lockfile --ignore-engines"
 
 ## use hub for git
-alias git=hub
+#alias git=hub
 
 ## util functions
 mg () { mkdir "$@" && cd "$@" || exit; }
@@ -93,6 +93,6 @@ git() {
   elif [[ $1 == "show-conflicts" ]]; then
     command git diff --name-only --diff-filter=U
   else
-    command git $@
+    command git "$@"
   fi
 }

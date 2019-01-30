@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 
-# ~/.macos — https://mths.be/macos Modified by Nathan Vale 
-# Run without downloading: (yeah I know this is bad practice but for setting up my
-# mac im going to take the risk) 
+# ~/.macos — https://mths.be/macos
+# Modified by Nathan Vale
+# Run without downloading:
 # curl https://raw.githubusercontent.com/nathanvale/dotfiles/master/.macos | bash
 
 # Close any open System Preferences panes, to prevent them from overriding
 # settings we’re about to change
 osascript -e 'tell application "System Preferences" to quit'
+
+program_exists() {
+  command -v "$1" >/dev/null 2>&1 ;
+}
 
 # Ask for the administrator password upfront
 sudo -v
@@ -16,7 +20,7 @@ sudo -v
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 ###############################################################################
-# Nathan's Customizations                                                       #
+# Nathan's Customizations                                                     #
 ###############################################################################
 
 echo "Hello $(whoami)! Let's get you set up."
@@ -24,25 +28,52 @@ echo "Hello $(whoami)! Let's get you set up."
 echo "mkdir -p ${HOME}/code"
 mkdir -p "${HOME}/code"
 
-echo "installing homebrew"
-# install homebrew https://brew.sh
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+if ! program_exists brew; then
+  echo "Installing Homebrew..."
+  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" >/dev/null
+  echo "Homebrew finished installing."
+fi
 
-echo "brew installing stuff"
-# hub: a github-specific version of git
-# ripgrep: rg is faster than alternatives
-# tree: really handy for listing out directories in text
-# bat: A cat(1) clone with syntax highlighting and Git integration.
-brew install git hub bash-completion watchman tree bat
-# yarn: without node because we'll get it from installing nvm later
-brew install yarn --without-node
+echo "Homebrew installing stuff"
 
-echo "installing node (via nvm-install)"
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-nvm install --lts
+packages=(
+  coreutils
+  git
+  hub # a github-specific version of git
+  bash-completion
+  watchman
+  tree # really handy for listing out directories in text
+  bat # A cat(1) clone with syntax highlighting and Git integration.
+)
+
+for package in "${packages[@]}"; do
+  if brew ls --versions $package >/dev/null; then
+    echo "$package is already installed"
+  else
+    brew install $package
+  fi
+done
+
+if brew ls --versions yarn >/dev/null; then
+  echo "yarn is already installed"
+else
+  # yarn: without node because we'll get it from installing nvm later
+  brew install yarn --without-node
+fi
+
+npm_version=`nvm --version 2>/dev/null`
+
+version=`nvm --version 2>/dev/null`
+
+if ! [ -z "$(command -v nvm)" ]; then
+  echo "installing node (via nvm-install)"
+  curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+  nvm install --lts
+fi
+
 echo "node --version: $(node --version)"
 echo "npm --version: $(npm --version)"
 
@@ -50,8 +81,29 @@ echo "installing a few global npm packages"
 yarn global add serve diff-so-fancy fkill-cli npm-quick-run semantic-release-cli now npmrc
 
 echo "installing apps with brew cask"
-brew cask install google-chrome slack brave-browser firefox divvy \ 
-visual-studio-code evernote adobe-photoshop-lightroom cleanmymac forklift
+
+casks=(
+  google-chrome
+  visual-studio-code
+  zeplin
+  slack
+  cleanmymac
+  evernote
+  daisydisk
+  launchbar
+  firefox
+  brave-browser
+)
+
+for cask in "${casks[@]}"; do
+  if brew cask ls --versions $cask >/dev/null; then
+    echo "$cask is already installed"
+  else
+    brew cask install $cask
+  fi
+done
+
+exit 1
 
 echo "Generating an RSA token for GitHub"
 mkdir -p ~/.ssh
@@ -277,7 +329,7 @@ defaults write com.apple.screencapture type -string "png"
 defaults write NSGlobalDomain AppleFontSmoothing -int 1
 
 # Enable HiDPI display modes (requires restart)
-sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutionEnabled -bool true
+sudo defaults write /Library/Preferences/com.apple.windozzzwserver DisplayResolutionEnabled -bool true
 
 ###############################################################################
 # Finder                                                                      #

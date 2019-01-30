@@ -68,7 +68,7 @@ alias ypm="echo \"Installing deps without lockfile and ignoring engines\" && yar
 mg () { mkdir "$@" && cd "$@" || exit; }
 shorten() { node ~/code/kcd.im/node_modules/.bin/netlify-shortener "$1" "$2"; }
 cdl() { cd "$@" && ll; }
-npm-latest() { npm info "$1" | grep latest; }
+npm_latest() { npm info "$1" | grep latest; }
 killport() { lsof -i tcp:"$*" | awk 'NR!=1 {print $2}' | xargs kill -9 ;}
 program_exists() {
   command -v "$1" >/dev/null 2>&1 ;

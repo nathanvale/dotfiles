@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Custom Aliases
+alias al="code ~/.aliases"
 alias cl="clear"
 alias c="code ."
 alias ll="ls -1a"
@@ -38,8 +39,9 @@ alias gl='git log --oneline'
 alias gl1='git lg1'
 alias gl2='git lg2'
 alias gp='git push'
+alias gpf='git push --force' # Are you sure you want to do this???
 alias gp="git pull"
-alias gpb='git push -u origin $(gitb)'
+alias gpb='git push -u origin $(gitb)' #-u flag adds a tracking reference to the upstream server you are pushing to. 
 alias gpl='git pull --rebase'
 alias gpt='git push --follow-tags'
 alias gpush="git push"
@@ -51,6 +53,7 @@ alias gs="git status"
 
 ## yarn aliases
 alias yar="yarn run"
+alias yac="yarn commit" # for repos with commitlint installed
 alias yas="yarn run start -s --"
 alias yab="yarn run build -s --"
 alias yat="yarn run test -s --"

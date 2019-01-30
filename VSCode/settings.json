@@ -3,7 +3,7 @@
   "git.allowForcePush": true,
   "editor.suggest.localityBonus": true,
   "editor.tabCompletion": "on",
-  "window.zoomLevel": 3,
+  "window.zoomLevel": 2,
   "terminal.integrated.shellArgs.linux": ["-l"],
   "files.autoSave": "afterDelay",
   "files.autoSaveDelay": 50,
@@ -74,5 +74,8 @@
   "cSpell.language": "en",
   "sync.autoUpload": false,
   "sync.autoDownload": false,
-  "prettier.requireConfig": true
+  "prettier.requireConfig": true,
+  "atomKeymap.promptV3Features": true,
+  "editor.multiCursorModifier": "ctrlCmd",
+  "editor.formatOnPaste": true
 }

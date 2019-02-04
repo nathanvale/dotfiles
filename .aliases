@@ -84,14 +84,3 @@ clear_proxy() {
 proxy_all() {
   no_proxy= $@
 }
-
-## CLI magic
-git() {
-  if [[ $1 == "clonem" ]]; then
-    command git clone "${GIT_BASE_PATH}/$2.git"
-  elif [[ $1 == "show-conflicts" ]]; then
-    command git diff --name-only --diff-filter=U
-  else
-    command git "$@"
-  fi
-}

@@ -7,7 +7,7 @@
   },
   {
     "comment": "Because I want enter to open the file, I need some way to rename it, this seemed as good as any other method. 'm' for 'move'",
-    "key": "m",
+    "key": "r",
     "command": "renameFile",
     "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsRoot && !inputFocus"
   },
@@ -16,6 +16,11 @@
     "key": "enter",
     "command": "-renameFile",
     "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsRoot && !inputFocus"
+  },
+  {
+      "key": "enter",
+      "command": "list.select",
+      "when": "listFocus && !inputFocus"
   },
   {
     "comment": "This makes my zoom behavior more like chrome",

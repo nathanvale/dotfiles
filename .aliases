@@ -19,7 +19,8 @@ alias kcd-oss="npx -p yo -p generator-kcd-oss -c 'yo kcd-oss'"
 function crapp { cp -R ~/.crapp "~/code/$@"; }
 alias yarn-update="brew upgrade yarn"
 alias flushdns="sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder"
-alias dots='code ~/code/dotfiles'
+alias dots='code ~/code/dotfiles',
+alias npmGlobal="npm list -g --depth 0"
 
 ## git aliases
 
@@ -36,8 +37,6 @@ alias gd='git diff'
 alias gdw='git diff -w'
 alias gf="git fetch"
 alias gl='git log --oneline'
-alias gl1='git lg1'
-alias gl2='git lg2'
 alias gp='git push'
 alias gpf='git push --force' # Are you sure you want to do this???
 alias gp="git pull"
@@ -62,7 +61,7 @@ alias yoff="yarn add --offline"
 alias ypm="echo \"Installing deps without lockfile and ignoring engines\" && yarn install --no-lockfile --ignore-engines"
 
 ## use hub for git
-#alias git=hub
+alias git=hub
 
 ## util functions
 mg () { mkdir "$@" && cd "$@" || exit; }

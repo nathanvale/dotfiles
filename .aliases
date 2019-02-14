@@ -21,6 +21,7 @@ alias yarn-update="brew upgrade yarn"
 alias flushdns="sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder"
 alias dots='code ~/code/dotfiles',
 alias npmGlobal="npm list -g --depth 0"
+alias getSSHKey="pbcopy < ~/.ssh/id_rsa.pub"
 
 ## git aliases
 
@@ -48,6 +49,11 @@ alias gra='git rebase --abort'
 alias grc='git rebase --continue'
 alias gs='git status -s'
 alias gs="git status"
+function grt { 
+  git fetch;
+  git push --delete origin "$@"; #delete remote tag
+  git tag --delete "$@"; #delete local tag
+}
 
 
 ## yarn aliases
@@ -83,15 +89,4 @@ clear_proxy() {
 }
 proxy_all() {
   no_proxy= $@
-}
-
-## CLI magic
-git() {
-  if [[ $1 == "clonem" ]]; then
-    command git clone "${GIT_BASE_PATH}/$2.git"
-  elif [[ $1 == "show-conflicts" ]]; then
-    command git diff --name-only --diff-filter=U
-  else
-    command git "$@"
-  fi
 }

@@ -1,5 +1,10 @@
 // Place your key bindings in this file to override the defaults
 [
+ {
+    "comment": "Toggle filter on type in explorer",
+    "key": "ctrl+alt+f",
+    "command": "list.toggleFilterOnType"
+  },
   {
     "comment": "This is just really handy. I use it all the time in Atom.",
     "key": "shift+cmd+\\",

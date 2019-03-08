@@ -1,9 +1,11 @@
 {
 
+
+
   "git.allowForcePush": true,
   "editor.suggest.localityBonus": true,
   "editor.tabCompletion": "on",
-  "window.zoomLevel": 2,
+  "window.zoomLevel": 3,
   "terminal.integrated.shellArgs.linux": ["-l"],
   "files.autoSave": "afterDelay",
   "files.autoSaveDelay": 50,
@@ -65,7 +67,7 @@
   "explorer.confirmDragAndDrop": false,
   "editor.minimap.enabled": false,
   "javascript.updateImportsOnFileMove.enabled": "always",
-  "diffEditor.ignoreTrimWhitespace": false,
+  "diffEditor.ignoreTrimWhitespace": true,
   "todo-tree.defaultHighlight": {
     "foreground": "green",
     "type": "none"
@@ -79,10 +81,10 @@
   "jest.enableSnapshotUpdateMessages": false,
   "jest.enableSnapshotPreviews": false,
   "cSpell.userWords": ["describedby", "formik"],
-  "workbench.colorTheme": "Material Theme Lighter High Contrast",
+  "workbench.colorTheme": "Material Theme",
   "workbench.iconTheme": "eq-material-theme-icons-light",
   "sync.gist": "1a51829e656236dce1ee07b82cce71b2",
-  "circle.apiKey": "7b9188032dfacca048dcafa879b59de02cf742cc",
+  "circleci.apiKey": "7b9188032dfacca048dcafa879b59de02cf742cc",
   "cSpell.language": "en",
   "sync.autoUpload": false,
   "sync.autoDownload": false,
@@ -93,5 +95,13 @@
   "workbench.activityBar.visible": false,
   "explorer.confirmDelete": false,
   "prettier.semi": false,
-  "workbench.list.keyboardNavigation": "simple"
+  "editor.fontFamily": "Operator Mono, Menlo, Monaco, 'Courier New', monospace",
+  // Controls the line height. Use 0 to compute the lineHeight from the fontSize.
+  "editor.lineHeight": 24,
+  // Enables font ligatures
+  "editor.fontLigatures": true,
+  // Controls if file decorations should use badges.
+  "explorer.decorations.badges": false,
+  "eslint.alwaysShowStatus": true,
+  "eslint.nodePath":"node_modules/easy-scripts/node_modules"
 }

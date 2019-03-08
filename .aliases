@@ -25,6 +25,7 @@ alias getSSHKey="pbcopy < ~/.ssh/id_rsa.pub"
 
 ## git aliases
 
+alias gb="git browse"
 alias ga="git add ."
 alias gaa='git add -A'
 alias gb='git rev-parse --abbrev-ref HEAD'
@@ -53,6 +54,11 @@ function grt {
   git fetch;
   git push --delete origin "$@"; #delete remote tag
   git tag --delete "$@"; #delete local tag
+}
+function grs { 
+  git remote -v
+  git remote set-url origin "$@"
+  git remote -v
 }
 
 

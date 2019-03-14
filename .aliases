@@ -19,7 +19,7 @@ alias kcd-oss="npx -p yo -p generator-kcd-oss -c 'yo kcd-oss'"
 function crapp { cp -R ~/.crapp "~/code/$@"; }
 alias yarn-update="brew upgrade yarn"
 alias flushdns="sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder"
-alias dots='code ~/code/dotfiles',
+alias dots='code ~/code/dotfiles'
 alias npmGlobal="npm list -g --depth 0"
 
 ## git aliases
@@ -59,6 +59,12 @@ alias yat="yarn run test -s --"
 alias yav="yarn run validate -s --"
 alias yoff="yarn add --offline"
 alias ypm="echo \"Installing deps without lockfile and ignoring engines\" && yarn install --no-lockfile --ignore-engines"
+removeAllGitTags() { # BE CAREFUL
+  git tag -d $(git tag -l);
+  git fetch;
+  git push origin --delete $(git tag -l); # Pushing once should be faster than multiple times
+  git tag -d $(git tag -l);
+}
 
 ## use hub for git
 alias git=hub

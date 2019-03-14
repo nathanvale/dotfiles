@@ -1,9 +1,11 @@
 {
 
+
+
   "git.allowForcePush": true,
   "editor.suggest.localityBonus": true,
   "editor.tabCompletion": "on",
-  "window.zoomLevel": 2,
+  "window.zoomLevel": 3,
   "terminal.integrated.shellArgs.linux": ["-l"],
   "files.autoSave": "afterDelay",
   "files.autoSaveDelay": 50,
@@ -20,11 +22,24 @@
     "**/logs/**": true,
     "**/target/**": true
   },
+"eslint.autoFixOnSave": true,
+"eslint.validate": [
+  "javascript",
+  "javascriptreact",
+  {
+    "language": "typescript",
+    "autoFix": true
+  },
+  {
+    "language": "typescriptreact",
+    "autoFix": true
+  }
+],
   "javascript.validate.enable": false,
   "eslint.enable": true,
   "files.exclude": {
     "**/node_modules/": false,
-    "**/dist/": false,
+    "**/dist/": true,
     "**/.git": true,
     "**/.svn": true,
     "**/.hg": true,
@@ -38,7 +53,6 @@
     "**/lib/": true
   },
   "http.proxyStrictSSL": false,
-  "gitlens.keymap": "chorded",
   "gitlens.advanced.messages": {
     "suppressResultsExplorerNotice": true,
     "suppressShowKeyBindingsNotice": true
@@ -53,7 +67,7 @@
   "explorer.confirmDragAndDrop": false,
   "editor.minimap.enabled": false,
   "javascript.updateImportsOnFileMove.enabled": "always",
-  "diffEditor.ignoreTrimWhitespace": false,
+  "diffEditor.ignoreTrimWhitespace": true,
   "todo-tree.defaultHighlight": {
     "foreground": "green",
     "type": "none"
@@ -67,15 +81,57 @@
   "jest.enableSnapshotUpdateMessages": false,
   "jest.enableSnapshotPreviews": false,
   "cSpell.userWords": ["describedby", "formik"],
-  "workbench.colorTheme": "Material Theme Lighter",
+  "workbench.colorTheme": "Material Theme",
   "workbench.iconTheme": "eq-material-theme-icons-light",
   "sync.gist": "1a51829e656236dce1ee07b82cce71b2",
-  "circle.apiKey": "7b9188032dfacca048dcafa879b59de02cf742cc",
+  "circleci.apiKey": "7b9188032dfacca048dcafa879b59de02cf742cc",
   "cSpell.language": "en",
   "sync.autoUpload": false,
   "sync.autoDownload": false,
   "prettier.requireConfig": true,
   "atomKeymap.promptV3Features": true,
   "editor.multiCursorModifier": "ctrlCmd",
-  "editor.formatOnPaste": true
+  "editor.formatOnPaste": true,
+  "workbench.activityBar.visible": false,
+  "explorer.confirmDelete": false,
+  "prettier.semi": false,
+  "editor.fontFamily": "Operator Mono, Menlo, Monaco, 'Courier New', monospace",
+  // Controls the line height. Use 0 to compute the lineHeight from the fontSize.
+  "editor.lineHeight": 24,
+  // Enables font ligatures
+  "editor.fontLigatures": true,
+  // Controls if file decorations should use badges.
+  "explorer.decorations.badges": false,
+  "eslint.alwaysShowStatus": true,
+  "eslint.nodePath": "node_modules/origin-scripts/node_modules",
+  "workbench.list.keyboardNavigation": "filter",
+  "cSpell.enabledLanguageIds": [
+    "asciidoc",
+    "c",
+    "cpp",
+    "csharp",
+    "css",
+    "git-commit",
+    "go",
+    "handlebars",
+    "html",
+    "jade",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "latex",
+    "less",
+    "markdown",
+    "php",
+    "plaintext",
+    "pub",
+    "python",
+    "restructuredtext",
+    "rust",
+    "scss",
+    "text",
+    "typescript",
+    "typescriptreact",
+    "yml"
+  ]
 }

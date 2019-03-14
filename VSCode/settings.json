@@ -39,7 +39,7 @@
   "eslint.enable": true,
   "files.exclude": {
     "**/node_modules/": false,
-    "**/dist/": false,
+    "**/dist/": true,
     "**/.git": true,
     "**/.svn": true,
     "**/.hg": true,
@@ -103,5 +103,35 @@
   // Controls if file decorations should use badges.
   "explorer.decorations.badges": false,
   "eslint.alwaysShowStatus": true,
-  "eslint.nodePath":"node_modules/easy-scripts/node_modules"
+  "eslint.nodePath": "node_modules/origin-scripts/node_modules",
+  "workbench.list.keyboardNavigation": "filter",
+  "cSpell.enabledLanguageIds": [
+    "asciidoc",
+    "c",
+    "cpp",
+    "csharp",
+    "css",
+    "git-commit",
+    "go",
+    "handlebars",
+    "html",
+    "jade",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "latex",
+    "less",
+    "markdown",
+    "php",
+    "plaintext",
+    "pub",
+    "python",
+    "restructuredtext",
+    "rust",
+    "scss",
+    "text",
+    "typescript",
+    "typescriptreact",
+    "yml"
+  ]
 }

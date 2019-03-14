@@ -1,5 +1,10 @@
 // Place your key bindings in this file to override the defaults
 [
+  {
+    "key": "/",
+    "command": "list.toggleKeyboardNavigation",
+    "when": "filesExplorerFocus"
+  },
  {
     "comment": "Toggle filter on type in explorer",
     "key": "ctrl+alt+f",

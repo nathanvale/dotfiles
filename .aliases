@@ -60,6 +60,12 @@ function grs {
   git remote -v
 }
 
+function gri { 
+  git rebase -i `git merge-base "$@" main`
+}
+
+
+
 
 ## yarn aliases
 alias yar="yarn run"

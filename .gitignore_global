@@ -10,8 +10,6 @@ npm-debug.log
 # yarn
 yarn-error.log
 
-# VS Code
-.vscode/
 # localhistory
 .history
 

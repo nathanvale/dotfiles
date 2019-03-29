@@ -5,7 +5,7 @@
   "git.allowForcePush": true,
   "editor.suggest.localityBonus": true,
   "editor.tabCompletion": "on",
-  "window.zoomLevel": 4,
+  "window.zoomLevel": 3,
   "terminal.integrated.shellArgs.linux": ["-l"],
   "files.autoSave": "afterDelay",
   "files.autoSaveDelay": 50,

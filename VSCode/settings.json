@@ -39,7 +39,7 @@
   "eslint.enable": true,
   "files.exclude": {
     "**/node_modules/": false,
-    "**/dist/": true,
+    "**/dist/": false,
     "**/.git": true,
     "**/.svn": true,
     "**/.hg": true,
@@ -67,7 +67,7 @@
   "explorer.confirmDragAndDrop": false,
   "editor.minimap.enabled": false,
   "javascript.updateImportsOnFileMove.enabled": "always",
-  "diffEditor.ignoreTrimWhitespace": true,
+  "diffEditor.ignoreTrimWhitespace": false,
   "todo-tree.defaultHighlight": {
     "foreground": "green",
     "type": "none"
@@ -133,5 +133,7 @@
     "typescript",
     "typescriptreact",
     "yml"
-  ]
+  ],
+  "eslint.provideLintTask": true,
+  "prettier.eslintIntegration": true
 }

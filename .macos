@@ -93,6 +93,7 @@ casks=(
   launchbar
   firefox
   brave-browser
+  circleci
 )
 
 for cask in "${casks[@]}"; do

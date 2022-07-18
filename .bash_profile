@@ -22,24 +22,42 @@ function random_element {
   printf "%s\n" "${array[$r]}"
 }
 
+
 # Default Prompt
 setEmoji () {
   EMOJI="$*"
-  PS1="${YELLOW}\w${GREEN}\$(git_branch)${RESET} ${EMOJI}\n$ ";
+  DISPLAY_DIR="%~"
+  DISPLAY_BRANCH=$(git_branch)
+  PROMPT="${YELLOW}${DISPLAY_DIR}${GREEN}${DISPLAY_BRANCH}${RESET} ${EMOJI}"$'\n'"$ ";
 }
 
 newRandomEmoji () {
   setEmoji "$(random_element 😅 👽 🔥 🚀 👻 ⛄ 👾 🍔 😄 🍰 🐑 😎 🏎 🤖 😇 😼 💪 🦄 🥓 🌮 🎉 💯 ⚛️ 🐠 🐳 🐿 🥳 🤩 🤯 🤠 👨‍💻 🦸‍ 🧝‍ 🧞‍ 🧙‍ 👨‍🚀 👨‍🔬 🕺 🦁 🐶 🐵 🐻 🦊 🐙 🦎 🦖 🦕 🦍 🦈 🐊 🦂 🐍 🐢 🐘 🐉 🦚 ✨ ☄️ ⚡️ 💥 💫 🧬 🔮 ⚗️ 🎊 🔭 ⚪️ 🔱)"
 }
 
+
 newRandomEmoji
 
 alias jestify="PS1=\"🃏\n$ \"";
 alias cypressify="PS1=\"🌀\n$ \"";
+alias reactify="PS1=\"⚛️\"$'\n'\"$ \"";
+
 
 # history size
 HISTSIZE=5000
 HISTFILESIZE=10000
+
+SAVEHIST=5000
+setopt EXTENDED_HISTORY
+HISTFILE=${ZDOTDIR:-$HOME}/.zsh_history
+# share history across multiple zsh sessions
+setopt SHARE_HISTORY
+# append to history
+setopt APPEND_HISTORY
+# adds commands as they are typed, not at shell exit
+setopt INC_APPEND_HISTORY
+# do not store duplications
+setopt HIST_IGNORE_DUPS
 
 # PATH ALTERATIONS
 ## Node
@@ -54,12 +72,12 @@ PATH="$PATH:$HOME/.my_bin";
 CDPATH=.:$HOME:$HOME/code:$HOME/Desktop
 
 
-# Bash completion
-if [ -f "$(brew --prefix)/etc/bash_completion" ]; then
-. "$(brew --prefix)/etc/bash_completion"
-fi
+# zsh auto autocomplete
+autoload -Uz compinit && compinit
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+eval "$(/opt/homebrew/bin/brew shellenv)"

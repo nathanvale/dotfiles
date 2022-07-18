@@ -8,8 +8,8 @@ alias ll="ls -1a"
 alias ..="cd ../"
 alias ..l="cd ../ && ll"
 alias pg="echo 'Pinging Google' && ping www.google.com"
-alias cb="code ~/.bash_profile"
-alias sb="source ~/.bash_profile"
+alias cb="code ~/.zprofile"
+alias sb="source ~/.zprofile"
 alias de="cd ~/Desktop"
 alias d="cd ~/code"
 alias showFiles='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
@@ -98,25 +98,22 @@ alias git=hub
 
 ## util functions
 mg () { mkdir "$@" && cd "$@" || exit; }
-shorten() { node ~/code/kcd.im/node_modules/.bin/netlify-shortener "$1" "$2"; }
 cdl() { cd "$@" && ll; }
-npm_latest() { npm info "$1" | grep latest; }
+npm-latest() { npm info "$1" | grep latest; }
 killport() { lsof -i tcp:"$*" | awk 'NR!=1 {print $2}' | xargs kill -9 ;}
-program_exists() {
-  command -v "$1" >/dev/null 2>&1 ;
-}
-without_proxy() {
-  http_proxy= https_proxy= all_proxy= no_proxy= $@
-}
-clear_proxy() {
-  unset http_proxy
-  unset https_proxy
-  unset all_proxy
-  unset no_proxy
-}
-proxy_all() {
-  no_proxy= $@
+function quit () {
+  if [ -z "$1" ]; then
+    # display usage if no parameters given
+    echo "Usage: quit appname"
+  else
+    for appname in $1; do
+    osascript -e 'quit app "'$appname'"'
+    done
+  fi
 }
 
-findGrep() { find $1 -name $2 | xargs git grep $3; }
+gif() {
+  ffmpeg -i "$1" -vf "fps=25,scale=iw/2:ih/2:flags=lanczos,palettegen" -y "/tmp/palette.png"
+  ffmpeg -i "$1" -i "/tmp/palette.png" -lavfi "fps=25,scale=iw/2:ih/2:flags=lanczos [x]; [x][1:v] paletteuse" -f image2pipe -vcodec ppm - | convert -delay 4 -layers Optimize -loop 0 - "${1%.*}.gif"
+}
 

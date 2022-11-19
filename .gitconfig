@@ -1,15 +1,17 @@
 [core]
 	excludesfile = /Users/nathanvale/.gitignore_global
 	editor = code --wait
-[difftool "sourcetree"]
-	cmd = code -n -w -d $LOCAL $REMOTE
-	path = 
+[diff]
+    tool = vscode
+[difftool "vscode"]
+    cmd = code --wait --diff $LOCAL $REMOTE
 [mergetool "sourcetree"]
 	cmd = code -n -w $MERGED
 	trustExitCode = true
 [user]
 	name = Nathan Vale
-	email = nathan.vale@originenergy.com.au
+	email = nathan.vale@auspost.com.au
+	signingkey = 42BD372B
 [http]
 [https]
     sslVerify = false
@@ -30,3 +32,9 @@
   untracked = cyan
 [branch]
 autosetuprebase = always
+[commit]
+	gpgSign = true
+[tag]
+	gpgSign = true
+[gpg]
+	program = /opt/homebrew/bin/gpg

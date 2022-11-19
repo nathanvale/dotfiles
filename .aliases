@@ -1,4 +1,4 @@
-#!/bin/bash
+lscleanup#!/bin/bash
 
 # Custom Aliases
 alias al="code ~/.aliases"
@@ -8,8 +8,8 @@ alias ll="ls -1a"
 alias ..="cd ../"
 alias ..l="cd ../ && ll"
 alias pg="echo 'Pinging Google' && ping www.google.com"
-alias cb="code ~/.zprofile"
-alias sb="source ~/.zprofile"
+alias cb="code ~/.zshrc"
+alias sb="source ~/.zshrc"
 alias de="cd ~/Desktop"
 alias d="cd ~/code"
 alias showFiles='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
@@ -116,4 +116,3 @@ gif() {
   ffmpeg -i "$1" -vf "fps=25,scale=iw/2:ih/2:flags=lanczos,palettegen" -y "/tmp/palette.png"
   ffmpeg -i "$1" -i "/tmp/palette.png" -lavfi "fps=25,scale=iw/2:ih/2:flags=lanczos [x]; [x][1:v] paletteuse" -f image2pipe -vcodec ppm - | convert -delay 4 -layers Optimize -loop 0 - "${1%.*}.gif"
 }
-

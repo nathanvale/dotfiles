@@ -10,8 +10,7 @@
 	trustExitCode = true
 [user]
 	name = Nathan Vale
-	email = nathan.vale@auspost.com.au
-	signingkey = 42BD372B
+	email = hi@nathanvale.com
 [http]
 [https]
     sslVerify = false

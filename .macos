@@ -50,6 +50,7 @@ packages=(
   fish
   neovim
   tmux
+  karabiner-elements
 )
 
 for package in "${packages[@]}"; do
@@ -127,6 +128,8 @@ ln -s "${HOME}/code/dotfiles/.gitconfig" "${HOME}/.gitconfig"
 ln -s "${HOME}/code/dotfiles/.my_bin" "${HOME}/.my_bin"
 ln -s "${HOME}/code/dotfiles/.aliases" "${HOME}/.aliases"
 ln -s "${HOME}/code/dotfiles/.zshrc" "${HOME}/.zshrc"
+ln -s "${HOME}/code/dotfiles/.config/tmux/tmux.conf" "${HOME}/.tmux.conf"
+ln -s "${HOME}/code/dotfiles/.config" "${HOME}"   
 echo "making system modifications:"
 
 # Make Chrome Two finger swipe for back and forward

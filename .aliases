@@ -1,5 +1,3 @@
-lscleanup#!/bin/bash
-
 # Custom Aliases
 alias al="code ~/.aliases"
 alias cl="clear"

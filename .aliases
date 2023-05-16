@@ -47,7 +47,7 @@ alias gpush="git push"
 alias gra='git rebase --abort'
 alias grc='git rebase --continue'
 alias gs='git status -s'
-alias gs="git status"
+alias gs="git "
 
 function defaultGitPullRebase {
   for branch in $(git for-each-ref --format='%(refname)' -- refs/heads/); do git config branch."${branch#refs/heads/}".rebase true; done

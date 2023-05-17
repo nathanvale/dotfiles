@@ -29,7 +29,7 @@ alias ga="git add ."
 alias gpf='git push --force-with-lease' # Are you sure you want to do this???
 alias gu "git reset --soft HEAD~"
 alias karabiner_cli '/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli'
-
+alias tiling "c $HOME/code/dotfiles/.config/skhd/skhdrc"
 
 # CDPATH ALTERATIONS
 set -gx CDPATH $CDPATH . ~ $HOME/code

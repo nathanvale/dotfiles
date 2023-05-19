@@ -11,6 +11,7 @@ set -g theme_hostname always
 
 # aliases
 alias c="code ."
+alias dotfiles="cd ~/code/dotfiles & c"
 alias pg="echo 'Pinging Google' && ping www.google.com"
 alias cb="code ~/.config/fish/config.fish"
 alias sb="source ~/.config/fish/config.fish"

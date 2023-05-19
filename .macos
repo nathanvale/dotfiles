@@ -40,7 +40,7 @@ echo "Homebrew installing stuff"
 packages=(
   coreutils
   git
-  hub # a github-specific version of git
+  gh # GitHub CLI tool 
   bash-completion
   watchman
   tree # really handy for listing out directories in text

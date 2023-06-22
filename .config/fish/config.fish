@@ -52,6 +52,9 @@ set -gx PATH $GOPATH/bin $PATH
 # Python
 set -gx PATH $HOME/.pyenv/shims:$PATH
 
+# Grep
+set -gx PATH /opt/homebrew/opt/grep/libexec/gnubin:$PATH
+
 load_nvm > /dev/stderr
 
 switch (uname)

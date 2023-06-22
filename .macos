@@ -51,6 +51,7 @@ packages=(
   neovim
   tmux
   karabiner-elements
+  grep
 )
 
 for package in "${packages[@]}"; do

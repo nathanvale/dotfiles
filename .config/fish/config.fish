@@ -55,6 +55,9 @@ set -gx PATH $HOME/.pyenv/shims:$PATH
 # Grep
 set -gx PATH /opt/homebrew/opt/grep/libexec/gnubin:$PATH
 
+# Yabai
+set -gx PATH /opt/homebrew/bin $PATH
+
 load_nvm > /dev/stderr
 
 switch (uname)

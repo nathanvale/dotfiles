@@ -10,7 +10,7 @@
 	trustExitCode = true
 [user]
 	name = Nathan Vale
-	email = hi@nathanvale.com
+	email = nathan.vale@origin.com.au
 [http]
 [https]
     sslVerify = false
@@ -31,9 +31,5 @@
   untracked = cyan
 [branch]
 autosetuprebase = always
-[commit]
-	gpgSign = true
-[tag]
-	gpgSign = true
-[gpg]
-	program = /opt/homebrew/bin/gpg
+[push]
+	default = current

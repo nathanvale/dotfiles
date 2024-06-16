@@ -131,6 +131,8 @@ ln -s "${HOME}/code/dotfiles/.aliases" "${HOME}/.aliases"
 ln -s "${HOME}/code/dotfiles/.zshrc" "${HOME}/.zshrc"
 ln -s "${HOME}/code/dotfiles/.config/tmux/tmux.conf" "${HOME}/.tmux.conf"
 ln -s "${HOME}/code/dotfiles/.config" "${HOME}"   
+ln -s "${HOME}/code/dotfiles/Scripts" "${HOME}"
+
 echo "making system modifications:"
 
 # Make Chrome Two finger swipe for back and forward

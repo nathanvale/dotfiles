@@ -132,6 +132,7 @@ ln -s "${HOME}/code/dotfiles/.zshrc" "${HOME}/.zshrc"
 ln -s "${HOME}/code/dotfiles/.config/tmux/tmux.conf" "${HOME}/.tmux.conf"
 ln -s "${HOME}/code/dotfiles/.config" "${HOME}"   
 ln -s "${HOME}/code/dotfiles/Scripts" "${HOME}"
+sudo ln -s /Users/nathanvale/code/dotfiles/Library/Preferences/com.googlecode.iterm2.plist /Library/Preferences/com.googlecode.iterm2.plist
 
 echo "making system modifications:"
 

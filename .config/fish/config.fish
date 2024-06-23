@@ -1,6 +1,6 @@
 set fish_greeting "Hello Nathan!"
 
-fzf_configure_bindings
+# fzf_configure_bindings
 
 set -gx TERM xterm-256color
 

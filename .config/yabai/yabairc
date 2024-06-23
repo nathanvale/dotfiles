@@ -6,7 +6,7 @@ yabai -m config external_bar off
 yabai -m config mouse_follows_focus on
 yabai -m config focus_follows_mouse off
 yabai -m config window_opacity on
-yabai -m config active_window_opacity .97
+yabai -m config active_window_opacity 1
 yabai -m config normal_window_opacity 0.8
 
 # Window topmost setting
@@ -56,3 +56,4 @@ yabai -m rule --add app="^Calculator$" manage=off
 yabai -m rule --add app="^Karabiner-Elements$" manage=off
 yabai -m rule --add app="^QuickTime Player$" manage=off
 yabai -m rule --add app="^Activity Monitor$" manage=off
+yabai -m rule --add app="^Time Machine$" manage=off

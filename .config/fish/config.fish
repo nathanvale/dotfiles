@@ -1,4 +1,6 @@
-set fish_greeting ""
+set fish_greeting "Hello Nathan!"
+
+fzf_configure_bindings
 
 set -gx TERM xterm-256color
 
@@ -21,15 +23,6 @@ alias ls "ls -p -G"
 alias la "ls -A"
 alias ll "ls -l"
 alias lla "ll -A"
-alias g git
-alias ga="git add ."
-# function gc 
-#   git commit -m "$argv";  
-# end
-alias gpf='git push --force-with-lease' # Are you sure you want to do this???
-alias gu "git reset --soft HEAD~"
-alias karabiner_cli '/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli'
-alias tiling "c $HOME/code/dotfiles/.config/skhd/skhdrc"
 
 # CDPATH ALTERATIONS
 set -gx CDPATH $CDPATH . ~ $HOME/code

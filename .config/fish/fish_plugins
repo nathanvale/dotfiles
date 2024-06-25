@@ -1,4 +1,5 @@
 jorgebucaran/fisher
-reitzig/sdkman-for-fish@v1.4.0
 jhillyerd/plugin-git
-ilancosman/tide
+ilancosman/tide@v6
+patrickf1/fzf.fish
+edc/bass

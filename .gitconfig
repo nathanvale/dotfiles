@@ -2,9 +2,9 @@
 	excludesfile = /Users/nathanvale/.gitignore_global
 	editor = code --wait
 [diff]
-    tool = vscode
+	tool = vscode
 [difftool "vscode"]
-    cmd = code --wait --diff $LOCAL $REMOTE
+	cmd = code --wait --diff $LOCAL $REMOTE
 [mergetool "sourcetree"]
 	cmd = code -n -w $MERGED
 	trustExitCode = true
@@ -33,3 +33,5 @@
 autosetuprebase = always
 [push]
 	default = current
+[init]
+	defaultBranch = master

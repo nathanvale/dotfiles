@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN//" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>name</key>
+    <string>Night Owl</string>
+    <key>settings</key>
+    <array>
+        <dict>
+            <key>settings</key>
+            <dict>
+                <key>background</key>
+                <string>#011627</string>
+                <key>foreground</key>
+                <string>#D6DEEB</string>
+                <key>caret</key>
+                <string>#FFCC00</string>
+                <key>invisibles</key>
+                <string>#3B4048</string>
+                <key>lineHighlight</key>
+                <string>#000000</string>
+                <key>selection</key>
+                <string>#5F7E97</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>scope</key>
+            <string>comment</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#5F7E97</string>
+                <key>fontStyle</key>
+                <string>italic</string> <!-- Italic font style for comments -->
+            </dict>
+        </dict>
+        <dict>
+            <key>scope</key>
+            <string>string</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#ECC48D</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>scope</key>
+            <string>constant.numeric</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#F78C6C</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>scope</key>
+            <string>constant.language</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#AB69C6</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>scope</key>
+            <string>keyword.control.import</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#C792EA</string>
+                <key>fontStyle</key>
+                <string>italic</string> <!-- Italic font style for import statements -->
+            </dict>
+        </dict>
+        <dict>
+            <key>scope</key>
+            <string>variable</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#D6DEEB</string> <!-- Light grey for variables -->
+            </dict>
+        </dict>
+        <dict>
+            <key>scope</key>
+            <string>variable.function</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#82AAFF</string> <!-- Light blue for function variables -->
+            </dict>
+        </dict>
+        <dict>
+            <key>scope</key>
+            <string>storage</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#C792EA</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>scope</key>
+            <string>entity.name.function</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#82AAFF</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>scope</key>
+            <string>entity.name.type</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#FFCB8B</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>scope</key>
+            <string>entity.other.attribute-name</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#CBE386</string> <!-- Light green for attribute names -->
+            </dict>
+        </dict>
+        <dict>
+            <key>scope</key>
+            <string>support.constant.property-value</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#C792EA</string> <!-- Light purple for property values -->
+            </dict>
+        </dict>
+        <dict>
+            <key>scope</key>
+            <string>meta.tag</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#E99273</string> <!-- Light yellow for tags -->
+            </dict>
+        </dict>
+        <dict>
+            <key>scope</key>
+            <string>meta.jsx.children</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#D6DEEB</string> <!-- Light grey for text inside JSX tags -->
+            </dict>
+        </dict>
+        <dict>
+            <key>scope</key>
+            <string>meta.jsx.attribute-name</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#7FDBCA</string> <!-- Light green for JSX attribute names -->
+            </dict>
+        </dict>
+        <dict>
+            <key>scope</key>
+            <string>support.constant.property-name</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#FF5F5F</string> <!-- Red for CSS property names inside JSX -->
+            </dict>
+        </dict>
+        
+        <!-- Solution 1: Use variable.other.property -->
+        <dict>
+            <key>scope</key>
+            <string>variable.other.property</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#D6DEEB</string> <!-- Light grey for keys in objects -->
+            </dict>
+        </dict>
+        
+        <!-- Solution 2: Use support.variable.property -->
+        <dict>
+            <key>scope</key>
+            <string>support.variable.property</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#D6DEEB</string> <!-- Light grey for keys in objects -->
+            </dict>
+        </dict>
+        
+        <!-- Solution 3: Use meta.object-literal.key -->
+        <dict>
+            <key>scope</key>
+            <string>meta.object-literal.key</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#D6DEEB</string> <!-- Light grey for keys in objects -->
+            </dict>
+        </dict>
+        
+        <!-- Solution 4: Use variable.object.key -->
+        <dict>
+            <key>scope</key>
+            <string>variable.object.key</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#D6DEEB</string> <!-- Light grey for keys in objects -->
+            </dict>
+        </dict>
+        
+        <!-- Solution 5: Use meta.property.object -->
+        <dict>
+            <key>scope</key>
+            <string>meta.property.object</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#D6DEEB</string> <!-- Light grey for keys in objects -->
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>

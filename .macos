@@ -102,6 +102,7 @@ casks=(
   firefox
   brave-browser
   circleci
+  awscli
 )
 
 for cask in "${casks[@]}"; do
@@ -126,13 +127,13 @@ echo "cloning dotfiles"
 git clone git@github.com:nathanvale/dotfiles.git "${HOME}/code/dotfiles"
 ln -s "${HOME}/code/dotfiles/.gitignore_global" "${HOME}/.gitignore_global"
 ln -s "${HOME}/code/dotfiles/.gitconfig" "${HOME}/.gitconfig"
-ln -s "${HOME}/code/dotfiles/.my_bin" "${HOME}/.my_bin"
 ln -s "${HOME}/code/dotfiles/.aliases" "${HOME}/.aliases"
 ln -s "${HOME}/code/dotfiles/.zshrc" "${HOME}/.zshrc"
-ln -s "${HOME}/code/dotfiles/.config/tmux/tmux.conf" "${HOME}/.tmux.conf"
-ln -s "${HOME}/code/dotfiles/.config" "${HOME}"   
+
+
 ln -s "${HOME}/code/dotfiles/Scripts" "${HOME}"
-sudo ln -s /Users/nathanvale/code/dotfiles/Library/Preferences/com.googlecode.iterm2.plist /Library/Preferences/com.googlecode.iterm2.plist
+ln -s ~/code/dotfiles/bin/ ~/.bin
+ln -s ~/code/dotfiles/config/ ~/.config
 
 echo "making system modifications:"
 

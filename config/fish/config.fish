@@ -62,16 +62,14 @@ alias cat="bat --paging=never"
 
 # Set FZF default options based on Night Owl theme
 set -Ux FZF_DEFAULT_OPTS '
-  --color=fg:#8EA3B9,bg:#051526,hl:#B7DA76
-  --color=fg+:#FFFFFF,bg+:#073642,hl+:#B7DA76
-  --color=info:#268bd2,prompt:#859900,pointer:#dc322f
-  --color=marker:#d33682,spinner:#2aa198,header:#C4A012
-  --color=query:#B7DA76
+  --color=fg:#D7DEEA,bg:#051526,hl:#BF94E4
+  --color=fg+:#FFFFFF,bg+:#073642,hl+:#BF94E4
+  --color=info:#84ACFF,prompt:#84ACFF,pointer:#EC6477
+  --color=marker:#d33682,spinner:#84ACFF,header:#C4A012
+  --color=query:#BF94E4,border:#687778
   --cycle --layout=reverse --border --height=90% --preview-window=wrap --marker="*"'
 
-set -x LS_COLORS "di=38;2;95;196;169:fi=0;38;5;67:ln=1;36:pi=40;33:so=1;32:bd=40;33;01:cd=40;33;01:or=31;01:ex=1;31:*.txt=1;34:*.md=1;36:*.json=1;33"
-
-
+set -x LS_COLORS 'di=38;2;149;217;202:fi=38;2;215;222;234:*=38;2;215;222;234:*.ts=38;2;99;119;119:*.tsx=38;2;99;119;119:*.js=38;2;99;119;119:*.jsx=38;2;99;119;119'
 
 # # CDPATH ALTERATIONS
 set -gx CDPATH $CDPATH . ~ $HOME/code
@@ -83,6 +81,62 @@ set -gx PATH ~/.bin $PATH
 set -gx PATH /opt/homebrew/bin $PATH
 set -gx PATH node_modules/.bin $PATH
 set -gx PATH ~/Library/Python/3.9/bin $PATH
+
+# Add these lines to your config.fish file
+set -U pure_color_normal '#D6D38E'
+set -U pure_color_info '#82AAFF'
+set -U pure_color_primary '#82AAFF'
+set -U pure_color_mute '#565656'
+set -U pure_color_success '#22D14E'
+set -U pure_color_caution '#ADDB8F'
+set -U pure_color_error '#EC6477'
+set -U pure_color_critical '#EC6477'
+
+# Remove previous universal variable settings if any
+set -e fish_color_normal
+set -e fish_color_command
+set -e fish_color_quote
+set -e fish_color_redirection
+set -e fish_color_end
+set -e fish_color_error
+set -e fish_color_param
+set -e fish_color_comment
+set -e fish_color_selection
+set -e fish_color_search_match
+set -e fish_color_operator
+set -e fish_color_escape
+set -e fish_color_autosuggestion
+set -e fish_color_user
+set -e fish_color_host
+set -e fish_color_cwd
+set -e fish_color_cwd_root
+set -e fish_color_valid_path
+set -e fish_color_white
+set -e fish_color_completion
+
+# Set new colors based on Night Owl theme
+set -U fish_color_normal '#D7DEEA'
+set -U fish_color_command '#CBE386'
+set -U fish_color_quote '#D7DEEA'
+set -U fish_color_redirection '#82AAFF'
+set -U fish_color_end '#82AAFF'
+set -U fish_color_error '#EC6477'
+# set -U fish_color_param ??? 
+set -U fish_color_comment '#565656'
+# set -U fish_color_selection ???
+set -U fish_color_search_match --background='333'
+# set -U fish_color_operator ??? 
+# set -U fish_color_escape ??? 
+# set -U fish_color_completion ??? 
+set -U fish_color_autosuggestion '#565656'
+# set -U fish_color_user ??? 
+# set -U fish_color_host ??? 
+set -U fish_color_cwd '#95D9CA'
+# set -U fish_color_cwd_root ??? 
+set -U fish_color_valid_path '#95D9CA'
+set -U fish_color_white '#D7DEEA'
+
+
 
 
 

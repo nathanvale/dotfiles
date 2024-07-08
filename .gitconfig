@@ -1,37 +1,105 @@
+[alias]
+    amend = commit --amend --no-edit
+    branches = branch -a
+    br = branch
+    ci = commit
+    cl = "!clear"
+    co = checkout
+    df = diff
+    last = log -1 HEAD
+    lg = log --oneline --graph --all --decorate
+    st = status
+    undo = reset --soft HEAD^
+    uncommit = reset --soft HEAD^
+    unstage = reset HEAD
+
+[branch]
+    autosetuprebase = never
+
+[color]
+    ui = auto
+
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+
+[color "diff"]
+    frag = magenta bold
+    meta = yellow bold
+    new = green bold
+    old = red bold
+
+[color "status"]
+    added = yellow
+    changed = green
+    untracked = cyan
+
 [core]
-	excludesfile = /Users/nathanvale/.gitignore_global
-	editor = code --wait
+    editor = code --wait
+    excludesfile = /Users/nathanvale/.gitignore_global
+    pager = bat --paging=always --pager=less
+
+[delta]
+    features = side-by-side line-numbers decorations
+    side-by-side = true
+    line-numbers = true
+    decorations = true
+    plus-style = "syntax #98C379"      # greenish color for additions
+    minus-style = "syntax #E06C75"     # reddish color for deletions
+    minus-emph-style = "syntax #BE5046" # emphasized deletion
+    file-style = "bold #E5C07B ul"     # yellowish color for file names
+    hunk-header-style = "bold #61AFEF" # blueish color for hunk headers
+    line-numbers-style = "bold #ABB2BF" # grayish color for line numbers
+
 [diff]
-	tool = vscode
+    tool = vscode
+
 [difftool "vscode"]
-	cmd = code --wait --diff $LOCAL $REMOTE
-[mergetool "sourcetree"]
-	cmd = code -n -w $MERGED
-	trustExitCode = true
-[user]
-	name = Nathan Vale
-	email = nathan.vale@origin.com.au
+    cmd = code --wait --diff $LOCAL $REMOTE
+
+[format]
+    pretty = format:%C(auto)%h %d %s %C(black)%C(bold)%cr
+
+[help]
+    autocorrect = 1
+
 [http]
+
 [https]
     sslVerify = false
-[color]
-  ui = auto
-[color "branch"]
-  current = yellow reverse
-  local = yellow
-  remote = green
-[color "diff"]
-  meta = yellow bold
-  frag = magenta bold
-  old = red bold
-  new = green bold
-[color "status"]
-  added = yellow
-  changed = green
-  untracked = cyan
-[branch]
-autosetuprebase = always
-[push]
-	default = current
+
 [init]
-	defaultBranch = master
+    defaultBranch = master
+
+[interactive]
+    diffFilter = delta --color-only
+
+[log]
+    abbrevCommit = true
+    date = relative
+    decorate = full
+
+[merge]
+    tool = vscode
+    conflictstyle = diff3
+
+[mergetool "vscode"]
+    cmd = code --wait $MERGED
+
+[pager]
+  diff = delta
+  log = delta
+  reflog = delta
+  show = delta
+  blame = delta
+
+[pull]
+    rebase = false
+
+[push]
+    default = current
+
+[user]
+    email = nathan.vale@origin.com.au
+    name = Nathan Vale

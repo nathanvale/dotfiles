@@ -84,6 +84,8 @@ set -gx PATH /opt/homebrew/bin $PATH
 set -gx PATH node_modules/.bin $PATH
 set -gx PATH ~/Library/Python/3.9/bin $PATH
 
+
+
 set -gx FD_OPTIONS "--color=always"
 
 function cd

@@ -14,3 +14,4 @@ aliases:
     ci: issue create
     cp: pr create
 browser: open
+version: "1"

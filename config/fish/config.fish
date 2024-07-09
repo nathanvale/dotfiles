@@ -34,6 +34,12 @@ alias open_plugin_git_readme="open https://github.com/jhillyerd/plugin-git"
 # Bat is a better version of cat
 alias cat='bat'
 alias batn='bat -n' # Alias to show line numbers
+function man
+    set tmp_file (mktemp)
+    command man $argv | col -bx >$tmp_file
+    bat $tmp_file
+    rm $tmp_file
+end
 # Eza is a better version of ls
 
 alias ls='eza --color=always --icons' # Alias ls command with eza options for colored output and icons 

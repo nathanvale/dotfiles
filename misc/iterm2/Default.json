@@ -243,7 +243,7 @@
   "Prevent Opening in a Tab" : true,
   "Semantic History" : {
     "text" : "code --goto \"\\(semanticHistory.path):\\(semanticHistory.lineNumber):\\(semanticHistory.columnNumber)\"",
-    "action" : "command",
+    "action" : "editor",
     "editor" : "com.microsoft.VSCode"
   },
   "Ansi 9 Color (Dark)" : {

@@ -1,7 +1,7 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
 SETUVAR BAT_THEME:Night\x2dOwl
-SETUVAR --export FZF_DEFAULT_OPTS:\x0a\x20\x20\x2d\x2dcolor\x3dfg\x3a\x23D7DEEA\x2cbg\x3a\x23051526\x2chl\x3a\x23BF94E4\x0a\x20\x20\x2d\x2dcolor\x3dfg\x2b\x3a\x23FFFFFF\x2cbg\x2b\x3a\x23073642\x2chl\x2b\x3a\x23BF94E4\x0a\x20\x20\x2d\x2dcolor\x3dinfo\x3a\x2384ACFF\x2cprompt\x3a\x2384ACFF\x2cpointer\x3a\x23EC6477\x0a\x20\x20\x2d\x2dcolor\x3dmarker\x3a\x23d33682\x2cspinner\x3a\x2384ACFF\x2cheader\x3a\x23C4A012\x0a\x20\x20\x2d\x2dcolor\x3dquery\x3a\x23BF94E4\x2cborder\x3a\x23687778\x0a\x20\x20\x2d\x2dcycle\x20\x2d\x2dlayout\x3dreverse\x20\x2d\x2dborder\x20\x2d\x2dheight\x3d90\x25\x20\x2d\x2dpreview\x2dwindow\x3dwrap\x20\x2d\x2dmarker\x3d\x22\x2a\x22
+SETUVAR --export FZF_DEFAULT_OPTS:\x0a\x20\x20\x2d\x2dansi\x0a\x20\x20\x2d\x2dcolor\x3dfg\x3a\x23D8DEEA\x2cbg\x3a\x23011627\x2chl\x3a\x23FFFFFF\x3abold\x0a\x20\x20\x2d\x2dcolor\x3dfg\x2b\x3a\x23FFFFFF\x2cbg\x2b\x3a\x23253A52\x2chl\x2b\x3a\x23FFFFFF\x3abold\x0a\x20\x20\x2d\x2dcolor\x3dinfo\x3a\x237FDBCA\x2cprompt\x3a\x2384ACFF\x2cpointer\x3a\x23ff5874\x0a\x20\x20\x2d\x2dcolor\x3dmarker\x3a\x23ff2c83\x2cspinner\x3a\x23FAD430\x2cheader\x3a\x23C4A012\x0a\x20\x20\x2d\x2dcolor\x3dquery\x3a\x23FFFFFF\x2cborder\x3a\x235F7E97\x0a\x20\x20\x2d\x2dcycle\x20\x2d\x2dlayout\x3dreverse\x20\x2d\x2dborder\x20\x2d\x2dheight\x3d90\x25\x20\x2d\x2dpreview\x2dwindow\x3dwrap\x20\x2d\x2dmarker\x3d\x22\x2a\x22
 SETUVAR PAGER:bat
 SETUVAR ZO_CMD:zo
 SETUVAR Z_CMD:z
@@ -9,22 +9,32 @@ SETUVAR Z_DATA:/Users/nathanvale/\x2elocal/share/z/data
 SETUVAR Z_DATA_DIR:/Users/nathanvale/\x2elocal/share/z
 SETUVAR Z_EXCLUDE:\x5e/Users/nathanvale\x24
 SETUVAR __fish_initialized:3400
+SETUVAR _fisher_acomagu_2F_fish_2D_async_2D_prompt_files:\x7e/\x2econfig/fish/conf\x2ed/__async_prompt\x2efish
+SETUVAR _fisher_plugins:acomagu/fish\x2dasync\x2dprompt
 SETUVAR _fisher_upgraded_to_4_4:\x1d
-SETUVAR fish_color_autosuggestion:\x23565656
+SETUVAR fish_color_autosuggestion:\x235F7E97
 SETUVAR fish_color_cancel:\x2dr
 SETUVAR fish_color_command:\x23CBE386
-SETUVAR fish_color_comment:\x23565656
-SETUVAR fish_color_cwd:\x2395D9CA
+SETUVAR fish_color_comment:\x235F7E97
+SETUVAR fish_color_completion:\x1d
+SETUVAR fish_color_cwd:\x23D8DEEA
+SETUVAR fish_color_cwd_root:default
 SETUVAR fish_color_end:\x2382AAFF
 SETUVAR fish_color_error:\x23EC6477
+SETUVAR fish_color_escape:default
 SETUVAR fish_color_history_current:\x2d\x2dbold
+SETUVAR fish_color_host:default
 SETUVAR fish_color_host_remote:yellow
 SETUVAR fish_color_normal:\x23D7DEEA
+SETUVAR fish_color_operator:default
+SETUVAR fish_color_param:default
 SETUVAR fish_color_quote:\x23D7DEEA
 SETUVAR fish_color_redirection:\x2382AAFF
-SETUVAR fish_color_search_match:\x2d\x2dbackground\x3d333
+SETUVAR fish_color_search_match:default
+SETUVAR fish_color_selection:default
 SETUVAR fish_color_status:red
-SETUVAR fish_color_valid_path:\x2395D9CA
+SETUVAR fish_color_user:default
+SETUVAR fish_color_valid_path:\x23D8DEEA
 SETUVAR fish_color_white:\x23D7DEEA
 SETUVAR fish_function_path:/Users/nathanvale/\x2econfig/fish/functions\x1e/opt/homebrew/etc/fish/functions\x1e/Users/nathanvale/\x2elocal/share/fish/vendor_functions\x2ed\x1e/Applications/iTerm\x2eapp/Contents/Resources/fish/vendor_functions\x2ed\x1e/opt/homebrew/share/fish/vendor_functions\x2ed\x1e/opt/homebrew/Cellar/fish/3\x2e7\x2e1/share/fish/functions\x1e/Users/nathanvale/\x2econfig/fish/functions/custom
 SETUVAR fish_key_bindings:fish_default_key_bindings
@@ -40,11 +50,11 @@ SETUVAR pure_color_at_sign:pure_color_mute
 SETUVAR pure_color_aws_profile:pure_color_warning
 SETUVAR pure_color_caution:\x23ADDB8F
 SETUVAR pure_color_command_duration:pure_color_warning
-SETUVAR pure_color_critical:\x23EC6477
+SETUVAR pure_color_critical:\x23ff5874
 SETUVAR pure_color_current_directory:pure_color_primary
 SETUVAR pure_color_danger:red
 SETUVAR pure_color_dark:black
-SETUVAR pure_color_error:\x23EC6477
+SETUVAR pure_color_error:\x23ff5874
 SETUVAR pure_color_git_branch:pure_color_mute
 SETUVAR pure_color_git_dirty:pure_color_mute
 SETUVAR pure_color_git_stash:pure_color_info
@@ -57,7 +67,7 @@ SETUVAR pure_color_k8s_context:pure_color_success
 SETUVAR pure_color_k8s_namespace:pure_color_primary
 SETUVAR pure_color_k8s_prefix:pure_color_info
 SETUVAR pure_color_light:white
-SETUVAR pure_color_mute:\x23565656
+SETUVAR pure_color_mute:\x235F7E97
 SETUVAR pure_color_nixdevshell_prefix:pure_color_info
 SETUVAR pure_color_nixdevshell_symbol:pure_color_mute
 SETUVAR pure_color_normal:\x23D6D38E

@@ -41,6 +41,7 @@ alias ll='eza -l --color=always --icons' # Alias ll command with eza options for
 alias la='eza -a --color=always --icons' # Alias la command with eza options for all files, colored output, and icons
 alias lt='eza --tree --color=always --icons' # Alias lt command with eza options for tree view, colored output, and icons
 
+
 set fzf_preview_dir_cmd la
 
 # Core utilities package
@@ -62,14 +63,15 @@ alias cat="bat --paging=never"
 
 # Set FZF default options based on Night Owl theme
 set -Ux FZF_DEFAULT_OPTS '
-  --color=fg:#D7DEEA,bg:#051526,hl:#BF94E4
-  --color=fg+:#FFFFFF,bg+:#073642,hl+:#BF94E4
-  --color=info:#84ACFF,prompt:#84ACFF,pointer:#EC6477
-  --color=marker:#d33682,spinner:#84ACFF,header:#C4A012
-  --color=query:#BF94E4,border:#687778
+  --ansi
+  --color=fg:#D8DEEA,bg:#011627,hl:#FFFFFF:bold
+  --color=fg+:#FFFFFF,bg+:#253A52,hl+:#FFFFFF:bold
+  --color=info:#7FDBCA,prompt:#84ACFF,pointer:#ff5874
+  --color=marker:#ff2c83,spinner:#FAD430,header:#C4A012
+  --color=query:#FFFFFF,border:#5F7E97
   --cycle --layout=reverse --border --height=90% --preview-window=wrap --marker="*"'
 
-set -x LS_COLORS 'di=38;2;149;217;202:fi=38;2;215;222;234:*=38;2;215;222;234:*.ts=38;2;99;119;119:*.tsx=38;2;99;119;119:*.js=38;2;99;119;119:*.jsx=38;2;99;119;119'
+set -x LS_COLORS 'di=38;2;216;222;234:fi=216;222;234:*=216;222;234:*.ts=38;2;130;170;255:*.tsx=38;2;130;170;255:*.js=38;2;130;170;255:*.jsx=38;2;130;170;255:*.fish=38;2;203;227;134:*.sh=38;2;203;227;134'
 
 # # CDPATH ALTERATIONS
 set -gx CDPATH $CDPATH . ~ $HOME/code
@@ -86,11 +88,13 @@ set -gx PATH ~/Library/Python/3.9/bin $PATH
 set -U pure_color_normal '#D6D38E'
 set -U pure_color_info '#82AAFF'
 set -U pure_color_primary '#82AAFF'
-set -U pure_color_mute '#565656'
+set -U pure_color_mute '#5F7E97'
 set -U pure_color_success '#22D14E'
 set -U pure_color_caution '#ADDB8F'
-set -U pure_color_error '#EC6477'
-set -U pure_color_critical '#EC6477'
+set -U pure_color_error '#ff5874'
+set -U pure_color_critical '#ff5874'
+
+set -g async_prompt_functions _pure_prompt_git
 
 # Remove previous universal variable settings if any
 set -e fish_color_normal
@@ -121,19 +125,19 @@ set -U fish_color_quote '#D7DEEA'
 set -U fish_color_redirection '#82AAFF'
 set -U fish_color_end '#82AAFF'
 set -U fish_color_error '#EC6477'
-# set -U fish_color_param ??? 
-set -U fish_color_comment '#565656'
-# set -U fish_color_selection ???
-set -U fish_color_search_match --background='333'
-# set -U fish_color_operator ??? 
-# set -U fish_color_escape ??? 
-# set -U fish_color_completion ??? 
-set -U fish_color_autosuggestion '#565656'
-# set -U fish_color_user ??? 
-# set -U fish_color_host ??? 
-set -U fish_color_cwd '#95D9CA'
-# set -U fish_color_cwd_root ??? 
-set -U fish_color_valid_path '#95D9CA'
+set -U fish_color_param default
+set -U fish_color_comment '#5F7E97'
+set -U fish_color_selection default
+set -U fish_color_search_match default
+set -U fish_color_operator default
+set -U fish_color_escape default
+set -U fish_color_completion #EC6477
+set -U fish_color_autosuggestion '#5F7E97'
+set -U fish_color_user default
+set -U fish_color_host default
+set -U fish_color_cwd '#D8DEEA'
+set -U fish_color_cwd_root default
+set -U fish_color_valid_path '#D8DEEA'
 set -U fish_color_white '#D7DEEA'
 
 

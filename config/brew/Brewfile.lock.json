@@ -613,7 +613,7 @@
         }
       },
       "koekeishiya/formulae/yabai": {
-        "version": "HEAD-09a7b23",
+        "version": "7.1.1",
         "bottle": false,
         "options": {
           "args": [

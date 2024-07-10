@@ -13,45 +13,45 @@
     },
     "brew": {
       "awscli": {
-        "version": "2.17.10",
+        "version": "2.17.11",
         "bottle": {
           "rebuild": 0,
           "root_url": "https://ghcr.io/v2/homebrew/core",
           "files": {
             "arm64_sonoma": {
               "cellar": ":any",
-              "url": "https://ghcr.io/v2/homebrew/core/awscli/blobs/sha256:130e5c8ef935a8884d1939b0330bd072b509a61f40d0c5c444f59edc1a279a77",
-              "sha256": "130e5c8ef935a8884d1939b0330bd072b509a61f40d0c5c444f59edc1a279a77"
+              "url": "https://ghcr.io/v2/homebrew/core/awscli/blobs/sha256:ab05795c0f665ec4d236ea49a719b43a9e62ad50d0d7976ae6672022aac43cf4",
+              "sha256": "ab05795c0f665ec4d236ea49a719b43a9e62ad50d0d7976ae6672022aac43cf4"
             },
             "arm64_ventura": {
               "cellar": ":any",
-              "url": "https://ghcr.io/v2/homebrew/core/awscli/blobs/sha256:dc76afcfd45ca149389244ff2d23fac5480fe5873d6ba792efc5e4e42cf7e6d8",
-              "sha256": "dc76afcfd45ca149389244ff2d23fac5480fe5873d6ba792efc5e4e42cf7e6d8"
+              "url": "https://ghcr.io/v2/homebrew/core/awscli/blobs/sha256:72af09f91cd2a6f9d541e991392574ab76b283e31cf3961d6dea0537bb18fe55",
+              "sha256": "72af09f91cd2a6f9d541e991392574ab76b283e31cf3961d6dea0537bb18fe55"
             },
             "arm64_monterey": {
               "cellar": ":any",
-              "url": "https://ghcr.io/v2/homebrew/core/awscli/blobs/sha256:28e5b8b5a96b27298d67a43aac9f904c6dc41710d7042353fd13feabef426f5e",
-              "sha256": "28e5b8b5a96b27298d67a43aac9f904c6dc41710d7042353fd13feabef426f5e"
+              "url": "https://ghcr.io/v2/homebrew/core/awscli/blobs/sha256:79c653b2fd6451f9619eefd09eb6bee452985024a88575239878dfc576b85d40",
+              "sha256": "79c653b2fd6451f9619eefd09eb6bee452985024a88575239878dfc576b85d40"
             },
             "sonoma": {
               "cellar": ":any",
-              "url": "https://ghcr.io/v2/homebrew/core/awscli/blobs/sha256:c34b8d1a635f1f0c843b8ee90c9fa304c26b796427cfb71ef4950ec5ee9a9da7",
-              "sha256": "c34b8d1a635f1f0c843b8ee90c9fa304c26b796427cfb71ef4950ec5ee9a9da7"
+              "url": "https://ghcr.io/v2/homebrew/core/awscli/blobs/sha256:e04966a10e23617b9ff0ec1deb0af53bac5aa0cfbf6d3d27dea8bdcb8331a5ee",
+              "sha256": "e04966a10e23617b9ff0ec1deb0af53bac5aa0cfbf6d3d27dea8bdcb8331a5ee"
             },
             "ventura": {
               "cellar": ":any",
-              "url": "https://ghcr.io/v2/homebrew/core/awscli/blobs/sha256:023f119f7e582717cb6469dccb8afa8cc78ed589be43ce6ab250666601354525",
-              "sha256": "023f119f7e582717cb6469dccb8afa8cc78ed589be43ce6ab250666601354525"
+              "url": "https://ghcr.io/v2/homebrew/core/awscli/blobs/sha256:e8ca15ee73eac38d50827fdd8f4ff29ea3ed43db74b17504108431b9c6a5c5ab",
+              "sha256": "e8ca15ee73eac38d50827fdd8f4ff29ea3ed43db74b17504108431b9c6a5c5ab"
             },
             "monterey": {
               "cellar": ":any",
-              "url": "https://ghcr.io/v2/homebrew/core/awscli/blobs/sha256:c6a599311d1978379e83ef8057d5b8d93e34fed1bacb17809d49f9e67fc045c6",
-              "sha256": "c6a599311d1978379e83ef8057d5b8d93e34fed1bacb17809d49f9e67fc045c6"
+              "url": "https://ghcr.io/v2/homebrew/core/awscli/blobs/sha256:9dc93478235a83195c1498cdafa4f43ea6f4d50bf27c3305fa687a38d166cd18",
+              "sha256": "9dc93478235a83195c1498cdafa4f43ea6f4d50bf27c3305fa687a38d166cd18"
             },
             "x86_64_linux": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/awscli/blobs/sha256:d2bf3f47ff6667923c56607ddbcafef53b25fda6573be178b1c4a63b4638dd99",
-              "sha256": "d2bf3f47ff6667923c56607ddbcafef53b25fda6573be178b1c4a63b4638dd99"
+              "url": "https://ghcr.io/v2/homebrew/core/awscli/blobs/sha256:5112c880580369e782b7ec54a2443e58cfcedc4bb9869c474f3351db08701e74",
+              "sha256": "5112c880580369e782b7ec54a2443e58cfcedc4bb9869c474f3351db08701e74"
             }
           }
         }
@@ -613,7 +613,7 @@
         }
       },
       "koekeishiya/formulae/yabai": {
-        "version": "7.1.1",
+        "version": "HEAD-09a7b23",
         "bottle": false,
         "options": {
           "args": [
@@ -635,10 +635,28 @@
           "full_name": "cleanmymac"
         }
       },
+      "discord": {
+        "version": "0.0.310",
+        "options": {
+          "full_name": "discord"
+        }
+      },
+      "firefox": {
+        "version": "128.0",
+        "options": {
+          "full_name": "firefox"
+        }
+      },
       "google-chrome": {
         "version": "126.0.6478.127",
         "options": {
           "full_name": "google-chrome"
+        }
+      },
+      "imazing": {
+        "version": "3.0.3,21059",
+        "options": {
+          "full_name": "imazing"
         }
       },
       "iterm2": {
@@ -653,16 +671,10 @@
           "full_name": "karabiner-elements"
         }
       },
-      "launchbar": {
-        "version": "6.19.1",
+      "postman": {
+        "version": "11.3.0",
         "options": {
-          "full_name": "launchbar"
-        }
-      },
-      "visual-studio-code": {
-        "version": "1.91.0",
-        "options": {
-          "full_name": "visual-studio-code"
+          "full_name": "postman"
         }
       },
       "slack": {
@@ -671,40 +683,22 @@
           "full_name": "slack"
         }
       },
-      "firefox": {
-        "version": "128.0",
+      "visual-studio-code": {
+        "version": "1.91.0",
         "options": {
-          "full_name": "firefox"
-        }
-      },
-      "zoom": {
-        "version": "6.1.1.36333",
-        "options": {
-          "full_name": "zoom"
-        }
-      },
-      "imazing": {
-        "version": "3.0.3,21059",
-        "options": {
-          "full_name": "imazing"
-        }
-      },
-      "discord": {
-        "version": "0.0.310",
-        "options": {
-          "full_name": "discord"
-        }
-      },
-      "postman": {
-        "version": "11.3.0",
-        "options": {
-          "full_name": "postman"
+          "full_name": "visual-studio-code"
         }
       },
       "whatsapp": {
         "version": "2.24.13.80",
         "options": {
           "full_name": "whatsapp"
+        }
+      },
+      "zoom": {
+        "version": "6.1.1.36333",
+        "options": {
+          "full_name": "zoom"
         }
       }
     },

@@ -1,0 +1,16 @@
+{
+  "symlinks": [
+    {
+      "target": "${HOME}/code/dotfiles/config",
+      "link_name": "${HOME}/.config"
+    },
+    {
+      "target": "${HOME}/code/dotfiles/Scripts",
+      "link_name": "${HOME}/Scripts"
+    },
+    {
+      "target": "${HOME}/code/dotfiles/bin",
+      "link_name": "${HOME}/.bin"
+    }
+  ]
+}

@@ -16,7 +16,7 @@ brew "git-delta"
 brew "grep"
 brew "jq"
 brew "yarn"
-brew "koekeishiya/formulae/yabai", args: ["HEAD"]
+brew "koekeishiya/formulae/yabai"
 cask "betterdisplay"
 cask "cleanmymac"
 cask "discord"

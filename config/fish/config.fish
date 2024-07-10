@@ -20,7 +20,7 @@ if not contains $custom_function_dir $fish_function_path
     set -U fish_function_path $fish_function_path $custom_function_dir
 end
 
-set -U fish_user_paths (brew --prefix grep)/libexec/gnubin $fish_user_paths
+set -U fish_user_paths (/opt/homebrew/bin/brew --prefix grep)/libexec/gnubin $fish_user_paths
 
 # aliases
 
@@ -151,6 +151,10 @@ set -U fish_color_white '#D7DEEA'
 
 
 set -gx FD_OPTIONS "--color=always"
+
+# HOMEBREW_BUNDLE_FILE_GLOBAL
+set -gx HOMEBREW_BUNDLE_FILE_GLOBAL ~/.config/brew/Brewfile
+set -gx HOMEBREW_BUNDLE_FILE ~/.config/brew/Brewfile
 
 function cd
     builtin cd $argv

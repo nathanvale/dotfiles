@@ -1,0 +1,32 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Format Shell Script",
+      "type": "shell",
+      "command": "shfmt -w",
+      "args": ["${file}"],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Wrap Shell Script Comments",
+      "type": "shell",
+      "command": "${workspaceFolder}/bin/wrap_comments.sh",
+      "args": ["${file}"],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Format and Wrap Shell Script",
+      "dependsOrder": "sequence",
+      "dependsOn": ["Format Shell Script", "Wrap Shell Script Comments"]
+    }
+  ]
+}

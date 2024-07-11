@@ -57,6 +57,10 @@ alias mv gmv
 # Origin Energy aliases
 alias mp="make prepare"
 
+# NVM
+set -x NVM_DIR $HOME/.nvm
+bass source $NVM_DIR/nvm.sh
+
 # Set bat as the default pager
 set -U PAGER bat
 
@@ -147,16 +151,17 @@ set -U fish_color_valid_path '#D8DEEA'
 set -U fish_color_white '#D7DEEA'
 
 
-
-
-
 set -gx FD_OPTIONS "--color=always"
 
 # HOMEBREW_BUNDLE_FILE_GLOBAL
 set -gx HOMEBREW_BUNDLE_FILE_GLOBAL ~/.config/brew/Brewfile
 set -gx HOMEBREW_BUNDLE_FILE ~/.config/brew/Brewfile
 
+
+
 function cd
     builtin cd $argv
-    load_nvm >/dev/stderr
+    load_nvm
 end
+
+load_nvm

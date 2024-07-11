@@ -34,6 +34,8 @@ alias open_plugin_git_readme="open https://github.com/jhillyerd/plugin-git"
 # Bat is a better version of cat
 alias cat='bat'
 alias batn='bat -n' # Alias to show line numbers
+alias gcgh=github_create_pr_and_merge
+
 function man
     set tmp_file (mktemp)
     command man $argv | col -bx >$tmp_file

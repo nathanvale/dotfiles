@@ -1,4 +1,6 @@
-function github_create_pr_and_merge
+function github_create_pr_and_merge --description "Create a PR and merge it"
+
+    echo "Creating a GitHub PR and merging it..."
 
     set -l branch_name (__git.current_branch)
     set -l base_branch (__git.default_branch)
@@ -22,6 +24,7 @@ function github_create_pr_and_merge
         end
         set continue (string lower $continue)
         if test $continue != y
+            echo "GitHub PR creation and merge aborted."
             return
         end
     end
@@ -29,4 +32,5 @@ function github_create_pr_and_merge
     git push origin $branch_name
     set -l pull_request_url (gh pr create --base $base_branch --head $branch_name -f)
     gh pr merge $pull_request_url --merge -d
+    echo "GitHub PR created and merged successfully."
 end

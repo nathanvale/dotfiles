@@ -11,6 +11,13 @@ function github_create_pr_and_merge --description "Create a PR and merge it"
         return
     end
 
+    # Check if the current branch is behind its remote counterpart
+    set -l remote_diff (git rev-list --count origin/$branch_name..$branch_name)
+    if test $remote_diff -gt 0
+        echo "The current branch is $remote_diff commits behind its remote counterpart. No PR will be created. Please pull the latest changes from the remote branch and try again."
+        return
+    end
+
     # Check commit differences
     set -l commit_diff (git rev-list --count $base_branch..$branch_name)
     if test $commit_diff -eq 0
@@ -31,6 +38,12 @@ function github_create_pr_and_merge --description "Create a PR and merge it"
 
     git push origin $branch_name
     set -l pull_request_url (gh pr create --base $base_branch --head $branch_name -f)
+
+    if test $status -ne 0
+        echo "GitHub PR creation failed. Please check the error message above."
+        return
+    end
+
     gh pr merge $pull_request_url --merge -d
     echo "GitHub PR created and merged successfully."
 end

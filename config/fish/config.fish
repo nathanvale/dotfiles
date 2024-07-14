@@ -1,7 +1,5 @@
 set fish_greeting "Hello Nathan!"
 
-source ~/.iterm2_shell_integration.fish
-
 fzf_configure_bindings --directory=\cf --processes=\cp --variables=\cv -git_status=\cS --git_log=\cL
 
 
@@ -36,7 +34,7 @@ alias open_plugin_git_readme="open https://github.com/jhillyerd/plugin-git"
 # Bat is a better version of cat
 alias cat='bat'
 alias batn='bat -n' # Alias to show line numbers
-alias ghpr=github_create_pr_and_merge
+alias gcpr=github_create_pr_and_merge
 
 function man
     set tmp_file (mktemp)
@@ -169,6 +167,3 @@ function cd
 end
 
 load_nvm
-
-test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
-

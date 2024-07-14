@@ -1,5 +1,7 @@
 set fish_greeting "Hello Nathan!"
 
+source ~/.iterm2_shell_integration.fish
+
 fzf_configure_bindings --directory=\cf --processes=\cp --variables=\cv -git_status=\cS --git_log=\cL
 
 
@@ -167,3 +169,6 @@ function cd
 end
 
 load_nvm
+
+test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
+

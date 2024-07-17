@@ -1,10 +1,13 @@
 #!/bin/bash
 
-# Inline symlink configuration
-declare -A symlinks
-symlinks["${HOME}/.config"]="${HOME}/code/dotfiles/config"
-symlinks["${HOME}/Scripts"]="${HOME}/code/dotfiles/Scripts"
-symlinks["${HOME}/.bin"]="${HOME}/code/dotfiles/bin"
+# Define symlinks as an array of pairs
+symlinks=(
+	"${HOME}/.config|${HOME}/code/dotfiles/config"
+	"${HOME}/Scripts|${HOME}/code/dotfiles/Scripts"
+	"${HOME}/.bin|${HOME}/code/dotfiles/bin"
+	"${HOME}/.zprofile|${HOME}/code/dotfiles/.zprofile"
+	"${HOME}/.gitconfig|${HOME}/code/dotfiles/.gitconfig"
+)
 
 # Function to create symlink if it doesn't already exist or is incorrect
 create_symlink() {
@@ -28,8 +31,9 @@ create_symlink() {
 }
 
 # Iterate over the symlinks and create/update them
-for link_name in "${!symlinks[@]}"; do
-	target="${symlinks[$link_name]}"
+for entry in "${symlinks[@]}"; do
+	link_name="${entry%%|*}"
+	target="${entry##*|}"
 	create_symlink "$target" "$link_name"
 done
 

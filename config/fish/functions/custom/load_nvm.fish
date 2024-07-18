@@ -7,7 +7,7 @@ function load_nvm
         # Read the Node.js version specified in the .nvmrc file
         set nvm_version (cat $nvmrc_path)
         # Check if the Node.js version is already installed
-        nvm use $nvm_version -s
+        nvm use $nvm_version
         # If the Node.js version is not installed, install it 
         if test $status -ne 0
             nvm install $npm_version

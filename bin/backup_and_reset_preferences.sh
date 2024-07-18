@@ -1,21 +1,7 @@
-# /bin/bash
+#!/bin/bash
 
-# Script Name: backup_reset_restore_preferences.sh
-# Description: Backs up all macOS user preferences to a timestamped directory
-# within a main PreferencesBackup directory,
-# resets all preferences to their default state, and then runs a user-defined
-# script to apply specific settings.
-
-# Function to log messages
 log_message() {
 	echo "$(date +"%Y-%m-%d %H:%M:%S") - $1" | tee -a "$log_file"
-}
-
-# Function to copy a file and preserve permissions
-copy_with_permissions() {
-	src=$1
-	dst=$2
-	cp "$src" "$dst"
 }
 
 # Function to check if plist file is empty
@@ -62,7 +48,7 @@ for domain in "${domainArray[@]}"; do
 	if [ -f "$plist_file" ]; then
 		if ! is_plist_empty "$plist_file"; then
 			log_message "Backing up preferences for domain: $domain"
-			copy_with_permissions "$plist_file" "$current_backup_dir/$(basename $plist_file)"
+			cp "$plist_file" "$current_backup_dir/$(basename $plist_file)"
 			log_message "Resetting preferences for domain: $domain"
 			defaults delete "$domain" || log_message "Failed to delete preferences for $domain"
 		else

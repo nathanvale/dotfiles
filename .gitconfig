@@ -99,7 +99,8 @@
 
 [push]
     default = current
+	autoSetupRemote = true
 
 [user]
-	email = nathan.vale@origin.com.au
 	name = Nathan Vale
+	email = hi@nathanvale.com

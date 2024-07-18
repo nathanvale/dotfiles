@@ -1,1 +1,3 @@
-export PATH="$HOME/.bin:$PATH"
+if [ -f ~/.zshrc ]; then
+    source ~/.zshrc
+fi

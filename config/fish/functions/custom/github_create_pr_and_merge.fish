@@ -13,6 +13,10 @@ function github_create_pr_and_merge --description "Create a PR and merge it"
 
     # Check if the current branch is behind its remote counterpart
     set -l remote_diff (git rev-list --count origin/$branch_name..$branch_name)
+    if test $status -ne 0
+        echo "Failed to check the difference between the current branch and its remote counterpart. Please check the error message above."
+        return
+    end
     if test $remote_diff -gt 0
         echo "The current branch is $remote_diff commits behind its remote counterpart. No PR will be created. Please pull the latest changes from the remote branch and try again."
         return

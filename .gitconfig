@@ -101,5 +101,5 @@
     default = current
 
 [user]
-    email = nathan.vale@origin.com.au
-    name = Nathan Vale
+	email = nathan.vale@origin.com.au
+	name = Nathan Vale

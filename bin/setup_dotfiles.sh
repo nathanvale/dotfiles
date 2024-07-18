@@ -176,71 +176,51 @@ defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
 defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
 
 # Safari
-# Uncomment and set these settings if needed
-# # Disable sending search queries to Apple
-# defaults write com.apple.Safari UniversalSearchEnabled -bool false
-# defaults write com.apple.Safari SuppressSearchSuggestions -bool true
-# # Enable continuous spellchecking
-# defaults write com.apple.Safari WebContinuousSpellCheckingEnabled -bool true
-# # Disable auto-correct
-# defaults write com.apple.Safari WebAutomaticSpellingCorrectionEnabled -bool
-# false
-# # Set Safari’s home page to `about:blank` for faster loading
-# defaults write com.apple.Safari HomePage -string "about:blank"
-# # Prevent Safari from opening ‘safe’ files automatically after
-# downloading
-# defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
-# # Allow hitting the Backspace key to go to the previous page in history
-# defaults write com.apple.Safari
-# com.apple.Safari.ContentPageGroupIdentifier.WebKit2BackspaceKeyNavigationEnabled
-# -bool true
-# # Enable Safari’s debug menu
-# defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
-# # Make Safari’s search banners default to Contains instead of Starts With
-# defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false
-# # Remove useless icons from Safari’s bookmarks bar
-# defaults write com.apple.Safari ProxiesInBookmarksBar "()"
-# # Enable the Develop menu and the Web Inspector in Safari
-# defaults write com.apple.Safari IncludeDevelopMenu -bool true
-# defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey
-# -bool true
-# defaults write com.apple.Safari
-# com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled
-# -bool true
-# # Warn about fraudulent websites
-# defaults write com.apple.Safari WarnAboutFraudulentWebsites -bool true
-# # Disable plug-ins
-# defaults write com.apple.Safari WebKitPluginsEnabled -bool false
-# defaults write com.apple.Safari
-# com.apple.Safari.ContentPageGroupIdentifier.WebKit2PluginsEnabled -bool
-# false
-# # Disable Java
-# defaults write com.apple.Safari WebKitJavaEnabled -bool false
-# defaults write com.apple.Safari
-# com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabled -bool false
-# # Block pop-up windows
-# defaults write com.apple.Safari WebKitJavaScriptCanOpenWindowsAutomatically
-# -bool false
-# defaults write com.apple.Safari
-# com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaScriptCanOpenWindowsAutomatically
-# -bool false
-# # Disable auto-playing video
-# defaults write com.apple.Safari WebKitMediaPlaybackAllowsInline -bool false
-# defaults write com.apple.SafariTechnologyPreview
-# WebKitMediaPlaybackAllowsInline -bool false
-# defaults write com.apple.Safari
-# com.apple.Safari.ContentPageGroupIdentifier.WebKit2AllowsInlineMediaPlayback
-# -bool false
-# defaults write com.apple.SafariTechnologyPreview
-# com.apple.Safari.ContentPageGroupIdentifier.WebKit2AllowsInlineMediaPlayback
-# -bool false
-# # Enable “Do Not Track”
-# defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
-# # Update extensions automatically
-# defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool
-# true
-# # Show the full URL in the address bar (note: this still hides the scheme)
-# defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
+# Disable sending search queries to Apple
+defaults write com.apple.Safari UniversalSearchEnabled -bool false
+defaults write com.apple.Safari SuppressSearchSuggestions -bool true
+# Enable continuous spellchecking
+defaults write com.apple.Safari WebContinuousSpellCheckingEnabled -bool true
+# Disable auto-correct
+defaults write com.apple.Safari WebAutomaticSpellingCorrectionEnabled -bool false
+# Set Safari’s home page to `about:blank` for faster loading
+defaults write com.apple.Safari HomePage -string "about:blank"
+# Prevent Safari from opening ‘safe’ files automatically after downloading
+defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
+# Allow hitting the Backspace key to go to the previous page in history
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2BackspaceKeyNavigationEnabled -bool true
+# Enable Safari’s debug menu
+defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
+# Make Safari’s search banners default to Contains instead of Starts With
+defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false
+# Remove useless icons from Safari’s bookmarks bar
+defaults write com.apple.Safari ProxiesInBookmarksBar "()"
+# Enable the Develop menu and the Web Inspector in Safari
+defaults write com.apple.Safari IncludeDevelopMenu -bool true
+defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true
+# Warn about fraudulent websites
+defaults write com.apple.Safari WarnAboutFraudulentWebsites -bool true
+# Disable plug-ins
+defaults write com.apple.Safari WebKitPluginsEnabled -bool false
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2PluginsEnabled -bool false
+# Disable Java
+defaults write com.apple.Safari WebKitJavaEnabled -bool false
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabled -bool false
+# Block pop-up windows
+defaults write com.apple.Safari WebKitJavaScriptCanOpenWindowsAutomatically -bool false
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaScriptCanOpenWindowsAutomatically -bool false
+# Disable auto-playing video
+defaults write com.apple.Safari WebKitMediaPlaybackAllowsInline -bool false
+defaults write com.apple.SafariTechnologyPreview WebKitMediaPlaybackAllowsInline -bool false
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2AllowsInlineMediaPlayback -bool false
+defaults write com.apple.SafariTechnologyPreview com.apple.Safari.ContentPageGroupIdentifier.WebKit2AllowsInlineMediaPlayback -bool false
+# Enable “Do Not Track”
+defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
+# Update extensions automatically
+defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true
+# Show the full URL in the address bar (note: this still hides the scheme)
+defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
 
 # Screenshots
 # Save screenshots in PNG format (other options: BMP, GIF, JPG, PDF, TIFF)
@@ -264,13 +244,6 @@ defaults write com.apple.commerce AutoUpdate -bool true
 # Disallow the App Store to reboot machine on macOS updates
 defaults write com.apple.commerce AutoUpdateRestartRequired -bool false
 
-# Spotlight
-# Uncomment the following lines if needed to hide Spotlight tray icon
-# sudo chmod 600
-# /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
-# sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array
-# "/Volumes"
-
 # Terminal
 # Only use UTF-8 in Terminal.app
 defaults write com.apple.terminal StringEncodings -array 4
@@ -280,18 +253,14 @@ defaults write com.apple.terminal StringEncodings -array 4
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 
 # Universal Access
-# Uncomment and set these settings if needed
-# # Minimize the motion effects across macOS, including transitions when
-# switching between spaces (desktops)
-# defaults write com.apple.universalaccess reduceMotion -bool true
-# # Use scroll gesture with the Ctrl (^) modifier key to zoom
-# defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool
-# true
-# defaults write com.apple.universalaccess HIDScrollZoomModifierMask -int
-# 262144
+# Minimize the motion effects across macOS, including transitions when switching between spaces (desktops)
+defaults write com.apple.universalaccess reduceMotion -bool true
+# Use scroll gesture with the Ctrl (^) modifier key to zoom
+defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool true
+defaults write com.apple.universalaccess HIDScrollZoomModifierMask -int 262144
 
-# Remove duplicates in the "Open With" menu
-/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
+# keyboard settions
+defaults write -g com.apple.keyboard.fnState -bool true
 
 # Show the ~/Library folder
 chflags nohidden ~/Library

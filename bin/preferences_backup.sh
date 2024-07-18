@@ -35,39 +35,21 @@ domains=$(defaults domains)
 IFS=', ' read -r -a domainArray <<<"$domains"
 
 # Confirmation prompt
-read -p "Are you sure you want to reset all preferences? This action cannot be undone. (yes/no): " confirm
+read -p "Are you sure you want to backup all the preferences? (yes/no): " confirm
 if [ "$confirm" != "yes" ]; then
 	log_message "Operation cancelled by user."
 	exit 1
 fi
 
-# Loop through each domain and back up and reset preferences
+# Loop through each domain and back up preferences
 for domain in "${domainArray[@]}"; do
 	plist_file="$HOME/Library/Preferences/$domain.plist"
-
 	if [ -f "$plist_file" ]; then
-		if ! is_plist_empty "$plist_file"; then
-			log_message "Backing up preferences for domain: $domain"
-			cp "$plist_file" "$current_backup_dir/$(basename $plist_file)"
-			log_message "Resetting preferences for domain: $domain"
-			defaults delete "$domain" || log_message "Failed to delete preferences for $domain"
-		else
-			log_message "Plist file for domain: $domain is empty, skipping backup and reset."
-		fi
+		log_message "Backing up preferences for domain: $domain"
+		cp "$plist_file" "$current_backup_dir/$(basename $plist_file)"
 	else
 		log_message "No preferences file found for domain: $domain, skipping backup and reset."
 	fi
 done
 
 log_message "Preferences have been backed up to $current_backup_dir and reset."
-
-# Run user-defined script to apply specific settings
-user_defined_script="$HOME/code/dotfiles/bin/setup_dotfiles.sh"
-if [ -f "$user_defined_script" ]; then
-	log_message "Running user-defined script to apply specific settings"
-	bash "$user_defined_script" || log_message "Failed to run user-defined script"
-else
-	log_message "User-defined script not found"
-fi
-
-log_message "All specified preferences have been reset to their default state and specific settings have been applied."

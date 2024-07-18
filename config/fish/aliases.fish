@@ -29,6 +29,7 @@ abbr -a ghpr github_create_pr_and_merge
 
 abbr -a ls "eza --color=always --icons"
 abbr -a ll "eza -l --color=always --icons"
+abbr -a lla "eza -l -a --color=always --icons"
 abbr -a la "eza -a --color=always --icons"
 abbr -a lt "eza --tree --color=always --icons"
 

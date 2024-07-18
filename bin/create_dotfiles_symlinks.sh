@@ -6,7 +6,9 @@ symlinks=(
 	"${HOME}/Scripts|${HOME}/code/dotfiles/Scripts"
 	"${HOME}/.bin|${HOME}/code/dotfiles/bin"
 	"${HOME}/.zprofile|${HOME}/code/dotfiles/.zprofile"
+	"${HOME}/.zshrc|${HOME}/code/dotfiles/.zshrc"
 	"${HOME}/.gitconfig|${HOME}/code/dotfiles/.gitconfig"
+	"${HOME}/.gitignore_global|${HOME}/code/dotfiles/.gitignore_global"
 )
 
 # Function to create symlink if it doesn't already exist or is incorrect

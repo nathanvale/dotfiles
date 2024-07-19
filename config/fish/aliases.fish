@@ -25,7 +25,9 @@ abbr -a de "cd ~/Desktop"
 abbr -a d "cd ~/code"
 abbr -a cat bat
 abbr -a batn "bat -n"
-abbr -a ghpr github_create_pr_and_merge
+abbr -a ghpr gh_create_pr_and_merge
+abbr -a ghli "gh auth login"
+abbr -a ghlo "gh auth logout"
 
 abbr -a ls "eza --color=always --icons"
 abbr -a ll "eza -l --color=always --icons"

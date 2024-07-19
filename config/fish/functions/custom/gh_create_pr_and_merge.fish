@@ -1,4 +1,4 @@
-function github_create_pr_and_merge --description "Create a PR and merge it"
+function gh_create_pr_and_merge --description "Create a PR and merge it"
 
     echo "Creating a GitHub PR and merging it..."
 

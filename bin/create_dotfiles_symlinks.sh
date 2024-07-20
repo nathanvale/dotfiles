@@ -9,6 +9,7 @@ symlinks=(
 	"${HOME}/.zshrc|${HOME}/code/dotfiles/.zshrc"
 	"${HOME}/.gitconfig|${HOME}/code/dotfiles/.gitconfig"
 	"${HOME}/.gitignore_global|${HOME}/code/dotfiles/.gitignore_global"
+	"${HOME}/Library/LaunchAgents|${HOME}/code/dotfiles/LaunchAgents"
 )
 
 # Function to create symlink if it doesn't already exist or is incorrect

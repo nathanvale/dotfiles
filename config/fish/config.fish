@@ -2,6 +2,9 @@ if status is-interactive
     source ~/.config/fish/env_vars.fish
     source ~/.config/fish/aliases.fish
 
+    # Load nvm using bass
+    bass source (brew --prefix nvm)/nvm.sh --no-use
+
     # Source the iterm2 shell integration if it exists
     test -e {$HOME}/.iterm2_shell_integration.fish; and source {$HOME}/.iterm2_shell_integration.fish
 

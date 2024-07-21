@@ -40,3 +40,5 @@ abbr -a mv gmv
 
 abbr -a less bat
 abbr -a cat "bat --paging=never"
+
+alias -s cd="custom_cd"

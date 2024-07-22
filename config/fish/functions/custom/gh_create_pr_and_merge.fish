@@ -49,5 +49,15 @@ function gh_create_pr_and_merge --description "Create a PR and merge it"
     end
 
     gh pr merge $pull_request_url --merge -d
+
+    if test $status -ne 0
+        echo "GitHub PR merge failed. Please check the error message above."
+        return
+    end
+
+    git branch --unset-upstream $branch_name
+
+
+
     echo "GitHub PR created and merged successfully."
 end

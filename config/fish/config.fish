@@ -18,6 +18,9 @@ if status is-interactive
     # Bindings for fzf
     fzf_configure_bindings --directory=\cf --processes=\cp --variables=\cv --git_status=\cS --git_log=\cl
 
-
+    # Source work configuration if using my work laptop
+    if test (hostname) = ORG101475
+        source ~/.config/fish/work_laptop.fish
+    end
 
 end

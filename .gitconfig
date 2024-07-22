@@ -104,3 +104,5 @@
 [user]
 	name = Nathan Vale
 	email = hi@nathanvale.com
+[fetch]
+	prune = true

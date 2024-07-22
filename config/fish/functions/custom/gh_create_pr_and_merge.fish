@@ -11,6 +11,13 @@ function gh_create_pr_and_merge --description "Create a PR and merge it"
         return
     end
 
+    # Check if the branch has been pushed to the remote
+    set -l remote_branch_exists (git rev-parse --verify origin/$branch_name 2>/dev/null)
+    if test -z "$remote_branch_exists"
+        echo "The current branch has not been pushed to the remote. Please push the branch and try again."
+        return
+    end
+
     # Check if the current branch is behind its remote counterpart
     set -l remote_diff (git rev-list --count origin/$branch_name..$branch_name)
     if test $status -ne 0
@@ -55,9 +62,7 @@ function gh_create_pr_and_merge --description "Create a PR and merge it"
         return
     end
 
-    git branch --unset-upstream $branch_name
-
-
+    git fetch origin --prune
 
     echo "GitHub PR created and merged successfully."
 end

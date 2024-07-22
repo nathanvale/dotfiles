@@ -1,4 +1,4 @@
-function custom_cd
+function cd
     builtin cd $argv
     load_nvm
 end

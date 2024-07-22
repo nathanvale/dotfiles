@@ -21,12 +21,8 @@ end
 # sets the Git user name and email to "Nathan Vale" and
 # "nathan.vale@origin.com.au" respectively.
 function cd
-    if functions -q custom_cd
-        custom_cd $argv
-    else
-        builtin cd $argv
-    end
-
+    builtin cd $argv
+    load_nvm
     # Check if the directory is a Git repository
     if git rev-parse --is-inside-work-tree >/dev/null 2>&1
         # Check if the repository is the dotfiles repository

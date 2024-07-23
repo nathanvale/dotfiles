@@ -53,7 +53,6 @@ set -gx EDITOR code
 
 set -gx PATH bin $PATH
 set -gx PATH ~/.bin $PATH
-set -gx PATH /opt/homebrew/bin $PATH
 set -gx PATH node_modules/.bin $PATH
 set -gx PATH ~/Library/Python/3.9/bin $PATH
 
@@ -103,6 +102,9 @@ set -U fish_color_valid_path '#D8DEEA'
 set -U fish_color_white '#D7DEEA'
 
 set -gx FD_OPTIONS "--color=always"
+
+# HOMEBREW PATHS
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # HOMEBREW_BUNDLE_FILE_GLOBAL
 set -gx HOMEBREW_BUNDLE_FILE_GLOBAL ~/.config/brew/Brewfile

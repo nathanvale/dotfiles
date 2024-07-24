@@ -1,8 +1,10 @@
 #!/bin/bash
 
+# Exit immediately if a command exits with a non-zero status
+set -e
+
 # Define the URLs of the scripts to download in the required order
 script_urls=(
-    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/check_shell.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/brew_install.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/brew_bundle.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/dotfiles_install.sh"
@@ -53,8 +55,11 @@ done
 
 # Create run_downloaded_scripts.sh script
 run_script="$tmp_dir/run_downloaded_scripts.sh"
-cat <<EOF > "$run_script"
+cat <<EOF >"$run_script"
 #!/bin/bash
+
+# Exit immediately if a command exits with a non-zero status
+set -e
 
 # Execute each script in the order they were downloaded
 script_names=(

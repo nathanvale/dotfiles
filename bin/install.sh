@@ -1,21 +1,21 @@
 #!/bin/bash
 
-# Define the URLs of the scripts to download and their respective parameters
-scripts=(
-    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/check_shell.sh|"
-    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/brew_install.sh|"
-    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/brew_bundle.sh|"
-    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/dotfiles_install.sh|"
-    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/manage_symlinks.sh|"
+# Define the URLs of the scripts to download in the required order
+script_urls=(
+    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/check_shell.sh"
+    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/brew_install.sh"
+    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/brew_bundle.sh"
+    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/dotfiles_install.sh"
+    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/manage_symlinks.sh"
 )
 
 # Create a temporary directory to store the downloaded scripts
 tmp_dir=$(mktemp -d)
+echo "Scripts will be downloaded to $tmp_dir"
 
-# Function to download and execute scripts
-download_and_execute() {
+# Function to download scripts
+download_scripts() {
     local url=$1
-    local params=$2
     local tmp_file="$tmp_dir/$(basename "$url")"
 
     # Determine whether to use the Authorization header
@@ -41,28 +41,50 @@ download_and_execute() {
 
     # Make the script executable
     chmod +x "$tmp_file"
-
-    # Execute the script with parameters if provided
-    if [ -n "$params" ]; then
-        echo "Executing $tmp_file with params: $params"
-        "$tmp_file" $params
-    else
-        echo "Executing $tmp_file without params"
-        "$tmp_file"
-    fi
 }
 
 # Export GITHUB_TOKEN variable to be available for the child processes
 export GITHUB_TOKEN
 
-# Iterate over the scripts array and process each script with its parameters
-for entry in "${scripts[@]}"; do
-    url="${entry%%|*}"
-    params="${entry##*|}"
-    download_and_execute "$url" "$params"
+# Download each script
+for url in "${script_urls[@]}"; do
+    download_scripts "$url"
+done
+
+# Create run_downloaded_scripts.sh script
+run_script="$tmp_dir/run_downloaded_scripts.sh"
+cat <<EOF > "$run_script"
+#!/bin/bash
+
+# Execute each script in the order they were downloaded
+script_names=(
+    $(for url in "${script_urls[@]}"; do echo "\"$(basename "$url")\""; done | tr '\n' ' ')
+)
+
+tmp_dir="$tmp_dir"
+
+# Iterate over the script names and execute each
+for script in "\${script_names[@]}"; do
+    script_path="\$tmp_dir/\$script"
+    if [[ -x "\$script_path" ]]; then
+        echo "Executing \$script_path"
+        "\$script_path"
+    else
+        echo "Script \$script_path is not executable or not found."
+        exit 1
+    fi
 done
 
 # Cleanup: remove the temporary directory
-rm -rf "$tmp_dir"
+rm -rf "\$tmp_dir"
 
 echo "All scripts executed successfully."
+EOF
+
+# Make the run_downloaded_scripts.sh script executable
+chmod +x "$run_script"
+
+# Inform the user how to run the scripts
+echo "All scripts downloaded to $tmp_dir"
+echo "To execute the scripts, run:"
+echo "$run_script"

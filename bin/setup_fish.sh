@@ -12,10 +12,10 @@ else
 fi
 
 # Change the default shell to Fish
-chsh -s $FISH_PATH $(whoami)
+sudo chsh -s $FISH_PATH $(whoami)
 
 # Print confirmation message
 echo "Fish shell is now installed and set as the default shell."
 
 # Optionally start Fish shell immediately
-$FISH_PATH
+exec $FISH_PATH

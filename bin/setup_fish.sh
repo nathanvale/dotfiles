@@ -12,7 +12,7 @@ else
 fi
 
 # Change the default shell to Fish
-chsh -s $FISH_PATH
+chsh -s $FISH_PATH $(whoami)
 
 # Print confirmation message
 echo "Fish shell is now installed and set as the default shell."

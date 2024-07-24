@@ -4,6 +4,10 @@ set -e
 
 echo "Starting Homebrew bundle..."
 
+# Temporarily add Homebrew to PATH
+BREW_PATH="/opt/homebrew/bin"
+export PATH="$BREW_PATH:$PATH"
+
 # Define the URL of the Brewfile
 BREWFILE_URL="https://raw.githubusercontent.com/nathanvale/dotfiles/master/config/brew/Brewfile"
 
@@ -14,7 +18,7 @@ TEMP_BREWFILE=$(mktemp)
 cleanup() {
   echo "Cleaning up..."
   rm -f "$TEMP_BREWFILE"
-  /opt/homebrew/bin/brew cleanup
+  brew cleanup
 }
 
 # Register the cleanup function to be called on exit and on specific signals
@@ -50,7 +54,7 @@ fi
 # Run brew bundle with the downloaded Brewfile
 echo "Running brew bundle..."
 
-if ! /opt/homebrew/bin/brew bundle --file=$TEMP_BREWFILE; then
+if ! brew bundle --file=$TEMP_BREWFILE; then
   echo "Failed to run brew bundle."
   # Ask to contnue with installation anyway
   read -p "Do you want to continue with the installation anyway? (y/n) " -n 1 -r

@@ -5,10 +5,12 @@ set -e
 
 # Define the URLs of the scripts to download in the required order
 script_urls=(
+    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/check_shell.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/brew_install.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/brew_bundle.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/dotfiles_install.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/manage_symlinks.sh"
+    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/setup_fish.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/macos_preferences.sh"
 )
 

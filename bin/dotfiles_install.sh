@@ -13,7 +13,7 @@ REPO_URL="nathanvale/dotfiles"
 CLONE_DIR="$HOME/code/dotfiles"
 SSH_CONFIG_CLEANUP_REQUIRED=false
 
-// GH wont login if this key exists
+# GH wont login if this key exists
 unset GITHUB_TOKEN
 
 # Temporarily add GitHub CLI to PATH

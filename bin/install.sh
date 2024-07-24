@@ -5,14 +5,14 @@ set -e
 
 # Define the URLs of the scripts to download in the required order
 script_urls=(
-    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/check_shell.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/brew_install.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/brew_bundle.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/dotfiles_install.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/manage_symlinks.sh"
+    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/macos_preferences.sh"
 )
 
-tmp_dir="/tmp/dot-files-setup-scripts-$(date +%Y%m%d%H%M%S)"
+tmp_dir="/tmp/setup-scripts-$(date +%Y%m%d%H%M%S)"
 mkdir -p "$tmp_dir"
 echo "Scripts will be downloaded to $tmp_dir"
 
@@ -46,6 +46,14 @@ download_scripts() {
     chmod +x "$tmp_file"
 }
 
+# Cleanup function to delete the temporary directory
+cleanup() {
+    echo "Cleaning up temporary files..."
+    rm -rf "$tmp_dir"
+}
+# Register the cleanup function to be called on exit and on specific signals
+trap cleanup EXIT HUP INT QUIT TERM
+
 # Export GITHUB_TOKEN variable to be available for the child processes
 export GITHUB_TOKEN
 
@@ -61,6 +69,14 @@ cat <<EOF >"$run_script"
 
 # Exit immediately if a command exits with a non-zero status
 set -e
+
+# Cleanup function to delete the temporary directory
+cleanup() {
+    echo "Cleaning up temporary files..."
+    rm -rf "$tmp_dir"
+}
+# Register the cleanup function to be called on exit and on specific signals
+trap cleanup EXIT HUP INT QUIT TERM
 
 # Execute each script in the order they were downloaded
 script_names=(

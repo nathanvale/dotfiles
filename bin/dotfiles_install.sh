@@ -13,6 +13,8 @@ REPO_URL="nathanvale/dotfiles"
 CLONE_DIR="$HOME/code/dotfiles"
 SSH_CONFIG_CLEANUP_REQUIRED=false
 
+unset GITHUB_TOKEN
+
 cleanup() {
     if [ "$SSH_CONFIG_CLEANUP_REQUIRED" = true ]; then
         echo "Cleaning up generated SSH key..."

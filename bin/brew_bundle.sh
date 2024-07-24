@@ -52,8 +52,14 @@ echo "Running brew bundle..."
 /opt/homebrew/bin/brew bundle --file=$TEMP_BREWFILE
 if [ $? -ne 0 ]; then
   echo "Failed to run brew bundle."
-  cleanup
-  exit 1
+
+  # Ask to contnue with installation anyway
+  read -p "Do you want to continue with the installation anyway? (y/n) " -n 1 -r
+
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    cleanup
+    exit 1
+  fi
 fi
 
 cleanup

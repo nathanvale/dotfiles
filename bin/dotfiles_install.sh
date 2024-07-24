@@ -10,7 +10,7 @@ SSH_CONFIG_FILE="$HOME/.ssh/config"
 GITHUB_HOSTNAME="github.com"
 GITHUB_SCOPES="admin:public_key,admin:ssh_signing_key"
 REPO_URL="nathanvale/dotfiles"
-CLONE_DIR="$HOME/code/dotfiles2"
+CLONE_DIR="$HOME/code/dotfiles"
 SSH_CONFIG_CLEANUP_REQUIRED=false
 
 cleanup() {

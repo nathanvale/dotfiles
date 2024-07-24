@@ -39,7 +39,8 @@ download_scripts() {
     # Check if the download was successful
     if [ "$status_code" -ne 200 ]; then
         echo "Failed to download $url (status code: $status_code)"
-        return 1
+        cleanup
+        exit 1
     fi
 
     # Make the script executable
@@ -52,7 +53,7 @@ cleanup() {
     rm -rf "$tmp_dir"
 }
 # Register the cleanup function to be called on exit and on specific signals
-trap cleanup EXIT HUP INT QUIT TERM
+trap cleanup HUP INT QUIT TERM
 
 # Export GITHUB_TOKEN variable to be available for the child processes
 export GITHUB_TOKEN
@@ -97,8 +98,6 @@ for script in "\${script_names[@]}"; do
     fi
 done
 
-# Cleanup: remove the temporary directory
-rm -rf "\$tmp_dir"
 
 echo "All scripts executed successfully."
 EOF

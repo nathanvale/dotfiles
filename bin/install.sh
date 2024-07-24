@@ -5,7 +5,7 @@ scripts=(
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/check_shell.sh|"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/brew_install.sh|"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/brew_bundle.sh|"
-    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/dotfiles.sh|"
+    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/dotfiles_install.sh|"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/manage_symlinks.sh|"
 )
 

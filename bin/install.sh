@@ -49,7 +49,6 @@ download_scripts() {
 
 # Cleanup function to delete the temporary directory
 cleanup() {
-    echo "Cleaning up temporary files..."
     rm -rf "$tmp_dir"
 }
 # Register the cleanup function to be called on exit and on specific signals
@@ -73,7 +72,6 @@ set -e
 
 # Cleanup function to delete the temporary directory
 cleanup() {
-    echo "Cleaning up temporary files..."
     rm -rf "$tmp_dir"
 }
 # Register the cleanup function to be called on exit and on specific signals

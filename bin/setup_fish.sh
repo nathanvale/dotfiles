@@ -20,4 +20,4 @@ sudo chsh -s $FISH_PATH $(whoami)
 echo "Fish shell is now installed and set as the default shell."
 
 # Optionally start Fish shell immediately
-exec $FISH_PATH
+echo "Run 'exec $FISH_PATH' to start Fish shell immediately."

@@ -10,8 +10,8 @@ script_urls=(
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/brew_bundle.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/dotfiles_install.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/manage_symlinks.sh"
-    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/setup_fish.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/macos_preferences.sh"
+    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/setup_fish.sh"
 )
 
 tmp_dir="/tmp/setup-scripts-$(date +%Y%m%d%H%M%S)"

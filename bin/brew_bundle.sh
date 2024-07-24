@@ -16,7 +16,6 @@ TEMP_BREWFILE=$(mktemp)
 
 # Define the cleanup function
 cleanup() {
-  echo "Cleaning up..."
   rm -f "$TEMP_BREWFILE"
   brew cleanup
 }

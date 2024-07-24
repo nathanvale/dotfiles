@@ -5,8 +5,11 @@ parent_shell=$(ps -o comm= -p $(ps -o ppid= -p $$))
 
 echo "Parent shell: $parent_shell"
 
+# Normalize the parent shell name to just the base name
+parent_shell_basename=$(basename "$parent_shell")
+
 # Check if the parent shell is bash or zsh
-if [[ "$parent_shell" == "bash" ]] || [[ "$parent_shell" == "zsh" ]]; then
+if [[ "$parent_shell_basename" == "bash" ]] || [[ "$parent_shell_basename" == "zsh" ]]; then
     echo "Script is being run in bash or zsh."
 else
     echo "Error: This script must be run from a bash or zsh session."

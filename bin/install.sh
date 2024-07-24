@@ -39,6 +39,12 @@ download_scripts() {
     # Check if the download was successful
     if [ "$status_code" -ne 200 ]; then
         echo "Failed to download $url (status code: $status_code)"
+        # Check if the GITHUB_TOKEN environment variable is not set
+        if [ -z "$auth_header" ]; then
+            echo "Make sure to set the GITHUB_TOKEN environment variable if $url exists in a private repo."
+            echo "For public repos, you can ignore this message."
+            echo "export GITHUB_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        fi
         cleanup
         exit 1
     fi
@@ -74,8 +80,8 @@ set -e
 cleanup() {
     rm -rf "$tmp_dir"
 }
-# Register the cleanup function to be called on exit and on specific signals
-trap cleanup EXIT HUP INT QUIT TERM
+# Register the cleanup function to be called on exit
+trap cleanup EXIT
 
 # Execute each script in the order they were downloaded
 script_names=(

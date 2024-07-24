@@ -347,9 +347,7 @@
                 "from": {
                   "key_code": "h",
                   "modifiers": {
-                    "mandatory": [
-                      "right_command"
-                    ]
+                    "mandatory": ["right_command"]
                   }
                 },
                 "to": [
@@ -363,9 +361,7 @@
                 "from": {
                   "key_code": "j",
                   "modifiers": {
-                    "mandatory": [
-                      "right_command"
-                    ]
+                    "mandatory": ["right_command"]
                   }
                 },
                 "to": [
@@ -379,9 +375,7 @@
                 "from": {
                   "key_code": "k",
                   "modifiers": {
-                    "mandatory": [
-                      "right_command"
-                    ]
+                    "mandatory": ["right_command"]
                   }
                 },
                 "to": [
@@ -395,9 +389,7 @@
                 "from": {
                   "key_code": "l",
                   "modifiers": {
-                    "mandatory": [
-                      "right_command"
-                    ]
+                    "mandatory": ["right_command"]
                   }
                 },
                 "to": [
@@ -416,10 +408,7 @@
                 "from": {
                   "key_code": "q",
                   "modifiers": {
-                    "mandatory": [
-                      "left_control",
-                      "command"
-                    ]
+                    "mandatory": ["left_control", "command"]
                   }
                 },
                 "to": [
@@ -433,10 +422,7 @@
                 "from": {
                   "key_code": "s",
                   "modifiers": {
-                    "mandatory": [
-                      "left_control",
-                      "command"
-                    ]
+                    "mandatory": ["left_control", "command"]
                   }
                 },
                 "to": [
@@ -450,10 +436,7 @@
                 "from": {
                   "key_code": "r",
                   "modifiers": {
-                    "mandatory": [
-                      "left_control",
-                      "command"
-                    ]
+                    "mandatory": ["left_control", "command"]
                   }
                 },
                 "to": [
@@ -472,10 +455,7 @@
                 "from": {
                   "key_code": "c",
                   "modifiers": {
-                    "mandatory": [
-                      "command",
-                      "control"
-                    ]
+                    "mandatory": ["command", "control"]
                   }
                 },
                 "to": [
@@ -494,10 +474,7 @@
                 "from": {
                   "key_code": "m",
                   "modifiers": {
-                    "mandatory": [
-                      "command",
-                      "control"
-                    ]
+                    "mandatory": ["command", "control"]
                   }
                 },
                 "to": [
@@ -516,10 +493,7 @@
                 "from": {
                   "key_code": "0",
                   "modifiers": {
-                    "mandatory": [
-                      "command",
-                      "control"
-                    ]
+                    "mandatory": ["command", "control"]
                   }
                 },
                 "to": [
@@ -538,10 +512,7 @@
                 "from": {
                   "key_code": "h",
                   "modifiers": {
-                    "mandatory": [
-                      "command",
-                      "control"
-                    ]
+                    "mandatory": ["command", "control"]
                   }
                 },
                 "to": [
@@ -555,10 +526,7 @@
                 "from": {
                   "key_code": "j",
                   "modifiers": {
-                    "mandatory": [
-                      "command",
-                      "control"
-                    ]
+                    "mandatory": ["command", "control"]
                   }
                 },
                 "to": [
@@ -572,10 +540,7 @@
                 "from": {
                   "key_code": "k",
                   "modifiers": {
-                    "mandatory": [
-                      "command",
-                      "control"
-                    ]
+                    "mandatory": ["command", "control"]
                   }
                 },
                 "to": [
@@ -589,10 +554,7 @@
                 "from": {
                   "key_code": "l",
                   "modifiers": {
-                    "mandatory": [
-                      "command",
-                      "control"
-                    ]
+                    "mandatory": ["command", "control"]
                   }
                 },
                 "to": [
@@ -611,10 +573,7 @@
                 "from": {
                   "key_code": "1",
                   "modifiers": {
-                    "mandatory": [
-                      "left_control",
-                      "right_shift"
-                    ]
+                    "mandatory": ["left_control", "right_shift"]
                   }
                 },
                 "to": [
@@ -628,10 +587,7 @@
                 "from": {
                   "key_code": "2",
                   "modifiers": {
-                    "mandatory": [
-                      "left_control",
-                      "right_shift"
-                    ]
+                    "mandatory": ["left_control", "right_shift"]
                   }
                 },
                 "to": [
@@ -645,10 +601,7 @@
                 "from": {
                   "key_code": "3",
                   "modifiers": {
-                    "mandatory": [
-                      "left_control",
-                      "right_shift"
-                    ]
+                    "mandatory": ["left_control", "right_shift"]
                   }
                 },
                 "to": [
@@ -662,10 +615,7 @@
                 "from": {
                   "key_code": "4",
                   "modifiers": {
-                    "mandatory": [
-                      "left_control",
-                      "right_shift"
-                    ]
+                    "mandatory": ["left_control", "right_shift"]
                   }
                 },
                 "to": [
@@ -679,10 +629,7 @@
                 "from": {
                   "key_code": "5",
                   "modifiers": {
-                    "mandatory": [
-                      "left_control",
-                      "right_shift"
-                    ]
+                    "mandatory": ["left_control", "right_shift"]
                   }
                 },
                 "to": [
@@ -696,10 +643,7 @@
                 "from": {
                   "key_code": "6",
                   "modifiers": {
-                    "mandatory": [
-                      "left_control",
-                      "right_shift"
-                    ]
+                    "mandatory": ["left_control", "right_shift"]
                   }
                 },
                 "to": [
@@ -713,10 +657,7 @@
                 "from": {
                   "key_code": "7",
                   "modifiers": {
-                    "mandatory": [
-                      "left_control",
-                      "right_shift"
-                    ]
+                    "mandatory": ["left_control", "right_shift"]
                   }
                 },
                 "to": [
@@ -730,10 +671,7 @@
                 "from": {
                   "key_code": "8",
                   "modifiers": {
-                    "mandatory": [
-                      "left_control",
-                      "right_shift"
-                    ]
+                    "mandatory": ["left_control", "right_shift"]
                   }
                 },
                 "to": [
@@ -747,10 +685,7 @@
                 "from": {
                   "key_code": "9",
                   "modifiers": {
-                    "mandatory": [
-                      "left_control",
-                      "right_shift"
-                    ]
+                    "mandatory": ["left_control", "right_shift"]
                   }
                 },
                 "to": [
@@ -764,15 +699,167 @@
                 "from": {
                   "key_code": "0",
                   "modifiers": {
-                    "mandatory": [
-                      "left_control",
-                      "right_shift"
-                    ]
+                    "mandatory": ["left_control", "right_shift"]
                   }
                 },
                 "to": [
                   {
                     "shell_command": "/opt/homebrew/bin/yabai -m window --space 10; /opt/homebrew/bin/yabai -m space --focus 10"
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "Yabai: Move to another desktop space and focus on it using control + [number]",
+            "manipulators": [
+              {
+                "from": {
+                  "key_code": "1",
+                  "modifiers": {
+                    "mandatory": ["left_control"],
+                    "optional": ["caps_lock"]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/opt/homebrew/bin/yabai -m space --focus 1"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "2",
+                  "modifiers": {
+                    "mandatory": ["left_control"],
+                    "optional": ["caps_lock"]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/opt/homebrew/bin/yabai -m space --focus 2"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "3",
+                  "modifiers": {
+                    "mandatory": ["left_control"],
+                    "optional": ["caps_lock"]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/opt/homebrew/bin/yabai -m space --focus 3"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "4",
+                  "modifiers": {
+                    "mandatory": ["left_control"],
+                    "optional": ["caps_lock"]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/opt/homebrew/bin/yabai -m space --focus 4"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "5",
+                  "modifiers": {
+                    "mandatory": ["left_control"],
+                    "optional": ["caps_lock"]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/opt/homebrew/bin/yabai -m space --focus 5"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "6",
+                  "modifiers": {
+                    "mandatory": ["left_control"],
+                    "optional": ["caps_lock"]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/opt/homebrew/bin/yabai -m space --focus 6"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "7",
+                  "modifiers": {
+                    "mandatory": ["left_control"],
+                    "optional": ["caps_lock"]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/opt/homebrew/bin/yabai -m space --focus 7"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "8",
+                  "modifiers": {
+                    "mandatory": ["left_control"],
+                    "optional": ["caps_lock"]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/opt/homebrew/bin/yabai -m space --focus 8"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "9",
+                  "modifiers": {
+                    "mandatory": ["left_control"],
+                    "optional": ["caps_lock"]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/opt/homebrew/bin/yabai -m space --focus 9"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "0",
+                  "modifiers": {
+                    "mandatory": ["left_control"],
+                    "optional": ["caps_lock"]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/opt/homebrew/bin/yabai -m space --focus 10"
                   }
                 ],
                 "type": "basic"
@@ -786,9 +873,7 @@
                 "from": {
                   "key_code": "c",
                   "modifiers": {
-                    "mandatory": [
-                      "right_shift"
-                    ]
+                    "mandatory": ["right_shift"]
                   }
                 },
                 "to": [
@@ -802,9 +887,7 @@
                 "from": {
                   "key_code": "s",
                   "modifiers": {
-                    "mandatory": [
-                      "right_shift"
-                    ]
+                    "mandatory": ["right_shift"]
                   }
                 },
                 "to": [
@@ -818,9 +901,7 @@
                 "from": {
                   "key_code": "f",
                   "modifiers": {
-                    "mandatory": [
-                      "right_shift"
-                    ]
+                    "mandatory": ["right_shift"]
                   }
                 },
                 "to": [
@@ -834,9 +915,7 @@
                 "from": {
                   "key_code": "k",
                   "modifiers": {
-                    "mandatory": [
-                      "right_shift"
-                    ]
+                    "mandatory": ["right_shift"]
                   }
                 },
                 "to": [
@@ -850,9 +929,7 @@
                 "from": {
                   "key_code": "q",
                   "modifiers": {
-                    "mandatory": [
-                      "right_shift"
-                    ]
+                    "mandatory": ["right_shift"]
                   }
                 },
                 "to": [
@@ -866,9 +943,7 @@
                 "from": {
                   "key_code": "a",
                   "modifiers": {
-                    "mandatory": [
-                      "right_shift"
-                    ]
+                    "mandatory": ["right_shift"]
                   }
                 },
                 "to": [
@@ -887,9 +962,7 @@
                 "from": {
                   "key_code": "open_bracket",
                   "modifiers": {
-                    "mandatory": [
-                      "control"
-                    ]
+                    "mandatory": ["control"]
                   }
                 },
                 "to": [
@@ -908,9 +981,7 @@
                 "from": {
                   "key_code": "h",
                   "modifiers": {
-                    "mandatory": [
-                      "control"
-                    ]
+                    "mandatory": ["control"]
                   }
                 },
                 "to": [
@@ -924,9 +995,7 @@
                 "from": {
                   "key_code": "j",
                   "modifiers": {
-                    "mandatory": [
-                      "control"
-                    ]
+                    "mandatory": ["control"]
                   }
                 },
                 "to": [
@@ -940,9 +1009,7 @@
                 "from": {
                   "key_code": "k",
                   "modifiers": {
-                    "mandatory": [
-                      "control"
-                    ]
+                    "mandatory": ["control"]
                   }
                 },
                 "to": [
@@ -956,9 +1023,7 @@
                 "from": {
                   "key_code": "l",
                   "modifiers": {
-                    "mandatory": [
-                      "control"
-                    ]
+                    "mandatory": ["control"]
                   }
                 },
                 "to": [

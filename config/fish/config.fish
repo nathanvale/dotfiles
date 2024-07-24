@@ -2,13 +2,20 @@ if status is-interactive
     source ~/.config/fish/env_vars.fish
     source ~/.config/fish/aliases.fish
 
+    set target_dir {$HOME}/code/dotfiles
+
+    if not test -d $target_dir/.git
+        # Initialize a Git repository in the target directory
+        git init $target_dir
+    end
+
     # Check if the universal variable for Tide configuration is set
     if not set -Uq tide_configured
-        echo "Configuring Tide..."
         tide configure --auto --style=Lean --prompt_colors='True color' --show_time='12-hour format' --lean_prompt_height='One line' --prompt_spacing=Compact --icons='Many icons' --transient=Yes
         set -U tide_configured yes
         exec fish
     end
+
 
     # Load nvm using bass
     bass source (brew --prefix nvm)/nvm.sh --no-use

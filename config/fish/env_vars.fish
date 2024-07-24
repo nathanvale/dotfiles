@@ -75,7 +75,6 @@ set -U tide_time_color 5F7E97 #5F7E97
 set -U tide_cmd_duration_color 5F7E97 #5F7E97
 set -U tide_status_color CBE386 #CBE386
 set -U tide_status_color_failure ff2c83 #ff2c83 
-
 set -U tide_os_icon ""
 
 

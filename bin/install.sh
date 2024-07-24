@@ -5,14 +5,15 @@ set -e
 
 # Define the URLs of the scripts to download in the required order
 script_urls=(
+    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/check_shell.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/brew_install.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/brew_bundle.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/dotfiles_install.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/manage_symlinks.sh"
 )
 
-# Create a temporary directory to store the downloaded scripts
-tmp_dir=$(mktemp -d)
+tmp_dir="/tmp/dot-files-setup-scripts-$(date +%Y%m%d%H%M%S)"
+mkdir -p "$tmp_dir"
 echo "Scripts will be downloaded to $tmp_dir"
 
 # Function to download scripts

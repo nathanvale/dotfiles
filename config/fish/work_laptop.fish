@@ -9,6 +9,7 @@ if jq '.profiles[].complex_modifications.rules[] | select(.description == "Yabai
     cp "$KARABINER_CONFIG" "$KARABINER_CONFIG.bak"
     jq 'walk(if type == "object" and .description == "Yabai: Move to another desktop space and focus on it using control + [number]" then empty else . end)' "$KARABINER_CONFIG.bak" >"$KARABINER_CONFIG"
     rm -rf "$KARABINER_CONFIG.bak"
+    sleep 1
     git update-index --assume-unchanged $KARABINER_CONFIG
     echo "The specific keybinding exists in the configuration. Commenting out Karabiner binding that this work laptop does not support."
 end

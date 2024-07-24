@@ -49,10 +49,9 @@ fi
 
 # Run brew bundle with the downloaded Brewfile
 echo "Running brew bundle..."
-/opt/homebrew/bin/brew bundle --file=$TEMP_BREWFILE
-if [ $? -ne 0 ]; then
-  echo "Failed to run brew bundle."
 
+if ! /opt/homebrew/bin/brew bundle --file=$TEMP_BREWFILE; then
+  echo "Failed to run brew bundle."
   # Ask to contnue with installation anyway
   read -p "Do you want to continue with the installation anyway? (y/n) " -n 1 -r
 

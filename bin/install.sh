@@ -95,7 +95,6 @@ for script in "\${script_names[@]}"; do
     script_path="\$tmp_dir/\$script"
     if [[ -x "\$script_path" ]]; then
         echo "Executing \$script_path"
-        "\$script_path"
         if ! "\$script_path" ; then
             echo "Failed to execute \$script_path"
             echo "Installtion of dotfiles failed."

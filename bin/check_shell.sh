@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source the color_log.sh script
-source ./color_log.sh
+source ./colour_log.sh
 
 if [ "$SHELL" == "/bin/bash" ]; then
     log $INFO "Script is being run in bash."

@@ -23,7 +23,6 @@ rm -rf /tmp/setup-scripts-*
 
 tmp_dir="/tmp/setup-scripts-$(date +%Y%m%d%H%M%S)"
 mkdir -p "$tmp_dir"
-echo "Scripts will be downloaded to $tmp_dir"
 
 # Function to download scripts
 download_scripts() {
@@ -47,7 +46,8 @@ download_scripts() {
 
     # Check if the download was successful
     if [ "$status_code" -ne 200 ]; then
-        echo "Failed to download $url (status code: $status_code)"
+        message = "Failed to download $url (status code: $status_code)"
+        echo -e "\033[0;31m$message\033[0m"
         # Check if the GITHUB_TOKEN environment variable is not set
         if [ -z "$auth_header" ]; then
             echo "Make sure to set the GITHUB_TOKEN environment variable if $url exists in a private repo."
@@ -85,10 +85,17 @@ cat <<EOF >"$run_script"
 # Exit immediately if a command exits with a non-zero status
 set -e
 
+# Resolve the absolute path of the directory containing this script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Source the colour_log.sh script
+source "$SCRIPT_DIR/colour_log.sh"
+
 # Cleanup function to delete the temporary directory
 cleanup() {
     rm -rf "$tmp_dir"
     sudo rm -f /usr/local/bin/install_dotfiles
+    log $INFO "Removed downloaded scripts and install_dotfiles."
 }
 
 # Execute each script in the order they were downloaded
@@ -102,23 +109,23 @@ tmp_dir="$tmp_dir"
 for script in "\${script_names[@]}"; do
     script_path="\$tmp_dir/\$script"
     if [[ -x "\$script_path" ]]; then
-        echo "Executing \$script_path"
         if ! "\$script_path" ; then
-            echo "Installation of dotfiles failed."
+            log $ERROR "Installation of dotfiles failed."
             cleanup
             exit 1
         fi
     else
-        echo "Script \$script_path is not executable or not found."
-        echo "Installation of dotfiles failed."
+        log $ERROR "Script \$script_path is not executable or not found."
+        log $ERROR "Installation of dotfiles failed."
         cleanup
         exit 1
     fi
 done
 
+log $INFO "Installation of dotfiles completed successfully."
+
 cleanup
 
-echo "All scripts executed successfully."
 EOF
 
 # Make the run_downloaded_scripts.sh script executable

@@ -11,6 +11,6 @@ if [ "$SHELL" == "/bin/bash" ]; then
 elif [ "$SHELL" == "/bin/zsh" ]; then
     log $INFO "Script is being run in zsh."
 else
-    log $ERROR "Error: This script must be run from a bash or zsh session."
+    log $ERROR "This script must be run from a bash or zsh session."
     exit 1
 fi

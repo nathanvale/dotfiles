@@ -21,7 +21,7 @@ cleanup() {
 }
 
 ignore_sigint() {
-  echo "Ignoring SIGINT..."
+  rm -f "$TEMP_BREWFILE"
   exit 0
 }
 
@@ -60,12 +60,8 @@ echo "Running brew bundle..."
 if ! brew bundle --file=$TEMP_BREWFILE; then
   echo "Failed to run brew bundle."
   # Ask to contnue with installation anyway
-  read -p "Do you want to continue with the installation anyway? (y/n) " -n 1 -r
-
-  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    cleanup
-    exit 1
-  fi
+  cleanup
+  exit 1
 fi
 
 cleanup

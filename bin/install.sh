@@ -87,8 +87,8 @@ set -e
 
 # Cleanup function to delete the temporary directory
 cleanup() {
-    rm -rf "$tmp_dir"
-    sudo rm -f /usr/local/bin/install_dotfiles
+    # rm -rf "$tmp_dir"
+    # sudo rm -f /usr/local/bin/install_dotfiles
 }
 
 # Execute each script in the order they were downloaded

@@ -107,14 +107,14 @@ for script in "\${script_names[@]}"; do
     script_path="\$tmp_dir/\$script"
     if [[ -x "\$script_path" ]]; then
         if ! "\$script_path" ; then
-            log \$ERROR "Installation of dotfiles failed."
             cleanup
+            log \$ERROR "Installation of dotfiles failed."
             exit 1
         fi
     else
+        cleanup
         log \$ERROR "Script \$script_path is not executable or not found."
         log \$ERROR "Installation of dotfiles failed."
-        cleanup
         exit 1
     fi
 done

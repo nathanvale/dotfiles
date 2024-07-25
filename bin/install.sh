@@ -81,6 +81,7 @@ set -e
 # Cleanup function to delete the temporary directory
 cleanup() {
     rm -rf "$tmp_dir"
+    sudo rm -f /usr/local/bin/install_dotfiles
 }
 
 # Execute each script in the order they were downloaded
@@ -96,12 +97,14 @@ for script in "\${script_names[@]}"; do
     if [[ -x "\$script_path" ]]; then
         echo "Executing \$script_path"
         if ! "\$script_path" ; then
-            echo "Failed to execute \$script_path"
-            echo "Installtion of dotfiles failed."
+            echo "Installation of dotfiles failed."
+            cleanup
             exit 1
         fi
     else
         echo "Script \$script_path is not executable or not found."
+        echo "Installation of dotfiles failed."
+        cleanup
         exit 1
     fi
 done
@@ -114,7 +117,10 @@ EOF
 # Make the run_downloaded_scripts.sh script executable
 chmod +x "$run_script"
 
+# Create a symbolic link for run_downloaded_scripts.sh
+sudo ln -sf "$run_script" /usr/local/bin/install_dotfiles
+
 # Inform the user how to run the scripts
 echo "All scripts downloaded to $tmp_dir"
 echo "To execute the scripts, run:"
-echo "$run_script"
+echo "install_dotfiles"

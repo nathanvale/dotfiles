@@ -15,6 +15,12 @@ script_urls=(
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/setup_fish.sh"
 )
 
+# Remove the existing install_dotfiles script
+sudo rm -f /usr/local/bin/install_dotfiles
+
+# Remove the existing temporary directory /tmp/setup-scripts-*
+rm -rf /tmp/setup-scripts-*
+
 tmp_dir="/tmp/setup-scripts-$(date +%Y%m%d%H%M%S)"
 mkdir -p "$tmp_dir"
 echo "Scripts will be downloaded to $tmp_dir"

@@ -59,7 +59,6 @@ echo "Running brew bundle..."
 
 if ! brew bundle --file=$TEMP_BREWFILE; then
   echo "Failed to run brew bundle."
-  # Ask to contnue with installation anyway
   cleanup
   exit 1
 fi

@@ -1,8 +1,15 @@
 #!/bin/bash
 
+INSTALLING_BREW_PACKAGES=false
+# Resolve the absolute path of the directory containing this script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Source the colour_log.sh script
+source "$SCRIPT_DIR/colour_log.sh"
+
 set -e
 
-echo "Starting Homebrew bundle..."
+log $INFO "Starting Homebrew bundle..."
 
 # Temporarily add Homebrew to PATH
 BREW_PATH="/opt/homebrew/bin"
@@ -16,13 +23,25 @@ TEMP_BREWFILE=$(mktemp)
 
 # Define the cleanup function
 cleanup() {
+  log $INFO "Removing temporary Brewfile and cleaning up Homebrew..."
   rm -f "$TEMP_BREWFILE"
   brew cleanup
 }
 
 ignore_sigint() {
-  rm -f "$TEMP_BREWFILE"
-  exit 0
+  # if installing brew packages prompt the user if the want to exit the script
+  if [ "$INSTALLING_BREW_PACKAGES" = true ]; then
+    log $WARNING "Installation of Homebrew bundle is in progress."
+    read -p "Do you want to skip the installation? [y/N] " -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      log $INFO "Installation of Homebrew packages skipped."
+      cleanup
+      exit 0
+    fi
+  fi
+  log $INFO "Installation of Homebrew bundle stopped."
+  cleanup
+  exit 1
 }
 
 trap ignore_sigint SIGINT
@@ -34,7 +53,7 @@ else
 fi
 
 # Download the Brewfile using curl with authorization if available
-echo "Downloading Brewfile from $BREWFILE_URL..."
+log $INFO "Downloading Brewfile from $BREWFILE_URL..."
 if [ -n "$auth_header" ]; then
   status_code=$(curl -w "%{http_code}" -H "$auth_header" -L -s -o "$TEMP_BREWFILE" "$BREWFILE_URL")
 else
@@ -43,26 +62,27 @@ fi
 
 # Check if the download was successful
 if [ "$status_code" -ne 200 ]; then
-  echo "Failed to download $BREWFILE_URL (status code: $status_code)"
+  log $ERROR "Failed to download $BREWFILE_URL (status code: $status_code)"
   # Check if the GITHUB_TOKEN environment variable is not set
   if [ -z "$auth_header" ]; then
-    echo "Make sure to set the GITHUB_TOKEN environment variable if $BREWFILE_URL exists in a private repo."
-    echo "For public repos, you can ignore this message."
-    echo "export GITHUB_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    log $ERROR "Make sure to set the GITHUB_TOKEN environment variable if $BREWFILE_URL exists in a private repo."
+    log $INFO "For public repos, you can ignore this message."
+    log $INFO "export GITHUB_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
   fi
   cleanup
   exit 1
 fi
 
+INSTALLING_BREW_PACKAGES=true
 # Run brew bundle with the downloaded Brewfile
-echo "Running brew bundle..."
+log $INFO "Installing Homebrew packages..."
 
 if ! brew bundle --file=$TEMP_BREWFILE; then
-  echo "Failed to run brew bundle."
+  log $ERROR "Failed to install Homebrew packages."
   cleanup
   exit 1
 fi
 
 cleanup
 
-echo "Homebrew bundle complete."
+log $INFO "Homebrew bundle complete."

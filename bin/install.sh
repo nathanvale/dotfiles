@@ -92,7 +92,7 @@ source "$tmp_dir/colour_log.sh"
 cleanup() {
     rm -rf "$tmp_dir"
     sudo rm -f /usr/local/bin/install_dotfiles
-    log \$INFO "Removed downloaded scripts and install_dotfiles."
+    log \$INFO "Removing downloaded scripts."
 }
 
 # Execute each script in the order they were downloaded

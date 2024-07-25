@@ -20,8 +20,12 @@ cleanup() {
   brew cleanup
 }
 
-# Register the cleanup function to be called on exit and on specific signals
-trap cleanup INT QUIT TERM
+ignore_sigint() {
+  echo "Ignoring SIGINT..."
+  exit 0
+}
+
+trap ignore_sigint SIGINT
 
 if [ -n "$GITHUB_TOKEN" ]; then
   auth_header="Authorization: token $GITHUB_TOKEN"

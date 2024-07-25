@@ -1,28 +1,33 @@
 #!/bin/bash
 
+# Resolve the absolute path of the directory containing this script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Source the colour_log.sh script
+source "$SCRIPT_DIR/colour_log.sh"
+
 set -e
 
-echo "Starting Homebrew installation..."
+log $INFO "Attempting Homebrew installation..."
 
 # Function to handle errors and interruptions
 handle_cleanup() {
-  echo "Error: $1"
-  echo "Running the official Homebrew uninstall script..."
-  trap 'handle_cleanup "Homebrew uninstallation interrupted."' INT QUIT TERM
+  log $ERROR "$1"
+  log $INFO "Running the official Homebrew uninstall script..."
+  trap 'handle_cleanup "Homebrew uninstallation interrupted."' HUP INT QUIT TERM
   if ! /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"; then
     handle_cleanup "Homebrew uninstallation script failed."
   else
-    echo "Homebrew uninstallation complete."
+    log $INFO "Homebrew uninstallation complete."
     exit 1
   fi
 }
 
-# Trap INT (Control-C)
-trap 'handle_cleanup "Homebrew installation interrupted."' INT QUIT TERM
+trap 'handle_cleanup "Homebrew installation interrupted."' HUP INT QUIT TERM
 
 # Check if Homebrew is already installed by looking for /opt/homebrew/bin/fish
 if [ -f /opt/homebrew/bin/fish ]; then
-  echo "Homebrew is already installed."
+  log $INFO "Homebrew is already installed."
   exit 0
 fi
 
@@ -30,4 +35,4 @@ if ! /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/insta
   handle_cleanup "Failed to run the official Homebrew install script."
 fi
 
-echo "Homebrew installation complete."
+log $INFO "Homebrew installation complete."

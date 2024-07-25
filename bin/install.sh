@@ -85,11 +85,9 @@ cat <<EOF >"$run_script"
 # Exit immediately if a command exits with a non-zero status
 set -e
 
-# Resolve the absolute path of the directory containing this script
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Source the colour_log.sh script
-source "$SCRIPT_DIR/colour_log.sh"
+source "$tmp_dir/colour_log.sh"
 
 # Cleanup function to delete the temporary directory
 cleanup() {

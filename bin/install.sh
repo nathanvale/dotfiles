@@ -82,8 +82,6 @@ set -e
 cleanup() {
     rm -rf "$tmp_dir"
 }
-# Register the cleanup function to be called on exit
-trap cleanup EXIT
 
 # Execute each script in the order they were downloaded
 script_names=(
@@ -98,12 +96,18 @@ for script in "\${script_names[@]}"; do
     if [[ -x "\$script_path" ]]; then
         echo "Executing \$script_path"
         "\$script_path"
+        if ! "\$script_path" ; then
+            echo "Failed to execute \$script_path"
+            echo "Installtion of dotfiles failed."
+            exit 1
+        fi
     else
         echo "Script \$script_path is not executable or not found."
         exit 1
     fi
 done
 
+cleanup
 
 echo "All scripts executed successfully."
 EOF

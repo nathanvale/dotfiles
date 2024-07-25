@@ -85,7 +85,6 @@ cat <<EOF >"$run_script"
 # Exit immediately if a command exits with a non-zero status
 set -e
 
-
 # Source the colour_log.sh script
 source "$tmp_dir/colour_log.sh"
 
@@ -93,7 +92,7 @@ source "$tmp_dir/colour_log.sh"
 cleanup() {
     rm -rf "$tmp_dir"
     sudo rm -f /usr/local/bin/install_dotfiles
-    log $INFO "Removed downloaded scripts and install_dotfiles."
+    log \$INFO "Removed downloaded scripts and install_dotfiles."
 }
 
 # Execute each script in the order they were downloaded
@@ -108,19 +107,19 @@ for script in "\${script_names[@]}"; do
     script_path="\$tmp_dir/\$script"
     if [[ -x "\$script_path" ]]; then
         if ! "\$script_path" ; then
-            log $ERROR "Installation of dotfiles failed."
+            log \$ERROR "Installation of dotfiles failed."
             cleanup
             exit 1
         fi
     else
-        log $ERROR "Script \$script_path is not executable or not found."
-        log $ERROR "Installation of dotfiles failed."
+        log \$ERROR "Script \$script_path is not executable or not found."
+        log \$ERROR "Installation of dotfiles failed."
         cleanup
         exit 1
     fi
 done
 
-log $INFO "Installation of dotfiles completed successfully."
+log \$INFO "Installation of dotfiles completed successfully."
 
 cleanup
 

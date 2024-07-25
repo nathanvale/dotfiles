@@ -39,7 +39,7 @@ set -Ux FZF_DEFAULT_OPTS '
   --ansi
   --color=fg:#D8DEEA,bg:#011627,hl:#FFFFFF:bold
   --color=fg+:#FFFFFF,bg+:#253A52,hl+:#FFFFFF:bold
-  --color=info:#7FDBCA,prompt:#84ACFF,pointer:#ff5874
+  --color=info:#7FDBCA,prompt:#84ACFF,pointer:#EC6477
   --color=marker:#ff2c83,spinner:#FAD430,header:#C4A012
   --color=query:#FFFFFF,border:#5F7E97
   --cycle --layout=reverse --border --height=90% --preview-window=wrap --marker="*"'

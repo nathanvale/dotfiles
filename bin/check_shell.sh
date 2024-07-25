@@ -1,7 +1,10 @@
 #!/bin/bash
 
-# Source the color_log.sh script
-source ./colour_log.sh
+# Resolve the absolute path of the directory containing this script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Source the colour_log.sh script
+source "$SCRIPT_DIR/colour_log.sh"
 
 if [ "$SHELL" == "/bin/bash" ]; then
     log $INFO "Script is being run in bash."

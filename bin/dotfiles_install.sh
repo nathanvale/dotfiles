@@ -12,6 +12,11 @@ GITHUB_SCOPES="admin:public_key,admin:ssh_signing_key"
 REPO_URL="nathanvale/dotfiles"
 CLONE_DIR="$HOME/code/dotfiles"
 SSH_CONFIG_CLEANUP_REQUIRED=false
+# Resolve the absolute path of the directory containing this script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Source the colour_log.sh script
+source "$SCRIPT_DIR/colour_log.sh"
 
 # GH wont login if this key exists
 unset GITHUB_TOKEN
@@ -22,13 +27,12 @@ export PATH="$GH_CLI_PATH:$PATH"
 
 cleanup() {
     if [ "$SSH_CONFIG_CLEANUP_REQUIRED" = true ]; then
-        echo "Cleaning up generated SSH key..."
+        log $INFO "Cleaning up generated SSH key..."
         rm -f "$KEY_PATH" "$KEY_PATH.pub"
         remove_git_sha_from_ssh_config
-
         # Check if the SSH config file exists and is empty, then delete it
         if [ -e "$SSH_CONFIG_FILE" ] && [ ! -s "$SSH_CONFIG_FILE" ]; then
-            echo "Deleting empty SSH config file..."
+            log $INFO "Deleting empty SSH config file..."
             rm "$SSH_CONFIG_FILE"
         fi
     fi
@@ -40,8 +44,7 @@ remove_git_sha_from_ssh_config() {
     if [ -f "$SSH_CONFIG_FILE" ]; then
         # Normalize KEY_PATH to use ~ instead of the full home directory path
         KEY_PATH_NORMALISED="${KEY_PATH/#$HOME/~}"
-        echo "Removing $KEY_PATH_NORMALISED from SSH config..."
-
+        log $INFO "Removing $KEY_PATH_NORMALISED from SSH config..."
         awk -v hostname="$GITHUB_HOSTNAME" -v keypath="$KEY_PATH_NORMALISED" '
         BEGIN {remove=0; first_host=1}
         {
@@ -86,23 +89,23 @@ remove_git_sha_from_ssh_config() {
 
 trap cleanup EXIT
 
-echo "Attempting to install $GITHUB_HOSTNAME/$REPO_URL on this computer..."
+log $INFO "Attempting to install $GITHUB_HOSTNAME/$REPO_URL on this computer..."
 
 # Check if the clone directory exists and is a Git repository
 if [ -d "$CLONE_DIR" ] && [ -d "$CLONE_DIR/.git" ]; then
-    echo "Directory $CLONE_DIR already exists and is a Git repository. Exiting."
+    log $ERROR "Directory $CLONE_DIR already exists and is a Git repository."
     exit 1
 fi
 
 # Check if the GitHub CLI is installed
 if ! command -v gh &>/dev/null; then
-    echo "GitHub CLI (gh) could not be found. Please install it and try again."
+    log $ERROR "GitHub CLI (gh) could not be found. Please install it and try again."
     exit 1
 fi
 
 # Check if SSH configuration already exists for the exact key name
 if [ -f "$KEY_PATH" ] && [ -f "$KEY_PATH.pub" ]; then
-    echo "Using the github.com SSH key that already exists."
+    log $INFO "Using the github.com SSH key that already exists."
 else
     SSH_CONFIG_CLEANUP_REQUIRED=true
     cleanup
@@ -133,29 +136,29 @@ if gh auth status &>/dev/null; then
 else
     gh auth login --hostname "$GITHUB_HOSTNAME" --web --git-protocol ssh --skip-ssh-key --scopes "$GITHUB_SCOPES"
 fi
-echo "Enter a title for your SSH key (e.g. 'Work Laptop' or 'Personal Laptop'):"
+log $INFO "Enter a title for your SSH key (e.g. 'Work Laptop' or 'Personal Laptop'):"
 read -r TITLE
 
 # Add SSH key to GitHub
 if ! gh ssh-key add "$KEY_PATH.pub" -t "$TITLE"; then
-    echo "Failed to add SSH key to GitHub. Please check the above error message and try again."
+    log $ERROR "Failed to add SSH key to GitHub. Please check the above error message and try again."
     exit 1
 fi
 
 SSH_CONFIG_CLEANUP_REQUIRED=false
-echo "SSH key successfully added to GitHub."
+log $INFO "SSH key successfully added to GitHub."
 
 # Create the directory for cloning if it doesn't exist
 mkdir -p "$CLONE_DIR"
 
 # Clone the repository using gh
-echo "Cloning repository $REPO_URL into $CLONE_DIR..."
+log $INFO "Cloning repository $REPO_URL into $CLONE_DIR..."
 
 if ! gh repo clone "$REPO_URL" "$CLONE_DIR"; then
-    echo "Failed to clone $REPO_URL. Please check the above error message and try again."
+    log $ERROR "Failed to clone $REPO_URL. Please check the above error message and try again."
     exit 1
 fi
 
 gh auth logout
 
-echo "Repository successfully cloned."
+log $INFO "Repository successfully cloned."

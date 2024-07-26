@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Resolve the absolute path of the directory containing this script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Source the colour_log.sh script
+source "$SCRIPT_DIR/colour_log.sh"
+
+log $INFO "Setting macOS preferences..."
+
 osascript -e 'tell application "System Preferences" to quit'
 
 # Ask for the administrator password upfront
@@ -266,3 +274,5 @@ sudo chflags nohidden ~/Library
 # Kill affected applications
 sudo killall Dock
 sudo killall Finder
+
+log $INFO "macOS preferences set."

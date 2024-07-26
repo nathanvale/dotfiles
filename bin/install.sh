@@ -123,6 +123,10 @@ log \$INFO "Installation of dotfiles completed successfully."
 
 cleanup
 
+echo "Loading Fish shell..."
+sleep 3
+exec "/opt/homebrew/bin/fish"
+
 EOF
 
 # Make the run_downloaded_scripts.sh script executable

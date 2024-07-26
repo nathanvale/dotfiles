@@ -2,11 +2,10 @@
 
 # Resolve the absolute path of the directory containing this script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+FISH_PATH="/opt/homebrew/bin/fish"
 
 # Source the colour_log.sh script
 source "$SCRIPT_DIR/colour_log.sh"
-
-FISH_PATH="/opt/homebrew/bin/fish"
 
 # Exit immediately if a command exits with a non-zero status
 set -e
@@ -25,4 +24,3 @@ export SHELL=$FISH_PATH
 
 # Print confirmation message
 log $INFO "Fish shell is now installed and set as the default shell."
-exec $FISH_PATH

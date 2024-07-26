@@ -25,4 +25,4 @@ export SHELL=$FISH_PATH
 
 # Print confirmation message
 log $INFO "Fish shell is now installed and set as the default shell."
-log $INFO "Run 'exec $FISH_PATH' to start Fish shell immediately."
+exec $FISH_PATH

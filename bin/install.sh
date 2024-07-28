@@ -123,7 +123,7 @@ log \$INFO "Installation of dotfiles completed successfully."
 
 cleanup
 
-echo "Loading Fish shell..."
+log \$INFO "Loading fish shell..."
 sleep 3
 exec "/opt/homebrew/bin/fish"
 

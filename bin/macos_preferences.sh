@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Resolve the absolute path of the directory containing this script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

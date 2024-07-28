@@ -1,31 +1,32 @@
 #!/bin/bash
 
-INSTALLING_BREW_PACKAGES=false
-# Resolve the absolute path of the directory containing this script
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# Source the colour_log.sh script
-source "$SCRIPT_DIR/colour_log.sh"
+# This script is used to remotely install Homebrew packages from a Brewfile.
+# It downloads the Brewfile from a specified URL and installs the packages using Homebrew.
+# If Homebrew is not installed, it prompts the user to install it.
+# The script also handles interruptions and cleanup.
 
 set -e
 
-log $INFO "Starting Homebrew bundle..."
-
+INSTALLING_BREW_PACKAGES=false
+# Resolve the absolute path of the directory containing this script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Source the colour_log.sh script
+source "$SCRIPT_DIR/colour_log.sh"
 # Temporarily add Homebrew to PATH
 BREW_PATH="/opt/homebrew/bin"
-export PATH="$BREW_PATH:$PATH"
-
 # Define the URL of the Brewfile
 BREWFILE_URL="https://raw.githubusercontent.com/nathanvale/dotfiles/master/config/brew/Brewfile"
-
 # Define a temporary file to store the downloaded Brewfile
 TEMP_BREWFILE=$(mktemp)
+export PATH="$BREW_PATH:$PATH"
 
 # Define the cleanup function
 cleanup() {
-  log $INFO "Removing temporary Brewfile and cleaning up Homebrew..."
+  log $INFO "Removing temporary Brewfile..."
   rm -f "$TEMP_BREWFILE"
-  brew cleanup
+  if command -v brew &>/dev/null; then
+    brew cleanup
+  fi
 }
 
 ignore_sigint() {
@@ -46,6 +47,17 @@ ignore_sigint() {
 }
 
 trap ignore_sigint SIGINT
+
+log $INFO "Starting Homebrew bundle..."
+
+# Check if brew command exists
+if ! command -v brew &>/dev/null; then
+  log $ERROR "Homebrew is not installed."
+  log $INFO "Run the install script to install Homebrew."
+  log $INFO "curl -fsSL https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/install.sh | /bin/bash"
+  cleanup
+  exit 1
+fi
 
 if [ -n "$GITHUB_TOKEN" ]; then
   auth_header="Authorization: token $GITHUB_TOKEN"

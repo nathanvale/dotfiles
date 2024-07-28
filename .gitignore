@@ -4,5 +4,5 @@ config/iterm2/
 
 # ignore third party launch agents
 LaunchAgents/com.DigiDNA.iMazing2Mac.Mini.plist
-LaunchAgents/com.koekeishiya.yabai.plist
 LaunchAgents/com.macpaw.CleanMyMac4.Updater.plist
+LaunchAgents/com.koekeishiya.yabai.plist

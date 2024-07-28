@@ -8,7 +8,7 @@ script_urls=(
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/colour_log.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/check_shell.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/brew_install.sh"
-    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/brew_bundle.sh"
+    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/brew_remote_bundle.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/dotfiles_install.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/manage_symlinks.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/macos_preferences.sh"
@@ -123,7 +123,7 @@ log \$INFO "Installation of dotfiles completed successfully."
 
 cleanup
 
-echo "Loading Fish shell..."
+log \$INFO "Loading fish shell..."
 sleep 3
 exec "/opt/homebrew/bin/fish"
 

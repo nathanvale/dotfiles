@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 echo "Starting Homebrew uninstallation..."
 
 # Run the official Homebrew uninstall script

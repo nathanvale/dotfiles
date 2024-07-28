@@ -32,8 +32,9 @@ create_symlink() {
 		fi
 	elif [ -e "$link_name" ]; then
 		log $WARNING "File or directory $link_name already exists and is not a symlink."
-		read -p "Would you like to remove it? (y/n): " response
-		if [[ "$response" == "y" ]]; then
+		read -p "Would you like to remove it? [y/N] " -n 1 -r
+		echo
+		if [[ $REPLY =~ ^[Yy]$ ]]; then
 			rm -rf "$link_name"
 			log $INFO "Removing $link_name..."
 			ln -s "$target" "$link_name"

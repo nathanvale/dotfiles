@@ -33,6 +33,7 @@ ignore_sigint() {
   if [ "$INSTALLING_BREW_PACKAGES" = true ]; then
     log $WARNING "Installation of Homebrew bundle is in progress."
     read -p "Do you want to skip the installation? [y/N] " -n 1 -r
+    echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
       log $INFO "Installation of Homebrew packages skipped."
       cleanup

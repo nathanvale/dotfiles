@@ -13,3 +13,5 @@ if jq '.profiles[].complex_modifications.rules[] | select(.description == "Yabai
     git update-index --assume-unchanged $KARABINER_CONFIG
     echo "The specific keybinding exists in the configuration. Commenting out Karabiner binding that this work laptop does not support."
 end
+
+abbr -a -g 'sso' 'aws sso login --profile zero-dev'

@@ -6,3 +6,6 @@ config/iterm2/
 LaunchAgents/com.DigiDNA.iMazing2Mac.Mini.plist
 LaunchAgents/com.macpaw.CleanMyMac4.Updater.plist
 LaunchAgents/com.koekeishiya.yabai.plist
+LaunchAgents/com.google.GoogleUpdater.wake.plist
+LaunchAgents/com.google.keystone.agent.plist
+LaunchAgents/com.google.keystone.xpcservice.plist

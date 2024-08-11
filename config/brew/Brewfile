@@ -2,6 +2,10 @@ tap "homebrew/bundle"
 tap "homebrew/services"
 tap "koekeishiya/formulae"
 
+# Color-highlighted diff(1) output
+brew "colordiff" 
+# Unit testing framework for Bash
+brew "bats-core"
 # Lazy git UI
 brew "lazygit"
 # Official Amazon AWS command-line interface

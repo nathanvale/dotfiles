@@ -1,6 +1,13 @@
 #!/bin/bash
 
-# Define symlinks as an array of pairs
+set -e
+
+# Ensure the script is being run from the correct directory
+cd "$(dirname "$0")"
+
+# Source the colour_log.sh script
+source "./colour_log.sh"
+
 symlinks=(
 	"${HOME}/.config|${HOME}/code/dotfiles/config"
 	"${HOME}/Scripts|${HOME}/code/dotfiles/Scripts"
@@ -9,13 +16,16 @@ symlinks=(
 	"${HOME}/.zshrc|${HOME}/code/dotfiles/.zshrc"
 	"${HOME}/.gitconfig|${HOME}/code/dotfiles/.gitconfig"
 	"${HOME}/.gitignore_global|${HOME}/code/dotfiles/.gitignore_global"
-	"${HOME}/Library/LaunchAgents|${HOME}/code/dotfiles/LaunchAgents"
 )
-# Resolve the absolute path of the directory containing this script
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Source the colour_log.sh script
-source "$SCRIPT_DIR/colour_log.sh"
+# Function to display usage
+usage() {
+	echo "Usage: $0 [-l | --link] [-u | --unlink] [-h | --help]"
+	echo "  -l, --link    Create symlinks"
+	echo "  -u, --unlink  Remove symlinks"
+	echo "  -h, --help    Display this help message"
+	exit 1
+}
 
 # Function to create symlink if it doesn't already exist or is incorrect
 create_symlink() {
@@ -51,7 +61,6 @@ create_symlink() {
 # Function to remove symlink if it exists
 remove_symlink() {
 	local link_name=$1
-
 	if [ -L "$link_name" ]; then
 		rm "$link_name"
 		log $INFO "Symlink removed: $link_name"
@@ -82,10 +91,25 @@ run_symlink_removal() {
 }
 
 # Main execution
-if [ "$1" == "--unlink" ]; then
-	log $INFO "Removing symlinks..."
-	run_symlink_removal
-else
-	log $INFO "Creating symlinks..."
-	run_symlink_creation
+if [ $# -eq 0 ]; then
+	usage
 fi
+
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+	-l | --link)
+		run_symlink_creation
+		shift
+		;;
+	-u | --unlink)
+		run_symlink_removal
+		shift
+		;;
+	-h | --help)
+		usage
+		;;
+	*)
+		usage
+		;;
+	esac
+done

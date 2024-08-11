@@ -15,8 +15,8 @@ SSH_CONFIG_CLEANUP_REQUIRED=false
 # Resolve the absolute path of the directory containing this script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Source the colour_log.sh script
 source "$SCRIPT_DIR/colour_log.sh"
+source "$SCRIPT_DIR/ssh_config_remove.sh"
 
 # GH wont login if this key exists
 unset GITHUB_TOKEN
@@ -29,7 +29,7 @@ cleanup() {
     if [ "$SSH_CONFIG_CLEANUP_REQUIRED" = true ]; then
         log $INFO "Cleaning up generated SSH key..."
         rm -f "$KEY_PATH" "$KEY_PATH.pub"
-        remove_git_sha_from_ssh_config
+        ssh_config_remove "$GITHUB_HOSTNAME" "$SSH_CONFIG_FILE"
         # Check if the SSH config file exists and is empty, then delete it
         if [ -e "$SSH_CONFIG_FILE" ] && [ ! -s "$SSH_CONFIG_FILE" ]; then
             log $INFO "Deleting empty SSH config file..."
@@ -37,54 +37,6 @@ cleanup() {
         fi
     fi
     SSH_CONFIG_CLEANUP_REQUIRED=false
-}
-
-remove_git_sha_from_ssh_config() {
-    # Check if SSH config file exists
-    if [ -f "$SSH_CONFIG_FILE" ]; then
-        # Normalize KEY_PATH to use ~ instead of the full home directory path
-        KEY_PATH_NORMALISED="${KEY_PATH/#$HOME/~}"
-        log $INFO "Removing $KEY_PATH_NORMALISED from SSH config..."
-        awk -v hostname="$GITHUB_HOSTNAME" -v keypath="$KEY_PATH_NORMALISED" '
-        BEGIN {remove=0; first_host=1}
-        {
-            # Process each line
-            if ($0 ~ "^[[:space:]]*Host[[:space:]]+" hostname "[[:space:]]*$") {
-                remove=1
-            }
-            if (remove && $0 ~ "^[[:space:]]*IdentityFile[[:space:]]+" keypath "[[:space:]]*$") {
-                remove=0
-                next
-            }
-            if (!remove) {
-                gsub(/^[[:space:]]+|[[:space:]]+$/, "");  # Remove leading and trailing spaces
-                if ($0 ~ "^Host[[:space:]]*") {
-                    if (!first_host) {
-                        print ""  # Print a blank line before each Host line
-                    }
-                    first_host=0
-                    print $0
-                } else if ($0 != "") {
-                    print "\t" $0
-                } else {
-                    print $0
-                }
-            }
-        }' "$SSH_CONFIG_FILE" >"$SSH_CONFIG_FILE.tmp"
-
-        # Use sed to ensure exactly one blank line between Host blocks
-        sed -i.bak -e '/^$/N;/\n$/D' "$SSH_CONFIG_FILE.tmp"
-
-        # Use sed to remove leading and trailing blank lines
-        sed -i.bak '/./,$!d' "$SSH_CONFIG_FILE.tmp" # Remove leading blank lines
-
-        # Remove the backup file created by sed
-        rm "$SSH_CONFIG_FILE.tmp.bak"
-
-        # Replace the original config file with the modified one
-        mv "$SSH_CONFIG_FILE.tmp" "$SSH_CONFIG_FILE"
-
-    fi
 }
 
 trap cleanup EXIT

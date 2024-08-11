@@ -1,3 +1,6 @@
+set -gx DOTFILES_GENIE_DIR "$HOME/code/dotfiles/genie";
+fish_add_path -gP "$HOME/code/dotfiles/genie/bin"
+
 # Define the custom functions directory
 set custom_function_dir ~/.config/fish/functions/custom
 

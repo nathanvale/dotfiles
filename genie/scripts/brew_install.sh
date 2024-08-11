@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Resolve the absolute path of the directory containing this script
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+set -e
+
+# Ensure the script is being run from the correct directory
+cd "$(dirname "$0")"
 
 # Source the colour_log.sh script
-source "$SCRIPT_DIR/colour_log.sh"
-
-set -e
+source "./colour_log.sh"
 
 log $INFO "Attempting Homebrew installation..."
 

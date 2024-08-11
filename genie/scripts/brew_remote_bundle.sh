@@ -7,11 +7,13 @@
 
 set -e
 
-INSTALLING_BREW_PACKAGES=false
-# Resolve the absolute path of the directory containing this script
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Ensure the script is being run from the correct directory
+cd "$(dirname "$0")"
+
 # Source the colour_log.sh script
-source "$SCRIPT_DIR/colour_log.sh"
+source "./colour_log.sh"
+
+INSTALLING_BREW_PACKAGES=false
 # Temporarily add Homebrew to PATH
 BREW_PATH="/opt/homebrew/bin"
 # Define the URL of the Brewfile

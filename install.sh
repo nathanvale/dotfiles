@@ -1,5 +1,4 @@
-#!/bin/bash;.'
-,'
+#!/bin/bash
 
 echo "This script will install the genie application on your system."
 

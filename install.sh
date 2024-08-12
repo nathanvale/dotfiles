@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 echo "This script will install the genie application on your system."
 
 # Set the directory where scripts should be saved
@@ -57,6 +56,8 @@ cleanup
 
 # Create the application directory
 mkdir -p "$tmp_dir"
+mkdir -p "$tmp_dir/scripts"
+mkdir -p "$tmp_dir/bin"
 
 # Export GITHUB_TOKEN variable to be available for the child processes
 export GITHUB_TOKEN

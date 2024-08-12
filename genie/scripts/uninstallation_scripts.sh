@@ -2,7 +2,6 @@
 uninstallation_urls=(
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/check_shell.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/brew_uninstall.sh"
-    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/yabai_sa_uninstall.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/nerd_fonts_uninstall.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/macos_preferences_uninstall.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/symlinks_uninstall.sh"

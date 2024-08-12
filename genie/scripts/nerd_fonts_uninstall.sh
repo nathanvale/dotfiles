@@ -6,9 +6,4 @@ source "./colour_log.sh"
 
 log $INFO "Attempting to remove nerd fonts..."
 
-if ! ./nerd_fonts_manage.sh --remove; then
-    log $ERROR "Failed to remove nerd fonts."
-    exit 1
-fi
-
-log $INFO "Nerd fonts removed successfully."
+./nerd_fonts_manage.sh --remove

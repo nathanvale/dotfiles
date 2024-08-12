@@ -1,7 +1,5 @@
-#!/bin/bash
-
-# Exit immediately if a command exits with a non-zero status
-set -e
+#!/bin/bash;.'
+,'
 
 echo "This script will install the genie application on your system."
 
@@ -64,10 +62,10 @@ mkdir -p "$tmp_dir"
 # Export GITHUB_TOKEN variable to be available for the child processes
 export GITHUB_TOKEN
 
-download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/color_log.sh scripts
-download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/installation_scripts.sh scripts
-download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/uninstallation_scripts.sh scripts
-download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/genie bin
+download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/color_log.sh scripts
+download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/installation_scripts.sh scripts
+download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/uninstallation_scripts.sh scripts
+download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/bin/genie bin
 
 # Register the cleanup function to be called on exit and on specific signals
 trap cleanup HUP INT QUIT TERM

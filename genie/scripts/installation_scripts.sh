@@ -6,6 +6,7 @@ installation_urls=(
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/dotfiles_install.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/symlinks_install.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/nerd_fonts_install.sh"
+    "https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/iterm_preferences_install.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/macos_preferences_install.sh"
     "https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/setup_fish.sh"
 )

@@ -67,6 +67,11 @@ mkdir -p "$tmp_dir/bin"
 export GITHUB_TOKEN
 
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/colour_log.sh scripts
+download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/ssh_config_remove.sh scripts
+download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/macos_preferences_manage.sh scripts
+download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/nerd_fonts_manage.sh scripts
+download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/symlinks_manage.sh scripts
+download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/yabai_sa_manage.sh scripts
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/installation_scripts.sh scripts
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/uninstallation_scripts.sh scripts
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/bin/genie bin
@@ -80,8 +85,8 @@ for url in "${installation_urls[@]}"; do
     download_script "$url" scripts
 done
 
-# add to path $tmp_dir/bin/genie
-export PATH=$PATH:$tmp_dir/bin/genie
+# Add $tmp_dir/bin to the PATH
+export PATH="$PATH:$tmp_dir/bin"
 
 # Inform the user how to run the scripts
 echo "All scripts downloaded to $tmp_dir"

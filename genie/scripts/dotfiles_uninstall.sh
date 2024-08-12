@@ -34,4 +34,4 @@ log $INFO "Attempting to uninstall $GITHUB_HOSTNAME/$REPO_URL from this computer
 
 cleanup
 
-log $INFO "Dotfiles uninstalled successfully."
+log $INFO "$GITHUB_HOSTNAME/$REPO_URL has been removed from this computer."

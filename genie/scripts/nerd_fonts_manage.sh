@@ -26,7 +26,6 @@ add_fonts() {
     mkdir -p "$DEST_DIR"
     cp "$FONT_DIR"/*.ttf "$DEST_DIR"
     if [ $? -eq 0 ]; then
-        echo "Nerd fonts added successfully."
         log $INFO "Nerd fonts added successfully."
         exit 0
     else

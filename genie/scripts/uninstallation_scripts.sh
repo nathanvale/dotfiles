@@ -14,5 +14,3 @@ uninstallation_scripts=()
 for url in "${uninstallation_urls[@]}"; do
     uninstallation_scripts+=("$(basename "$url")")
 done
-
-echo "uninstallation_scripts: ${uninstallation_scripts[@]}"

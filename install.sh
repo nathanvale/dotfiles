@@ -71,7 +71,6 @@ download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/gen
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/macos_preferences_manage.sh scripts
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/nerd_fonts_manage.sh scripts
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/symlinks_manage.sh scripts
-download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/yabai_sa_manage.sh scripts
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/installation_scripts.sh scripts
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/uninstallation_scripts.sh scripts
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/bin/genie bin
@@ -82,6 +81,10 @@ source "$tmp_dir/scripts/uninstallation_scripts.sh"
 
 # Download each script and save it to the scripts sub directory
 for url in "${installation_urls[@]}"; do
+    download_script "$url" scripts
+done
+
+for url in "${uninstallation_urls[@]}"; do
     download_script "$url" scripts
 done
 

@@ -6,16 +6,12 @@ set -e
 # Set the directory where scripts should be saved
 tmp_dir="/tmp/genie-$(date +%Y%m%d%H%M%S)"
 
-# Register the cleanup function to be called on exit and on specific signals
 trap cleanup HUP INT QUIT TERM
 
-# Cleanup function to delete the temporary directory
 cleanup() {
     rm -rf /tmp/genie-*
     if ! rm -rf "$tmp_dir"; then
         echo "Failed to remove the temporary directory $tmp_dir"
-    else
-        echo "Removed the temporary directory $tmp_dir"
     fi
 }
 
@@ -66,20 +62,24 @@ mkdir -p "$tmp_dir/bin"
 # Export GITHUB_TOKEN variable to be available for the child processes
 export GITHUB_TOKEN
 
+# Common scripts
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/colour_log.sh scripts
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/ssh_config_remove.sh scripts
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/macos_preferences_manage.sh scripts
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/nerd_fonts_manage.sh scripts
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/symlinks_manage.sh scripts
+download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/iterm_preferences_manage.sh scripts
+# Installation scripts
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/installation_scripts.sh scripts
+# Uninstallation scripts
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/uninstallation_scripts.sh scripts
+# Genie app
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/bin/genie bin
 
 source "$tmp_dir/scripts/colour_log.sh"
 source "$tmp_dir/scripts/installation_scripts.sh"
 source "$tmp_dir/scripts/uninstallation_scripts.sh"
 
-# Download each script and save it to the scripts sub directory
 for url in "${installation_urls[@]}"; do
     download_script "$url" scripts
 done
@@ -88,7 +88,6 @@ for url in "${uninstallation_urls[@]}"; do
     download_script "$url" scripts
 done
 
-# Inform the user how to run the scripts
-echo "All scripts downloaded to $tmp_dir"
-echo "To execute the scripts, run:"
-echo "$tmp_dir/bin/genie --install"
+log $INFO "All scripts downloaded to $tmp_dir"
+log $INFO "To execute the scripts, run:"
+log $INFO "$tmp_dir/bin/genie --install"

@@ -269,4 +269,3 @@ reset)
     exit 1
     ;;
 esac
-        echo "Failed to remove nerd fonts."

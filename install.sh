@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Exit immediately if a command exits with a non-zero status
+set -e
+
 echo "This script will install the genie application on your system."
 
 # Set the directory where scripts should be saved
@@ -37,8 +40,7 @@ download_script() {
 
     # Check if the download was successful
     if [ "$status_code" -ne 200 ]; then
-        message = "Failed to download $url (status code: $status_code)"
-        echo -e "\033[0;31m$message\033[0m"
+        echo "Failed to download $url (status code: $status_code)"
         # Check if the GITHUB_TOKEN environment variable is not set
         if [ -z "$auth_header" ]; then
             echo "Make sure to set the GITHUB_TOKEN environment variable if $url exists in a private repo."
@@ -61,7 +63,7 @@ mkdir -p "$tmp_dir"
 # Export GITHUB_TOKEN variable to be available for the child processes
 export GITHUB_TOKEN
 
-download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/color_log.sh scripts
+download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/colour_log.sh scripts
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/installation_scripts.sh scripts
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/scripts/uninstallation_scripts.sh scripts
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/bin/genie bin

@@ -4,7 +4,7 @@
 set -e
 
 # Set the directory where scripts should be saved
-tmp_dir="/tmp/genie-$(date +%Y%m%d%H%M%S)"
+tmp_dir="/tmp/genie-*"
 
 # Register the cleanup function to be called on exit and on specific signals
 trap cleanup HUP INT QUIT TERM
@@ -88,10 +88,7 @@ for url in "${uninstallation_urls[@]}"; do
     download_script "$url" scripts
 done
 
-# Add $tmp_dir/bin to the PATH
-export PATH="$PATH:$tmp_dir/bin"
-
 # Inform the user how to run the scripts
 echo "All scripts downloaded to $tmp_dir"
 echo "To execute the scripts, run:"
-echo "genie --install"
+echo "$tmp_dir/bin/genie --install"

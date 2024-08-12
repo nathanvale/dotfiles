@@ -68,7 +68,7 @@ download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/gen
 download_script https://raw.githubusercontent.com/nathanvale/dotfiles/master/genie/bin/genie bin
 
 # Register the cleanup function to be called on exit and on specific signals
-trap cleanup HUP INT QUIT TERM
+trap cleanup EXIT
 
 source "$tmp_dir/scripts/color_log.sh"
 source "$tmp_dir/scripts/installation_scripts.sh"

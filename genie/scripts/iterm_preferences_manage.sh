@@ -58,13 +58,11 @@ import_settings() {
 
 # Function to delete iTerm2 settings from defaults
 delete_settings() {
-    defaults delete com.googlecode.iterm2
-    if [ $? -eq 0 ]; then
-        log $INFO "iTerm2 settings deleted from defaults successfully."
+    if ! defaults delete com.googlecode.iterm2 >/dev/null 2>&1; then
+        log $ERROR "Failed to delete iTerm2 settings from defaults."
         exit 0
     else
-        log $ERROR "Failed to delete iTerm2 settings from defaults."
-        exit 1
+        log $INFO "iTerm2 settings deleted from defaults successfully."
     fi
 }
 

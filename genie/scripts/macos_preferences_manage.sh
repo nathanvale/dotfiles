@@ -60,7 +60,7 @@ set_preferences() {
 
     # Apple Global Domain
 
-    apply_preference NSGlobalDomain NSQuitAlwaysKeepsWindows -bool false             # Disable resume system-wide
+    apply_preference NSGlobalDomain NSQuitAlwaysKeepsWindows -bool true              # Disable resume system-wide
     apply_preference NSGlobalDomain AppleInterfaceStyle -string "Dark"               # Enable Dark Mode
     apply_preference NSGlobalDomain AppleKeyboardUIMode -int 2                       # Enable full keyboard access for all controls (e.g., enable Tab in modal dialogs)
     apply_preference NSGlobalDomain ApplePressAndHoldEnabled -bool false             # Disable press-and-hold for keys in favor of key repeat

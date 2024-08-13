@@ -6,4 +6,4 @@ source "./colour_log.sh"
 
 log $INFO "Attempting to set remove iTerm2 preferences..."
 
-./iterm_preferences_manage --delete
+./iterm_preferences_manage.sh --delete

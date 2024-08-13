@@ -6,4 +6,4 @@ source "./colour_log.sh"
 
 log $INFO "Attempting to set import iTerm2 preferences..."
 
-./iterm_preferences_manage --import
+./iterm_preferences_manage.sh --import

@@ -12,6 +12,11 @@ log $INFO "Starting Homebrew uninstallation..."
 
 # Run the official Homebrew uninstall script
 log $INFO "Running the official Homebrew uninstall script..."
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)" || exit 0
 
-log $INFO "Homebrew uninstallation complete."
+if ! /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"; then
+    log $ERROR "Failed to run the official Homebrew uninstall script."
+    exit 0
+else
+    log $INFO "Homebrew uninstallation complete."
+fi

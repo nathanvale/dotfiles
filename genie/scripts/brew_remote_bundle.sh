@@ -94,8 +94,7 @@ log $INFO "Installing Homebrew packages..."
 
 if ! brew bundle --file=$TEMP_BREWFILE; then
   log $ERROR "Failed to install Homebrew packages."
-  cleanup
-  exit 1
+  ignore_sigint
 fi
 
 cleanup

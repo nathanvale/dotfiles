@@ -11,5 +11,5 @@ function open_all_my_apps --description "Open all my apps"
         sleep .5
     end
     sleep 2
-    yabai_reset_windows
+    aerospace workspace 1
 end

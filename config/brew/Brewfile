@@ -1,75 +1,28 @@
 tap "homebrew/bundle"
 tap "homebrew/services"
-tap "koekeishiya/formulae"
-
-# Color-highlighted diff(1) output
-brew "colordiff" 
-# Unit testing framework for Bash
-brew "bats-core"
-# Lazy git UI
-brew "lazygit"
-# Official Amazon AWS command-line interface
+tap "nikitabobko/tap"
 brew "awscli"
-# Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
-# GNU File, Shell, and Text utilities
 brew "coreutils"
-# Modern, maintained ***REMOVED*** for ls
+brew "bats-core"
 brew "eza"
-# Simple, fast and user-friendly alternative to find
 brew "fd"
-# User-friendly command-line shell for UNIX-like operating systems
 brew "fish"
-# Plugin manager for the Fish shell
 brew "fisher"
-# Command-line tools for fly.io services
 brew "flyctl"
-# Command-line fuzzy finder written in Go
 brew "fzf"
-# GitHub command-line tool
 brew "gh"
-# Remote repository management made easy
 brew "ghq"
-# Syntax-highlighting pager for git and diff output
 brew "git-delta"
-# GNU grep, egrep and fgrep
 brew "grep"
-# Lightweight and flexible command-line JSON processor
 brew "jq"
-# Manage multiple Node.js versions
+brew "lazygit"
 brew "nvm"
-# Autoformat shell script source code
 brew "shfmt"
-# JavaScript package manager
 brew "yarn"
-# A tiling window manager for macOS based on binary space partitioning.
-brew "koekeishiya/formulae/yabai"
-# Display management tool
+cask "aerospace"
 cask "betterdisplay"
-# Tool to remove unnecessary files and folders from disk
 cask "cleanmymac"
-# Voice and text chat software
-cask "discord"
-# Web browser
-cask "firefox"
-# Web browser
-cask "google-chrome"
-# iPhone management application
-cask "imazing"
-# Terminal emulator as alternative to Apple's Terminal app
-cask "iterm2"
-# Keyboard customiser
-cask "karabiner-elements"
-# Collaboration platform for API development
-cask "postman"
-# Team communication and collaboration software
-cask "slack"
-# Open-source code editor
-cask "visual-studio-code"
-# Native desktop client for WhatsApp
-cask "whatsapp"
-# Video communication and virtual meeting platform
-cask "zoom"
 vscode "aaron-bond.better-comments"
 vscode "alefragnani.bookmarks"
 vscode "andys8.jest-snippets"
@@ -115,3 +68,4 @@ vscode "wallabyjs.wallaby-vscode"
 vscode "wayou.vscode-todo-highlight"
 vscode "yoavbls.pretty-ts-errors"
 vscode "yy0931.save-as-root"
+vscode "tamasfe.even-better-toml"

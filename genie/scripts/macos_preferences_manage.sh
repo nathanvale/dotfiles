@@ -97,6 +97,8 @@ set_preferences() {
     apply_preference com.apple.frameworks.diskimages skip-verify-remote -bool true # Disable disk image verification
 
     # Dock
+    apply_preference com.apple.spaces "spans-displays" -bool "true"                    # Disable displays have seperate spaces
+    apply_preference com.apple.dock "expose-group-apps" -bool "true"                   # Group windows by application in Mission Control
     apply_preference com.apple.dock autohide -bool true                                # Automatically hide and show the Dock
     apply_preference com.apple.dock autohide-time-modifier -float 0.001                # Speed up Dock auto-hide/show animation
     apply_preference com.apple.dock enable-spring-load-actions-on-all-items -bool true # Enable spring loading for all Dock items

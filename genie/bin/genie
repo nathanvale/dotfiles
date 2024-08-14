@@ -50,6 +50,12 @@ install_app() {
     execute_scripts "$error_message" "${scripts[@]}"
 
     log $INFO "Installation of dotfiles completed successfully."
+
+    sleep 2
+
+    open '/Applications/Karabiner-Elements.app/'
+    open '/Applications/Aerospace.app/'
+    open '/Applications/iTerm.app/'
 }
 
 # Function to uninstall the application

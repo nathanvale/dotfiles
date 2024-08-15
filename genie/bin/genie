@@ -55,7 +55,6 @@ install_app() {
 
     open '/Applications/Karabiner-Elements.app/'
     open '/Applications/Aerospace.app/'
-    open '/Applications/iTerm.app/'
 }
 
 # Function to uninstall the application

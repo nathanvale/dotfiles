@@ -6,17 +6,21 @@
 # Returns: None
 
 open_all_my_apps() {
-    # Define an array of applications to open
-    apps_to_open=("iTerm" "Visual Studio Code" "Google Chrome" "Safari" "Slack" "Microsoft Outlook" "Notes" "Reminders" "Calendar")
+    # Define an array of applications to open on my work Mac
+    if [ "$(hostname)" = "ORG101475" ]; then
+        apps_to_open=("iTerm" "Visual Studio Code" "Google Chrome" "Safari" "Slack" "Microsoft Outlook" "Notes" "Reminders" "Microsoft Teams")
+    else
+        # Define an array of applications to open on my personal Mac
+        apps_to_open=("iTerm" "Visual Studio Code" "Google Chrome" "Safari" "Notes" "Reminders" "Calendar")
+    fi
 
     # Loop through each application in the list and open it
     for app in "${apps_to_open[@]}"; do
         echo "Opening $app"
         open -a "$app"
-        sleep 0.5
+        # sleep 0.5
     done
 
-    sleep 2
 
     aerospace workspace 1
 }

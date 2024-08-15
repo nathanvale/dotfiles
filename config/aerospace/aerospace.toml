@@ -83,7 +83,6 @@ outer.right = 0
 # You can uncomment this line to open up terminal with alt + enter shortcut
 # See: https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget
 alt-enter = 'exec-and-forget open_all_my_apps.sh'
-ctrl-cmd-c = 'exec-and-forget osascript ~/Scripts/check_and_open_safari.applescript "https://chatgpt.com"'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#layout
 alt-slash = 'layout tiles horizontal vertical'
@@ -112,22 +111,23 @@ ctrl-6 = 'workspace 6'
 ctrl-7 = 'workspace 7'
 ctrl-8 = 'workspace 8'
 ctrl-9 = 'workspace 9'
-ctrl-cmd-s = 'workspace S'
-ctrl-cmd-m = 'workspace M'
-ctrl-cmd-p = 'workspace P'
-ctrl-cmd-n = 'workspace N'
-ctrl-cmd-r = 'workspace R'
+ctrl-alt-s = 'workspace S'
+ctrl-alt-m = 'workspace M'
+ctrl-alt-c = 'workspace C'
+ctrl-alt-p = 'workspace P'
+ctrl-alt-n = 'workspace N'
+ctrl-alt-r = 'workspace R'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
-ctrl-cmd-1 = ['move-node-to-workspace 1', 'workspace 1']
-ctrl-cmd-2 = ['move-node-to-workspace 2', 'workspace 2']
-ctrl-cmd-3 = ['move-node-to-workspace 3', 'workspace 3']
-ctrl-cmd-4 = ['move-node-to-workspace 4', 'workspace 4']
-ctrl-cmd-5 = ['move-node-to-workspace 5', 'workspace 5']
-ctrl-cmd-6 = ['move-node-to-workspace 6', 'workspace 6']
-ctrl-cmd-7 = ['move-node-to-workspace 7', 'workspace 7']
-ctrl-cmd-8 = ['move-node-to-workspace 8', 'workspace 8']
-ctrl-cmd-9 = ['move-node-to-workspace 9', 'workspace 9']
+ctrl-alt-1 = ['move-node-to-workspace 1', 'workspace 1']
+ctrl-alt-2 = ['move-node-to-workspace 2', 'workspace 2']
+ctrl-alt-3 = ['move-node-to-workspace 3', 'workspace 3']
+ctrl-alt-4 = ['move-node-to-workspace 4', 'workspace 4']
+ctrl-alt-5 = ['move-node-to-workspace 5', 'workspace 5']
+ctrl-alt-6 = ['move-node-to-workspace 6', 'workspace 6']
+ctrl-alt-7 = ['move-node-to-workspace 7', 'workspace 7']
+ctrl-alt-8 = ['move-node-to-workspace 8', 'workspace 8']
+ctrl-alt-9 = ['move-node-to-workspace 9', 'workspace 9']
 
 alt-shift-f = 'fullscreen'
 
@@ -210,16 +210,16 @@ if.app-id = 'com.apple.mail'
 run = "move-node-to-workspace 6"
 
 [[on-window-detected]]
-if.app-id = 'com.apple.iCal'
-run = ['move-node-to-workspace 6']
-
-[[on-window-detected]]
 if.app-id = 'com.apple.systempreferences'
 run = ['layout floating', 'move-node-to-workspace S']
 
 [[on-window-detected]]
 if.app-id = 'com.apple.Music'
 run = ['move-node-to-workspace M']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.iCal'
+run = ['move-node-to-workspace C']
 
 [[on-window-detected]]
 if.app-id = 'com.apple.podcasts'

@@ -12,7 +12,7 @@ after-login-command = []
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
-after-startup-command = []
+after-startup-command = ["exec-and-forget open_all_my_apps.sh"]
 
 # Start AeroSpace at login
 start-at-login = true
@@ -82,7 +82,7 @@ outer.right = 0
 
 # You can uncomment this line to open up terminal with alt + enter shortcut
 # See: https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget
-alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
+alt-enter = 'exec-and-forget open_all_my_apps.sh'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#layout
 alt-slash = 'layout tiles horizontal vertical'
@@ -111,12 +111,12 @@ ctrl-6 = 'workspace 6'
 ctrl-7 = 'workspace 7'
 ctrl-8 = 'workspace 8'
 ctrl-9 = 'workspace 9'
-ctrl-cmd-s = 'workspace S'
-ctrl-cmd-m = 'workspace M'
-ctrl-cmd-c = 'workspace C'
-ctrl-cmd-p = 'workspace P'
-ctrl-cmd-n = 'workspace N'
-ctrl-cmd-r = 'workspace R'
+ctrl-alt-s = 'workspace S'
+ctrl-alt-m = 'workspace M'
+ctrl-alt-c = 'workspace C'
+ctrl-alt-p = 'workspace P'
+ctrl-alt-n = 'workspace N'
+ctrl-alt-r = 'workspace R'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 ctrl-alt-1 = ['move-node-to-workspace 1', 'workspace 1']
@@ -134,7 +134,7 @@ alt-shift-f = 'fullscreen'
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
-alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
+ctrl-alt-tab = 'move-workspace-to-monitor --wrap-around next'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
 alt-shift-semicolon = 'mode service'
@@ -142,11 +142,11 @@ alt-shift-semicolon = 'mode service'
 alt-shift-r = 'mode resize'
 
 [mode.resize.binding]
-h = 'resize width -50'
-j = 'resize height +50'
-k = 'resize height -50'
-l = 'resize width +50'
-b = 'balance-sizes'
+ctrl-h = 'resize width -50'
+ctrl-j = 'resize height +50'
+ctrl-k = 'resize height -50'
+ctrl-l = 'resize width +50'
+ctrl-b = 'balance-sizes'
 
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
@@ -194,11 +194,19 @@ if.app-id = 'com.tinyspeck.slackmacgap'
 run = "move-node-to-workspace 5"
 
 [[on-window-detected]]
+if.app-id = 'com.apple.MobileSMS'
+run = "move-node-to-workspace 5"
+
+[[on-window-detected]]
 if.app-id = 'com.microsoft.Outlook'
 run = "move-node-to-workspace 6"
 
 [[on-window-detected]]
 if.app-id = 'com.microsoft.teams2'
+run = "move-node-to-workspace 6"
+
+[[on-window-detected]]
+if.app-id = 'com.apple.mail'
 run = "move-node-to-workspace 6"
 
 [[on-window-detected]]
@@ -235,3 +243,9 @@ run = ['layout floating']
 
 [[on-window-detected]]
 run = "move-node-to-workspace 8"
+
+[exec]
+inherit-env-vars = true
+
+[exec.env-vars]
+PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:${HOME}/code/dotfiles/bin:${PATH}'

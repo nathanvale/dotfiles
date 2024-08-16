@@ -11,7 +11,7 @@ open_all_my_apps() {
         apps_to_open=("iTerm" "Visual Studio Code" "Google Chrome" "Safari" "Slack" "Microsoft Outlook" "Notes" "Reminders" "Microsoft Teams")
     else
         # Define an array of applications to open on my personal Mac
-        apps_to_open=("iTerm" "Visual Studio Code" "Google Chrome" "Safari" "Notes" "Reminders" "Calendar")
+        apps_to_open=("iTerm" "Visual Studio Code" "Google Chrome" "Safari" "Notes" "Reminders" "Calendar","Messages")
     fi
 
     # Loop through each application in the list and open it
@@ -20,7 +20,6 @@ open_all_my_apps() {
         open -a "$app"
         # sleep 0.5
     done
-
 
     aerospace workspace 1
 }

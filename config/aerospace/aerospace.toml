@@ -117,6 +117,7 @@ ctrl-cmd-n = 'workspace N'
 ctrl-cmd-r = 'workspace R'
 ctrl-cmd-c = 'exec-and-forget osascript ~/Scripts/check_and_open_safari.applescript "https://chatgpt.com"'
 ctrl-cmd-m = 'exec-and-forget osascript ~/Scripts/check_and_open_safari.applescript "https://mail.google.com"'
+ctrl-cmd-t = 'exec-and-forget osascript ~/Scripts/check_and_open_safari.applescript "https://x.com"'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 ctrl-cmd-1 = ['move-node-to-workspace 1', 'workspace 1']

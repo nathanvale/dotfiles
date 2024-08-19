@@ -111,6 +111,7 @@ ctrl-6 = 'workspace 6'
 ctrl-7 = 'workspace 7'
 ctrl-8 = 'workspace 8'
 ctrl-9 = 'workspace 9'
+ctrl-cmd-b = 'workspace B'
 ctrl-cmd-s = 'workspace S'
 ctrl-cmd-p = 'workspace P'
 ctrl-cmd-n = 'workspace N'
@@ -213,6 +214,10 @@ run = ['move-node-to-workspace 6']
 [[on-window-detected]]
 if.app-id = 'com.apple.systempreferences'
 run = ['layout floating', 'move-node-to-workspace S']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.iBooksX'
+run = ['move-node-to-workspace B']
 
 [[on-window-detected]]
 if.app-id = 'com.apple.Music'

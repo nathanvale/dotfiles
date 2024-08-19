@@ -115,10 +115,12 @@ ctrl-cmd-b = 'workspace B'
 ctrl-cmd-s = 'workspace S'
 ctrl-cmd-p = 'workspace P'
 ctrl-cmd-n = 'workspace N'
+ctrl-cmd-f = 'workspace F'
 ctrl-cmd-r = 'workspace R'
 ctrl-cmd-c = 'exec-and-forget osascript ~/Scripts/check_and_open_safari.applescript "https://chatgpt.com"'
 ctrl-cmd-m = 'exec-and-forget osascript ~/Scripts/check_and_open_safari.applescript "https://mail.google.com"'
 ctrl-cmd-t = 'exec-and-forget osascript ~/Scripts/check_and_open_safari.applescript "https://x.com"'
+ctrl-cmd-y = 'exec-and-forget osascript ~/Scripts/check_and_open_safari.applescript "https://www.youtube.com"'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 ctrl-cmd-1 = ['move-node-to-workspace 1', 'workspace 1']
@@ -236,11 +238,11 @@ if.app-id = 'com.apple.reminders'
 run = ['move-node-to-workspace R']
 
 [[on-window-detected]]
-if.app-id = 'org.pqrs.Karabiner-Elements.Settings'
-run = ['layout floating']
+if.app-id = 'com.apple.finder'
+run = ['move-node-to-workspace F']
 
 [[on-window-detected]]
-if.app-id = 'com.apple.finder'
+if.app-id = 'org.pqrs.Karabiner-Elements.Settings'
 run = ['layout floating']
 
 [[on-window-detected]]

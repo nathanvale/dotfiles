@@ -55,7 +55,7 @@ function gh_create_pr_and_merge --description "Create a PR and merge it"
         return
     end
 
-    gh pr merge $pull_request_url --merge -d
+    gh pr merge $pull_request_url --merge -d --auto
 
     if test $status -ne 0
         echo "GitHub PR merge failed. Please check the error message above."

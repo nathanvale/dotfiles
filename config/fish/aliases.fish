@@ -28,7 +28,7 @@ abbr -a batn "bat -n"
 abbr -a ghpr gh_create_pr_and_merge
 abbr -a ghli "gh auth login"
 abbr -a ghlo "gh auth logout"
-abbr -a gdb git_delete_branch
+abbr -a gbda git_branch_delete_all
 
 abbr -a ls "eza --color=always --icons"
 abbr -a ll "eza -l --color=always --icons"

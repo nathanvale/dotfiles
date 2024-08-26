@@ -1,4 +1,4 @@
-function git_delete_branch
+function git_branch_delete_all
 
     git fetch --all --prune
 

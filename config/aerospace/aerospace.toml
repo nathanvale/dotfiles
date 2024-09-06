@@ -102,8 +102,8 @@ alt-shift-l = 'move right'
 
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
-ctrl-1 = 'workspace 1'
-ctrl-2 = 'workspace 2'
+ctrl-1 = ['workspace 1', 'layout accordion horizontal vertical']
+ctrl-2 = ['workspace 2', 'layout accordion horizontal vertical']
 ctrl-3 = 'workspace 3'
 ctrl-4 = 'workspace 4'
 ctrl-5 = 'workspace 5'
@@ -141,6 +141,8 @@ ctrl-alt-n = ['move-node-to-workspace N', 'workspace N']
 ctrl-alt-f = ['move-node-to-workspace F', 'workspace F']
 ctrl-alt-r = ['move-node-to-workspace R', 'workspace R']
 ctrl-alt-d = ['move-node-to-workspace D', 'workspace D']
+ctrl-alt-shift-left = ['move-node-to-monitor prev', 'focus-monitor prev']
+ctrl-alt-shift-right = ['move-node-to-monitor next', 'focus-monitor next']
 
 alt-shift-f = 'fullscreen'
 

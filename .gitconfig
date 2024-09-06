@@ -45,15 +45,11 @@
     side-by-side = true
     line-numbers = true
     decorations = true
-    plus-style = "syntax #98C379"      # greenish color for additions
-    minus-style = "syntax #E06C75"     # reddish color for deletions
-    minus-emph-style = "syntax #BE5046" # emphasized deletion
-    file-style = "bold #E5C07B ul"     # yellowish color for file names
-    hunk-header-style = "bold #61AFEF" # blueish color for hunk headers
-    line-numbers-style = "bold #ABB2BF" # grayish color for line numbers
+    true-color = always
 
 [diff]
     tool = vscode
+    colorMoved = default
 
 [difftool "vscode"]
     cmd = code --wait --diff $LOCAL $REMOTE

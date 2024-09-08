@@ -102,8 +102,8 @@ alt-shift-l = 'move right'
 
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
-ctrl-1 = ['workspace 1', 'layout accordion horizontal vertical']
-ctrl-2 = ['workspace 2', 'layout accordion horizontal vertical']
+ctrl-1 = 'workspace 1'
+ctrl-2 = 'workspace 2'
 ctrl-3 = 'workspace 3'
 ctrl-4 = 'workspace 4'
 ctrl-5 = 'workspace 5'

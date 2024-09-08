@@ -116,10 +116,11 @@ ctrl-cmd-c = 'workspace C'
 ctrl-cmd-s = 'workspace S'
 ctrl-cmd-p = 'workspace P'
 ctrl-cmd-n = 'workspace N'
+ctrl-cmd-m = 'workspace M'
 ctrl-cmd-f = 'workspace F'
 ctrl-cmd-r = 'workspace R'
 ctrl-cmd-d = 'workspace D'
-ctrl-cmd-m = 'exec-and-forget osascript ~/Scripts/check_and_open_safari.applescript "https://mail.google.com"'
+ctrl-cmd-g = 'exec-and-forget osascript ~/Scripts/check_and_open_safari.applescript "https://mail.google.com"'
 ctrl-cmd-t = 'exec-and-forget osascript ~/Scripts/check_and_open_safari.applescript "https://x.com"'
 ctrl-cmd-y = 'exec-and-forget osascript ~/Scripts/check_and_open_safari.applescript "https://www.youtube.com"'
 
@@ -205,24 +206,28 @@ if.app-id = 'com.apple.Safari'
 run = "move-node-to-workspace 4"
 
 [[on-window-detected]]
+if.app-id = 'com.openai.chat'
+run = ['move-node-to-workspace 5']
+
+[[on-window-detected]]
 if.app-id = 'com.tinyspeck.slackmacgap'
-run = "move-node-to-workspace 5"
+run = "move-node-to-workspace 6"
 
 [[on-window-detected]]
 if.app-id = 'com.apple.MobileSMS'
-run = "move-node-to-workspace 5"
+run = "move-node-to-workspace 6"
 
 [[on-window-detected]]
 if.app-id = 'com.microsoft.Outlook'
-run = "move-node-to-workspace 6"
+run = "move-node-to-workspace 7"
 
 [[on-window-detected]]
 if.app-id = 'com.microsoft.teams2'
-run = "move-node-to-workspace 6"
+run = "move-node-to-workspace 7"
 
 [[on-window-detected]]
 if.app-id = 'com.apple.iCal'
-run = ['move-node-to-workspace 6']
+run = ['move-node-to-workspace 7']
 
 [[on-window-detected]]
 if.app-id = 'com.apple.systempreferences'
@@ -231,10 +236,6 @@ run = ['layout floating', 'move-node-to-workspace S']
 [[on-window-detected]]
 if.app-id = 'com.apple.iBooksX'
 run = ['move-node-to-workspace B']
-
-[[on-window-detected]]
-if.app-id = 'com.openai.chat'
-run = ['move-node-to-workspace C']
 
 [[on-window-detected]]
 if.app-id = 'com.apple.Music'

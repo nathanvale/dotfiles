@@ -40,7 +40,7 @@ apply_preference() {
         log $INFO "Would set $quoted_params"
     else
         log $INFO "Setting $quoted_params"
-        defaults write "$@"
+        sudo defaults write "$@"
     fi
 }
 

@@ -7,7 +7,7 @@
 
 open_all_my_apps() {
     # Define an array of applications to open on my work Mac
-    if [ "$(hostname)" = "ORG101475" ]; then
+    if [ "$(hostname)" = "BUN339782" ]; then
         apps_to_open=("iTerm" "Visual Studio Code" "Google Chrome" "Safari" "Slack" "Microsoft Outlook" "Notes" "Reminders" "Microsoft Teams" "ChatGPT")
     else
         # Define an array of applications to open on my personal Mac

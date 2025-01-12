@@ -198,36 +198,16 @@ if.app-id = 'com.microsoft.VSCode'
 run = "move-node-to-workspace 2"
 
 [[on-window-detected]]
-if.app-id = 'com.google.Chrome'
+if.app-id = 'company.thebrowser.Browser'
 run = "move-node-to-workspace 3"
 
 [[on-window-detected]]
-if.app-id = 'com.apple.Safari'
+if.app-id = 'com.apple.MobileSMS'
 run = "move-node-to-workspace 4"
 
 [[on-window-detected]]
-if.app-id = 'com.openai.chat'
-run = ['move-node-to-workspace 5']
-
-[[on-window-detected]]
-if.app-id = 'com.tinyspeck.slackmacgap'
-run = "move-node-to-workspace 6"
-
-[[on-window-detected]]
-if.app-id = 'com.apple.MobileSMS'
-run = "move-node-to-workspace 6"
-
-[[on-window-detected]]
-if.app-id = 'com.microsoft.Outlook'
-run = "move-node-to-workspace 7"
-
-[[on-window-detected]]
 if.app-id = 'com.microsoft.teams2'
-run = "move-node-to-workspace 7"
-
-[[on-window-detected]]
-if.app-id = 'com.apple.iCal'
-run = ['move-node-to-workspace 7']
+run = "move-node-to-workspace 5"
 
 [[on-window-detected]]
 if.app-id = 'com.apple.systempreferences'
@@ -270,7 +250,7 @@ if.app-id = 'com.macpaw.CleanMyMac4'
 run = ['layout floating']
 
 [[on-window-detected]]
-run = "move-node-to-workspace 8"
+run = "move-node-to-workspace 7"
 
 [exec]
 inherit-env-vars = true

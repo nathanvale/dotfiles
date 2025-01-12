@@ -24,7 +24,7 @@ if status is-interactive
     end
 
     # Bindings for fzf
-    fzf_configure_bindings --directory=\cf --processes=\cp --variables=\cv --git_status=\cS --git_log=\cl
+    fzf_configure_bindings --directory=\cf --processes=\cp --variables=\cv --git_status=\cs --git_log=
 
     # Source work configuration if using my work laptop
     if test (hostname) = ORG101475

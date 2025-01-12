@@ -182,14 +182,6 @@
                             "to": [{ "key_code": "left_control" }]
                         }
                     ]
-                },
-                {
-                    "identifiers": {
-                        "device_address": "ce-f3-a8-6c-93-a9",
-                        "is_keyboard": true,
-                        "is_pointing_device": true
-                    },
-                    "ignore": false
                 }
             ],
             "name": "Nathan",

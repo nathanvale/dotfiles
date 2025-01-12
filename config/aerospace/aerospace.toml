@@ -246,7 +246,7 @@ if.app-id = 'org.pqrs.Karabiner-Elements.Settings'
 run = ['layout floating']
 
 [[on-window-detected]]
-if.app-id = 'com.macpaw.CleanMyMac4'
+if.app-id = 'com.macpaw.CleanMyMac5'
 run = ['layout floating']
 
 [[on-window-detected]]

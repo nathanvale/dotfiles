@@ -41,3 +41,4 @@ abbr -a mv gmv
 
 abbr -a less bat
 abbr -a cat "bat --paging=never"
+abbr -a lz lazygit

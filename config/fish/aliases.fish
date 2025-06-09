@@ -19,8 +19,7 @@ abbr 4DIRS --set-cursor=! "$(string join \n -- 'for dir in */' 'cd $dir' '!' 'cd
 
 abbr -a c "code ."
 abbr -a pg "echo 'Pinging Google' && ping www.google.com"
-abbr -a cf "code ~/.config/fish/config.fish"
-abbr -a sf "source ~/.config/fish/config.fish"
+
 abbr -a de "cd ~/Desktop"
 abbr -a d "cd ~/code"
 abbr -a cat bat
@@ -42,3 +41,25 @@ abbr -a mv gmv
 abbr -a less bat
 abbr -a cat "bat --paging=never"
 abbr -a lz lazygit
+
+abbr -a nu "nvm use"
+abbr -a pi "pnpm run install"
+abbr -a pd "pnpm run dev"
+abbr -a pf "pnpm run format"
+abbr -a pt "pnpm run typecheck"
+abbr -a pv "pnpm run validate"
+abbr -a pt "pnpm run test"
+abbr -a pl "pnpm run lint"
+abbr -a pa "pnpm add"
+abbr -a prd "pnpm add -D"
+
+
+abbr -a ac "code . ~/code/dotfiles/config/aerospace/aerospace.toml"
+abbr -a ar "aerospace reload-config"
+abbr -a fc "code ~/.config/fish/config.fish"
+abbr -a fr "source ~/.config/fish/config.fish"
+
+alias p.csp="cd ~/code/CSP/ && nvm use && code ."
+alias p.dotfiles="cd ~/code/dotfiles/ && code ."
+
+alias w.nvmrc="node -v > .nvmrc"

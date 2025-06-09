@@ -7,7 +7,6 @@
                 "rules": [
                     {
                         "description": "Change right_command+hjkl to arrow keys",
-                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": {
@@ -45,7 +44,6 @@
                     },
                     {
                         "description": "Launch and focus System Settings, Finder with home folder, Karabiner-Elements, Activity Monitor, and start QuickTime screen recording with right shift+letters.",
-                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": {
@@ -99,7 +97,6 @@
                     },
                     {
                         "description": "Map ctrl + [ to escape",
-                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": {
@@ -205,50 +202,16 @@
                     },
                     "ignore": false,
                     "manipulate_caps_lock_led": false
-                },
-                {
-                    "identifiers": {
-                        "device_address": "ce-f3-a8-6c-93-ae",
-                        "is_keyboard": true,
-                        "is_pointing_device": true
-                    },
-                    "ignore": false,
-                    "manipulate_caps_lock_led": false
-                },
-                {
-                    "identifiers": {
-                        "device_address": "ce-f3-a8-6c-93-ad",
-                        "is_keyboard": true,
-                        "is_pointing_device": true
-                    },
-                    "ignore": false,
-                    "simple_modifications": [
-                        {
-                            "from": { "key_code": "caps_lock" },
-                            "to": [{ "key_code": "left_control" }]
-                        }
-                    ]
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "is_pointing_device": true,
-                        "product_id": 12885,
-                        "vendor_id": 6645
-                    },
-                    "ignore": false
-                },
-                {
-                    "identifiers": {
-                        "device_address": "ce-f3-a8-6c-93-a1",
-                        "is_keyboard": true,
-                        "is_pointing_device": true
-                    },
-                    "ignore": false
                 }
             ],
             "name": "Nathan",
             "selected": true,
+            "simple_modifications": [
+                {
+                    "from": { "key_code": "caps_lock" },
+                    "to": [{ "key_code": "left_control" }]
+                }
+            ],
             "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
         }
     ]

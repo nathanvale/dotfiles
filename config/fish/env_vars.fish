@@ -1,4 +1,4 @@
-set -gx DOTFILES_GENIE_DIR "$HOME/code/dotfiles/genie";
+set -gx DOTFILES_GENIE_DIR "$HOME/code/dotfiles/genie"
 fish_add_path -gP "$HOME/code/dotfiles/genie/bin"
 
 # Define the custom functions directory
@@ -111,3 +111,18 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # HOMEBREW_BUNDLE_FILE_GLOBAL
 set -gx HOMEBREW_BUNDLE_FILE_GLOBAL ~/.config/brew/Brewfile
 set -gx HOMEBREW_BUNDLE_FILE ~/.config/brew/Brewfile
+
+set -gx LANG en_AU.UTF-8
+set -gx LC_COLLATE en_AU.UTF-8
+set -gx LC_CTYPE en_AU.UTF-8
+set -gx LC_MESSAGES en_AU.UTF-8
+set -gx LC_MONETARY en_AU.UTF-8
+set -gx LC_NUMERIC en_AU.UTF-8
+set -gx LC_TIME en_AU.UTF-8
+set -gx LC_ALL en_AU.UTF-8
+
+
+set -x XDG_CONFIG_HOME ~/.config
+
+set -gx PNPM_HOME ~/.local/share/pnpm
+set -gx PATH $PNPM_HOME/bin $PATH

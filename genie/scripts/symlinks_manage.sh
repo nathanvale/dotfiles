@@ -11,7 +11,7 @@ source "./colour_log.sh"
 symlinks=(
 	"${HOME}/.config|${HOME}/code/dotfiles/config"
 	"${HOME}/Scripts|${HOME}/code/dotfiles/Scripts"
-	"${HOME}/.bin|${HOME}/code/dotfiles/bin"
+	"${HOME}/bin|${HOME}/code/dotfiles/bin"
 	"${HOME}/.zprofile|${HOME}/code/dotfiles/.zprofile"
 	"${HOME}/.zshrc|${HOME}/code/dotfiles/.zshrc"
 	"${HOME}/.gitconfig|${HOME}/code/dotfiles/.gitconfig"

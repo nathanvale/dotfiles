@@ -7,7 +7,6 @@
                 "rules": [
                     {
                         "description": "Change right_command+hjkl to arrow keys",
-                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": {
@@ -45,7 +44,6 @@
                     },
                     {
                         "description": "Launch and focus System Settings, Finder with home folder, Karabiner-Elements, Activity Monitor, and start QuickTime screen recording with right shift+letters.",
-                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": {
@@ -99,7 +97,6 @@
                     },
                     {
                         "description": "Map ctrl + [ to escape",
-                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": {
@@ -249,6 +246,12 @@
             ],
             "name": "Nathan",
             "selected": true,
+            "simple_modifications": [
+                {
+                    "from": { "key_code": "caps_lock" },
+                    "to": [{ "key_code": "left_control" }]
+                }
+            ],
             "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
         }
     ]

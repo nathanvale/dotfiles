@@ -22,7 +22,7 @@
 
 function close_all_my_apps --description "Close all my apps except specified ones"
     # List of apps to keep open
-    set -l keepapps iTerm2
+    set -l keepapps ""
     # Get the list of application names
     set -l quitapps (osascript -e 'tell application "System Events" to get name of (every application process whose background only is false and name is not "Finder")')
     # Convert the list into an array
@@ -45,5 +45,4 @@ function close_all_my_apps --description "Close all my apps except specified one
             end
         end
     end
-    aerospace workspace 1
 end

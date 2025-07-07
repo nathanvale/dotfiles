@@ -1,0 +1,97 @@
+# ~/.config/tmuxinator/mnemosyne.yml
+# Tmuxinator configuration for mnemosyne Next.js + Storybook project
+
+name: mnemosyne
+root: ~/code/mnemosyne
+
+# Optional tmux socket
+# socket_name: foo
+
+# Note that the pre and post options have been deprecated in favor of
+# project hooks.
+
+# Project hooks
+# Runs on project start, always
+# on_project_start: command
+
+# Run on project start, the first time
+# on_project_first_start: command
+
+# Run on project stop
+# on_project_stop: command
+
+# Runs in each window and pane before window/pane specific commands. 
+# Useful for setting up interpreter versions.
+pre_window: |
+  # Create logs directory if it doesn't exist
+  mkdir -p .logs
+  # Load environment variables if they exist
+  if [ -f .env.development ]; then
+    source .env.development
+  fi
+  # Open VS Code (only once per session)
+  if [ ! -f /tmp/tmux_mnemosyne_vscode_opened ]; then
+    code . &
+    touch /tmp/tmux_mnemosyne_vscode_opened
+  fi
+
+# Runs in each window and pane after window/pane specific commands.
+# post_window: command
+
+# Runs in each pane and window. This is useful for setting up interpreter versions.
+# pre: command
+
+# Pass command line options to tmux. Useful for specifying a different tmux.conf.
+# tmux_options: -f ~/.tmux.mac.conf
+
+# Change the command to call tmux. This can be used by derivatives/wrappers like byobu.
+# tmux_command: byobu
+
+# Specifies (by name or index) which window will be selected on project startup. If not set, the first window is used.
+# startup_window: dev
+
+# Specifies (by index) which pane of the specified window will be selected on project startup. If not set, the first pane is used.
+# startup_pane: 1
+
+# Controls whether the tmux session should be attached to automatically. Defaults to true.
+# attach: false
+
+# Change base index for windows (default is 0)
+tmux_options: -f ~/.tmux.conf
+windows:
+  - storybook:
+      root: ~/code/mnemosyne
+      panes:
+        - pnpm storybook
+  - dev:
+      root: ~/code/mnemosyne
+      panes:
+        - |
+          # Auto-rename window with git branch
+          branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "no-git")
+          tmux rename-window "dev: $branch"
+          # Start dev server with logging
+          pnpm dev 2>&1 | tee -a .logs/dev.$(date +%s).log | pino-pretty
+  - prisma:
+      root: ~/code/mnemosyne
+      panes:
+        - pnpm prisma studio
+  - git:
+      root: ~/code/mnemosyne
+      panes:
+        - lazygit
+  - logs:
+      root: ~/code/mnemosyne
+      panes:
+        - |
+          # Wait a moment for logs to be created
+          sleep 2
+          # Use lnav to view logs if available, otherwise use tail
+          if command -v lnav >/dev/null 2>&1; then
+            lnav .logs
+          else
+            echo "lnav not found, using tail instead..."
+            tail -f .logs/*.log 2>/dev/null || echo "No log files found yet. Waiting for logs..."
+            while [ ! -f .logs/*.log ]; do sleep 1; done
+            tail -f .logs/*.log
+          fi

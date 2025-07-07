@@ -1,0 +1,32 @@
+theme = NightOwlDark
+
+window-padding-x = 4
+window-padding-y = 4
+window-width = 120
+window-height = 45
+
+font-size = 14
+font-family = "MesloLGS NF"
+font-thicken = false
+
+adjust-cell-width = -3%
+adjust-underline-position = 40%
+adjust-underline-thickness = -60%
+
+cursor-style = block
+cursor-style-blink = false
+
+copy-on-select = true
+
+shell-integration = zsh
+shell-integration-features = no-cursor
+
+macos-icon = custom-style
+macos-icon-ghost-color = FFFFFF
+macos-icon-screen-color = 000000,00E000
+macos-non-native-fullscreen = true
+macos-titlebar-style = tabs
+
+background-opacity = .4
+background-blur = true
+keybind = shift+enter=text:\n

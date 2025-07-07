@@ -191,9 +191,8 @@ if.app-id = 'com.microsoft.Outlook'
 run = "move-node-to-workspace 6"
 
 [[on-window-detected]]
-if.app-id = 'com.apple.systempreferences'
-run = ['layout floating', 'move-node-to-workspace S']
-
+if.app-id = 'com.leomehlig.today'
+run = ['move-node-to-workspace S']
 
 [[on-window-detected]]
 if.app-id = 'com.apple.MobileSMS'
@@ -233,10 +232,10 @@ run = ['layout floating']
 
 [[on-window-detected]]
 if.window-title-regex-substring = '^Settings'
-run = ['layout floating', 'move-node-to-workspace S']
+run = ['layout floating', 'move-node-to-workspace 0']
 
 [[on-window-detected]]
-run = ['layout tiling', 'move-node-to-workspace 0']
+run = ['layout floating', 'move-node-to-workspace 0']
 
 
 [exec]

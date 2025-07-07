@@ -22,9 +22,9 @@ case $CURRENT_WORKSPACE in
     # Leave this space open for another Arc browser window
      open -a "Arc"
     ;;
-"5")
-    open -a "Microsoft Teams"
-    ;;
+# "5")
+#     open -a "Microsoft Teams"
+#     ;;
 "6")
     open -a "Microsoft Outlook"
     ;;
@@ -49,6 +49,12 @@ case $CURRENT_WORKSPACE in
 "I")
     open -a "Music"
     ;;
+"P")
+    open -a "Podcasts"
+    ;;
+"S")
+    open -a "Structured"
+    ;;      
 *)
     # write to a file in my home directory with the current workspace
     echo "No application assigned for this workspace."

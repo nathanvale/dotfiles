@@ -1,6 +1,7 @@
 tap "homebrew/bundle"
 tap "homebrew/services"
 tap "nikitabobko/tap"
+brew "az"
 brew "pnpm"
 brew "awscli"
 brew "bat"

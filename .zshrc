@@ -1,5 +1,5 @@
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -71,6 +71,10 @@ export ZSH="$HOME/.oh-my-zsh"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git gh pnpm azure z fzf history zsh-autosuggestions zsh-syntax-highlighting)
+
+if [ -f /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
 
 source $ZSH/oh-my-zsh.sh
 
@@ -177,9 +181,6 @@ alias cat="bat"
 # Use bat with line numbers
 alias batn="bat -n"
 
-# Use grm instead of rm
-alias rm="grm"
-
 # Use gmv instead of mv
 alias mv="gmv"
 
@@ -216,3 +217,5 @@ alias w.nvmrc="node -v > .nvmrc"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 
+
+PATH=~/.console-ninja/.bin:$PATH

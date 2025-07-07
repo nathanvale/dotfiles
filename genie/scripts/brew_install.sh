@@ -25,8 +25,8 @@ handle_cleanup() {
 
 trap 'handle_cleanup "Homebrew installation interrupted."' HUP INT QUIT TERM
 
-# Check if Homebrew is already installed by looking for /opt/homebrew/bin/fish
-if [ -f /opt/homebrew/bin/fish ]; then
+# Check if Homebrew is already installed by looking for /opt/homebrew/bin/brew
+if [ -f /opt/homebrew/bin/brew ]; then
   log $INFO "Homebrew is already installed."
   exit 0
 fi

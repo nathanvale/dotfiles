@@ -1,0 +1,16 @@
+# ~/.config/tmuxinator/_shared.yml
+# Shared configuration snippets for tmuxinator projects
+# This file contains reusable YAML anchors
+
+# Common startup script for all projects
+startup_script: &startup_script |
+  # Create logs directory structure if it doesn't exist
+  mkdir -p .logs/dev
+  mkdir -p .logs/prisma
+  mkdir -p .logs/storybook
+  # Clean up logs older than 7 days
+  find .logs -name "*.log" -mtime +7 -delete 2>/dev/null || true
+  # Keep only last 10 log files per service
+  for dir in .logs/*/; do
+    ls -t "$dir"*.log 2>/dev/null | tail -n +11 | xargs rm -f 2>/dev/null || true
+  done

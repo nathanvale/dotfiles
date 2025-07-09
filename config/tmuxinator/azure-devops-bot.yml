@@ -1,24 +1,24 @@
-# ~/.config/tmuxinator/mnemosyne.yml
-# Smart tmux dev environment for Next.js + Prisma + Storybook project
+# ~/.config/tmuxinator/azure-devops-bot.yml
+# Smart tmux dev environment for Azure DevOps Bot project
 
-name: mnemosyne
-root: ~/code/mnemosyne
+name: azure-devops-bot
+root: ~/code/azure-devops-bot
 
 # Project hooks - runs on project start
 on_project_start: |
   source ~/.config/tmuxinator/scripts/common-setup.sh
-  setup_logs "mnemosyne"
-  setup_vscode_marker "mnemosyne"
+  setup_logs "azure_devops_bot"
+  setup_vscode_marker "azure_devops_bot"
 
 # Run on project stop - cleanup
 on_project_stop: |
   source ~/.config/tmuxinator/scripts/common-setup.sh
-  cleanup_vscode_marker "mnemosyne"
+  cleanup_vscode_marker "azure_devops_bot"
 
 # Runs before each window starts
 pre_window: |
   source ~/.config/tmuxinator/scripts/common-setup.sh
-  open_vscode_once "mnemosyne"
+  open_vscode_once "azure_devops_bot"
 
 # Set window base-index to 1 and load tmux config
 tmux_options: -f ~/.tmux.conf
@@ -28,35 +28,28 @@ startup_window: claude
 startup_pane: 1
 windows:
   - claude:
-      root: ~/code/mnemosyne
+      root: ~/code/azure-devops-bot
       panes:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh
           pane_setup "claude"
           claude
   - lazygit:
-      root: ~/code/mnemosyne
+      root: ~/code/azure-devops-bot
       panes:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh
           pane_setup "git"
           lazygit
-  - nextjs:
-      root: ~/code/mnemosyne
+  - dev:
+      root: ~/code/azure-devops-bot
       panes:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh
-          pane_setup "nextjs" "nextjs"
-          pnpm dev 2>&1 | tee -a .logs/nextjs/nextjs.$(date +%s).log | pnpm exec pino-pretty
-  - storybook:
-      root: ~/code/mnemosyne
-      panes:
-        - |
-          source ~/.config/tmuxinator/scripts/common-setup.sh
-          pane_setup "storybook" "storybook"
-          pnpm storybook 2>&1 | tee -a .logs/storybook/storybook.$(date +%s).log
+          pane_setup "dev" "dev"
+          pnpm dev 2>&1 | tee -a .logs/dev/dev.$(date +%s).log
   - prisma:
-      root: ~/code/mnemosyne
+      root: ~/code/azure-devops-bot
       panes:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh

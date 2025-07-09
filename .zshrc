@@ -8,7 +8,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-# ZSH_THEME="robbyrussell"
+# ZSH_THEME="robbyrussell"  # Disabled for minimal custom prompt
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -38,7 +38,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # DISABLE_LS_COLORS="true"
 
 # Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
+DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
@@ -72,6 +72,13 @@ export ZSH="$HOME/.oh-my-zsh"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git gh pnpm azure z fzf history zsh-autosuggestions zsh-syntax-highlighting)
 
+# Prevent Oh My Zsh from overriding our custom prompt
+ZSH_THEME=""
+
+# Disable hostname in prompt completely
+unset HOST
+unset HOSTNAME
+
 if [ -f /opt/homebrew/bin/brew ]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
@@ -103,12 +110,6 @@ export FZF_DEFAULT_OPTS='
 
 export PNPM_HOME="$HOME/.local/share/pnpm"
 export PATH="$PNPM_HOME/bin:$PATH"
-
-export PATH="/opt/homebrew/bin:$PATH"
-
-if [ -f /opt/homebrew/bin/brew ]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-fi
 
 export HOMEBREW_BUNDLE_FILE_GLOBAL="$HOME/.config/brew/Brewfile"
 export HOMEBREW_BUNDLE_FILE="$HOME/.config/brew/Brewfile"
@@ -214,8 +215,50 @@ alias p.dotfiles="cd ~/code/dotfiles/ && code ."
 # Write current Node.js version to .nvmrc
 alias w.nvmrc="node -v > .nvmrc"
 
+
+ # Make sure no earlier alias overrides the ws function
+unalias ws 2>/dev/null
+# Workspace launcher: ws <project>
+ws () {
+  local proj="$1"
+  [[ -z "$proj" ]] && { echo "usage: ws <project>"; return 1; }
+
+  local dir; dir="$(zoxide query "$proj" 2>/dev/null || echo "$proj")"
+
+  cd "$dir" || { echo "ws: cannot cd into $dir"; return 1; }
+  tmuxinator start "$proj"
+}
+
+# Enable tab-completion for zoxide bookmarks
+compdef _zoxide ws
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# Minimal Git branch prompt setup
+autoload -Uz vcs_info
+precmd() { 
+  vcs_info
+  # Set terminal title to just the current directory name
+  print -Pn "\e]0;%1~\a"
+}
 
+# Configure vcs_info to show only the branch name
+zstyle ':vcs_info:*' formats '%b'
+zstyle ':vcs_info:*' actionformats '%b|%a'
+
+setopt prompt_subst
+
+# Completely override any system prompt settings
+export PS1='%F{green}${vcs_info_msg_0_}%f%(?.%(!.#.>).%(!.#.>)) '
+export PS2='> '
+export PS3='> '
+export PS4='+ '
+
+# Minimal prompt: just show the Git branch (if present) and prompt character
+# This completely overrides any Oh My Zsh theme
+PROMPT='%F{green}${vcs_info_msg_0_}%f%(?.%(!.#.>).%(!.#.>)) '
+RPS1=''  # Clear right prompt
+PS2='> '  # Clear multiline prompt
 
 PATH=~/.console-ninja/.bin:$PATH
+

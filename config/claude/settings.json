@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "azure-devops-bot": {
+      "type": "stdio",
+      "command": "/bin/sh",
+      "args": [
+        "-c",
+        "cd /Users/nathanvale/code/azure-devops-bot && /usr/local/bin/pnpm mcp --emails=Nathan.Vale@fwc.gov.au,ITEX-NV@fwc.gov.au"
+      ]
+    }
+  }
+}

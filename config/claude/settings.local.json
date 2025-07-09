@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(mkdir:*)",
+      "Bash(grep:*)",
+      "Bash(npx vitest run:*)",
+      "Bash(claude config show)",
+      "Bash(claude config --help)",
+      "Bash(claude config list)",
+      "Bash(claude config add mcpServers -g '{\"\"name\"\": \"\"wallaby\"\", \"\"command\"\": \"\"npx\"\", \"\"args\"\": [\"\"-y\"\", \"\"-c\"\", \"\"node ~/.wallaby/mcp/\"\"]}')",
+      "Bash(claude config list:*)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(claude mcp add:*)",
+      "Bash(sudo ln:*)"
+    ],
+    "deny": []
+  }
+}

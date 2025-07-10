@@ -40,7 +40,7 @@ windows:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh
           pane_setup "git"
-          git
+          lazygit
   - dev:
       root: ~/code/azure-devops-bot
       panes:

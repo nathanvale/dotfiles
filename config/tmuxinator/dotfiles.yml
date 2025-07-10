@@ -39,4 +39,4 @@ windows:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh
           pane_setup "git"
-          git
+          lazygit

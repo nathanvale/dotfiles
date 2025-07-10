@@ -34,13 +34,13 @@ windows:
           source ~/.config/tmuxinator/scripts/common-setup.sh
           pane_setup "claude"
           claude
-  - lazygit:
+  - git:
       root: ~/code/azure-devops-bot
       panes:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh
           pane_setup "git"
-          lazygit
+          git
   - dev:
       root: ~/code/azure-devops-bot
       panes:

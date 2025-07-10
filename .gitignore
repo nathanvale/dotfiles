@@ -2,3 +2,4 @@
 config/fish/fish_variables
 config/iterm2/
 config/raycast/
+settings.local.json

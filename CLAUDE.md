@@ -22,6 +22,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `tmuxinator start <project>` - Start tmuxinator project sessions
 - `lazygit` - Terminal UI for git operations
 
+**Testing and Validation:**
+- All installation scripts use `set -e` for immediate failure on errors
+- Scripts are idempotent and can be run multiple times safely
+- Individual components can be tested in isolation
+
+**Management Scripts (`bin/`):**
+- `*_manage.sh` scripts - Individual component management utilities
+- `installation_scripts.sh` / `uninstallation_scripts.sh` - Script orchestration
+- `preferences_backup.sh` / `preferences_restore.sh` - Configuration backup/restore
+
 ## Architecture
 
 This is a comprehensive macOS dotfiles system built around modular shell scripts that orchestrate the setup of development environments.
@@ -64,6 +74,12 @@ This is a comprehensive macOS dotfiles system built around modular shell scripts
 **Raycast Extensions:**
 - Custom Raycast extensions for productivity workflows
 - Bluetooth device management, color tools, JSON formatting, etc.
+- Extensions are TypeScript-based with individual package.json configurations
+
+**AeroSpace Window Management:**
+- Tiling window manager configuration in `config/aerospace/`
+- Custom keybindings and workspace management
+- Integration scripts in `bin/aerospace_*.sh`
 
 ### File Organization
 
@@ -74,14 +90,21 @@ config/           # All configuration files
 ├── brew/         # Homebrew package definitions
 ├── karabiner/    # Keyboard remapping rules
 ├── raycast/      # Raycast extension configurations
+├── aerospace/    # AeroSpace window manager config
+├── claude/       # Claude Code personal configuration
+├── git/          # Git configuration and settings
 └── ...
 
 bin/              # Installation system and custom utilities
 ├── install-dotfiles.sh   # Main installation script
 ├── uninstall-dotfiles.sh # Main uninstallation script
+├── *_manage.sh   # Individual component management
 └── *.sh          # Individual installation modules
 
 misc/             # Fonts, themes, and other assets
+├── iterm2/       # iTerm2 settings and profiles
+├── mesloLGS_NF/  # Nerd Font files
+└── via/          # Keyboard layout configurations
 ```
 
 
@@ -93,3 +116,24 @@ misc/             # Fonts, themes, and other assets
 - The system supports both installation and uninstallation workflows
 - Individual scripts can be run manually for specific tasks
 - Tmux sessions are configured with vi-style keybindings and system clipboard integration
+
+## Key Configuration Files
+
+**Core Package Management:**
+- `config/brew/Brewfile` - Homebrew package definitions (brew, casks, taps)
+- Includes essential tools: tmux, lazygit, zoxide, fzf, bat, eza, jq, etc.
+
+**Terminal and Shell:**
+- `config/tmux/tmux.conf` - Tmux configuration with Night Owl theme
+- `config/tmuxinator/` - Project session templates for different codebases
+- Shell configurations support zsh with various productivity tools
+
+**Personal Claude Code Setup:**
+- `config/claude/` - Contains personal Claude Code configuration
+- Instructions, commands, and project-specific settings
+- Integrated with the overall dotfiles system
+
+**Raycast Extensions:**
+- Each extension in `config/raycast/extensions/` has its own package.json
+- Custom TypeScript-based extensions for productivity workflows
+- Includes Bluetooth management, color tools, JSON formatting, and more

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# TaskDock CLI Entry Point
+# This script allows taskdock to be called from anywhere
+
+# Find TaskDock root
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TASKDOCK_BIN="$SCRIPT_DIR/../apps/taskdock/bin/taskdock"
+
+# Execute TaskDock
+exec "$TASKDOCK_BIN" "$@"

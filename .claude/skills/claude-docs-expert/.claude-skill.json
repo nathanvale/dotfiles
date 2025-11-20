@@ -1,0 +1,64 @@
+{
+  "name": "claude-docs-expert",
+  "version": "1.0.0",
+  "description": "Access Claude Code documentation with sync status checking and topic browsing",
+  "author": "Nathan Vale",
+  "category": "documentation",
+  "tags": ["docs", "claude", "documentation", "help", "reference"],
+  "main": "claude-docs-expert.sh",
+  "dependencies": {
+    "claude-code-docs": "~/.claude-code-docs/claude-docs-helper.sh"
+  },
+  "commands": {
+    "/docs": {
+      "description": "List all available documentation topics",
+      "usage": "/docs",
+      "aliases": ["docs", "documentation"]
+    },
+    "/docs <topic>": {
+      "description": "Read specific documentation with link to official docs",
+      "usage": "/docs <topic>",
+      "examples": ["/docs mcp", "/docs artifacts", "/docs tools"]
+    },
+    "/docs -t": {
+      "description": "Check sync status without reading a doc",
+      "usage": "/docs -t"
+    },
+    "/docs -t <topic>": {
+      "description": "Check freshness then read documentation",
+      "usage": "/docs -t <topic>",
+      "examples": ["/docs -t mcp", "/docs -t artifacts"]
+    },
+    "/docs whats new": {
+      "description": "Show recent documentation changes",
+      "usage": "/docs whats new",
+      "aliases": ["/docs what's new"]
+    }
+  },
+  "invocation": {
+    "direct": true,
+    "skill_callable": true,
+    "supported_interfaces": ["cli", "skill"]
+  },
+  "output": {
+    "format": "markdown",
+    "includes_links": true,
+    "structured": true
+  },
+  "requirements": {
+    "shell": "bash",
+    "min_version": "4.0",
+    "permissions": ["read", "execute"]
+  },
+  "installation": {
+    "auto_install": false,
+    "setup_required": true,
+    "setup_notes": "Requires ~/.claude-code-docs/claude-docs-helper.sh to be installed and executable"
+  },
+  "metadata": {
+    "created": "2025-11-06",
+    "last_updated": "2025-11-06",
+    "documentation": "skill.md",
+    "license": "MIT"
+  }
+}

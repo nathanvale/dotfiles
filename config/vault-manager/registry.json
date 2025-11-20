@@ -1,0 +1,105 @@
+{
+  "version": "2.0.0",
+  "vaults": {
+    "personal": {
+      "type": "personal",
+      "path": "/Users/nathanvale/code/my-second-brain"
+    },
+    "repos": {
+      "type": "unified",
+      "path": "/Users/nathanvale/Documents/ObsidianVaults/Repos",
+      "repositories": [
+        {
+          "name": "adhd-brain",
+          "path": "/Users/nathanvale/code/adhd-brain",
+          "fingerprint": {
+            "vault_id": "184bf407-b3b6-4a31-91ee-328ef5cf6ed9",
+            "git_remote": "git@github.com:nathanvale/adhd-brain.git",
+            "has_agent_os": false,
+            "has_docs": true,
+            "name": "adhd-brain"
+          },
+          "components": {
+            "docs": true
+          },
+          "registered": "2025-10-02T01:55:03Z"
+        },
+        {
+          "name": "test_repo",
+          "path": "/tmp/test_repo",
+          "fingerprint": {
+            "vault_id": "5c80c95f-ec80-4f2a-af37-ad717c02c4f3",
+            "has_agent_os": true,
+            "has_docs": true,
+            "name": "test_repo"
+          },
+          "components": {
+            "agentOS": true,
+            "docs": true
+          },
+          "registered": "2025-11-13T21:25:57Z"
+        },
+        {
+          "name": "migration-cli",
+          "path": "/Users/nathanvale/code/MPCU-Build-and-Deliver/apps/migration-cli",
+          "fingerprint": {
+            "vault_id": "42f4dcd4-9a19-4956-a408-e6e6a0be33f0",
+            "has_agent_os": false,
+            "has_docs": true,
+            "name": "migration-cli"
+          },
+          "components": {
+            "docs": true
+          },
+          "registered": "2025-11-17T21:51:17Z"
+        },
+        {
+          "name": "MPCU-Build-and-Deliver",
+          "path": "/Users/nathanvale/code/MPCU-Build-and-Deliver",
+          "fingerprint": {
+            "vault_id": "7d263c57-0fa5-46e7-bac9-90ca95ab1937",
+            "git_remote": "https://medicalpanels@dev.azure.com/medicalpanels/MPCU%20Build%20and%20Deliver/_git/MPCU%20Build%20and%20Deliver",
+            "has_agent_os": false,
+            "has_docs": true,
+            "name": "MPCU-Build-and-Deliver"
+          },
+          "components": {
+            "docs": true
+          },
+          "registered": "2025-11-19T10:34:26Z"
+        },
+        {
+          "name": "dotfiles",
+          "path": "/Users/nathanvale/code/dotfiles",
+          "fingerprint": {
+            "vault_id": "dcd1af04-abe2-4744-a7e1-7655919a5969",
+            "git_remote": "git@github.com:nathanvale/dotfiles.git",
+            "has_agent_os": false,
+            "has_docs": true,
+            "name": "dotfiles"
+          },
+          "components": {
+            "docs": true
+          },
+          "registered": "2025-11-19T22:27:07Z"
+        },
+        {
+          "name": "imessage-timeline",
+          "path": "/Users/nathanvale/code/imessage-timeline",
+          "fingerprint": {
+            "vault_id": "2bbe168f-91ec-4508-a61d-37f7e87defea",
+            "git_remote": "git@github.com:nathanvale/imessage-timeline.git",
+            "has_agent_os": false,
+            "has_docs": true,
+            "name": "imessage-timeline"
+          },
+          "components": {
+            "docs": true
+          },
+          "registered": "2025-11-19T23:20:09Z"
+        }
+      ]
+    }
+  },
+  "lastUpdated": "2025-11-19T23:20:09Z"
+}

@@ -1,0 +1,49 @@
+# ~/.config/tmuxinator/modern-ts-cli-starter.yml
+
+name: modern-ts-cli-starter
+root: /Users/nathanvale/code/modern-ts-cli-starter
+
+# Project hooks - runs on project start
+on_project_start: |
+  source ~/.config/tmuxinator/scripts/common-setup.sh
+  setup_logs "modern-ts-cli-starter"
+  setup_vscode_marker "modern-ts-cli-starter"
+
+# Run on project stop - cleanup
+on_project_stop: |
+  source ~/.config/tmuxinator/scripts/common-setup.sh
+  cleanup_vscode_marker "modern-ts-cli-starter"
+
+# Runs before each window starts
+pre_window: |
+  source ~/.config/tmuxinator/scripts/common-setup.sh
+  open_vscode_once "modern-ts-cli-starter"
+
+# Set window base-index to 1 and load tmux config
+tmux_options: -f ~/.tmux.conf
+
+# Start with the first window (claude)
+startup_window: claude
+startup_pane: 1
+windows:
+  - claude:
+      root: /Users/nathanvale/code/modern-ts-cli-starter
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "claude"
+          claude
+  - git:
+      root: /Users/nathanvale/code/modern-ts-cli-starter
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "git"
+          lazygit
+  - dev:
+      root: /Users/nathanvale/code/modern-ts-cli-starter
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "dev" "dev"
+          npm run dev 2>&1 | tee -a .logs/dev/dev.$(date +%s).log

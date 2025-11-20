@@ -1,4 +1,7 @@
 - Test names should not include the word "test"
+- Use Wallaby.js for test results, errors, and debugging
+- Leverage runtime values from Wallaby.**js** and inline feedback when debugging tests
+- Fall back to terminal only if Wallaby isn't available
 - Test assertions should be strict
   - Bad: `expect(content).to.include('valid-content')`
   - Better: `expect(content).to.equal({ key: 'valid-content' })`

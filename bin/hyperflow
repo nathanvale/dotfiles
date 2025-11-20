@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# HyperFlow CLI Entry Point
+# Mirrors the TaskDock shim pattern for consistency
+
+# Find HyperFlow root
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+HYPERFLOW_BIN="$SCRIPT_DIR/../apps/hyperflow/hyperflow.sh"
+
+# Execute HyperFlow
+exec "$HYPERFLOW_BIN" "$@"

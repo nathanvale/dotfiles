@@ -1,0 +1,69 @@
+{
+  "workspaces": {
+    "1": {
+      "apps": ["Ghostty"],
+      "mode": "default",
+      "description": "Terminal"
+    },
+    "2": {
+      "apps": ["Visual Studio Code"],
+      "mode": "default",
+      "description": "Code Editor"
+    },
+    "3": {
+      "apps": ["Arc"],
+      "mode": "default",
+      "description": "Browser"
+    },
+    "4": {
+      "apps": ["Obsidian"],
+      "mode": "default",
+      "description": "Notes"
+    },
+    "5": {
+      "apps": ["Microsoft Teams"],
+      "mode": "professional-engineer",
+      "description": "Teams"
+    },
+    "H1": {
+      "apps": ["Messages"],
+      "mode": "casual-text",
+      "description": "Messages"
+    },
+    "H2": {
+      "apps": ["ChatGPT"],
+      "mode": "default",
+      "description": "ChatGPT"
+    },
+    "H3": {
+      "apps": ["Claude"],
+      "mode": "default",
+      "description": "Claude Desktop"
+    },
+    "H4": {
+      "apps": ["Calendar"],
+      "mode": "default",
+      "description": "Calendar"
+    },
+    "H5": {
+      "apps": ["Microsoft Outlook"],
+      "mode": "email",
+      "description": "Email"
+    },
+    "S": {
+      "apps": ["System Settings"],
+      "mode": "default",
+      "description": "System Settings"
+    },
+    "F": {
+      "apps": ["Finder"],
+      "mode": "default",
+      "description": "Finder"
+    },
+    "C": {
+      "apps": ["ChatGPT", "Claude"],
+      "mode": "default",
+      "description": "AI Assistants"
+    }
+  }
+}

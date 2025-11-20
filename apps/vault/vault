@@ -1,0 +1,805 @@
+#!/bin/bash
+# vault - Unified ADHD-friendly vault management system
+set -e
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+MAGENTA='\033[0;35m'
+NC='\033[0m'
+
+# Configuration
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_DIR="$HOME/.config/vault-manager"
+REGISTRY_FILE="$CONFIG_DIR/registry.json"
+REPOS_VAULT="/Users/nathanvale/Documents/ObsidianVaults/Repos/repos"
+SEARCH_PATHS="${VAULT_SEARCH_PATHS:-$HOME/code}"
+
+# Source monorepo detection library
+if [ -f "$SCRIPT_DIR/lib/monorepo-detect.sh" ]; then
+    source "$SCRIPT_DIR/lib/monorepo-detect.sh"
+fi
+
+# Logging
+log_info() { echo -e "${BLUE}ℹ️  $1${NC}"; }
+log_success() { echo -e "${GREEN}✅ $1${NC}"; }
+log_warn() { echo -e "${YELLOW}⚠️  $1${NC}"; }
+log_error() { echo -e "${RED}❌ $1${NC}"; }
+log_tmux() {
+    if [ -n "$TMUX" ]; then
+        tmux display-message "$1"
+    else
+        echo -e "$1"
+    fi
+}
+
+# ============================================================================
+# CORE VAULT FUNCTIONS
+# ============================================================================
+
+# Generate unique vault ID for a repository
+generate_vault_id() {
+    local repo_path="$1"
+
+    if [ -f "$repo_path/.vault-id" ]; then
+        cat "$repo_path/.vault-id"
+        return
+    fi
+
+    local vault_id=$(uuidgen 2>/dev/null | tr '[:upper:]' '[:lower:]' || echo "vault-$(date +%s)-$(od -An -N4 -tx4 /dev/urandom | tr -d ' ')")
+
+    # Write .vault-id with error checking
+    if ! echo "$vault_id" > "$repo_path/.vault-id" 2>/dev/null; then
+        log_error "Failed to write .vault-id to $repo_path (check permissions)"
+        return 1
+    fi
+
+    # Add to .gitignore with error checking
+    if [ -f "$repo_path/.gitignore" ]; then
+        if ! grep -q "^.vault-id$" "$repo_path/.gitignore" 2>/dev/null; then
+            if ! echo ".vault-id" >> "$repo_path/.gitignore" 2>/dev/null; then
+                log_error "Failed to update .gitignore in $repo_path (check permissions)"
+                return 1
+            fi
+        fi
+    else
+        if ! echo ".vault-id" > "$repo_path/.gitignore" 2>/dev/null; then
+            log_error "Failed to create .gitignore in $repo_path (check permissions)"
+            return 1
+        fi
+    fi
+
+    echo "$vault_id"
+}
+
+# Get repository fingerprint
+get_repo_fingerprint() {
+    local repo_path="$1"
+    local fingerprint="{}"
+
+    local vault_id=$(generate_vault_id "$repo_path")
+    fingerprint=$(echo "$fingerprint" | jq --arg id "$vault_id" '.vault_id = $id')
+
+    if [ -d "$repo_path/.git" ]; then
+        local git_remote=$(cd "$repo_path" && git remote get-url origin 2>/dev/null || echo "")
+        if [ -n "$git_remote" ]; then
+            fingerprint=$(echo "$fingerprint" | jq --arg remote "$git_remote" '.git_remote = $remote')
+        fi
+    fi
+
+    local has_aos="false"
+    local has_docs="false"
+    [ -d "$repo_path/.agent-os" ] && has_aos="true"
+    [ -d "$repo_path/docs" ] && has_docs="true"
+
+    fingerprint=$(echo "$fingerprint" | jq \
+        --arg aos "$has_aos" \
+        --arg docs "$has_docs" \
+        --arg name "$(basename "$repo_path")" \
+        '.has_agent_os = ($aos == "true") | .has_docs = ($docs == "true") | .name = $name')
+
+    echo "$fingerprint"
+}
+
+# Load or create registry
+load_registry() {
+    if [ ! -f "$REGISTRY_FILE" ]; then
+        mkdir -p "$CONFIG_DIR"
+        cat > "$REGISTRY_FILE" << 'EOF'
+{
+  "version": "3.0.0",
+  "vaults": {
+    "personal": {
+      "type": "personal",
+      "path": "/Users/nathanvale/code/my-second-brain"
+    },
+    "repos": {
+      "type": "unified",
+      "path": "/Users/nathanvale/Documents/ObsidianVaults/Repos",
+      "repositories": []
+    }
+  },
+  "lastUpdated": ""
+}
+EOF
+    fi
+    cat "$REGISTRY_FILE"
+}
+
+# Save registry with atomic write to prevent corruption
+save_registry() {
+    local registry="$1"
+    local temp_file="${REGISTRY_FILE}.tmp.$$"
+
+    # Write to temporary file first with error checking
+    if ! echo "$registry" | jq --arg date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" '.lastUpdated = $date' > "$temp_file" 2>/dev/null; then
+        log_error "Failed to write registry to temp file (check permissions and disk space)"
+        rm -f "$temp_file"
+        return 1
+    fi
+
+    # Atomic move (overwrites are atomic on Unix filesystems)
+    if ! mv "$temp_file" "$REGISTRY_FILE" 2>/dev/null; then
+        log_error "Failed to save registry to $REGISTRY_FILE (check permissions)"
+        rm -f "$temp_file"
+        return 1
+    fi
+}
+
+# ============================================================================
+# REPOSITORY MANAGEMENT
+# ============================================================================
+
+# Create vault symlinks for a repository
+create_vault_symlinks() {
+    local repo_path="$1"
+    local repo_name="$2"
+
+    mkdir -p "$REPOS_VAULT/$repo_name"
+    [ -d "$repo_path/.agent-os" ] && ln -sf "$repo_path/.agent-os" "$REPOS_VAULT/$repo_name/.agent-os"
+    [ -d "$repo_path/docs" ] && ln -sf "$repo_path/docs" "$REPOS_VAULT/$repo_name/docs"
+}
+
+# Register repository
+register_repo() {
+    local repo_path="$1"
+
+    # Validate path exists and resolve it - fail if cd fails
+    local original_dir="$PWD"
+    if ! cd "$repo_path" 2>/dev/null; then
+        log_error "Cannot access directory: $repo_path"
+        return 1
+    fi
+    repo_path=$(pwd)
+    cd "$original_dir" || true
+
+    local repo_name=$(basename "$repo_path")
+
+    # Check if has vaultable content
+    if [ ! -d "$repo_path/.agent-os" ] && [ ! -d "$repo_path/docs" ]; then
+        log_warn "No .agent-os or docs folder found. Creating .agent-os..."
+        mkdir -p "$repo_path/.agent-os"
+    fi
+
+    local fingerprint=$(get_repo_fingerprint "$repo_path")
+    local vault_id=$(echo "$fingerprint" | jq -r '.vault_id')
+
+    local registry=$(load_registry)
+
+    # Check if already registered
+    local exists=$(echo "$registry" | jq --arg id "$vault_id" \
+        '[.vaults.repos.repositories[] | select(.fingerprint.vault_id == $id)] | length')
+
+    if [ "$exists" -gt 0 ]; then
+        log_tmux "${YELLOW}Already registered: $repo_name${NC}"
+        return
+    fi
+
+    # Create symlinks
+    create_vault_symlinks "$repo_path" "$repo_name"
+
+    # Add to registry
+    local components='{}'
+    [ -d "$repo_path/.agent-os" ] && components=$(echo "$components" | jq '.agentOS = true')
+    [ -d "$repo_path/docs" ] && components=$(echo "$components" | jq '.docs = true')
+
+    registry=$(echo "$registry" | jq \
+        --arg name "$repo_name" \
+        --arg path "$repo_path" \
+        --argjson fp "$fingerprint" \
+        --argjson comp "$components" \
+        '.vaults.repos.repositories += [{
+            name: $name,
+            path: $path,
+            fingerprint: $fp,
+            components: $comp,
+            registered: (now | strftime("%Y-%m-%dT%H:%M:%SZ"))
+        }]')
+
+    save_registry "$registry"
+    log_tmux "${GREEN}✅ Registered: $repo_name${NC}"
+}
+
+# Unregister repository
+unregister_repo() {
+    local repo_path="$1"
+    local repo_name=$(basename "$repo_path")
+
+    rm -rf "$REPOS_VAULT/$repo_name"
+
+    local registry=$(load_registry)
+    registry=$(echo "$registry" | jq --arg path "$repo_path" \
+        '.vaults.repos.repositories |= map(select(.path != $path))')
+
+    save_registry "$registry"
+    log_tmux "${GREEN}✅ Unregistered: $repo_name${NC}"
+}
+
+# Find repository by vault ID
+find_repo_by_id() {
+    local vault_id="$1"
+
+    # Validate SEARCH_PATHS to prevent injection
+    if [ -z "$SEARCH_PATHS" ]; then
+        log_error "SEARCH_PATHS is empty or not set"
+        return 1
+    fi
+
+    # Quote variable to prevent shell injection, prune node_modules and .git for performance
+    find "$SEARCH_PATHS" \( -path '*/node_modules' -o -path '*/.git' \) -prune -o -name ".vault-id" -type f -print 2>/dev/null | while read id_file; do
+        if [ "$(cat "$id_file" 2>/dev/null)" = "$vault_id" ]; then
+            dirname "$id_file"
+            return 0
+        fi
+    done
+    return 1
+}
+
+# ============================================================================
+# HEALTH CHECK & AUTO-REPAIR
+# ============================================================================
+
+health_check() {
+    log_info "Running vault health check..."
+
+    local registry=$(load_registry)
+    local updated_registry="$registry"
+    local fixed_count=0
+    local broken_count=0
+    local broken_repos=()
+
+    local repo_count=$(echo "$registry" | jq '.vaults.repos.repositories | length')
+
+    for ((i=0; i<repo_count; i++)); do
+        local repo=$(echo "$registry" | jq ".vaults.repos.repositories[$i]")
+        local repo_name=$(echo "$repo" | jq -r '.name')
+        local repo_path=$(echo "$repo" | jq -r '.path')
+        local vault_id=$(echo "$repo" | jq -r '.fingerprint.vault_id // empty')
+
+        echo -n "Checking $repo_name... "
+
+        if [ -d "$repo_path" ]; then
+            # Repository exists at recorded path
+            local needs_fix=false
+
+            if [ ! -d "$REPOS_VAULT/$repo_name" ]; then
+                needs_fix=true
+            elif [ -d "$repo_path/.agent-os" ] && [ ! -L "$REPOS_VAULT/$repo_name/.agent-os" ]; then
+                needs_fix=true
+            elif [ -d "$repo_path/docs" ] && [ ! -L "$REPOS_VAULT/$repo_name/docs" ]; then
+                needs_fix=true
+            fi
+
+            if [ "$needs_fix" = true ]; then
+                echo -e "${YELLOW}FIXING${NC}"
+                create_vault_symlinks "$repo_path" "$repo_name"
+                fixed_count=$((fixed_count + 1))
+            else
+                echo -e "${GREEN}OK${NC}"
+            fi
+        else
+            # Repository moved, try to find it
+            local found_path=""
+            if [ -n "$vault_id" ]; then
+                found_path=$(find_repo_by_id "$vault_id")
+            fi
+
+            if [ -n "$found_path" ]; then
+                echo -e "${YELLOW}MOVED${NC}"
+                log_info "  Found at: $found_path"
+
+                # Update registry
+                local new_fingerprint=$(get_repo_fingerprint "$found_path")
+                local new_name=$(basename "$found_path")
+
+                updated_registry=$(echo "$updated_registry" | jq \
+                    --arg idx "$i" \
+                    --arg path "$found_path" \
+                    --arg name "$new_name" \
+                    --argjson fp "$new_fingerprint" \
+                    '.vaults.repos.repositories[$idx | tonumber].path = $path |
+                     .vaults.repos.repositories[$idx | tonumber].name = $name |
+                     .vaults.repos.repositories[$idx | tonumber].fingerprint = $fp')
+
+                # Fix symlinks
+                rm -rf "$REPOS_VAULT/$repo_name"
+                create_vault_symlinks "$found_path" "$new_name"
+
+                fixed_count=$((fixed_count + 1))
+            else
+                echo -e "${RED}NOT FOUND${NC}"
+                rm -rf "$REPOS_VAULT/$repo_name"
+                broken_repos+=("$repo_name:$repo_path")
+                broken_count=$((broken_count + 1))
+
+                # Remove from registry
+                updated_registry=$(echo "$updated_registry" | jq --arg path "$repo_path" \
+                    '.vaults.repos.repositories |= map(select(.path != $path))')
+            fi
+        fi
+    done
+
+    # Save updated registry
+    if [ "$updated_registry" != "$registry" ]; then
+        save_registry "$updated_registry"
+    fi
+
+    # Summary
+    echo
+    if [ "$broken_count" -eq 0 ] && [ "$fixed_count" -eq 0 ]; then
+        log_tmux "${GREEN}✅ All vaults healthy!${NC}"
+    elif [ "$broken_count" -eq 0 ]; then
+        log_tmux "${GREEN}✅ Fixed $fixed_count issue(s)${NC}"
+        echo
+        echo -e "${BLUE}Auto-repaired:${NC}"
+        echo "• Recreated missing symlinks"
+        echo "• Updated registry paths"
+        echo "• Reconnected moved repositories"
+    else
+        log_tmux "${YELLOW}⚠️  Fixed: $fixed_count, Missing: $broken_count${NC}"
+
+        if [ ${#broken_repos[@]} -gt 0 ]; then
+            echo
+            echo -e "${RED}❌ Repositories not found:${NC}"
+            for broken_repo in "${broken_repos[@]}"; do
+                local repo_name="${broken_repo%%:*}"
+                local repo_path="${broken_repo##*:}"
+                echo "  • $repo_name (was at: $repo_path)"
+            done
+
+            echo
+            echo -e "${CYAN}🔧 Manual actions needed:${NC}"
+            echo "1. If repositories were deleted:"
+            echo "   • No action needed - they've been removed from vault"
+            echo
+            echo "2. If repositories were moved outside search paths:"
+            echo "   • Move them back to ~/code/ directory, OR"
+            echo "   • Set VAULT_SEARCH_PATHS to include new location:"
+            echo "     export VAULT_SEARCH_PATHS=\"$HOME/code:$HOME/new-location\""
+            echo "   • Run 'vault health' again"
+            echo
+            echo "3. If you renamed repositories without .vault-id files:"
+            echo "   • Re-register manually: 'vault register /path/to/renamed/repo'"
+            echo
+            echo "4. To search wider for missing repos:"
+            echo "   • Run 'vault manage' to see all discoverable repositories"
+        fi
+    fi
+
+    # Auto-repair summary
+    if [ "$fixed_count" -gt 0 ] || [ "$broken_count" -gt 0 ]; then
+        echo
+        echo -e "${BLUE}ℹ️  What health check auto-repairs:${NC}"
+        echo "✅ Missing symlinks → Recreated automatically"
+        echo "✅ Moved repositories → Found by vault ID and reconnected"
+        echo "✅ Renamed repositories → Updated paths in registry"
+        echo "❌ Deleted repositories → Removed from vault (manual confirmation)"
+        echo "❌ Repos moved outside search paths → Manual relocation needed"
+    fi
+
+    # Pause for user to read results (especially important for tmux popup)
+    if [ -n "$TMUX" ]; then
+        echo
+        echo -e "${CYAN}Press any key to close...${NC}"
+        read -n 1 -s
+    fi
+}
+
+# ============================================================================
+# INTERACTIVE MANAGEMENT
+# ============================================================================
+
+# Interactive monorepo package selection
+interactive_manage_monorepo() {
+    local project_path="$1"
+    local monorepo_type="$2"
+
+    if ! command -v fzf &> /dev/null; then
+        log_error "fzf is required. Install with: brew install fzf"
+        return 1
+    fi
+
+    log_info "Detected ${CYAN}${monorepo_type}${NC} monorepo"
+    echo -e "${BLUE}Scanning for packages...${NC}"
+
+    # Get all packages in the monorepo
+    local packages=$(get_monorepo_packages "$project_path" "$monorepo_type")
+
+    if [ -z "$packages" ]; then
+        log_warn "No packages found in monorepo"
+        return 1
+    fi
+
+    local package_count=$(echo "$packages" | wc -l | tr -d ' ')
+    echo -e "${GREEN}Found ${package_count} package(s)${NC}"
+    echo
+
+    # Get registered repos
+    local registry=$(load_registry)
+    local registered_repos=$(echo "$registry" | jq -r '.vaults.repos.repositories[] | .path')
+
+    # Prepare fzf input with package info
+    local fzf_input=""
+    while IFS= read -r package_path; do
+        if [ -z "$package_path" ]; then continue; fi
+
+        local package_name=$(get_package_name "$package_path" "$monorepo_type")
+
+        # Check if registered
+        local is_registered="false"
+        if echo "$registered_repos" | grep -q "^$package_path$"; then
+            is_registered="true"
+        fi
+
+        # Generate display line
+        local display=$(generate_package_display "$package_path" "$package_name" "$is_registered" "$monorepo_type")
+        fzf_input="${fzf_input}${display}\n"
+    done <<< "$packages"
+
+    # Interactive selection with fzf
+    local header_text="📦 Monorepo: ${monorepo_type} (${package_count} packages)
+Select packages to register as vaults
+Space: toggle | Ctrl-A: select all | Ctrl-D: deselect all | Enter: apply"
+
+    local selected=$(echo -e "$fzf_input" | fzf \
+        --multi \
+        --layout=reverse \
+        --height=80% \
+        --border \
+        --header="$header_text" \
+        --preview='pkg_path=$(echo {} | sed "s/.*- //"); echo "Package: $pkg_path"; echo; [ -d "$pkg_path/.agent-os" ] && echo "✅ Has .agent-os/" || echo "❌ No .agent-os/"; [ -d "$pkg_path/docs" ] && echo "✅ Has docs/" || echo "❌ No docs/"; echo; [ -f "$pkg_path/package.json" ] && echo "--- package.json ---" && cat "$pkg_path/package.json" | jq -r ".name, .description" 2>/dev/null || true' \
+        --preview-window=down:8:wrap \
+        --bind='space:toggle' \
+        --bind='ctrl-a:select-all' \
+        --bind='ctrl-d:deselect-all' \
+        --marker='→' \
+        --prompt='Package> ' || echo "")
+
+    if [ -z "$selected" ]; then
+        log_tmux "${BLUE}No changes made${NC}"
+        return
+    fi
+
+    # Process selections
+    local selected_paths=$(echo "$selected" | sed 's/.*- //')
+    local to_register=""
+    local to_unregister=""
+
+    # Check which packages should be registered/unregistered
+    while IFS= read -r package_path; do
+        if [ -z "$package_path" ]; then continue; fi
+
+        if echo "$selected_paths" | grep -q "^$package_path$"; then
+            # Selected - should be registered
+            if ! echo "$registered_repos" | grep -q "^$package_path$"; then
+                to_register="${to_register}${package_path}\n"
+            fi
+        else
+            # Not selected - should be unregistered if currently registered
+            if echo "$registered_repos" | grep -q "^$package_path$"; then
+                to_unregister="${to_unregister}${package_path}\n"
+            fi
+        fi
+    done <<< "$packages"
+
+    # Apply changes
+    local changed=false
+    if [ -n "$to_register" ]; then
+        echo -e "$to_register" | while IFS= read -r pkg_path; do
+            if [ -n "$pkg_path" ]; then
+                register_repo "$pkg_path"
+                changed=true
+            fi
+        done
+    fi
+
+    if [ -n "$to_unregister" ]; then
+        echo -e "$to_unregister" | while IFS= read -r pkg_path; do
+            if [ -n "$pkg_path" ]; then
+                unregister_repo "$pkg_path"
+                changed=true
+            fi
+        done
+    fi
+
+    [ "$changed" = true ] && log_tmux "${GREEN}✅ Monorepo vault changes applied${NC}"
+}
+
+interactive_manage() {
+    if ! command -v fzf &> /dev/null; then
+        log_error "fzf is required. Install with: brew install fzf"
+        return 1
+    fi
+
+    # Check if current directory is a monorepo and user wants to manage packages
+    local current_dir=$(pwd)
+    if command -v detect_monorepo_type &> /dev/null; then
+        local monorepo_type=$(detect_monorepo_type "$current_dir" 2>/dev/null)
+        if [ -n "$monorepo_type" ]; then
+            echo -e "${CYAN}Current directory is a ${monorepo_type} monorepo${NC}"
+            read -p "Manage packages in this monorepo? (y/n): " -n 1 -r
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                interactive_manage_monorepo "$current_dir" "$monorepo_type"
+                return
+            fi
+        fi
+    fi
+
+    log_info "Scanning for repositories..."
+
+    # Validate SEARCH_PATHS to prevent injection
+    if [ -z "$SEARCH_PATHS" ]; then
+        log_error "SEARCH_PATHS is empty or not set"
+        return 1
+    fi
+
+    # Get all potential repos - quote variable to prevent shell injection, prune node_modules and .git for performance
+    local all_repos=$(find "$SEARCH_PATHS" \( -path '*/node_modules' -o -path '*/.git' \) -prune -o -type d \( -name ".agent-os" -o -name "docs" \) -print 2>/dev/null | \
+        while read -r dir; do
+            if [[ "$dir" == *"/.agent-os" ]]; then
+                dirname "$dir"
+            elif [[ "$dir" == */docs ]]; then
+                local parent=$(dirname "$dir")
+                if [ -f "$parent/package.json" ] || [ -f "$parent/Cargo.toml" ] || \
+                   [ -f "$parent/go.mod" ] || [ -d "$parent/.git" ]; then
+                    echo "$parent"
+                fi
+            fi
+        done | sort -u)
+
+    # Get registered repos
+    local registry=$(load_registry)
+    local registered_repos=$(echo "$registry" | jq -r '.vaults.repos.repositories[] | .path')
+
+    # Prepare fzf input
+    local fzf_input=""
+    while IFS= read -r repo; do
+        if [ -z "$repo" ]; then continue; fi
+
+        local repo_name=$(basename "$repo")
+        local components=""
+        [ -d "$repo/.agent-os" ] && components="aos"
+        [ -d "$repo/docs" ] && [ -n "$components" ] && components="${components}+docs" || [ -d "$repo/docs" ] && components="docs"
+
+        local status="[ ]"
+        if echo "$registered_repos" | grep -q "^$repo$"; then
+            status="[✓]"
+        fi
+
+        fzf_input="${fzf_input}${status} ${repo_name} ${CYAN}(${components})${NC} - ${repo}\n"
+    done <<< "$all_repos"
+
+    # Interactive selection
+    local selected=$(echo -e "$fzf_input" | fzf \
+        --multi \
+        --layout=reverse \
+        --height=80% \
+        --border \
+        --header="📦 Vault Manager - Space: toggle, Enter: apply, Esc: cancel" \
+        --preview='echo "Repository: {}" | sed "s|.*- ||"' \
+        --preview-window=down:2:wrap \
+        --bind='space:toggle' \
+        --bind='ctrl-a:select-all' \
+        --bind='ctrl-d:deselect-all' \
+        --marker='→' \
+        --prompt='Repository> ' || echo "")
+
+    if [ -z "$selected" ]; then
+        log_tmux "${BLUE}No changes made${NC}"
+        return
+    fi
+
+    # Process selections
+    local selected_paths=$(echo "$selected" | sed 's/.*- //')
+    local to_register=""
+    local to_unregister=""
+
+    while IFS= read -r repo; do
+        if [ -z "$repo" ]; then continue; fi
+
+        if echo "$selected_paths" | grep -q "^$repo$"; then
+            # Selected - should be registered
+            if ! echo "$registered_repos" | grep -q "^$repo$"; then
+                to_register="${to_register}${repo}\n"
+            fi
+        else
+            # Not selected - should be unregistered if currently registered
+            if echo "$registered_repos" | grep -q "^$repo$"; then
+                to_unregister="${to_unregister}${repo}\n"
+            fi
+        fi
+    done <<< "$all_repos"
+
+    # Apply changes
+    local changed=false
+    if [ -n "$to_register" ]; then
+        echo -e "$to_register" | while IFS= read -r repo; do
+            if [ -n "$repo" ]; then
+                register_repo "$repo"
+                changed=true
+            fi
+        done
+    fi
+
+    if [ -n "$to_unregister" ]; then
+        echo -e "$to_unregister" | while IFS= read -r repo; do
+            if [ -n "$repo" ]; then
+                unregister_repo "$repo"
+                changed=true
+            fi
+        done
+    fi
+
+    [ "$changed" = true ] && log_tmux "${GREEN}✅ Vault changes applied${NC}"
+}
+
+# ============================================================================
+# TMUX INTEGRATION
+# ============================================================================
+
+# Open vault for current project
+open_current() {
+    local project_path=$(pwd)
+    local registry=$(load_registry)
+
+    # Check if current project is registered
+    local repo_count=$(echo "$registry" | jq --arg path "$project_path" \
+        '[.vaults.repos.repositories[] | select(.path == $path)] | length')
+
+    if [ "$repo_count" -eq 0 ]; then
+        # Not registered, auto-register if it has vaultable content
+        if [ -d ".agent-os" ] || [ -d "docs" ]; then
+            log_tmux "${YELLOW}Auto-registering $(basename "$project_path")...${NC}"
+            register_repo "$project_path"
+        else
+            log_tmux "${YELLOW}Creating .agent-os and registering...${NC}"
+            mkdir -p .agent-os
+            register_repo "$project_path"
+        fi
+    fi
+
+    # Open Repos vault
+    local obsidian_url="obsidian://open?vault="
+    local encoded_vault=$(python3 -c "import urllib.parse; print(urllib.parse.quote('Repos'))" 2>/dev/null || echo "Repos")
+    local full_url="${obsidian_url}${encoded_vault}"
+
+    open "$full_url" >/dev/null 2>&1 &
+    log_tmux "${GREEN}📖 Opened Repos vault${NC}"
+}
+
+# ============================================================================
+# CLI INTERFACE
+# ============================================================================
+
+show_help() {
+    cat << EOF
+${CYAN}🗂️  Vault - ADHD-Friendly Repository Management${NC}
+
+${YELLOW}Usage:${NC}
+  vault <command>
+
+${YELLOW}Commands:${NC}
+  ${GREEN}manage${NC}              Interactive checkbox interface for bulk registration
+  ${GREEN}monorepo${NC} [path]     Manage packages in a monorepo (auto-detects type)
+  ${GREEN}health${NC}              Check and fix vault health (finds moved repos)
+  ${GREEN}open${NC}                Open current project's vault (auto-register if needed)
+  ${GREEN}register${NC} [path]     Register current directory (or specified path)
+  ${GREEN}status${NC}              Show all registered repositories
+  ${GREEN}help${NC}                Show this help
+
+${YELLOW}Tmux Bindings:${NC}
+  ${CYAN}Ctrl-g V${NC}            Interactive vault manager (manage)
+  ${CYAN}Ctrl-g H${NC}            Health check (health)
+  ${CYAN}Ctrl-g v${NC}            Open current vault (open)
+
+${YELLOW}Monorepo Support:${NC}
+  • ✅ pnpm (pnpm-workspace.yaml)
+  • ✅ Lerna (lerna.json)
+  • ✅ NX (nx.json)
+  • ✅ Yarn workspaces (package.json)
+  • ✅ Cargo workspaces (Cargo.toml)
+  • ✅ Go workspaces (go.work)
+
+${YELLOW}Auto-Registration:${NC}
+  • New tmuxinator projects automatically register
+  • Opening repos with vault content auto-registers
+  • Creates .agent-os folder if none exists
+  • Monorepo packages can be selectively registered
+
+${YELLOW}Features:${NC}
+  • ✅ Survives repository renames and moves
+  • ✅ Checkbox interface for bulk management
+  • ✅ Auto-discovery and self-healing
+  • ✅ ADHD-friendly simple commands
+  • ✅ Smart monorepo package detection
+
+EOF
+}
+
+# Main command dispatcher
+main() {
+    case "${1:-help}" in
+        "manage"|"m")
+            interactive_manage
+            ;;
+        "monorepo"|"mono")
+            local project_path="${2:-.}"
+            if [ ! -d "$project_path" ]; then
+                log_error "Directory not found: $project_path"
+                exit 1
+            fi
+
+            # Resolve to absolute path
+            local original_dir="$PWD"
+            if ! cd "$project_path" 2>/dev/null; then
+                log_error "Cannot access directory: $project_path"
+                exit 1
+            fi
+            project_path=$(pwd)
+            cd "$original_dir" || true
+
+            # Detect monorepo type
+            if command -v detect_monorepo_type &> /dev/null; then
+                local monorepo_type=$(detect_monorepo_type "$project_path" 2>/dev/null)
+                if [ -n "$monorepo_type" ]; then
+                    interactive_manage_monorepo "$project_path" "$monorepo_type"
+                else
+                    log_error "Not a monorepo or unsupported monorepo type: $project_path"
+                    echo -e "${YELLOW}Supported types: pnpm, lerna, nx, yarn, cargo, go${NC}"
+                    exit 1
+                fi
+            else
+                log_error "Monorepo detection library not found"
+                exit 1
+            fi
+            ;;
+        "health"|"h"|"check"|"fix")
+            health_check
+            ;;
+        "open"|"o")
+            open_current
+            ;;
+        "register"|"r")
+            register_repo "${2:-.}"
+            ;;
+        "status"|"s"|"list")
+            local registry=$(load_registry)
+            echo -e "${CYAN}📦 Registered Repositories:${NC}"
+            echo "$registry" | jq -r '.vaults.repos.repositories[] | "  • \(.name) (\(.path))"'
+            ;;
+        "help"|"--help"|"-h")
+            show_help
+            ;;
+        *)
+            log_error "Unknown command: $1"
+            show_help
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

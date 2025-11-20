@@ -17,6 +17,10 @@
       "options": { "parser": "json", "trailingComma": "none" }
     },
     {
+      "files": ["pnpm-lock.yaml", "config/vscode/settings.json", "config/vscode/keybindings.json"],
+      "options": { "jsonRecursiveSort": false }
+    },
+    {
       "files": ["*.yaml", "*.yml"],
       "options": {
         "parser": "yaml",

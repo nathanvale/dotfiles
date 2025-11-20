@@ -1,21 +1,21 @@
 {
+  "version": 1,
   "plugins": {
     "code-documentation@claude-code-workflows": {
-      "gitCommitSha": "51c85a89771ef6ae2d7e8996c66c953f741caff4",
-      "installPath": "/Users/nathanvale/.claude/plugins/marketplaces/claude-code-workflows/plugins/code-documentation",
+      "version": "unknown",
       "installedAt": "2025-11-06T22:58:03.352Z",
-      "isLocal": true,
       "lastUpdated": "2025-11-06T22:58:03.352Z",
-      "version": "unknown"
+      "installPath": "/Users/nathanvale/.claude/plugins/marketplaces/claude-code-workflows/plugins/code-documentation",
+      "gitCommitSha": "51c85a89771ef6ae2d7e8996c66c953f741caff4",
+      "isLocal": true
     },
     "skill-creator@awesome-claude-skills": {
-      "gitCommitSha": "20be1f84833d50020631dd931ffb9e2338cdc287",
-      "installPath": "/Users/nathanvale/.claude/plugins/marketplaces/awesome-claude-skills/skill-creator",
+      "version": "unknown",
       "installedAt": "2025-11-17T05:53:29.824Z",
-      "isLocal": true,
       "lastUpdated": "2025-11-17T05:53:29.824Z",
-      "version": "unknown"
+      "installPath": "/Users/nathanvale/.claude/plugins/marketplaces/awesome-claude-skills/skill-creator",
+      "gitCommitSha": "20be1f84833d50020631dd931ffb9e2338cdc287",
+      "isLocal": true
     }
-  },
-  "version": 1
+  }
 }

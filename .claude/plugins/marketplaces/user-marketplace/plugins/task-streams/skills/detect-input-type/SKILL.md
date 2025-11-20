@@ -1,11 +1,17 @@
 ---
 name: detect-input-type
-description: Intelligently detects document type (review, spec, ADR, tech-debt, security, generic) from content and filename to route to appropriate format skill. Use when user says 'detect document type', 'what type of document is this', 'analyze document', 'classify document', or when converting documents without specifying type. Analyzes .md files for type indicators and structural patterns. (plugin:task-streams)
+description:
+  Intelligently detects document type (review, spec, ADR, tech-debt, security, generic) from content
+  and filename to route to appropriate format skill. Use when user says 'detect document type',
+  'what type of document is this', 'analyze document', 'classify document', or when converting
+  documents without specifying type. Analyzes .md files for type indicators and structural patterns.
+  (plugin:task-streams)
 ---
 
 # Detect Input Type Skill
 
-Analyzes document content and metadata to determine document type, enabling the convert command to route to the appropriate format skill.
+Analyzes document content and metadata to determine document type, enabling the convert command to
+route to the appropriate format skill.
 
 ## When to Use
 
@@ -19,7 +25,9 @@ Use this skill when you need to:
 
 ## Purpose
 
-Provides intelligent type detection so the convert command can handle ANY document without manual type specification. Uses content heuristics, filename patterns, and structural markers to classify documents.
+Provides intelligent type detection so the convert command can handle ANY document without manual
+type specification. Uses content heuristics, filename patterns, and structural markers to classify
+documents.
 
 ## Supported Types
 
@@ -33,6 +41,7 @@ Provides intelligent type detection so the convert command can handle ANY docume
 ## Supporting Documentation
 
 **See @reference.md** for:
+
 - Complete scoring and classification logic
 - Keyword patterns and structural markers per type
 - Example documents and their detected types

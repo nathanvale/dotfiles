@@ -61,6 +61,7 @@ Run queries based on previous results:
 **Scenario**: Error at src/parser.ts:123 in production
 
 **Steps**:
+
 1. Query: "trace-to-error" at src/parser.ts:123 → Get call stacks
 2. Read files in call paths (targeted, not全部)
 3. Query: "blast-radius" of error function → Understand impact
@@ -76,6 +77,7 @@ Run queries based on previous results:
 **Scenario**: Want to refactor extractEmail function
 
 **Steps**:
+
 1. Query: "find-callers extractEmail" → Who uses it?
 2. Query: "blast-radius extractEmail" → Full impact
 3. Query: "cross-domain" → Does it cross boundaries?
@@ -91,6 +93,7 @@ Run queries based on previous results:
 **Scenario**: Reduce codebase size before major release
 
 **Steps**:
+
 1. Query: "dead-code" → Get all unused functions
 2. For each unused function:
    - Check if export (might be library code)
@@ -107,6 +110,7 @@ Run queries based on previous results:
 **Scenario**: Optimize slow endpoint
 
 **Steps**:
+
 1. Identify slow function from profiler
 2. Query: "find-calls" from slow function → What does it call?
 3. Query: "blast-radius" of called functions → Impact of optimizing each
@@ -124,6 +128,7 @@ Run queries based on previous results:
 **Scenario**: New developer needs to understand architecture
 
 **Steps**:
+
 1. Query: "hotspots" → Find most important functions
 2. Query: "cross-domain" for each domain → Understand coupling
 3. Query: "cycles" → Identify architectural issues

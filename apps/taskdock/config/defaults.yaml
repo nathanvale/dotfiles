@@ -2,27 +2,27 @@
 # These values are used when no user or repo config overrides them
 
 # Task management
-ticket_prefix: ""                # Required: must be set per-repo (e.g., "MPCU", "PROJ")
-task_directory: "docs/tasks"     # Where task markdown files live
-lock_max_age_minutes: 30         # How long before a lock is considered stale
+ticket_prefix: "" # Required: must be set per-repo (e.g., "MPCU", "PROJ")
+task_directory: "docs/tasks" # Where task markdown files live
+lock_max_age_minutes: 30 # How long before a lock is considered stale
 
 # Worktree settings
-worktree_root: ".worktrees"      # Where worktrees are created
-branch_prefix: "feat"            # Branch prefix for feature branches
+worktree_root: ".worktrees" # Where worktrees are created
+branch_prefix: "feat" # Branch prefix for feature branches
 
 # Git settings
-default_branch: "main"           # Main branch name (fallback to "master" if not found)
-git_provider: "auto"             # "auto", "github", or "azure"
+default_branch: "main" # Main branch name (fallback to "master" if not found)
+git_provider: "auto" # "auto", "github", or "azure"
 
 # Validation
-run_format: true                 # Run formatters during validation
-run_typecheck: true              # Run type checking
-run_lint: true                   # Run linting
-run_tests: true                  # Run tests
+run_format: true # Run formatters during validation
+run_typecheck: true # Run type checking
+run_lint: true # Run linting
+run_tests: true # Run tests
 
 # Telemetry
-telemetry_enabled: true          # Enable structured logging
-log_retention_days: 7            # How long to keep logs
+telemetry_enabled: true # Enable structured logging
+log_retention_days: 7 # How long to keep logs
 
 # Output
-default_output_format: "human"   # "human" or "json"
+default_output_format: "human" # "human" or "json"

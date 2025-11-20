@@ -13,11 +13,13 @@ github: https://github.com/example/repo/issues/103
 
 ## Description
 
-Authentication endpoints are vulnerable to brute force attacks. Need to implement rate limiting to protect user accounts.
+Authentication endpoints are vulnerable to brute force attacks. Need to implement rate limiting to
+protect user accounts.
 
 ## Blocking Issue
 
-This task is blocked by T0002 (error handling improvements) because we need proper error codes to communicate rate limit violations to clients.
+This task is blocked by T0002 (error handling improvements) because we need proper error codes to
+communicate rate limit violations to clients.
 
 ## Requirements
 
@@ -32,7 +34,7 @@ This task is blocked by T0002 (error handling improvements) because we need prop
 - [ ] Rate limiting middleware implemented
 - [ ] Redis integration for counter storage
 - [ ] Configurable limits via environment variables
-- [ ] Proper HTTP headers (X-RateLimit-*)
+- [ ] Proper HTTP headers (X-RateLimit-\*)
 - [ ] Tests for rate limiting scenarios
 - [ ] Documentation updated
 
@@ -41,6 +43,7 @@ This task is blocked by T0002 (error handling improvements) because we need prop
 Use `express-rate-limit` package with Redis store.
 
 **Configuration:**
+
 - Max 5 attempts per email per 15 minutes
 - Max 20 attempts per IP per hour
 - Exponential backoff after first block
@@ -48,8 +51,10 @@ Use `express-rate-limit` package with Redis store.
 ## Dependencies
 
 **Blocks:**
+
 - Must wait for T0002 to be completed
 
 **Requires:**
+
 - Redis instance (already available in staging/prod)
 - express-rate-limit npm package

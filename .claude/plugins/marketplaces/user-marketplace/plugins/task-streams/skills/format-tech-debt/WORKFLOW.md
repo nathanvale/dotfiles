@@ -1,6 +1,7 @@
 # Tech Debt Enrichment Workflow
 
-Detailed 12-step process for transforming raw code review tech debt items into fully enriched task-decomposable output.
+Detailed 12-step process for transforming raw code review tech debt items into fully enriched
+task-decomposable output.
 
 ---
 
@@ -205,7 +206,7 @@ Rounded → 12h
 function mapContactDto(row: CsvRow): ContactDto {
   return {
     email: row.email.toLowerCase(), // No null check!
-  }
+  };
 }
 ```
 
@@ -215,7 +216,7 @@ function mapContactDto(row: CsvRow): ContactDto {
 function mapContactDto(row: CsvRow): ContactDto {
   return {
     email: row.email ? row.email.toLowerCase() : "noemail@example.com",
-  }
+  };
 }
 ```
 ````
@@ -304,8 +305,8 @@ function mapContactDto(row: CsvRow): ContactDto {
 **Example:**
 
 ```markdown
-**Blocking Dependencies:** P0-001 (Service factory refactoring)
-**Blocks:** P1-005 (Batch retry mechanism), P2-012 (Error reporting dashboard)
+**Blocking Dependencies:** P0-001 (Service factory refactoring) **Blocks:** P1-005 (Batch retry
+mechanism), P2-012 (Error reporting dashboard)
 
 **Prerequisites:**
 
@@ -391,7 +392,8 @@ Expand certain steps for critical tech debt items:
 
 - **Step 4 (Acceptance Criteria)**: Add 6-8 criteria for comprehensive coverage
 - **Step 5 (Regression Risk)**: Detailed analysis with impact quantification
-- **Step 6 (Remediation Steps)**: Break into sub-phases (Preparation, Implementation, Validation, Deployment)
+- **Step 6 (Remediation Steps)**: Break into sub-phases (Preparation, Implementation, Validation,
+  Deployment)
 - **Step 9 (Testing)**: Add security tests, performance tests, compliance tests
 
 ---

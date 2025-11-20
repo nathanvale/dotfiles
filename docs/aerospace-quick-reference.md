@@ -3,7 +3,9 @@
 ## Your Fixed Configuration
 
 ### What Changed
-1. ✅ **Removed the problematic catch-all rule** that was sending all windows to floating workspace 0
+
+1. ✅ **Removed the problematic catch-all rule** that was sending all windows to floating workspace
+   0
 2. ✅ **Added specific floating rules** for Activity Monitor and system utilities
 3. ✅ **Enhanced service mode** with recovery commands
 4. ✅ **Added smart detection** for dialog windows (Open/Save/Export/Import)
@@ -11,6 +13,7 @@
 ## Key Bindings Reference
 
 ### Workspace Navigation
+
 - `Ctrl + 1-6`: Switch to numbered workspaces
 - `Ctrl + 0`: Switch to workspace 0 (utility workspace)
 - `Ctrl + Cmd + C`: ChatGPT
@@ -24,16 +27,19 @@
 - `Ctrl + Cmd + I`: Music
 
 ### Window Management
+
 - `Ctrl + Cmd + -`: Focus left
 - `Ctrl + Cmd + =`: Focus right
 - `Ctrl + Cmd + .`: Fullscreen toggle
 - `Alt + Tab`: Workspace back-and-forth
 
 ### Moving Windows
+
 - `Ctrl + Shift + 1-6`: Move window to workspace and follow
 - `Ctrl + Alt + Shift + ←/→`: Move to monitor
 
 ### Service Mode (Ctrl + Cmd + ;)
+
 - `Esc`: Reload config
 - `r`: Reset layout (flatten workspace tree)
 - `f`: Toggle floating/tiling
@@ -43,6 +49,7 @@
 - `Backspace`: Close all windows but current
 
 ### Resize Mode (Ctrl + Cmd + ')
+
 - `b`: Balance window sizes
 - `-`: Decrease size
 - `=`: Increase size
@@ -51,12 +58,14 @@
 ## Troubleshooting
 
 ### If Activity Monitor Disappears
+
 1. Press `Ctrl + Cmd + ;` to enter service mode
 2. Press `0` to go to workspace 0 (where it might be hidden)
 3. OR press `r` to reset the layout
 4. OR press `c` to center the window
 
 ### If Any Window Goes Off-Screen
+
 1. Use `Ctrl + Cmd + ;` then `r` to reset layout
 2. Or use `Ctrl + Cmd + ;` then `f` to toggle floating/tiling
 3. Or manually focus the window with terminal:
@@ -66,13 +75,16 @@
    ```
 
 ### Mission Control Fix
+
 If windows appear tiny in Mission Control:
+
 1. Open System Settings → Desktop & Dock → Mission Control
 2. Enable "Group Windows by Application"
 
 ## Terminal Commands
 
 ### Useful AeroSpace Commands
+
 ```bash
 # Reload configuration
 aerospace reload-config
@@ -96,6 +108,7 @@ aerospace layout floating tiling
 ## Apps with Special Handling
 
 ### Always Float
+
 - Activity Monitor
 - System Preferences/Settings
 - System Information
@@ -105,6 +118,7 @@ aerospace layout floating tiling
 - Dialog windows (Open/Save/Export/Import)
 
 ### Auto-Workspace Assignment
+
 - Ghostty → Workspace 1
 - VS Code → Workspace 2
 - Arc Browser → Workspace 3
@@ -121,16 +135,19 @@ aerospace layout floating tiling
 5. **Center Window**: `Ctrl + Cmd + ;` then `c`
 
 ## Monitor Setup
+
 Ensure your monitors have free corner space:
+
 - System Settings → Displays → Arrange
 - Leave space in bottom-right or bottom-left corners
 - This is where AeroSpace hides inactive workspace windows
 
 ## Performance Tips
+
 1. Enable "Reduce Motion" in System Settings → Accessibility → Display
 2. Keep workspace count reasonable (you're using ~15 which is fine)
 3. Restart AeroSpace after config changes: `aerospace reload-config`
 
 ---
 
-*Your AeroSpace is now optimized! The Activity Monitor issue should be completely resolved.*
+_Your AeroSpace is now optimized! The Activity Monitor issue should be completely resolved._

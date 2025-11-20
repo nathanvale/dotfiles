@@ -1,11 +1,15 @@
 ---
 name: id-generator
-description: Generate task (T####) and report (R####) IDs with rich metadata tracking. Stores creation date, source document, type, and notes for every ID. State in .claude/state/task-streams/id-generator.json (gitignored). Auto-initializes. (project, gitignored)
+description:
+  Generate task (T####) and report (R####) IDs with rich metadata tracking. Stores creation date,
+  source document, type, and notes for every ID. State in
+  .claude/state/task-streams/id-generator.json (gitignored). Auto-initializes. (project, gitignored)
 ---
 
 # ID Generator Skill
 
-Deterministic TypeScript script for generating sequential task IDs and report IDs with comprehensive metadata tracking.
+Deterministic TypeScript script for generating sequential task IDs and report IDs with comprehensive
+metadata tracking.
 
 ## Purpose
 
@@ -27,7 +31,8 @@ Each generated ID stores:
 
 - `generate.ts` - Bun/TypeScript script with operations: `--task`, `--report`, `--show`, `--reset`
 - **State file:** `.claude/state/task-streams/id-generator.json` (project-specific, gitignored)
-- **State location:** Uses `process.cwd()` when called from Claude Code Task agents (always the project directory)
+- **State location:** Uses `process.cwd()` when called from Claude Code Task agents (always the
+  project directory)
 - **Auto-initialization:** Creates state file with counter=0 on first use
 - **Exit codes:** 0 (success), 1 (error/limit exceeded/missing args)
 - **Output:** Returns just IDs (e.g., "T0001" or "R0001") for automation
@@ -121,12 +126,12 @@ bun generate.ts --reset
 
 ```json
 {
-  "paddingWidth": 4,
   "counter": 0,
   "history": [],
+  "lastUpdated": "2025-11-05T10:49:37.631Z",
+  "paddingWidth": 4,
   "reportCounter": 0,
-  "reportHistory": [],
-  "lastUpdated": "2025-11-05T10:49:37.631Z"
+  "reportHistory": []
 }
 ```
 
@@ -134,63 +139,63 @@ bun generate.ts --reset
 
 ```json
 {
-  "paddingWidth": 4,
   "counter": 5,
   "history": [
     {
-      "id": "T0001",
       "created": "2025-11-05T10:50:15.223Z",
+      "id": "T0001",
+      "notes": "",
       "sourceDocument": "docs/specs/auth-feature.md",
-      "sourceType": "spec",
-      "notes": ""
+      "sourceType": "spec"
     },
     {
-      "id": "T0002",
       "created": "2025-11-05T10:51:03.456Z",
+      "id": "T0002",
+      "notes": "",
       "sourceDocument": "docs/specs/api-redesign.md",
-      "sourceType": "spec",
-      "notes": ""
+      "sourceType": "spec"
     },
     {
-      "id": "T0003",
       "created": "2025-11-05T10:52:18.789Z",
+      "id": "T0003",
+      "notes": "High-priority refactor",
       "sourceDocument": "docs/tech-debt/legacy-refactor.md",
-      "sourceType": "tech-debt",
-      "notes": "High-priority refactor"
+      "sourceType": "tech-debt"
     },
     {
-      "id": "T0004",
       "created": "2025-11-05T10:53:45.012Z",
+      "id": "T0004",
+      "notes": "",
       "sourceDocument": "docs/security/sql-injection.md",
-      "sourceType": "security",
-      "notes": ""
+      "sourceType": "security"
     },
     {
-      "id": "T0005",
       "created": "2025-11-05T10:54:30.234Z",
+      "id": "T0005",
+      "notes": "",
       "sourceDocument": "docs/adrs/adr-005-oauth.md",
-      "sourceType": "adr",
-      "notes": ""
+      "sourceType": "adr"
     }
   ],
+  "lastUpdated": "2025-11-10T14:30:45.123Z",
+  "paddingWidth": 4,
   "reportCounter": 2,
   "reportHistory": [
     {
-      "id": "R0001",
       "created": "2025-11-10T14:25:12.456Z",
+      "id": "R0001",
+      "notes": "Bug hunt: role creation failures",
       "sourceDocument": "docs/reports/bug-hunt.json",
-      "sourceType": "review",
-      "notes": "Bug hunt: role creation failures"
+      "sourceType": "review"
     },
     {
-      "id": "R0002",
       "created": "2025-11-10T14:30:45.123Z",
+      "id": "R0002",
+      "notes": "Code quality analysis",
       "sourceDocument": "docs/reports/code-quality.json",
-      "sourceType": "review",
-      "notes": "Code quality analysis"
+      "sourceType": "review"
     }
-  ],
-  "lastUpdated": "2025-11-10T14:30:45.123Z"
+  ]
 }
 ```
 
@@ -239,7 +244,7 @@ R0001
 // In convert command
 
 // Step 1: Extract findings/requirements from document
-const findings = extractFindings(document)
+const findings = extractFindings(document);
 
 // Step 2: Generate task ID for each finding
 for (const finding of findings) {
@@ -248,14 +253,14 @@ for (const finding of findings) {
     "--source=" + sourceDocPath,
     "--source-type=" + detectedType,
     "--notes=" + finding.title,
-  ])
+  ]);
   // taskId = "T0001", "T0002", etc.
 
   // Create task file with metadata
   createTaskFile(taskId, finding, {
     sourceDocument: sourceDocPath,
     sourceType: detectedType,
-  })
+  });
 }
 ```
 
@@ -341,10 +346,10 @@ bun generate.ts                         # Exit 1 (no operation specified)
 2. If not found, creates it with default:
    ```json
    {
-     "paddingWidth": 4,
      "counter": 0,
      "history": [],
-     "lastUpdated": "2025-11-05T..."
+     "lastUpdated": "2025-11-05T...",
+     "paddingWidth": 4
    }
    ```
 3. Executes your command (task/show/reset)
@@ -427,6 +432,7 @@ Skill(task-streams:id-generator): "Generate a REPORT ID (use --report flag) for 
 ```
 
 **IMPORTANT:**
+
 - Code analyzer MUST use `--report` flag (NOT `--task`)
 - Report IDs use R#### prefix (NOT T####)
 - Report counter is independent from task counter
@@ -434,7 +440,8 @@ Skill(task-streams:id-generator): "Generate a REPORT ID (use --report flag) for 
 
 ## Notes
 
-For detailed state file architecture, jq querying patterns, recovery scenarios, and integration examples, see @reference.md.
+For detailed state file architecture, jq querying patterns, recovery scenarios, and integration
+examples, see @reference.md.
 
 - **Deterministic:** Script-based, not LLM-generated responses
 - **Sequential:** Always increments, never skips

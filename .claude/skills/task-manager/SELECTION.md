@@ -1,6 +1,7 @@
 # Task Selection Algorithm (Fallback)
 
-**⚠️ IMPORTANT**: Only use this document if `select-task.ts` script fails or returns an error. The script is the primary selection method (95% token savings).
+**⚠️ IMPORTANT**: Only use this document if `select-task.ts` script fails or returns an error. The
+script is the primary selection method (95% token savings).
 
 ## When to Use This Document
 
@@ -23,6 +24,7 @@ ls -1 docs/tasks/T*.md | sort
 **Expected pattern:** `T####-descriptive-title.md`
 
 Example:
+
 ```
 docs/tasks/T0001-fix-query-execution-error-findbyname.md
 docs/tasks/T0002-enable-delete-access-repository-configuration.md
@@ -60,6 +62,7 @@ grep -l "^status: READY$" docs/tasks/T*.md
 **Only READY tasks can be started.**
 
 **Status meanings:**
+
 - **TODO**: Has unmet dependencies (blocked)
 - **READY**: All dependencies done, can start
 - **IN_PROGRESS**: Currently being worked on
@@ -99,6 +102,7 @@ grep -l "^priority: P3$" docs/tasks/T*.md | xargs grep -l "^status: READY$"
 4. **Finally P3 tasks** (low priority)
 
 **Within same priority:**
+
 - Choose lower task ID (T0001 before T0002)
 - Or choose by component criticality
 - Or ask user for preference
@@ -123,6 +127,7 @@ cat docs/tasks/T0001-*.md
 - **Blocked By**: Tasks that must be DONE first (critical)
 
 **Validation:**
+
 ```bash
 # For each task in "Blocked By" list, verify status is DONE
 grep "^status: DONE$" docs/tasks/T0005-*.md
@@ -136,6 +141,7 @@ If ANY blocking task is not DONE, the task is **not truly READY** (data inconsis
 Show the user:
 
 1. **Selected task summary:**
+
    ```
    Task: T0001
    Title: Fix query execution error in ContactRepository.findByName()
@@ -146,6 +152,7 @@ Show the user:
    ```
 
 2. **Other ready tasks** (for context):
+
    ```
    Other READY tasks:
    - T0003 (P1): Add migration mode bidirectional operations
@@ -254,6 +261,7 @@ exit 1
 ```
 
 Usage:
+
 ```bash
 chmod +x fallback-select.sh
 ./fallback-select.sh
@@ -264,17 +272,20 @@ chmod +x fallback-select.sh
 ### No READY Tasks Found
 
 **Symptoms:**
+
 ```bash
 $ grep -l "^status: READY$" docs/tasks/T*.md
 # No output
 ```
 
 **Possible causes:**
+
 1. All tasks are TODO (have dependencies)
 2. All tasks are IN_PROGRESS or DONE
 3. Task files don't have `status: READY` line
 
 **Actions:**
+
 ```bash
 # Check all statuses
 grep "^status:" docs/tasks/T*.md
@@ -289,6 +300,7 @@ done
 ### Multiple P0 Tasks Ready
 
 **Symptoms:**
+
 ```bash
 $ grep -l "^priority: P0$" docs/tasks/T*.md | xargs grep -l "^status: READY$"
 docs/tasks/T0001-*.md
@@ -297,6 +309,7 @@ docs/tasks/T0009-*.md
 ```
 
 **Actions:**
+
 1. Select lowest ID (T0001)
 2. Or ask user which is most critical
 3. Or check which has most dependents (blocks most work)
@@ -309,11 +322,13 @@ grep "Blocked By:.*T0001" docs/tasks/T*.md
 ### Task File Parsing Errors
 
 **Symptoms:**
+
 - YAML frontmatter malformed
 - Missing required fields
 - Incorrect indentation
 
 **Actions:**
+
 ```bash
 # Validate YAML frontmatter
 python3 << EOF
@@ -329,10 +344,12 @@ EOF
 ### Inconsistent Dependencies
 
 **Symptoms:**
+
 - Task marked READY but dependencies not DONE
 - Circular dependencies
 
 **Actions:**
+
 1. Audit dependency graph
 2. Update task statuses to reflect reality
 3. Break circular dependencies
@@ -346,6 +363,7 @@ pnpm tsx ~/.claude/skills/task-manager/select-task.ts
 ```
 
 The script is preferred because:
+
 - **95% token savings** vs manual parsing
 - Automatic validation
 - Consistent JSON output

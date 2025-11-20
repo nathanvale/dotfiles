@@ -14,7 +14,8 @@ github: https://github.com/example/repo/issues/105
 
 ## Description
 
-Update authentication documentation to reflect recent changes in email validation and error handling.
+Update authentication documentation to reflect recent changes in email validation and error
+handling.
 
 ## Status
 
@@ -31,12 +32,14 @@ Update authentication documentation to reflect recent changes in email validatio
 ## Documentation Updates
 
 **Files Updated:**
+
 - `docs/authentication.md` - Main auth documentation
 - `docs/api/errors.md` - Error code reference
 - `docs/getting-started.md` - Setup instructions
 - `README.md` - Updated links
 
 **New Sections Added:**
+
 - Supported email formats
 - Error code reference table
 - Rate limiting information (placeholder for T0003)

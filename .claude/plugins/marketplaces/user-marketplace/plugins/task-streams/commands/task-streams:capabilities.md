@@ -1,10 +1,13 @@
 ---
-description: Plugin discovery API - returns task format schema and integration points for other plugins to consume
+description:
+  Plugin discovery API - returns task format schema and integration points for other plugins to
+  consume
 ---
 
 # Capabilities Command
 
-Discovery API that returns the task-streams format specification, allowing other plugins to generate conformant task files without knowing implementation details.
+Discovery API that returns the task-streams format specification, allowing other plugins to generate
+conformant task files without knowing implementation details.
 
 ## Usage
 
@@ -50,14 +53,8 @@ Discovery API that returns the task-streams format specification, allowing other
 
 ```typescript
 interface CapabilitiesQuery {
-  format: "json" | "yaml" | "markdown"
-  section:
-    | "schema"
-    | "frontmatter"
-    | "enrichments"
-    | "validation"
-    | "examples"
-    | "all"
+  format: "json" | "yaml" | "markdown";
+  section: "schema" | "frontmatter" | "enrichments" | "validation" | "examples" | "all";
 }
 ```
 
@@ -82,21 +79,21 @@ Generating specification...
 
 ```json
 {
-  "version": "1.0.0",
+  "conventions": {
+    "componentCodeFormat": "C##",
+    "filenameFormat": "{taskId}-{slug}.md",
+    "priorityValues": ["P0", "P1", "P2", "P3"],
+    "statusValues": ["READY", "IN_PROGRESS", "BLOCKED", "DONE"],
+    "taskDirectory": "docs/tasks/",
+    "taskIdFormat": "T####"
+  },
   "taskFormat": {
     "frontmatter": {
-      "required": [
-        "id",
-        "title",
-        "priority",
-        "component",
-        "status",
-        "created",
-        "source"
-      ],
-      "optional": ["tags", "assignee", "dueDate", "effort"]
+      "optional": ["tags", "assignee", "dueDate", "effort"],
+      "required": ["id", "title", "priority", "component", "status", "created", "source"]
     },
     "sections": {
+      "optional": ["References", "Alternatives Considered"],
       "required": [
         "Description",
         "Acceptance Criteria",
@@ -108,18 +105,10 @@ Generating specification...
         "Regression Risk",
         "Code Examples",
         "Notes"
-      ],
-      "optional": ["References", "Alternatives Considered"]
+      ]
     }
   },
-  "conventions": {
-    "taskIdFormat": "T####",
-    "componentCodeFormat": "C##",
-    "priorityValues": ["P0", "P1", "P2", "P3"],
-    "statusValues": ["READY", "IN_PROGRESS", "BLOCKED", "DONE"],
-    "filenameFormat": "{taskId}-{slug}.md",
-    "taskDirectory": "docs/tasks/"
-  }
+  "version": "1.0.0"
 }
 ```
 
@@ -173,52 +162,52 @@ docs/tasks/{taskId}-{slug}.md
 ```json
 {
   "frontmatter": {
-    "id": {
-      "type": "string",
-      "format": "T####",
-      "description": "Unique task identifier",
-      "required": true,
-      "example": "T0001"
-    },
-    "title": {
-      "type": "string",
-      "description": "Human-readable task name",
-      "required": true,
-      "example": "Implement OAuth2 authentication flow"
-    },
-    "priority": {
-      "type": "string",
-      "enum": ["P0", "P1", "P2", "P3"],
-      "description": "Task priority (P0=critical, P3=low)",
-      "required": true,
-      "example": "P0"
-    },
     "component": {
-      "type": "string",
-      "format": "C##",
       "description": "Component code from registry",
+      "example": "C05",
+      "format": "C##",
       "required": true,
-      "example": "C05"
-    },
-    "status": {
-      "type": "string",
-      "enum": ["READY", "IN_PROGRESS", "BLOCKED", "DONE"],
-      "description": "Current task status",
-      "required": true,
-      "example": "READY"
+      "type": "string"
     },
     "created": {
-      "type": "string",
-      "format": "date-time",
       "description": "ISO 8601 creation timestamp",
+      "example": "2025-11-05T14:30:22Z",
+      "format": "date-time",
       "required": true,
-      "example": "2025-11-05T14:30:22Z"
+      "type": "string"
+    },
+    "id": {
+      "description": "Unique task identifier",
+      "example": "T0001",
+      "format": "T####",
+      "required": true,
+      "type": "string"
+    },
+    "priority": {
+      "description": "Task priority (P0=critical, P3=low)",
+      "enum": ["P0", "P1", "P2", "P3"],
+      "example": "P0",
+      "required": true,
+      "type": "string"
     },
     "source": {
-      "type": "string",
       "description": "Origin document or description",
+      "example": "docs/specs/auth-redesign-spec.md",
       "required": true,
-      "example": "docs/specs/auth-redesign-spec.md"
+      "type": "string"
+    },
+    "status": {
+      "description": "Current task status",
+      "enum": ["READY", "IN_PROGRESS", "BLOCKED", "DONE"],
+      "example": "READY",
+      "required": true,
+      "type": "string"
+    },
+    "title": {
+      "description": "Human-readable task name",
+      "example": "Implement OAuth2 authentication flow",
+      "required": true,
+      "type": "string"
     }
   }
 }
@@ -232,74 +221,74 @@ docs/tasks/{taskId}-{slug}.md
 {
   "enrichments": [
     {
-      "name": "File Locations",
       "description": "Files to Create/Modify/Delete with line ranges",
-      "section": "Files to Change",
+      "example": "### Files to Modify\n- `src/auth.ts:45-89` - Add OAuth flow",
       "format": "Three subsections (Create, Modify, Delete)",
-      "example": "### Files to Modify\n- `src/auth.ts:45-89` - Add OAuth flow"
+      "name": "File Locations",
+      "section": "Files to Change"
     },
     {
-      "name": "Effort Estimates",
       "description": "Realistic time estimates",
-      "section": "Description (Estimated Effort field)",
+      "example": "8h",
       "format": "Hours with 'h' suffix",
-      "example": "8h"
+      "name": "Effort Estimates",
+      "section": "Description (Estimated Effort field)"
     },
     {
-      "name": "Complexity",
       "description": "Technical complexity classification",
-      "section": "Description (Complexity field)",
+      "example": "CRITICAL",
       "format": "CRITICAL | HIGH | MEDIUM | LOW",
-      "example": "CRITICAL"
+      "name": "Complexity",
+      "section": "Description (Complexity field)"
     },
     {
-      "name": "Acceptance Criteria",
       "description": "3-5 testable checkbox items",
-      "section": "Acceptance Criteria",
+      "example": "- [ ] OAuth tokens validated correctly",
       "format": "Markdown checkboxes (- [ ])",
-      "example": "- [ ] OAuth tokens validated correctly"
+      "name": "Acceptance Criteria",
+      "section": "Acceptance Criteria"
     },
     {
-      "name": "Regression Risk",
       "description": "Impact, Blast Radius, Testing Gaps, Rollback Risk",
-      "section": "Regression Risk",
+      "example": "**Impact:** High - Core authentication",
       "format": "Structured fields",
-      "example": "**Impact:** High - Core authentication"
+      "name": "Regression Risk",
+      "section": "Regression Risk"
     },
     {
-      "name": "Implementation Steps",
       "description": "Numbered list of concrete actions",
-      "section": "Implementation Steps",
+      "example": "1. Create OAuth client wrapper",
       "format": "Numbered list (1., 2., 3.)",
-      "example": "1. Create OAuth client wrapper"
+      "name": "Implementation Steps",
+      "section": "Implementation Steps"
     },
     {
-      "name": "Code Examples",
       "description": "Current and proposed code",
-      "section": "Code Examples",
+      "example": "**Current:**\n```typescript\n// legacy code\n```",
       "format": "Two code blocks (Current, Proposed)",
-      "example": "**Current:**\n```typescript\n// legacy code\n```"
+      "name": "Code Examples",
+      "section": "Code Examples"
     },
     {
-      "name": "Testing Table",
       "description": "Maps test types to acceptance criteria",
-      "section": "Testing Requirements",
+      "example": "| Unit | AC1, AC2 | Token tests | path |",
       "format": "Markdown table with 4 columns",
-      "example": "| Unit | AC1, AC2 | Token tests | path |"
+      "name": "Testing Table",
+      "section": "Testing Requirements"
     },
     {
-      "name": "Dependencies",
       "description": "Blocking tasks and prerequisites",
-      "section": "Dependencies",
+      "example": "**Blocking:** T0001, T0003",
       "format": "Blocking/Blocked By with task IDs",
-      "example": "**Blocking:** T0001, T0003"
+      "name": "Dependencies",
+      "section": "Dependencies"
     },
     {
-      "name": "Component Classification",
       "description": "Component code from registry",
-      "section": "Description (Component field)",
+      "example": "**Component:** C05: Authentication",
       "format": "C## code with name",
-      "example": "**Component:** C05: Authentication"
+      "name": "Component Classification",
+      "section": "Description (Component field)"
     }
   ]
 }
@@ -314,28 +303,28 @@ docs/tasks/{taskId}-{slug}.md
   "validation": {
     "rules": [
       {
+        "autoFix": true,
         "code": "MISSING_FRONTMATTER",
-        "severity": "ERROR",
         "description": "Task file must have YAML frontmatter",
-        "autoFix": true
+        "severity": "ERROR"
       },
       {
+        "autoFix": true,
         "code": "INVALID_TASK_ID",
-        "severity": "ERROR",
         "description": "Task ID must match T#### format",
-        "autoFix": true
+        "severity": "ERROR"
       },
       {
+        "autoFix": true,
         "code": "MISSING_SECTION",
-        "severity": "ERROR",
         "description": "Required section not found",
-        "autoFix": true
+        "severity": "ERROR"
       },
       {
+        "autoFix": false,
         "code": "AC_TOO_FEW",
-        "severity": "WARNING",
         "description": "Should have 3-5 acceptance criteria",
-        "autoFix": false
+        "severity": "WARNING"
       }
     ],
     "validateCommand": "/task-streams:validate"
@@ -371,15 +360,13 @@ source: docs/specs/auth-redesign-spec.md
 
 # T0001: Implement OAuth2 authentication flow
 
-**Component:** C05: Authentication & Authorization
-**Priority:** P0 (Critical)
-**Status:** READY
-**Estimated Effort:** 12h
-**Complexity:** CRITICAL
+**Component:** C05: Authentication & Authorization **Priority:** P0 (Critical) **Status:** READY
+**Estimated Effort:** 12h **Complexity:** CRITICAL
 
 ## Description
 
-Replace legacy authentication with OAuth2 flow using Azure AD B2C. Enables single sign-on and improves security posture.
+Replace legacy authentication with OAuth2 flow using Azure AD B2C. Enables single sign-on and
+improves security posture.
 
 ## Acceptance Criteria
 
@@ -429,8 +416,7 @@ Replace legacy authentication with OAuth2 flow using Azure AD B2C. Enables singl
 
 ## Dependencies
 
-**Blocking:** None
-**Blocked By:** None
+**Blocking:** None **Blocked By:** None
 
 ## Prerequisites
 
@@ -441,11 +427,10 @@ Replace legacy authentication with OAuth2 flow using Azure AD B2C. Enables singl
 
 ## Regression Risk
 
-**Impact:** High - Core authentication mechanism affects all users
-**Blast Radius:** Entire application (all authenticated features)
-**Dependencies:** Session management, API authorization, user profiles
-**Testing Gaps:** No existing OAuth2 tests, need migration path validation
-**Rollback Risk:** Medium - Can revert to legacy auth if needed, sessions persist
+**Impact:** High - Core authentication mechanism affects all users **Blast Radius:** Entire
+application (all authenticated features) **Dependencies:** Session management, API authorization,
+user profiles **Testing Gaps:** No existing OAuth2 tests, need migration path validation **Rollback
+Risk:** Medium - Can revert to legacy auth if needed, sessions persist
 
 ## Code Examples
 
@@ -454,10 +439,10 @@ Replace legacy authentication with OAuth2 flow using Azure AD B2C. Enables singl
 ```typescript
 // src/lib/auth/legacy-auth.ts
 export async function authenticate(username: string, password: string) {
-  const hash = await hashPassword(password)
-  const user = await db.users.findOne({ username, passwordHash: hash })
-  if (!user) throw new Error("Invalid credentials")
-  return createSession(user.id)
+  const hash = await hashPassword(password);
+  const user = await db.users.findOne({ username, passwordHash: hash });
+  if (!user) throw new Error("Invalid credentials");
+  return createSession(user.id);
 }
 ```
 ````
@@ -468,14 +453,10 @@ export async function authenticate(username: string, password: string) {
 ```typescript
 // src/lib/auth/oauth-client.ts
 export async function authenticate(authorizationCode: string) {
-  const tokenResponse =
-    await oauthClient.exchangeCodeForTokens(authorizationCode)
-  await tokenManager.store(
-    tokenResponse.accessToken,
-    tokenResponse.refreshToken
-  )
-  const userInfo = await oauthClient.getUserInfo(tokenResponse.accessToken)
-  return createSession(userInfo.sub)
+  const tokenResponse = await oauthClient.exchangeCodeForTokens(authorizationCode);
+  await tokenManager.store(tokenResponse.accessToken, tokenResponse.refreshToken);
+  const userInfo = await oauthClient.getUserInfo(tokenResponse.accessToken);
+  return createSession(userInfo.sub);
 }
 ```
 

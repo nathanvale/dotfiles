@@ -1,6 +1,7 @@
 # 10 Required Enrichments for All Task Formats
 
-This document defines the 10 universal enrichments required for all task output, regardless of source format (code reviews, specs, security audits, tech debt, or generic documents).
+This document defines the 10 universal enrichments required for all task output, regardless of
+source format (code reviews, specs, security audits, tech debt, or generic documents).
 
 **Used by:** format-bug-findings, format-spec, format-tech-debt, format-security, format-generic
 
@@ -145,16 +146,16 @@ This document defines the 10 universal enrichments required for all task output,
 **Current Code (BUGGY):**
 
 ```typescript
-const result = data[0].field // No bounds check!
+const result = data[0].field; // No bounds check!
 ```
 
 **Proposed Fix:**
 
 ```typescript
 if (data.length > 0) {
-  const result = data[0].field
+  const result = data[0].field;
 } else {
-  throw new Error("No data available")
+  throw new Error("No data available");
 }
 ```
 ````
@@ -206,12 +207,11 @@ if (data.length > 0) {
 **Format:**
 
 ```markdown
-**Required Testing:**
-| Test Type | Validates AC | Description | Location |
-|-------------|--------------|------------------------------------|-------------------------------------------------|
-| Unit | AC1, AC2 | Test fixture mode guard | `src/__tests__/service-factory.test.ts` |
-| Integration | AC3, AC4 | Verify no real API calls made | `tests/integration/fixture-mode.test.ts` |
-| E2E | AC5 | Full migration dry-run test | `tests/integration/referral-migration.test.ts` |
+| **Required Testing:** | Test Type | Validates AC                  | Description                                    | Location |
+| --------------------- | --------- | ----------------------------- | ---------------------------------------------- | -------- |
+| Unit                  | AC1, AC2  | Test fixture mode guard       | `src/__tests__/service-factory.test.ts`        |          |
+| Integration           | AC3, AC4  | Verify no real API calls made | `tests/integration/fixture-mode.test.ts`       |
+| E2E                   | AC5       | Full migration dry-run test   | `tests/integration/referral-migration.test.ts` |
 ```
 
 **Requirements:**
@@ -228,8 +228,7 @@ if (data.length > 0) {
 **Format:**
 
 ```markdown
-**Blocking Dependencies:** P0-001, P0-003
-**Blocks:** P1-005, P2-012
+**Blocking Dependencies:** P0-001, P0-003 **Blocks:** P1-005, P2-012
 
 **Prerequisites:**
 
@@ -254,14 +253,12 @@ Use this template for EVERY task:
 ````markdown
 ### {Priority}: {Task Title}
 
-**Component:** {C##: Component Name from component-manager skill}
-**Location:** `{file.ts:lineStart-lineEnd}`
-**Estimated Effort:** {X}h
-**Complexity:** {CRITICAL | HIGH | MEDIUM | LOW}
-**Regression Risk:** {HIGH | MEDIUM | LOW}
+**Component:** {C##: Component Name from component-manager skill} **Location:**
+`{file.ts:lineStart-lineEnd}` **Estimated Effort:** {X}h **Complexity:** {CRITICAL | HIGH | MEDIUM |
+LOW} **Regression Risk:** {HIGH | MEDIUM | LOW}
 
-**Description:**
-{Clear description of the work. 2-4 sentences explaining what needs to be done and why it matters.}
+**Description:** {Clear description of the work. 2-4 sentences explaining what needs to be done and
+why it matters.}
 
 **Regression Risk Details:**
 
@@ -315,15 +312,13 @@ Use this template for EVERY task:
 - `path/to/obsolete/file.ts` - Reason for deletion
 - `path/to/another/obsolete/file.ts` - Reason for deletion
 
-**Required Testing:**
-| Test Type | Validates AC | Description | Location |
-|-------------|--------------|------------------------------------|--------------------------------------------|
-| Unit | AC1, AC2 | Test fixture mode guard | `src/__tests__/service-factory.test.ts` |
-| Integration | AC3, AC4 | Verify no real API calls made | `tests/integration/fixture-mode.test.ts` |
-| E2E | AC5 | Full migration dry-run test | `tests/integration/referral-migration.test.ts` |
+| **Required Testing:** | Test Type | Validates AC                  | Description                                    | Location |
+| --------------------- | --------- | ----------------------------- | ---------------------------------------------- | -------- |
+| Unit                  | AC1, AC2  | Test fixture mode guard       | `src/__tests__/service-factory.test.ts`        |          |
+| Integration           | AC3, AC4  | Verify no real API calls made | `tests/integration/fixture-mode.test.ts`       |
+| E2E                   | AC5       | Full migration dry-run test   | `tests/integration/referral-migration.test.ts` |
 
-**Blocking Dependencies:** {P0-001, P0-003, or "None"}
-**Blocks:** {P1-005, P2-012, or "None"}
+**Blocking Dependencies:** {P0-001, P0-003, or "None"} **Blocks:** {P1-005, P2-012, or "None"}
 
 **Prerequisites:**
 
@@ -338,7 +333,8 @@ Use this template for EVERY task:
 
 Before finalizing a task, verify:
 
-- [ ] **All 10 enrichments present** (location, effort, complexity, acceptance criteria, regression risk, implementation steps, code examples, file changes, testing table, dependencies)
+- [ ] **All 10 enrichments present** (location, effort, complexity, acceptance criteria, regression
+      risk, implementation steps, code examples, file changes, testing table, dependencies)
 - [ ] **File changes separated into 3 categories** (Create, Modify, Delete)
 - [ ] **Acceptance criteria use checkboxes** (`- [ ]`)
 - [ ] **Implementation steps use numbered list** (`1.`, `2.`, etc.)
@@ -355,7 +351,8 @@ Before finalizing a task, verify:
 
 **Use component-manager skill for classification:**
 
-When formatting a task, invoke the **component-manager skill** to find or create the appropriate component code. The component-manager skill will:
+When formatting a task, invoke the **component-manager skill** to find or create the appropriate
+component code. The component-manager skill will:
 
 1. Search existing components for a match (e.g., "Service Factory" → C02)
 2. Create a new component if no match found
@@ -367,13 +364,15 @@ When formatting a task, invoke the **component-manager skill** to find or create
 - Component-manager skill returns: C02 (Service Factory & Mode Selection)
 - Use in task: **Component:** C02: Service Factory & Mode Selection
 
-The component-manager skill manages the component registry and ensures consistent component codes across all tasks.
+The component-manager skill manages the component registry and ensures consistent component codes
+across all tasks.
 
 ---
 
 ## Notes
 
-- These 10 enrichments are universal across ALL task types (bugs, features, security, tech debt, specs, generic)
+- These 10 enrichments are universal across ALL task types (bugs, features, security, tech debt,
+  specs, generic)
 - Component classification enables cross-review task tracking
 - Three file categories (Create/Modify/Delete) are critical for accurate work estimation
 - Testing table ensures traceability to acceptance criteria

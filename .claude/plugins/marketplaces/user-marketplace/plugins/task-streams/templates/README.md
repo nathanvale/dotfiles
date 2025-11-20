@@ -2,9 +2,9 @@
 
 ## Overview
 
-The Template System provides a standardized structure contract for all enriched
-task formats in the Task Streams system. Templates define the required sections
-and metadata that format skills must include when generating task documentation.
+The Template System provides a standardized structure contract for all enriched task formats in the
+Task Streams system. Templates define the required sections and metadata that format skills must
+include when generating task documentation.
 
 ### What is a Template?
 
@@ -15,8 +15,8 @@ A template is a **structure-only** Markdown file that defines:
 - Frontmatter metadata (template name, version, description)
 - The 10 universal enrichments that all tasks must include
 
-Templates are **NOT** filled with placeholder content. They serve as a
-structural contract that format skills must follow.
+Templates are **NOT** filled with placeholder content. They serve as a structural contract that
+format skills must follow.
 
 ### Why Templates Exist
 
@@ -24,14 +24,13 @@ Templates ensure:
 
 1. **Consistency**: All task formats have the same enrichment structure
 2. **Completeness**: No format can skip required enrichments
-3. **Discoverability**: External plugins can discover and use templates
-   programmatically
+3. **Discoverability**: External plugins can discover and use templates programmatically
 4. **Validation**: Automated checks ensure templates maintain quality standards
 
 ### Key Principle: Structure-Only, No Placeholders
 
-Templates define structure, not content. Format skills are responsible for
-generating real content that follows the template structure.
+Templates define structure, not content. Format skills are responsible for generating real content
+that follows the template structure.
 
 ❌ **Wrong** (placeholder content):
 
@@ -55,8 +54,7 @@ Format skills fill in actual values:
 
 ## Template Structure
 
-All templates must include the **10 universal enrichments** defined in
-`SHARED_ENRICHMENTS.md`:
+All templates must include the **10 universal enrichments** defined in `SHARED_ENRICHMENTS.md`:
 
 ### Quick Reference Table
 
@@ -95,39 +93,36 @@ The template system includes 5 production templates:
 
 ### 1. Bug Findings Template
 
-**File:** `bug-findings.template.md` **Format Skill:** `format-bug-findings`
-**Description:** Template for documenting bug findings from code reviews or
-testing
+**File:** `bug-findings.template.md` **Format Skill:** `format-bug-findings` **Description:**
+Template for documenting bug findings from code reviews or testing
 
 Use for: Bug reports, code review findings, defect documentation
 
 ### 2. Generic Template
 
-**File:** `generic.template.md` **Format Skill:** `format-generic`
-**Description:** General-purpose template for tasks that don't fit other
-categories
+**File:** `generic.template.md` **Format Skill:** `format-generic` **Description:** General-purpose
+template for tasks that don't fit other categories
 
 Use for: General tasks, miscellaneous work items, catch-all documentation
 
 ### 3. Security Template
 
-**File:** `security.template.md` **Format Skill:** `format-security`
-**Description:** Template for security-related tasks and vulnerability
-documentation
+**File:** `security.template.md` **Format Skill:** `format-security` **Description:** Template for
+security-related tasks and vulnerability documentation
 
 Use for: Security vulnerabilities, security improvements, threat modeling
 
 ### 4. Spec Template
 
-**File:** `spec.template.md` **Format Skill:** `format-spec` **Description:**
-Template for technical specifications and design documents
+**File:** `spec.template.md` **Format Skill:** `format-spec` **Description:** Template for technical
+specifications and design documents
 
 Use for: Feature specs, architecture documents, design proposals
 
 ### 5. Tech Debt Template
 
-**File:** `tech-debt.template.md` **Format Skill:** `format-tech-debt`
-**Description:** Template for technical debt tasks and code quality improvements
+**File:** `tech-debt.template.md` **Format Skill:** `format-tech-debt` **Description:** Template for
+technical debt tasks and code quality improvements
 
 Use for: Refactoring, code cleanup, technical debt remediation
 
@@ -148,17 +143,17 @@ Format skills **must**:
 
 ```typescript
 // 1. Retrieve template structure
-import { TemplateRegistry } from "./scripts/template-registry.js"
+import { TemplateRegistry } from "./scripts/template-registry.js";
 
-const template = await TemplateRegistry.getTemplate("bug-findings")
+const template = await TemplateRegistry.getTemplate("bug-findings");
 
 // 2. Generate content following template structure
-const taskOutput = generateBugFindingsTask(data)
+const taskOutput = generateBugFindingsTask(data);
 
 // 3. Validate output matches template
-const validation = await TemplateRegistry.validateTemplate("bug-findings")
+const validation = await TemplateRegistry.validateTemplate("bug-findings");
 if (!validation) {
-  throw new Error("Template validation failed")
+  throw new Error("Template validation failed");
 }
 ```
 
@@ -173,8 +168,8 @@ All format skill output must include:
 
 # Task Title
 
-**Location:** [actual file paths] **Estimated Effort:** [actual estimate]
-**Complexity:** [actual complexity level]
+**Location:** [actual file paths] **Estimated Effort:** [actual estimate] **Complexity:** [actual
+complexity level]
 
 ## Acceptance Criteria
 
@@ -184,9 +179,9 @@ All format skill output must include:
 
 ## Regression Risk Analysis
 
-**Regression Risk Details:** **Impact:** [actual impact] **Blast Radius:**
-[actual blast radius] **Dependencies:** [actual dependencies] **Testing Gaps:**
-[actual gaps] **Rollback Risk:** [actual risk]
+**Regression Risk Details:** **Impact:** [actual impact] **Blast Radius:** [actual blast radius]
+**Dependencies:** [actual dependencies] **Testing Gaps:** [actual gaps] **Rollback Risk:** [actual
+risk]
 
 ## Implementation Plan
 
@@ -200,8 +195,8 @@ All format skill output must include:
 
 ## File Changes
 
-**Files to Create:** [actual files] **Files to Modify:** [actual files] **Files
-to Delete:** [actual files]
+**Files to Create:** [actual files] **Files to Modify:** [actual files] **Files to Delete:** [actual
+files]
 
 ## Testing Requirements
 
@@ -209,8 +204,8 @@ to Delete:** [actual files]
 
 ## Dependencies
 
-**Blocking Dependencies:** [actual blocking items] **Blocks:** [actual items
-this blocks] **Prerequisites:** [actual prerequisites]
+**Blocking Dependencies:** [actual blocking items] **Blocks:** [actual items this blocks]
+**Prerequisites:** [actual prerequisites]
 ```
 
 ---
@@ -220,13 +215,13 @@ this blocks] **Prerequisites:** [actual prerequisites]
 ### Listing All Templates
 
 ```typescript
-import { TemplateRegistry } from "./scripts/template-registry.js"
+import { TemplateRegistry } from "./scripts/template-registry.js";
 
-const templates = await TemplateRegistry.listTemplates()
+const templates = await TemplateRegistry.listTemplates();
 
-console.log(`Found ${templates.length} templates:`)
+console.log(`Found ${templates.length} templates:`);
 for (const template of templates) {
-  console.log(`- ${template.templateName} (${template.formatSkill})`)
+  console.log(`- ${template.templateName} (${template.formatSkill})`);
 }
 ```
 
@@ -249,42 +244,41 @@ for (const template of templates) {
 ### Retrieving a Template
 
 ```typescript
-import { TemplateRegistry } from "./scripts/template-registry.js"
+import { TemplateRegistry } from "./scripts/template-registry.js";
 
 // Get full template content
-const content = await TemplateRegistry.getTemplate("bug-findings")
+const content = await TemplateRegistry.getTemplate("bug-findings");
 
 // Get metadata only (faster)
-const metadata = await TemplateRegistry.getTemplateMetadata("bug-findings")
+const metadata = await TemplateRegistry.getTemplateMetadata("bug-findings");
 ```
 
 ### Validating a Template
 
 ```typescript
-import { TemplateRegistry } from "./scripts/template-registry.js"
+import { TemplateRegistry } from "./scripts/template-registry.js";
 
-const isValid = await TemplateRegistry.validateTemplate("bug-findings")
+const isValid = await TemplateRegistry.validateTemplate("bug-findings");
 
 if (isValid) {
-  console.log("✓ Template has all 10 enrichments")
+  console.log("✓ Template has all 10 enrichments");
 } else {
-  console.log("✗ Template is missing enrichments")
+  console.log("✗ Template is missing enrichments");
 }
 ```
 
 ### JSON Output Format
 
-Templates are returned as JSON-compatible objects for external plugin
-consumption:
+Templates are returned as JSON-compatible objects for external plugin consumption:
 
 ```json
 {
-  "templateName": "bug-findings",
-  "templateVersion": "1.0.0",
   "description": "Template for bug findings from code reviews",
-  "requiredEnrichments": 10,
   "formatSkill": "format-bug-findings",
-  "path": "/Users/username/project/.claude-plugins/task-streams/templates/bug-findings.template.md"
+  "path": "/Users/username/project/.claude-plugins/task-streams/templates/bug-findings.template.md",
+  "requiredEnrichments": 10,
+  "templateName": "bug-findings",
+  "templateVersion": "1.0.0"
 }
 ```
 
@@ -324,21 +318,19 @@ template_content = result.stdout
 #### Node.js Example
 
 ```javascript
-import { TemplateRegistry } from "./scripts/template-registry.js"
+import { TemplateRegistry } from "./scripts/template-registry.js";
 
 // List all templates
-const templates = await TemplateRegistry.listTemplates()
+const templates = await TemplateRegistry.listTemplates();
 
 // Filter by format skill
-const securityTemplates = templates.filter(
-  (t) => t.formatSkill === "format-security"
-)
+const securityTemplates = templates.filter((t) => t.formatSkill === "format-security");
 
 // Get template content
 for (const template of securityTemplates) {
-  const content = await TemplateRegistry.getTemplate(template.templateName)
-  console.log(`Template: ${template.templateName}`)
-  console.log(`Content length: ${content.length} characters`)
+  const content = await TemplateRegistry.getTemplate(template.templateName);
+  console.log(`Template: ${template.templateName}`);
+  console.log(`Content length: ${content.length} characters`);
 }
 ```
 
@@ -350,12 +342,9 @@ for (const template of securityTemplates) {
 
 The template enrichment validator (`template-enrichment-validator.ts`) verifies:
 
-1. **All 10 enrichments present**: Every template must include all universal
-   enrichments
-2. **Required headings**: Checks for `## Acceptance Criteria`,
-   `## Implementation Plan`, etc.
-3. **Required fields**: Checks for `**Location:**`, `**Estimated Effort:**`,
-   etc.
+1. **All 10 enrichments present**: Every template must include all universal enrichments
+2. **Required headings**: Checks for `## Acceptance Criteria`, `## Implementation Plan`, etc.
+3. **Required fields**: Checks for `**Location:**`, `**Estimated Effort:**`, etc.
 4. **Frontmatter completeness**: Ensures all metadata fields are present
 
 ### Running Validation CLI
@@ -396,18 +385,18 @@ bun scripts/validate-templates.ts --template=bug-findings
 For detailed validation output with enrichment breakdown:
 
 ```typescript
-import { validateTemplateHasAllEnrichments } from "./scripts/template-enrichment-validator.js"
-import { TemplateRegistry } from "./scripts/template-registry.js"
+import { validateTemplateHasAllEnrichments } from "./scripts/template-enrichment-validator.js";
+import { TemplateRegistry } from "./scripts/template-registry.js";
 
-const content = await TemplateRegistry.getTemplate("bug-findings")
-const validation = validateTemplateHasAllEnrichments(content)
+const content = await TemplateRegistry.getTemplate("bug-findings");
+const validation = validateTemplateHasAllEnrichments(content);
 
 if (validation.passed) {
-  console.log("✓ Template is valid")
+  console.log("✓ Template is valid");
 } else {
-  console.log("✗ Template has issues:")
+  console.log("✗ Template has issues:");
   for (const issue of validation.missing) {
-    console.log(`  - ${issue}`)
+    console.log(`  - ${issue}`);
   }
 }
 ```
@@ -468,19 +457,17 @@ When creating a new template, verify it includes:
 - [ ] **Enrichment 2**: `**Estimated Effort:**`
 - [ ] **Enrichment 3**: `**Complexity:**`
 - [ ] **Enrichment 4**: `## Acceptance Criteria` + `**Acceptance Criteria:**`
-- [ ] **Enrichment 5**: `## Regression Risk Analysis` + 5 fields (Impact, Blast
-      Radius, Dependencies, Testing Gaps, Rollback Risk)
+- [ ] **Enrichment 5**: `## Regression Risk Analysis` + 5 fields (Impact, Blast Radius,
+      Dependencies, Testing Gaps, Rollback Risk)
 - [ ] **Enrichment 6**: `## Implementation Plan` + `**Implementation Steps:**`
 - [ ] **Enrichment 7**: `## Code Examples`
 - [ ] **Enrichment 8**: `## File Changes` + 3 fields (Create, Modify, Delete)
 - [ ] **Enrichment 9**: `## Testing Requirements` + `**Required Testing:**`
-- [ ] **Enrichment 10**: `## Dependencies` + 3 fields (Blocking Dependencies,
-      Blocks, Prerequisites)
+- [ ] **Enrichment 10**: `## Dependencies` + 3 fields (Blocking Dependencies, Blocks, Prerequisites)
 
 ### Pre-Commit Hook
 
-The template system includes a pre-commit hook that prevents committing invalid
-templates:
+The template system includes a pre-commit hook that prevents committing invalid templates:
 
 ```bash
 # .git/hooks/pre-commit
@@ -511,8 +498,8 @@ Templates can include additional sections beyond the 10 enrichments:
 **Reproduction Steps:** **Error Messages:** **Stack Traces:**
 ```
 
-The validator only checks for the presence of the 10 universal enrichments.
-Additional sections are allowed and encouraged for format-specific needs.
+The validator only checks for the presence of the 10 universal enrichments. Additional sections are
+allowed and encouraged for format-specific needs.
 
 ### Can we skip an enrichment if it's not relevant?
 
@@ -523,9 +510,8 @@ If an enrichment isn't relevant, include it with a note:
 ```markdown
 ## Regression Risk Analysis
 
-**Impact:** None (documentation-only change) **Blast Radius:** Isolated to
-documentation **Dependencies:** None **Testing Gaps:** None (no code changes)
-**Rollback Risk:** None (reversible)
+**Impact:** None (documentation-only change) **Blast Radius:** Isolated to documentation
+**Dependencies:** None **Testing Gaps:** None (no code changes) **Rollback Risk:** None (reversible)
 ```
 
 This ensures:
@@ -565,8 +551,8 @@ External plugins should:
 3. Generate content that **follows** the template
 4. Never modify the template files themselves
 
-Templates are controlled by the template system maintainers to ensure
-consistency across all format skills.
+Templates are controlled by the template system maintainers to ensure consistency across all format
+skills.
 
 ### What happens if I add a template without all 10 enrichments?
 
@@ -602,19 +588,18 @@ Fix the issues by adding the missing enrichments, then commit again.
 | Technical debt, refactoring                     | `tech-debt`    | `format-tech-debt`    |
 | General tasks, miscellaneous work               | `generic`      | `format-generic`      |
 
-**When in doubt**, use `generic` template - it's the catch-all for tasks that
-don't fit other categories.
+**When in doubt**, use `generic` template - it's the catch-all for tasks that don't fit other
+categories.
 
 ### Can I create a template for internal use only?
 
 **Yes**. Add templates to any directory and use the `templatesDir` parameter:
 
 ```typescript
-const templates = await TemplateRegistry.listTemplates("/path/to/my/templates")
+const templates = await TemplateRegistry.listTemplates("/path/to/my/templates");
 ```
 
-However, templates in the official `.claude-plugins/task-streams/templates/`
-directory:
+However, templates in the official `.claude-plugins/task-streams/templates/` directory:
 
 - Must pass validation
 - Must have all 10 enrichments
@@ -632,14 +617,12 @@ Internal templates can have looser requirements but won't benefit from:
 
 ## Additional Resources
 
-- **Template Enrichment Mapping**: `TEMPLATE-ENRICHMENT-MAPPING.md` - Detailed
-  mapping of enrichments to template sections
-- **Shared Enrichments**: `../SHARED_ENRICHMENTS.md` - Source of truth for the
-  10 universal enrichments
-- **Scripts Documentation**: `../scripts/README.md` - Documentation for all
-  template system scripts
-- **Integration Tests**: `../tests/templates/integration.test.ts` - Complete
-  integration test suite
+- **Template Enrichment Mapping**: `TEMPLATE-ENRICHMENT-MAPPING.md` - Detailed mapping of
+  enrichments to template sections
+- **Shared Enrichments**: `../SHARED_ENRICHMENTS.md` - Source of truth for the 10 universal
+  enrichments
+- **Scripts Documentation**: `../scripts/README.md` - Documentation for all template system scripts
+- **Integration Tests**: `../tests/templates/integration.test.ts` - Complete integration test suite
 
 ---
 
@@ -650,10 +633,8 @@ When contributing new templates or improvements:
 1. **Follow TDD**: Write tests first, then implement
 2. **Run validation**: Use `bun scripts/validate-templates.ts`
 3. **Run tests**: Use `pnpm vitest run .claude-plugins/task-streams/tests/`
-4. **Update docs**: Add new templates to this README's "Available Templates"
-   section
-5. **Version bump**: Increment `templateVersion` for changes to existing
-   templates
+4. **Update docs**: Add new templates to this README's "Available Templates" section
+5. **Version bump**: Increment `templateVersion` for changes to existing templates
 
 ---
 

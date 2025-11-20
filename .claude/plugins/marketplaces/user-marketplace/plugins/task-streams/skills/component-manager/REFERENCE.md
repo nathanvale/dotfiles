@@ -140,7 +140,8 @@ TASK_ID=$(bun ../id-generator/generate.ts --task --source="docs/review.md" --sou
 # ---
 ```
 
-Task IDs (T0001, T0002...) are sequential and independent of component codes. Component codes (C01, C02...) classify tasks by functional area.
+Task IDs (T0001, T0002...) are sequential and independent of component codes. Component codes (C01,
+C02...) classify tasks by functional area.
 
 ## File Locations
 

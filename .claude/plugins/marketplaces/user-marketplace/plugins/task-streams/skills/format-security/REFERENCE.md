@@ -1,6 +1,7 @@
 # Format Security Reference
 
-Complete reference for transforming security audits and vulnerability assessments into prioritized remediation tasks.
+Complete reference for transforming security audits and vulnerability assessments into prioritized
+remediation tasks.
 
 ---
 
@@ -36,9 +37,7 @@ This skill handles three common security audit formats:
 
 ### VULN-001: SQL Injection in User Search
 
-**CVSS Score:** 9.8 (Critical)
-**CVE:** CVE-2024-5678
-**OWASP:** A03:2021 - Injection
+**CVSS Score:** 9.8 (Critical) **CVE:** CVE-2024-5678 **OWASP:** A03:2021 - Injection
 
 {Description}
 
@@ -57,8 +56,7 @@ This skill handles three common security audit formats:
 
 ### Finding 1: Missing authorization checks
 
-**Severity:** High
-**Affected endpoints:** /api/admin/\*
+**Severity:** High **Affected endpoints:** /api/admin/\*
 
 {Description}
 
@@ -82,9 +80,7 @@ This skill handles three common security audit formats:
 
 ### 1. Authentication Bypass
 
-**Risk Rating:** Critical
-**Attack Complexity:** Low
-**Proof of Concept:** {PoC details}
+**Risk Rating:** Critical **Attack Complexity:** Low **Proof of Concept:** {PoC details}
 
 **Recommendation:**
 
@@ -118,21 +114,18 @@ Even if base severity is "medium", escalate to P0 if:
 - **Compliance violation** (GDPR, HIPAA, PCI-DSS, SOC 2)
 
 ```typescript
-function adjustSecurityPriority(
-  basePriority: string,
-  finding: SecurityFinding
-): string {
+function adjustSecurityPriority(basePriority: string, finding: SecurityFinding): string {
   // Escalation rules
   if (finding.exploitable && finding.dataExposure === "PII") {
-    return "P0" // Always P0 for exploitable PII exposure
+    return "P0"; // Always P0 for exploitable PII exposure
   }
   if (finding.compliance === "PCI-DSS") {
-    return "P0" // Compliance violations are P0
+    return "P0"; // Compliance violations are P0
   }
   if (finding.activeExploitation) {
-    return "P0" // Zero-day or active attacks are P0
+    return "P0"; // Zero-day or active attacks are P0
   }
-  return basePriority
+  return basePriority;
 }
 ```
 
@@ -174,11 +167,8 @@ Each vulnerability becomes a separate remediation task:
 Extract all security identifiers:
 
 ```markdown
-**Vulnerability ID:** VULN-001
-**CVE:** CVE-2024-5678
-**CVSS Score:** 9.8 (Critical)
-**CWE:** CWE-89 (SQL Injection)
-**OWASP:** A03:2021 - Injection
+**Vulnerability ID:** VULN-001 **CVE:** CVE-2024-5678 **CVSS Score:** 9.8 (Critical) **CWE:** CWE-89
+(SQL Injection) **OWASP:** A03:2021 - Injection
 ```
 
 #### Attack Vector Analysis
@@ -186,14 +176,10 @@ Extract all security identifiers:
 Extract CVSS attack vector components:
 
 ```markdown
-**Attack Vector:** Network (remotely exploitable)
-**Attack Complexity:** Low (easy to exploit)
-**Privileges Required:** None (unauthenticated)
-**User Interaction:** None (no user action needed)
-**Scope:** Changed (affects other components)
-**Confidentiality Impact:** High
-**Integrity Impact:** High
-**Availability Impact:** High
+**Attack Vector:** Network (remotely exploitable) **Attack Complexity:** Low (easy to exploit)
+**Privileges Required:** None (unauthenticated) **User Interaction:** None (no user action needed)
+**Scope:** Changed (affects other components) **Confidentiality Impact:** High **Integrity Impact:**
+High **Availability Impact:** High
 ```
 
 #### Affected Assets
@@ -268,14 +254,13 @@ Generate security-specific ACs:
 ### Phase 5: Testing Requirements (Security Focus)
 
 ```markdown
-**Required Testing:**
-| Test Type | Validates AC | Description | Location |
-|-----------|--------------|-------------|----------|
-| Static Analysis (SAST) | AC1 | Scan confirms no SQL concat | CI/CD pipeline |
-| Input Fuzzing | AC2 | Fuzz test with SQL injection vectors | `tests/security/sqli.test.ts` |
-| Penetration Test | AC3 | Manual retest by security team | External pentest |
-| Integration Test | AC4 | Verify queries work with valid input | `tests/api/users.test.ts` |
-| Security Regression | AC5 | Automated SQL injection test suite | `tests/security/regression.ts` |
+**Required Testing:** | Test Type | Validates AC | Description | Location |
+|-----------|--------------|-------------|----------| | Static Analysis (SAST) | AC1 | Scan confirms
+no SQL concat | CI/CD pipeline | | Input Fuzzing | AC2 | Fuzz test with SQL injection vectors |
+`tests/security/sqli.test.ts` | | Penetration Test | AC3 | Manual retest by security team | External
+pentest | | Integration Test | AC4 | Verify queries work with valid input |
+`tests/api/users.test.ts` | | Security Regression | AC5 | Automated SQL injection test suite |
+`tests/security/regression.ts` |
 ```
 
 ### Phase 6: Remediation Steps

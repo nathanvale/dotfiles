@@ -1,74 +1,4 @@
 {
-"multiCommand.commands": [
-  {
-    // 14" Laptop Mode: editor-focused, only primary sidebar visible
-    "command": "layout.laptopMode",
-    "sequence": [
-      "workbench.action.closePanel",                 // hide bottom panel
-      "workbench.action.maximizeEditorHideSidebar",  // editor full, no sidebars
-      "workbench.action.toggleSidebarVisibility"     // turn primary sidebar back on
-    ]
-  },
-  {
-    // 40" Big Monitor Mode: both sidebars visible, tidy editor widths
-    "command": "layout.bigMonitor",
-    "sequence": [
-      "workbench.action.closePanel",                 // hide bottom panel
-      "workbench.action.maximizeEditorHideSidebar",  // start from clean editor-only
-      "workbench.action.toggleSidebarVisibility",    // show primary sidebar (left)
-      "workbench.action.toggleAuxiliaryBar",         // show secondary sidebar (right)
-      "workbench.action.evenEditorWidths"            // balance editor groups
-    ]
-  }
-],
-  // ============================================================================
-  // AGENTIC WORKFLOWS — Auto-Approval + Stable Copilot Experience
-  // ============================================================================
-  "chat.tools.global.autoApprove": true,
-  "chat.tools.terminal.enableAutoApprove": true,
-  "chat.tools.terminal.autoApprove": {
-    "rm": false,
-    "rmdir": false,
-    "del": false,
-    "kill": false,
-    "curl": false,
-    "wget": false,
-    "eval": false,
-    "chmod": false,
-    "chown": false
-  },
-  "chat.agent.maxRequests": 300,
-  "github.copilot.chat.view": "editor",
-  "github.copilot.chat.showWelcomeMessage": false,
-  "github.copilot.editor.enableAutoCompletions": true,
-  // ============================================================================
-  // TERMINAL STABILITY — Prevent Focus Stealing + Predictable Layout
-  // ============================================================================
-  "terminal.integrated.focusAfterExecution": false,
-  "terminal.integrated.revealOnCommand": "never",
-  "terminal.integrated.revealOnStartup": "never",
-  "terminal.integrated.defaultProfile.osx": "zsh",
-  "terminal.integrated.startInInteractiveShell": false,
-  "terminal.integrated.allowChording": false,
-  // Terminals open in editor tabs (stable, predictable, never shove panels around)
-  "terminal.integrated.defaultLocation": "editor",
-  "terminal.integrated.splitCwd": "inherited",
-  // ============================================================================
-  // FORMATTING — Prettier First, ESLint Beside It, No Conflicts
-  // ============================================================================
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
-  },
-  "prettier.requireConfig": true,
-  "prettier.useEditorConfig": true,
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -84,50 +14,13 @@
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  // ============================================================================
-  // ESLINT — Flat Config-Friendly, Zero Surprises
-  // ============================================================================
-  "eslint.enable": true,
-  "eslint.packageManager": "pnpm",
-  "eslint.useFlatConfig": true,
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
-  "eslint.workingDirectories": [
-    {
-      "mode": "auto"
-    }
-  ],
-  "editor.codeActionsOnSaveTimeout": 2000,
-  // ============================================================================
-  // FILESYSTEM — Noise Reduction + Speed + CPU Relief
-  // ============================================================================
-  "files.trimTrailingWhitespace": true,
-  "files.insertFinalNewline": true,
-  "files.eol": "\n",
-  "files.exclude": {
-    "**/.git": true,
-    "**/.DS_Store": true,
-    "**/node_modules": true
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "files.watcherExclude": {
-    "**/node_modules/**": true,
-    "**/.git/**": true,
-    "**/dist/**": true,
-    "**/.next/**": true,
-    "**/.turbo/**": true,
-    "**/coverage/**": true
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "search.exclude": {
-    "**/node_modules": true,
-    "**/dist": true,
-    "**/.next": true,
-    "**/.turbo": true,
-    "**/coverage": true
-  },
+  "chat.agent.maxRequests": 300,
   // Prevent Copilot search from scanning noisy folders
   "chat.search.exclude": [
     "**/node_modules/**",
@@ -137,40 +30,142 @@
     "**/coverage/**"
   ],
   // ============================================================================
-  // EDITOR EXPERIENCE — Smooth, Predictable, ADHD-Friendly
+  // AGENTIC WORKFLOWS — Auto-Approval + Stable Copilot Experience
   // ============================================================================
-  "workbench.colorTheme": "Night Owl",
-  "explorer.confirmDelete": false,
-  "editor.fontFamily": "MesloLGS NF, Menlo, Monaco, 'Courier New', monospace",
-  "editor.smoothScrolling": true,
+  "chat.tools.global.autoApprove": true,
+  "chat.tools.terminal.autoApprove": {
+    "chmod": false,
+    "chown": false,
+    "curl": false,
+    "del": false,
+    "eval": false,
+    "kill": false,
+    "rm": false,
+    "rmdir": false,
+    "wget": false
+  },
+  "chat.tools.terminal.enableAutoApprove": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "editor.codeActionsOnSaveTimeout": 2000,
   "editor.cursorBlinking": "smooth",
-  "editor.inlineSuggest.enabled": true,
+  // ============================================================================
+  // FORMATTING — Prettier First, ESLint Beside It, No Conflicts
+  // ============================================================================
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.fontFamily": "MesloLGS NF, Menlo, Monaco, 'Courier New', monospace",
+  "editor.formatOnSave": true,
   // Hover popups softened — less visual noise
   "editor.hover.delay": 600,
-  "workbench.startupEditor": "none",
-  "workbench.statusBar.visible": true,
-  // Tabs easier to see + keep track of
-  "workbench.editor.highlightModifiedTabs": true,
-  "workbench.editor.wrapTabs": true,
-  "tab.lastPinnedTabsOverflow": true,
-  // No preview tabs (prevents tab-jumping)
-  "workbench.editor.enablePreview": false,
-  "workbench.editor.enablePreviewFromQuickOpen": false,
-  // Keep sidebar anchored, no layout surprises
-  "workbench.layoutControl.enabled": false,
-  "workbench.sideBar.location": "left",
-  // Calm animations
-  "workbench.useExperimentalGridLayout": false,
-  // ============================================================================
-  // NOTIFICATIONS — No Popup Intrusions
-  // ============================================================================
-  "notifications.notificationToasts": "never",
-  "files.autoSave": "afterDelay",
-  "gitlens.ai.model": "vscode",
-  "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+  "editor.inlineSuggest.enabled": true,
   "editor.minimap.enabled": false,
   // ============================================================================
   // KEYBOARD / FLOW — Optional “Emergency Reset” (Stabilises Agent Sessions)
   // ============================================================================
   // (Add the keybinding manually if you want it — VS Code stores keybindings separately)
+  "editor.smoothScrolling": true,
+  // ============================================================================
+  // ESLINT — Flat Config-Friendly, Zero Surprises
+  // ============================================================================
+  "eslint.enable": true,
+  "eslint.packageManager": "pnpm",
+  "eslint.useFlatConfig": true,
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "explorer.confirmDelete": false,
+  "files.autoSave": "afterDelay",
+  "files.eol": "\n",
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/.git": true,
+    "**/node_modules": true
+  },
+  "files.insertFinalNewline": true,
+  // ============================================================================
+  // FILESYSTEM — Noise Reduction + Speed + CPU Relief
+  // ============================================================================
+  "files.trimTrailingWhitespace": true,
+  "files.watcherExclude": {
+    "**/.git/**": true,
+    "**/.next/**": true,
+    "**/.turbo/**": true,
+    "**/coverage/**": true,
+    "**/dist/**": true,
+    "**/node_modules/**": true
+  },
+  "github.copilot.chat.showWelcomeMessage": false,
+  "github.copilot.chat.view": "editor",
+  "github.copilot.editor.enableAutoCompletions": true,
+  "gitlens.ai.model": "vscode",
+  "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+  "multiCommand.commands": [
+    {
+      // 14" Laptop Mode: editor-focused, only primary sidebar visible
+      "command": "layout.laptopMode",
+      "sequence": [
+        "workbench.action.closePanel", // hide bottom panel
+        "workbench.action.maximizeEditorHideSidebar", // editor full, no sidebars
+        "workbench.action.toggleSidebarVisibility" // turn primary sidebar back on
+      ]
+    },
+    {
+      // 40" Big Monitor Mode: both sidebars visible, tidy editor widths
+      "command": "layout.bigMonitor",
+      "sequence": [
+        "workbench.action.closePanel", // hide bottom panel
+        "workbench.action.maximizeEditorHideSidebar", // start from clean editor-only
+        "workbench.action.toggleSidebarVisibility", // show primary sidebar (left)
+        "workbench.action.toggleAuxiliaryBar", // show secondary sidebar (right)
+        "workbench.action.evenEditorWidths" // balance editor groups
+      ]
+    }
+  ],
+  // ============================================================================
+  // NOTIFICATIONS — No Popup Intrusions
+  // ============================================================================
+  "notifications.notificationToasts": "never",
+  "prettier.requireConfig": true,
+  "prettier.useEditorConfig": true,
+  "search.exclude": {
+    "**/.next": true,
+    "**/.turbo": true,
+    "**/coverage": true,
+    "**/dist": true,
+    "**/node_modules": true
+  },
+  "tab.lastPinnedTabsOverflow": true,
+  "terminal.integrated.allowChording": false,
+  // Terminals open in editor tabs (stable, predictable, never shove panels around)
+  "terminal.integrated.defaultLocation": "editor",
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  // ============================================================================
+  // TERMINAL STABILITY — Prevent Focus Stealing + Predictable Layout
+  // ============================================================================
+  "terminal.integrated.focusAfterExecution": false,
+  "terminal.integrated.revealOnCommand": "never",
+  "terminal.integrated.revealOnStartup": "never",
+  "terminal.integrated.splitCwd": "inherited",
+  "terminal.integrated.startInInteractiveShell": false,
+  // ============================================================================
+  // EDITOR EXPERIENCE — Smooth, Predictable, ADHD-Friendly
+  // ============================================================================
+  "workbench.colorTheme": "Night Owl",
+  // No preview tabs (prevents tab-jumping)
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.enablePreviewFromQuickOpen": false,
+  // Tabs easier to see + keep track of
+  "workbench.editor.highlightModifiedTabs": true,
+  "workbench.editor.wrapTabs": true,
+  // Keep sidebar anchored, no layout surprises
+  "workbench.layoutControl.enabled": false,
+  "workbench.sideBar.location": "left",
+  "workbench.startupEditor": "none",
+  "workbench.statusBar.visible": true,
+  // Calm animations
+  "workbench.useExperimentalGridLayout": false
 }

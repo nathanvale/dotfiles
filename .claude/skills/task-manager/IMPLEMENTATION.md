@@ -1,12 +1,15 @@
 # Implementation Guidance & TDD Workflow
 
-This document provides comprehensive guidance for implementing tasks using Test-Driven Development (TDD) with Wallaby MCP integration.
+This document provides comprehensive guidance for implementing tasks using Test-Driven Development
+(TDD) with Wallaby MCP integration.
 
 ## Core Principle: Tests First, Always
 
-**⚠️ CRITICAL RULE**: This skill **enforces** Test-Driven Development. You MUST write tests BEFORE implementing code. Code-first approaches will be rejected.
+**⚠️ CRITICAL RULE**: This skill **enforces** Test-Driven Development. You MUST write tests BEFORE
+implementing code. Code-first approaches will be rejected.
 
 **TDD Cycle:**
+
 ```
 1. Write Test (RED)
    ↓
@@ -57,6 +60,7 @@ This document provides comprehensive guidance for implementing tasks using Test-
    - What are the testing gaps?
 
 **Present summary to user:**
+
 ```
 Task: T0001 - Fix query execution error
 Priority: P0 (Critical Path)
@@ -83,11 +87,11 @@ Acceptance Criteria: 5 items to validate
 
 **Extract from Testing Requirements table:**
 
-| Test Type   | Validates AC | Description                                  | Location                                          |
-| ----------- | ------------ | -------------------------------------------- | ------------------------------------------------- |
-| Unit        | AC1, AC2     | Mock query returns [] for empty results     | `tests/unit/mocks/mock-dataverse.test.ts`         |
-| Unit        | AC3          | findByName handles special characters        | `tests/unit/dynamics/contact-repository.test.ts`  |
-| Integration | AC4, AC5     | End-to-end migration with 100 CSV rows       | Manual: CLI command with --limit=100              |
+| Test Type   | Validates AC | Description                             | Location                                         |
+| ----------- | ------------ | --------------------------------------- | ------------------------------------------------ |
+| Unit        | AC1, AC2     | Mock query returns [] for empty results | `tests/unit/mocks/mock-dataverse.test.ts`        |
+| Unit        | AC3          | findByName handles special characters   | `tests/unit/dynamics/contact-repository.test.ts` |
+| Integration | AC4, AC5     | End-to-end migration with 100 CSV rows  | Manual: CLI command with --limit=100             |
 
 **TDD Execution Order:**
 
@@ -96,6 +100,7 @@ Acceptance Criteria: 5 items to validate
 3. **E2E tests last** (slowest, most comprehensive)
 
 **For each test:**
+
 - Identify test file location
 - Write test before any implementation
 - Verify test fails (RED state)
@@ -122,35 +127,35 @@ touch tests/unit/mocks/mock-dataverse.test.ts
 
 ```typescript
 // tests/unit/mocks/mock-dataverse.test.ts
-import { describe, it, expect } from 'vitest'
-import { MockDataverseService } from '../../../src/lib/mocks/mock-dataverse'
+import { describe, it, expect } from "vitest";
+import { MockDataverseService } from "../../../src/lib/mocks/mock-dataverse";
 
-describe('MockDataverseService.query()', () => {
-  it('should return empty array when no results match filter', async () => {
-    const mockService = new MockDataverseService()
+describe("MockDataverseService.query()", () => {
+  it("should return empty array when no results match filter", async () => {
+    const mockService = new MockDataverseService();
 
     // Execute query with filter that matches nothing
-    const results = await mockService.query('contacts', {
-      filter: "firstname eq 'NonExistent' and lastname eq 'User'"
-    })
+    const results = await mockService.query("contacts", {
+      filter: "firstname eq 'NonExistent' and lastname eq 'User'",
+    });
 
     // Assert: should return [] not throw error
-    expect(results).toEqual([])
-    expect(results).toHaveLength(0)
-  })
+    expect(results).toEqual([]);
+    expect(results).toHaveLength(0);
+  });
 
-  it('should handle special characters in filter without throwing', async () => {
-    const mockService = new MockDataverseService()
+  it("should handle special characters in filter without throwing", async () => {
+    const mockService = new MockDataverseService();
 
     // Execute query with single quote (O'Brien)
-    const results = await mockService.query('contacts', {
-      filter: "firstname eq 'O''Brien' and lastname eq 'Smith'"
-    })
+    const results = await mockService.query("contacts", {
+      filter: "firstname eq 'O''Brien' and lastname eq 'Smith'",
+    });
 
     // Should not throw, should return []
-    expect(results).toEqual([])
-  })
-})
+    expect(results).toEqual([]);
+  });
+});
 ```
 
 #### Step 3.3: Run Test - Verify RED
@@ -167,13 +172,14 @@ mcp__wallaby__wallaby_allTestsForFile \
 ```
 
 **Expected output (RED state):**
+
 ```json
 {
   "failingTests": [
     {
+      "error": "Expected [] but received Error: Query failed",
       "id": "tests/unit/mocks/mock-dataverse.test.ts:5",
-      "name": "should return empty array when no results match filter",
-      "error": "Expected [] but received Error: Query failed"
+      "name": "should return empty array when no results match filter"
     }
   ]
 }
@@ -247,13 +253,14 @@ mcp__wallaby__wallaby_testById \
 ```
 
 **Expected output (GREEN state):**
+
 ```json
 {
   "test": {
+    "duration": 15,
     "id": "tests/unit/mocks/mock-dataverse.test.ts:5",
     "name": "should return empty array when no results match filter",
-    "status": "passed",
-    "duration": 15
+    "status": "passed"
   }
 }
 ```
@@ -309,6 +316,7 @@ async query<T = any>(entityLogicalName: string, options: QueryOptions = {}): Pro
 ```
 
 **After each refactoring:**
+
 ```bash
 # Verify tests still pass
 mcp__wallaby__wallaby_allTestsForFile \
@@ -337,15 +345,15 @@ mcp__wallaby__wallaby_allTestsForFile \
 
 ```typescript
 // ❌ WRONG
-const first = results[0].property
+const first = results[0].property;
 
 // ✅ CORRECT
 if (results.length > 0) {
-  const first = results[0].property
+  const first = results[0].property;
 }
 // OR
-expect(results).toHaveLength(1)
-const first = results[0]!.property  // Safe after length check
+expect(results).toHaveLength(1);
+const first = results[0]!.property; // Safe after length check
 ```
 
 ### Pattern 2: Null/Undefined Handling
@@ -353,12 +361,12 @@ const first = results[0]!.property  // Safe after length check
 ```typescript
 // ❌ WRONG
 function process(value: string | undefined) {
-  return value.toUpperCase()  // Crash if undefined!
+  return value.toUpperCase(); // Crash if undefined!
 }
 
 // ✅ CORRECT
 function process(value: string | undefined): string {
-  return value?.toUpperCase() ?? 'DEFAULT'
+  return value?.toUpperCase() ?? "DEFAULT";
 }
 ```
 
@@ -381,12 +389,12 @@ catch (error) {
 ```typescript
 // ❌ WRONG
 class MyRepository extends DataverseRepository {
-  mapDto(data: any): MyDto { }  // Missing override
+  mapDto(data: any): MyDto {} // Missing override
 }
 
 // ✅ CORRECT
 class MyRepository extends DataverseRepository {
-  override mapDto(data: any): MyDto { }
+  override mapDto(data: any): MyDto {}
 }
 ```
 
@@ -394,11 +402,11 @@ class MyRepository extends DataverseRepository {
 
 ```typescript
 // ❌ WRONG - SQL injection vulnerable
-const filter = `firstname eq '${firstName}'`  // Breaks with O'Brien
+const filter = `firstname eq '${firstName}'`; // Breaks with O'Brien
 
 // ✅ CORRECT - Escape single quotes
-const safeFirstName = firstName.replace(/'/g, "''")
-const filter = `firstname eq '${safeFirstName}'`
+const safeFirstName = firstName.replace(/'/g, "''");
+const filter = `firstname eq '${safeFirstName}'`;
 ```
 
 ## Acceptance Criteria Tracking
@@ -407,6 +415,7 @@ const filter = `firstname eq '${safeFirstName}'`
 
 ```markdown
 ## Acceptance Criteria
+
 - [x] Mock query() returns empty array [] when no contacts match filter
 - [x] findByName() returns null when no contacts found (no exception thrown)
 - [x] Filter string parsing handles special characters and quotes safely
@@ -432,18 +441,18 @@ pnpm test:integration
 
 ```typescript
 // tests/integration/contact-service.test.ts
-describe('Contact Service Integration', () => {
-  it('should handle contact lookup with no results gracefully', async () => {
-    const service = new ContactService(mockDataverse, mockLogger)
+describe("Contact Service Integration", () => {
+  it("should handle contact lookup with no results gracefully", async () => {
+    const service = new ContactService(mockDataverse, mockLogger);
 
     // Lookup non-existent contact
-    const result = await service.findByName('NonExistent', 'User')
+    const result = await service.findByName("NonExistent", "User");
 
     // Should return null, not throw
-    expect(result).toBeNull()
-    expect(mockLogger.errors).toHaveLength(0)
-  })
-})
+    expect(result).toBeNull();
+    expect(mockLogger.errors).toHaveLength(0);
+  });
+});
 ```
 
 ## E2E Testing (Manual CLI)
@@ -461,6 +470,7 @@ USE_FIXTURES=true npx tsx src/cli.ts migrate referrals \
 ```
 
 **Monitor output for:**
+
 - ✅ All rows processed successfully
 - ✅ No DATAVERSE_QUERY_FAILED errors
 - ✅ Explosion ratio: 1 CSV row → 9 Dataverse records
@@ -471,12 +481,14 @@ USE_FIXTURES=true npx tsx src/cli.ts migrate referrals \
 ### Mistake 1: Implementing Before Testing
 
 **❌ WRONG:**
+
 ```
 1. Write code first
 2. Then write tests to verify
 ```
 
 **✅ CORRECT:**
+
 ```
 1. Write test first (fails)
 2. Write minimal code (passes)
@@ -486,6 +498,7 @@ USE_FIXTURES=true npx tsx src/cli.ts migrate referrals \
 ### Mistake 2: Writing Too Much Code at Once
 
 **❌ WRONG:**
+
 ```
 1. Write all implementation
 2. Run all tests
@@ -493,6 +506,7 @@ USE_FIXTURES=true npx tsx src/cli.ts migrate referrals \
 ```
 
 **✅ CORRECT:**
+
 ```
 1. Write ONE test
 2. Write MINIMAL code to pass
@@ -503,12 +517,14 @@ USE_FIXTURES=true npx tsx src/cli.ts migrate referrals \
 ### Mistake 3: Not Using Wallaby MCP
 
 **❌ WRONG:**
+
 ```
 # Run tests manually
 pnpm test
 ```
 
 **✅ CORRECT:**
+
 ```
 # Use Wallaby MCP for real-time feedback
 mcp__wallaby__wallaby_failingTests
@@ -518,6 +534,7 @@ mcp__wallaby__wallaby_testById --id="test-id"
 ### Mistake 4: Skipping Refactoring
 
 **❌ WRONG:**
+
 ```
 1. Write test
 2. Make it pass
@@ -525,6 +542,7 @@ mcp__wallaby__wallaby_testById --id="test-id"
 ```
 
 **✅ CORRECT:**
+
 ```
 1. Write test (RED)
 2. Make it pass (GREEN)
@@ -535,11 +553,13 @@ mcp__wallaby__wallaby_testById --id="test-id"
 ### Mistake 5: Ignoring Code Examples
 
 **❌ WRONG:**
+
 ```
 Read task, implement from scratch
 ```
 
 **✅ CORRECT:**
+
 ```
 1. Read Code Examples section
 2. Compare Current vs Proposed
@@ -565,4 +585,5 @@ Before marking task as done, verify:
 
 ## Proceeding to Validation
 
-Once implementation is complete and all tests pass, proceed to **@VALIDATION.md** for quality checks and task completion procedures.
+Once implementation is complete and all tests pass, proceed to **@VALIDATION.md** for quality checks
+and task completion procedures.

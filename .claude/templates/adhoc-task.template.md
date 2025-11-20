@@ -6,44 +6,45 @@ description: Unified task template for /start-review command - AI fills all sect
 
 # Task Template Structure
 
-This template is used by `/start-review` to generate complete, actionable tasks from code reviews or requirements documents.
+This template is used by `/start-review` to generate complete, actionable tasks from code reviews or
+requirements documents.
 
 ## Frontmatter Fields
 
 ```yaml
 ---
 # === IDENTITY ===
-id: {{TASK_ID}}                    # MPCU-NNN (auto-generated)
-title: {{TITLE}}                   # Brief task description
+id: { { TASK_ID } } # MPCU-NNN (auto-generated)
+title: { { TITLE } } # Brief task description
 
 # === PRIORITY & CLASSIFICATION ===
-priority: {{PRIORITY}}             # P0, P1, P2, P3
-component: {{COMPONENT}}           # C## code from component-manager (optional)
+priority: { { PRIORITY } } # P0, P1, P2, P3
+component: { { COMPONENT } } # C## code from component-manager (optional)
 
 # === LIFECYCLE STATUS ===
-status: READY                      # Always READY when created
-created: {{CREATED_ISO}}           # ISO 8601 timestamp
-started:                           # Filled by create-worktree.sh
-completed:                         # Filled on task completion
-completion_date:                   # Filled on task completion
-actual_effort:                     # Filled on task completion (e.g., "4h")
+status: READY # Always READY when created
+created: { { CREATED_ISO } } # ISO 8601 timestamp
+started: # Filled by create-worktree.sh
+completed: # Filled on task completion
+completion_date: # Filled on task completion
+actual_effort: # Filled on task completion (e.g., "4h")
 
 # === GIT INTEGRATION ===
-branch:                            # Filled by create-worktree.sh
-worktree:                          # Filled by create-worktree.sh
+branch: # Filled by create-worktree.sh
+worktree: # Filled by create-worktree.sh
 
 # === REVIEW LIFECYCLE (future use) ===
-review_id:                         # R-MPCU-NNN (if from /review command)
-review_status:                     # PENDING, APPROVED, REJECTED
-review_required: false             # Quality gate flag
-reviewed:                          # ISO 8601 review date
-review_report:                     # Path to review report
+review_id: # R-MPCU-NNN (if from /review command)
+review_status: # PENDING, APPROVED, REJECTED
+review_required: false # Quality gate flag
+reviewed: # ISO 8601 review date
+review_report: # Path to review report
 
 # === PROVENANCE ===
-source: {{SOURCE}}                 # adhoc, docs/reviews/R-*.md, etc.
+source: { { SOURCE } } # adhoc, docs/reviews/R-*.md, etc.
 
 # === DEPENDENCIES ===
-depends_on: []                     # List of blocking task IDs
+depends_on: [] # List of blocking task IDs
 ---
 ```
 
@@ -54,11 +55,9 @@ depends_on: []                     # List of blocking task IDs
 
 ## Core Metadata
 
-**Component:** {{COMPONENT_NAME}}
-**Location:** {{FILE_PATH}}:{{LINE_NUMBER}}
-**Estimated Effort:** {{EFFORT_ESTIMATE}}
-**Complexity:** LOW | MEDIUM | HIGH | CRITICAL
-**Regression Risk:** LOW | MEDIUM | HIGH | CRITICAL
+**Component:** {{COMPONENT_NAME}} **Location:** {{FILE_PATH}}:{{LINE_NUMBER}} **Estimated Effort:**
+{{EFFORT_ESTIMATE}} **Complexity:** LOW | MEDIUM | HIGH | CRITICAL **Regression Risk:** LOW | MEDIUM
+| HIGH | CRITICAL
 
 ## Description
 
@@ -84,7 +83,8 @@ depends_on: []                     # List of blocking task IDs
 - [ ] {{AC_2}}
 - [ ] {{AC_3}}
 
-(AI: Generate 3-5 specific, testable acceptance criteria. What must be true for this task to be considered complete?)
+(AI: Generate 3-5 specific, testable acceptance criteria. What must be true for this task to be
+considered complete?)
 
 ## Implementation Plan
 
@@ -94,23 +94,21 @@ depends_on: []                     # List of blocking task IDs
 2. {{STEP_2}}
 3. {{STEP_3}}
 
-(AI: Break down the work into clear, sequential steps. Be specific about what code changes are needed where.)
+(AI: Break down the work into clear, sequential steps. Be specific about what code changes are
+needed where.)
 
 ## Code Examples
 
 **Current Code (BUGGY):**
 
-\`\`\`{{LANGUAGE}}
-{{CURRENT_CODE}}
-\`\`\`
+\`\`\`{{LANGUAGE}} {{CURRENT_CODE}} \`\`\`
 
 **Proposed Fix:**
 
-\`\`\`{{LANGUAGE}}
-{{PROPOSED_FIX}}
-\`\`\`
+\`\`\`{{LANGUAGE}} {{PROPOSED_FIX}} \`\`\`
 
-(AI: Extract code from review if present, or create examples based on description. Show before/after.)
+(AI: Extract code from review if present, or create examples based on description. Show
+before/after.)
 
 ## File Changes
 
@@ -130,10 +128,9 @@ depends_on: []                     # List of blocking task IDs
 
 ## Testing Requirements
 
-**Required Testing:**
-| Test Type | Validates AC | Description | Location |
-|-----------|--------------|-------------|----------|
-| {{TEST_TYPE}} | AC{{NUM}} | {{TEST_DESC}} | {{TEST_LOCATION}} |
+**Required Testing:** | Test Type | Validates AC | Description | Location |
+|-----------|--------------|-------------|----------| | {{TEST_TYPE}} | AC{{NUM}} | {{TEST_DESC}} |
+{{TEST_LOCATION}} |
 
 (AI: Create a test matrix. Map each test to specific acceptance criteria.)
 
@@ -156,6 +153,7 @@ depends_on: []                     # List of blocking task IDs
 **Bug Type:** {{BUG_TYPE}}
 
 **Root Cause (5 Whys):**
+
 1. Why did this happen? {{WHY_1}}
 2. Why {{WHY_1}}? {{WHY_2}}
 3. Why {{WHY_2}}? {{WHY_3}}
@@ -183,27 +181,27 @@ depends_on: []                     # List of blocking task IDs
 ## Reproduction
 
 \`\`\`bash
+
 # Reproduction steps
-{{REPRO_STEPS}}
-\`\`\`
+
+{{REPRO_STEPS}} \`\`\`
 
 (AI: For bugs, provide exact steps to reproduce. For features, provide usage examples.)
 
 ## Hotfix Decision
 
-**Decision:** {{HOTFIX_DECISION}}
-**Timeline:** {{TIMELINE}}
-**Approach:** {{APPROACH}}
-**Risk:** {{RISK}}
+**Decision:** {{HOTFIX_DECISION}} **Timeline:** {{TIMELINE}} **Approach:** {{APPROACH}} **Risk:**
+{{RISK}}
 
 (AI: Assess urgency. Is this hotfix-worthy? What's the safest approach?)
 
 ## Pattern Detection
 
 \`\`\`bash
+
 # Search for similar patterns
-{{PATTERN_SEARCH_COMMAND}}
-\`\`\`
+
+{{PATTERN_SEARCH_COMMAND}} \`\`\`
 
 (AI: Provide grep/rg commands to find similar issues in the codebase)
 ```
@@ -218,7 +216,8 @@ When generating a task from this template:
 4. **Make it actionable** - Someone should be able to implement this task without asking questions
 5. **Infer intelligently** - If information is missing, make reasonable assumptions based on context
 6. **Use proper formatting** - Code blocks, tables, lists should be correctly formatted
-7. **Mark unknowns** - If you truly can't determine something, use "TBD" or "Unknown" rather than guessing
+7. **Mark unknowns** - If you truly can't determine something, use "TBD" or "Unknown" rather than
+   guessing
 8. **Keep it concise** - Detailed but not verbose. Every section should add value.
 
 ## Example Placeholders Reference

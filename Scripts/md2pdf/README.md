@@ -107,7 +107,7 @@ Creates: `00_Inbox/Tasmania_Hiking_Boots_Research-HUMAN.pdf`
 The script handles all standard markdown:
 
 - **Headings** (H1, H2, H3, etc.)
-- **Bold** and *italic* text
+- **Bold** and _italic_ text
 - Bullet lists
 - Numbered lists
 - Block quotes
@@ -119,6 +119,7 @@ The script handles all standard markdown:
 ### Automatic Adjustments
 
 The script automatically:
+
 - Removes horizontal rules (`---`) which render as lines in PDF
 - Preserves proper line breaks in lists
 - Uses clean typography defaults
@@ -134,8 +135,7 @@ The script uses these pandoc settings:
 - **Margins**: 2.5cm
 - **Line breaks**: Preserved in lists
 
-To customize, edit the script at:
-`~/code/dotfiles/scripts/md2pdf/md2pdf`
+To customize, edit the script at: `~/code/dotfiles/scripts/md2pdf/md2pdf`
 
 ## Troubleshooting
 
@@ -165,6 +165,7 @@ sudo tlmgr install package-name
 ```
 
 Common missing packages:
+
 - `sourcecodepro`
 - `sourcesanspro`
 - `footnotebackref`
@@ -193,7 +194,8 @@ Each list item should be on its own line with no extra blank lines between items
 
 ### Horizontal Lines Appearing
 
-The script automatically removes markdown horizontal rules (`---`). If you see lines in your PDF, check if you have other line characters in your source.
+The script automatically removes markdown horizontal rules (`---`). If you see lines in your PDF,
+check if you have other line characters in your source.
 
 ## Dependencies
 
@@ -214,7 +216,8 @@ All required packages are listed in installation step 2.
 
 ## Why This Solution?
 
-After trying various clipboard/RTF approaches (which had character encoding and line spacing issues), we built this PDF solution because:
+After trying various clipboard/RTF approaches (which had character encoding and line spacing
+issues), we built this PDF solution because:
 
 1. **Reliable** - No clipboard formatting quirks
 2. **Professional** - Proper typography from Eisvogel template
@@ -222,11 +225,13 @@ After trying various clipboard/RTF approaches (which had character encoding and 
 4. **Simple** - One command to convert
 5. **Customizable** - Easy to adjust settings
 
-The Eisvogel template is used by thousands of developers and academics for professional documents (6.8k GitHub stars).
+The Eisvogel template is used by thousands of developers and academics for professional documents
+(6.8k GitHub stars).
 
 ## Credits
 
-- **Eisvogel Template**: [Wandmalfarbe/pandoc-latex-template](https://github.com/Wandmalfarbe/pandoc-latex-template)
+- **Eisvogel Template**:
+  [Wandmalfarbe/pandoc-latex-template](https://github.com/Wandmalfarbe/pandoc-latex-template)
 - **Pandoc**: [pandoc.org](https://pandoc.org/)
 - **BasicTeX**: [tug.org/mactex](https://www.tug.org/mactex/)
 
@@ -238,6 +243,4 @@ The Eisvogel template is licensed under BSD-3-Clause.
 
 ---
 
-**Created**: 2025-10-12
-**Last Updated**: 2025-10-12
-**Version**: 1.0.0
+**Created**: 2025-10-12 **Last Updated**: 2025-10-12 **Version**: 1.0.0

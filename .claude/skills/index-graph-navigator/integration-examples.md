@@ -7,6 +7,7 @@
 **Purpose**: Analyze code quality within domains
 
 **Integration Points**:
+
 - Use `Skill(index-graph-navigator)` query: "hotspots" to find high-risk functions
 - Use `Skill(index-graph-navigator)` query: "dead-code" to find unused code
 - Use `Skill(index-graph-navigator)` query: "blast-radius" for impact analysis
@@ -23,6 +24,7 @@
 **User**: "I have an error at src/parser.ts:123, help me find the cause"
 
 **Workflow**:
+
 1. Use `Skill(index-graph-navigator)` query: "trace-to-error" at src/parser.ts:123
 2. Get call stacks showing all paths to the error location
 3. Read ONLY files in the call path (not entire codebase)
@@ -39,6 +41,7 @@
 **User**: "I want to rename function parseDate to parseDateTime"
 
 **Workflow**:
+
 1. Check blast radius: `Skill(index-graph-navigator)` query: "blast-radius parseDate"
 2. Check if hotspot: `Skill(index-graph-navigator)` query: "hotspots"
 3. Check cross-domain usage: `Skill(index-graph-navigator)` query: "cross-domain"
@@ -53,6 +56,7 @@
 **Purpose**: Find code not covered by tests
 
 **Workflow**:
+
 1. Find dead code: `Skill(index-graph-navigator)` query: "dead-code"
 2. Find entry points (potential test targets)
 3. Cross-reference with test files
@@ -67,6 +71,7 @@
 **Purpose**: Analyze coupling and dependencies
 
 **Workflow**:
+
 1. For each domain, query cross-domain dependencies
 2. Build coupling matrix
 3. Calculate coupling scores

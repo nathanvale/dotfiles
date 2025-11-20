@@ -68,7 +68,8 @@ Every finding MUST include all 10 enrichments:
 
 **Use component-manager skill for classification:**
 
-When formatting a finding, invoke the **component-manager skill** to find or create the appropriate component code. The component-manager skill will:
+When formatting a finding, invoke the **component-manager skill** to find or create the appropriate
+component code. The component-manager skill will:
 
 1. Search existing components for a match (e.g., "Service Factory" → C02)
 2. Create a new component if no match found
@@ -80,7 +81,8 @@ When formatting a finding, invoke the **component-manager skill** to find or cre
 - Component-manager skill returns: C02 (Service Factory & Mode Selection)
 - Use in finding: **Component:** C02: Service Factory & Mode Selection
 
-The component-manager skill manages the component registry and ensures consistent component codes across all findings and tasks.
+The component-manager skill manages the component registry and ensures consistent component codes
+across all findings and tasks.
 
 ---
 
@@ -89,14 +91,14 @@ The component-manager skill manages the component registry and ensures consisten
 ````markdown
 ### P0-001: Service Factory Missing Fixture Mode Validation
 
-**Component:** C02: Service Factory & Mode Selection
-**Location:** `src/lib/services/service-factory.ts:125-145`
-**Estimated Effort:** 8h
-**Complexity:** CRITICAL
+**Component:** C02: Service Factory & Mode Selection **Location:**
+`src/lib/services/service-factory.ts:125-145` **Estimated Effort:** 8h **Complexity:** CRITICAL
 **Regression Risk:** HIGH
 
-**Issue:**
-Service factory doesn't validate fixture mode properly, allowing real Azure API calls during development. This could result in accidental production writes when USE_FIXTURES flag is misconfigured. Without validation, developers could unknowingly connect to live Dataverse during local testing.
+**Issue:** Service factory doesn't validate fixture mode properly, allowing real Azure API calls
+during development. This could result in accidental production writes when USE_FIXTURES flag is
+misconfigured. Without validation, developers could unknowingly connect to live Dataverse during
+local testing.
 
 **Regression Risk Details:**
 
@@ -128,7 +130,7 @@ Service factory doesn't validate fixture mode properly, allowing real Azure API 
 export class ServiceFactory {
   constructor() {
     // No validation - dangerous!
-    this.mode = process.env.USE_FIXTURES === "true"
+    this.mode = process.env.USE_FIXTURES === "true";
   }
 }
 ```
@@ -138,14 +140,14 @@ export class ServiceFactory {
 ```typescript
 export class ServiceFactory {
   constructor() {
-    const fixtureMode = process.env.USE_FIXTURES
+    const fixtureMode = process.env.USE_FIXTURES;
     if (fixtureMode === undefined) {
-      throw new Error("USE_FIXTURES environment variable required")
+      throw new Error("USE_FIXTURES environment variable required");
     }
     if (fixtureMode !== "true" && fixtureMode !== "false") {
-      throw new Error(`Invalid USE_FIXTURES value: ${fixtureMode}`)
+      throw new Error(`Invalid USE_FIXTURES value: ${fixtureMode}`);
     }
-    this.mode = fixtureMode === "true"
+    this.mode = fixtureMode === "true";
   }
 }
 ```
@@ -164,14 +166,13 @@ export class ServiceFactory {
 
 - None
 
-**Required Testing:**
-| Test Type | Validates AC | Description | Location |
-|-------------|--------------|----------------------------------------|---------------------------------------------------|
-| Unit | AC1, AC2 | Test fixture mode validation logic | `src/__tests__/service-factory.test.ts` |
-| Integration | AC3, AC4, AC5| Verify Azure SDK not initialized | `tests/integration/fixture-mode-guard.test.ts` |
+| **Required Testing:**                          | Test Type     | Validates AC                       | Description                             | Location |
+| ---------------------------------------------- | ------------- | ---------------------------------- | --------------------------------------- | -------- |
+| Unit                                           | AC1, AC2      | Test fixture mode validation logic | `src/__tests__/service-factory.test.ts` |          |
+| Integration                                    | AC3, AC4, AC5 | Verify Azure SDK not initialized   |
+| `tests/integration/fixture-mode-guard.test.ts` |
 
-**Blocking Dependencies:** None
-**Blocks:** P1-003, P1-007
+**Blocking Dependencies:** None **Blocks:** P1-003, P1-007
 
 **Prerequisites:**
 
@@ -183,7 +184,8 @@ export class ServiceFactory {
 
 ## Notes
 
-- This skill is format-agnostic at the domain level - works for bugs, features, security, tech debt, etc.
+- This skill is format-agnostic at the domain level - works for bugs, features, security, tech debt,
+  etc.
 - The 10 enrichments are universal across all finding types (see SHARED_ENRICHMENTS.md)
 - Component classification enables cross-review task tracking
 - Three file categories (Create/Modify/Delete) are critical for accurate work estimation

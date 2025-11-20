@@ -1,6 +1,7 @@
 # Required VS Code Settings for Prompt Files
 
-To enable the `/merge` and `/next` prompts to execute terminal commands automatically, you need to configure VS Code's auto-approval settings.
+To enable the `/merge` and `/next` prompts to execute terminal commands automatically, you need to
+configure VS Code's auto-approval settings.
 
 ## Enable Terminal Command Auto-Approval
 
@@ -17,23 +18,26 @@ Add to your VS Code `settings.json`:
 
 ```json
 {
-  "chat.tools.global.autoApprove": true,
-  "chat.agent.maxRequests": 300
+  "chat.agent.maxRequests": 300,
+  "chat.tools.global.autoApprove": true
 }
 ```
 
 **To open settings.json:**
+
 - Cmd+Shift+P → `Preferences: Open User Settings (JSON)`
 
 ## What These Settings Do
 
 ### `chat.tools.global.autoApprove`
+
 - **Purpose**: Enables "YOLO mode" - auto-approves all tool operations
 - **Effect**: Eliminates confirmation dialogs when running terminal commands
 - **Security**: VS Code warns this is not recommended for untrusted workspaces
 - **Use case**: Essential for `/merge` and `/next` prompts to work smoothly
 
 ### `chat.agent.maxRequests`
+
 - **Purpose**: Maximum number of requests an agent can make before asking to continue
 - **Default**: 25
 - **Recommended**: 300 (allows longer autonomous workflows)
@@ -45,19 +49,19 @@ If you prefer more control, you can enable auto-approval only for specific comma
 
 ```json
 {
-  "chat.tools.terminal.enableAutoApprove": true,
   "chat.tools.terminal.autoApprove": {
-    "rm": false,
-    "rmdir": false,
-    "del": false,
-    "kill": false,
-    "curl": false,
-    "wget": false,
-    "eval": false,
+    "/^Remove-Item\\b/i": false,
     "chmod": false,
     "chown": false,
-    "/^Remove-Item\\b/i": false
-  }
+    "curl": false,
+    "del": false,
+    "eval": false,
+    "kill": false,
+    "rm": false,
+    "rmdir": false,
+    "wget": false
+  },
+  "chat.tools.terminal.enableAutoApprove": true
 }
 ```
 

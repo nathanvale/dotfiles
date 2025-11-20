@@ -10,13 +10,9 @@ formatSkill: format-security
 
 ## <!-- TASK OUTPUT FRONTMATTER STRUCTURE -->
 
-id: # T#### format (auto-generated)
-title: # Brief task description
-priority: # P0, P1, P2, or P3
-component: # C## code from component-manager
-status: # READY, IN_PROGRESS, BLOCKED, DONE
-created: # ISO 8601 timestamp
-source: # Original document path
+id: # T#### format (auto-generated) title: # Brief task description priority: # P0, P1, P2, or P3
+component: # C## code from component-manager status: # READY, IN_PROGRESS, BLOCKED, DONE created: #
+ISO 8601 timestamp source: # Original document path
 
 ---
 
@@ -24,11 +20,7 @@ source: # Original document path
 
 ## Core Metadata
 
-**Component:**
-**Location:**
-**Estimated Effort:**
-**Complexity:**
-**Regression Risk:**
+**Component:** **Location:** **Estimated Effort:** **Complexity:** **Regression Risk:**
 
 ## Description
 
@@ -84,10 +76,8 @@ source: # Original document path
 
 ## Testing Requirements
 
-**Required Testing:**
-| Test Type | Validates AC | Description | Location |
-|-----------|--------------|-------------|----------|
-| | | | |
+**Required Testing:** | Test Type | Validates AC | Description | Location |
+|-----------|--------------|-------------|----------| | | | | |
 
 ## Dependencies
 
@@ -106,31 +96,20 @@ source: # Original document path
 
 ## CVSS Score
 
-**CVSS v3.1**:
-**Vector**:
-**CWE**:
-**OWASP**:
+**CVSS v3.1**: **Vector**: **CWE**: **OWASP**:
 
 ## Threat Model
 
-**Threat Actor**:
-**Attack Path**:
-**Exploitability**:
+**Threat Actor**: **Attack Path**: **Exploitability**:
 
 ## Compliance Impact
 
-**Frameworks Affected**:
-**Reporting Required**:
-**Audit Impact**:
+**Frameworks Affected**: **Reporting Required**: **Audit Impact**:
 
 ## Security Controls
 
-**Preventive**:
-**Detective**:
-**Compensating** (temp):
+**Preventive**: **Detective**: **Compensating** (temp):
 
 ## Verification
 
-**Pre-fix**:
-**Post-fix**:
-**Pentest**:
+**Pre-fix**: **Post-fix**: **Pentest**:

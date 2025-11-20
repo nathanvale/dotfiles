@@ -2,7 +2,8 @@
 
 ## Overview
 
-HyperFlow is the orchestration layer that ties together multiple productivity tools into a seamless keyboard-driven workflow.
+HyperFlow is the orchestration layer that ties together multiple productivity tools into a seamless
+keyboard-driven workflow.
 
 ## Component Flow
 
@@ -29,21 +30,25 @@ HYPERFLOW.SH (Orchestration Layer)
 ## Key Components
 
 ### 1. Karabiner-Elements (Keyboard Remapping)
+
 - **Location**: `config/karabiner/karabiner.json`
 - **Function**: Converts Caps Lock to Hyper key, routes Hyper+Key to shell commands
 - **Complex modification**: "Caps Lock → Hyper Key (⌃⌥⇧⌘) (Caps Lock if alone)"
 
 ### 2. HyperFlow Scripts (Orchestration)
+
 - **Main launcher**: `apps/hyperflow/hyperflow.sh` (via `bin/hyperflow` shim)
 - **Mode switcher**: `apps/hyperflow/superwhisper-mode-switch.sh`
 - **Function**: Coordinates app launching and mode switching with debouncing
 
 ### 3. SuperWhisper (Voice Input)
+
 - **Modes**: default, casual-text, professional-engineer, email
 - **Function**: Context-aware AI voice dictation that switches based on active app
 - **Integration**: Maintains focus after mode switches
 
 ### 4. Raycast (Window Management)
+
 - **Function**: Native macOS window positioning
 - **Hotkeys**: Set directly in Raycast (not through Karabiner)
 
@@ -67,13 +72,13 @@ Result: VS Code focused, SuperWhisper in coding mode, ready to work
 
 ## File Locations
 
-| Component | File Path |
-|-----------|-----------|
-| Karabiner Config | `config/karabiner/karabiner.json` |
-| Main Launcher | `apps/hyperflow/hyperflow.sh` (shim: `bin/hyperflow`) |
-| SuperWhisper Switcher | `apps/hyperflow/superwhisper-mode-switch.sh` |
-| Documentation | `apps/hyperflow/README.md` |
-| Debug Logs | Console.app (filter: "hyperflow" or "superwhisper") |
+| Component             | File Path                                             |
+| --------------------- | ----------------------------------------------------- |
+| Karabiner Config      | `config/karabiner/karabiner.json`                     |
+| Main Launcher         | `apps/hyperflow/hyperflow.sh` (shim: `bin/hyperflow`) |
+| SuperWhisper Switcher | `apps/hyperflow/superwhisper-mode-switch.sh`          |
+| Documentation         | `apps/hyperflow/README.md`                            |
+| Debug Logs            | Console.app (filter: "hyperflow" or "superwhisper")   |
 
 ## Design Principles
 

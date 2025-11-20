@@ -1,9 +1,9 @@
 {
-  "showFrontmatter": true,
-  "showLineNumber": true,
+  "alwaysUpdateLinks": true,
   "readableLineLength": true,
-  "strictLineBreaks": false,
+  "showFrontmatter": true,
   "showInlineTitle": true,
-  "useMarkdownLinks": true,
-  "alwaysUpdateLinks": true
+  "showLineNumber": true,
+  "strictLineBreaks": false,
+  "useMarkdownLinks": true
 }

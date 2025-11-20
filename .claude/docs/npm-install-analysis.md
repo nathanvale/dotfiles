@@ -1,16 +1,16 @@
 # NPM Install in Worktrees: Deep Analysis
 
-**Date:** 2025-11-17
-**Analysis:** Comparing GTR, incident.io, and our current implementation
+**Date:** 2025-11-17 **Analysis:** Comparing GTR, incident.io, and our current implementation
 
 ---
 
 ## Executive Summary
 
-After analyzing git-worktree-runner (GTR), incident.io's production usage, and our current implementation, here's what we found:
+After analyzing git-worktree-runner (GTR), incident.io's production usage, and our current
+implementation, here's what we found:
 
-**Current Implementation Rating:** ⭐⭐⭐⭐ (4/5)
-**Key Finding:** Our approach is actually **superior** to GTR in some ways, but we're missing **hook flexibility** and **error handling**.
+**Current Implementation Rating:** ⭐⭐⭐⭐ (4/5) **Key Finding:** Our approach is actually
+**superior** to GTR in some ways, but we're missing **hook flexibility** and **error handling**.
 
 ---
 
@@ -21,6 +21,7 @@ After analyzing git-worktree-runner (GTR), incident.io's production usage, and o
 **Philosophy:** Offload all dependency installation to user-configurable hooks
 
 **Implementation:**
+
 ```bash
 # User configures hooks via git config
 gtr config add gtr.hook.postCreate "npm install"
@@ -34,6 +35,7 @@ run_hooks_in "postCreate" "$WORKTREE_PATH" \
 ```
 
 **Pros:**
+
 - ✅ **Ultimate flexibility** - User controls everything
 - ✅ **Cross-platform** - Works with any build tool (npm, pnpm, cargo, pip, etc.)
 - ✅ **Environment variables** - Hooks receive context via env vars
@@ -41,12 +43,14 @@ run_hooks_in "postCreate" "$WORKTREE_PATH" \
 - ✅ **Isolation** - Each hook runs in subshell
 
 **Cons:**
+
 - ❌ **Requires setup** - User must configure hooks per repo
 - ❌ **No defaults** - Zero auto-detection
 - ❌ **No monorepo awareness** - User must handle `--filter` manually
 - ❌ **Silent failures** - Hooks fail but worktree still created
 
 **GTR Hook System Code:**
+
 ```bash
 # From lib/hooks.sh
 run_hooks() {
@@ -89,6 +93,7 @@ EOF
 **Philosophy:** Automate the entire worktree lifecycle with bash function
 
 **Implementation:**
+
 ```bash
 # From their blog post - the `w` function
 w() {
@@ -103,16 +108,19 @@ w() {
 ```
 
 **Key Insight from Blog:**
+
 > "Our CI runs in under five minutes"
 
 **What they DON'T mention:**
+
 - How they handle `npm install` in worktrees
 - Whether they copy `node_modules` or reinstall
 - How they manage monorepo dependencies
 - Database setup for each worktree
 
-**Our Hypothesis:**
-They likely rely on **fast CI with preview environments** rather than local dependency installation. Their worktrees might be primarily for **code changes**, with **testing happening in CI**.
+**Our Hypothesis:** They likely rely on **fast CI with preview environments** rather than local
+dependency installation. Their worktrees might be primarily for **code changes**, with **testing
+happening in CI**.
 
 ---
 
@@ -121,6 +129,7 @@ They likely rely on **fast CI with preview environments** rather than local depe
 **Philosophy:** Intelligent defaults with auto-detection, handle common cases automatically
 
 **Implementation:**
+
 ```bash
 # 1. Auto-detect package manager
 if [ -f "$WORKTREE_ABS_PATH/pnpm-lock.yaml" ]; then
@@ -148,6 +157,7 @@ fi
 ```
 
 **Pros:**
+
 - ✅ **Zero configuration** - Works out of the box
 - ✅ **Monorepo-aware** - Detects packages automatically
 - ✅ **Smart filtering** - Uses `pnpm --filter` for monorepos
@@ -156,6 +166,7 @@ fi
 - ✅ **Task-driven** - Knows which package to install from task file
 
 **Cons:**
+
 - ❌ **Hardcoded** - No user control over install process
 - ❌ **No hooks** - Can't run custom post-install commands
 - ❌ **Error handling** - `|| true` swallows all errors
@@ -166,18 +177,18 @@ fi
 
 ## Detailed Comparison Matrix
 
-| Feature | GTR | incident.io | Our Implementation | Winner |
-|---------|-----|-------------|-------------------|--------|
-| **Auto-detect package manager** | ❌ | Unknown | ✅ | **Us** |
-| **Monorepo support** | ❌ Manual | Unknown | ✅ Auto | **Us** |
-| **Configurability** | ✅✅ Hooks | ❌ | ❌ | **GTR** |
-| **Zero-config workflow** | ❌ | ✅ | ✅ | **Us/incident** |
-| **Custom post-install steps** | ✅ Hooks | ❌ | ❌ | **GTR** |
-| **Error handling** | ⚠️ Logs | Unknown | ❌ | **GTR** |
-| **Cross-platform (Rust, Python)** | ✅ | ✅ | ❌ | **GTR** |
-| **pnpm workspace filtering** | ❌ Manual | Unknown | ✅ Auto | **Us** |
-| **Suppress noise** | ❌ | Unknown | ✅ | **Us** |
-| **Build step automation** | ✅ Hooks | CI-based | ❌ | **GTR** |
+| Feature                           | GTR        | incident.io | Our Implementation | Winner          |
+| --------------------------------- | ---------- | ----------- | ------------------ | --------------- |
+| **Auto-detect package manager**   | ❌         | Unknown     | ✅                 | **Us**          |
+| **Monorepo support**              | ❌ Manual  | Unknown     | ✅ Auto            | **Us**          |
+| **Configurability**               | ✅✅ Hooks | ❌          | ❌                 | **GTR**         |
+| **Zero-config workflow**          | ❌         | ✅          | ✅                 | **Us/incident** |
+| **Custom post-install steps**     | ✅ Hooks   | ❌          | ❌                 | **GTR**         |
+| **Error handling**                | ⚠️ Logs    | Unknown     | ❌                 | **GTR**         |
+| **Cross-platform (Rust, Python)** | ✅         | ✅          | ❌                 | **GTR**         |
+| **pnpm workspace filtering**      | ❌ Manual  | Unknown     | ✅ Auto            | **Us**          |
+| **Suppress noise**                | ❌         | Unknown     | ✅                 | **Us**          |
+| **Build step automation**         | ✅ Hooks   | CI-based    | ❌                 | **GTR**         |
 
 ---
 
@@ -188,15 +199,22 @@ fi
 From their blog post analysis:
 
 **Evidence 1: Fast iteration**
+
 > "$8 of Claude credit later, it had produced a full analysis... 18% (30 seconds) improvement"
 
 **Evidence 2: CI-centric**
-> "We already have previews automatically generated for frontend code changes in pull requests, which run against our staging infrastructure"
+
+> "We already have previews automatically generated for frontend code changes in pull requests,
+> which run against our staging infrastructure"
 
 **Evidence 3: Resource constraints**
-> "Running several Claude sessions simultaneously means juggling databases, ports, and local services—which quickly becomes unwieldy"
 
-**Conclusion:** incident.io likely uses worktrees for **code changes only**, relying on **CI for builds and tests**. They mention "preview environments" extensively but never mention local `npm install`.
+> "Running several Claude sessions simultaneously means juggling databases, ports, and local
+> services—which quickly becomes unwieldy"
+
+**Conclusion:** incident.io likely uses worktrees for **code changes only**, relying on **CI for
+builds and tests**. They mention "preview environments" extensively but never mention local
+`npm install`.
 
 ---
 
@@ -207,6 +225,7 @@ From their blog post analysis:
 **Problem:** Each worktree runs `npm install` independently, duplicating work.
 
 **Example:**
+
 ```
 Main repo:          pnpm install (5 min)
 Worktree T0001:     pnpm install (5 min)  ← Duplicate!
@@ -221,6 +240,7 @@ Worktree T0003:     pnpm install (5 min)  ← Duplicate!
 **Problem:** Each worktree creates its own `node_modules/`
 
 **Calculation:**
+
 ```
 node_modules/: 2GB per worktree
 4 worktrees:   8GB total
@@ -232,6 +252,7 @@ node_modules/: 2GB per worktree
 **Problem:** Multiple dev servers can't run on same port
 
 **Example:**
+
 ```
 Worktree 1: npm run dev → Port 3000 ✅
 Worktree 2: npm run dev → Port 3000 ❌ CONFLICT
@@ -244,6 +265,7 @@ Worktree 2: npm run dev → Port 3000 ❌ CONFLICT
 ### GTR's Recommendation
 
 **From their README:**
+
 ```bash
 # Example setup for Node.js
 gtr config add gtr.hook.postCreate "pnpm install"
@@ -261,6 +283,7 @@ gtr config add gtr.hook.postCreate "cargo build"
 ### incident.io's Approach
 
 **From their workflow description:**
+
 1. Create worktree (instant)
 2. Make code changes with Claude
 3. **Push to CI** for build/test
@@ -272,16 +295,19 @@ gtr config add gtr.hook.postCreate "cargo build"
 ### What Works in Practice
 
 **For small projects (<100 packages):**
+
 - ✅ Run `npm install` in each worktree
 - ✅ Accept some duplication
 - ✅ Keep it simple
 
 **For large monorepos (100+ packages):**
+
 - ✅ Use pnpm workspaces (shared node_modules)
 - ✅ Use `--filter` for targeted installs
 - ✅ Consider skipping install if package unchanged
 
 **For maximum parallelism:**
+
 - ✅ Skip local installs entirely
 - ✅ Push to CI for builds
 - ✅ Use preview environments
@@ -293,6 +319,7 @@ gtr config add gtr.hook.postCreate "cargo build"
 ### 1. Monorepo Intelligence ✅
 
 **Our code:**
+
 ```bash
 if [ "$IS_MONOREPO" = true ] && [ "$PKG_MGR" = "pnpm" ]; then
     PACKAGE_NAME=$(echo "$TASK_FILE_PATH" | sed 's|^\./||' | cut -d'/' -f1-2)
@@ -303,6 +330,7 @@ fi
 ```
 
 **Why this is smart:**
+
 - Detects package from task file path
 - Uses pnpm's `--filter` for targeted installs
 - Avoids installing entire monorepo
@@ -312,6 +340,7 @@ fi
 ### 2. Multi-Package-Manager Support ✅
 
 **Our detection logic:**
+
 ```bash
 if [ -f "$WORKTREE_ABS_PATH/pnpm-lock.yaml" ]; then PKG_MGR="pnpm"
 elif [ -f "$WORKTREE_ABS_PATH/yarn.lock" ]; then PKG_MGR="yarn"
@@ -321,6 +350,7 @@ fi
 ```
 
 **Why this is valuable:**
+
 - Works across all projects without configuration
 - Respects project's chosen package manager
 - Automatic and invisible to user
@@ -328,11 +358,13 @@ fi
 ### 3. Noise Suppression ✅
 
 **Our approach:**
+
 ```bash
 (cd "$WORKTREE_ABS_PATH" && $PKG_MGR install) 2>&1 | grep -v "deprecated" || true
 ```
 
 **Benefits:**
+
 - Cleaner output for users
 - Focuses on actual errors
 - Less visual clutter
@@ -344,6 +376,7 @@ fi
 ### 1. Error Swallowing ❌
 
 **Current code:**
+
 ```bash
 | grep -v "deprecated" || true
 ```
@@ -351,6 +384,7 @@ fi
 **Problem:** The `|| true` means installation failures are ignored!
 
 **Example failure:**
+
 ```bash
 $ pnpm install --filter apps/api
 Error: Package "@types/node" not found
@@ -359,6 +393,7 @@ $ echo $?
 ```
 
 **Fix needed:**
+
 ```bash
 # Better approach
 if ! (cd "$WORKTREE_ABS_PATH" && $PKG_MGR install 2>&1 | grep -v "deprecated"); then
@@ -372,6 +407,7 @@ fi
 **Current code:** Hardcoded install, no customization
 
 **What we're missing:**
+
 ```bash
 # What GTR allows
 gtr config add gtr.hook.postCreate "pnpm install"
@@ -388,6 +424,7 @@ git config --add claude.hook.postCreate "pnpm run db:setup"
 **Current code:** Always runs install, no way to disable
 
 **What users might want:**
+
 ```bash
 # Skip install for quick worktree creation
 create-worktree.sh T0001 --no-install
@@ -401,6 +438,7 @@ git config --bool claude.worktree.autoInstall false
 **Current code:** Runs install synchronously
 
 **What we could do:**
+
 ```bash
 # Launch multiple worktree creations in parallel
 parallel-worktree-create.sh T0001 T0002 T0003 T0004
@@ -416,6 +454,7 @@ parallel-worktree-create.sh T0001 T0002 T0003 T0004
 ### Tier 1: Must-Have Improvements
 
 **1. Fix Error Handling**
+
 ```bash
 # Current (WRONG)
 (cd "$WORKTREE_ABS_PATH" && $PKG_MGR install) 2>&1 | grep -v "deprecated" || true
@@ -431,6 +470,7 @@ fi
 ```
 
 **2. Add Hook System (GTR-style)**
+
 ```bash
 # Read hooks from git config
 HOOKS=$(git config --get-all claude.hook.postCreate 2>/dev/null || echo "")
@@ -450,6 +490,7 @@ fi
 ```
 
 **3. Add `--no-install` Flag**
+
 ```bash
 # In argument parsing
 NO_INSTALL=false
@@ -468,6 +509,7 @@ fi
 ### Tier 2: Nice-to-Have Enhancements
 
 **4. Smart Caching**
+
 ```bash
 # Check if dependencies actually changed
 if [ -f "$MAIN_REPO_ROOT/package-lock.json" ] && \
@@ -480,6 +522,7 @@ fi
 ```
 
 **5. Progress Indicators**
+
 ```bash
 # Show progress for long installs
 echo "Installing dependencies (this may take a moment)..."
@@ -495,6 +538,7 @@ wait $INSTALL_PID
 ```
 
 **6. Parallel Install Support**
+
 ```bash
 # When creating multiple worktrees, install in parallel
 for task in T0001 T0002 T0003; do
@@ -506,6 +550,7 @@ wait  # Wait for all to complete
 ### Tier 3: Advanced Features
 
 **7. Shared node_modules (pnpm style)**
+
 ```bash
 # Symlink to shared node_modules if using pnpm
 if [ "$PKG_MGR" = "pnpm" ]; then
@@ -515,6 +560,7 @@ fi
 ```
 
 **8. CI-Only Mode (incident.io style)**
+
 ```bash
 # Skip all local setup, rely on CI
 git config --bool claude.worktree.ciOnly true
@@ -534,16 +580,19 @@ fi
 **Our Current Implementation:** ⭐⭐⭐⭐ (4/5)
 
 **What we're doing better than GTR:**
+
 - ✅ Monorepo intelligence
 - ✅ Zero-configuration auto-detection
 - ✅ Clean output
 
 **What GTR does better:**
+
 - ✅ Hook flexibility
 - ✅ Error visibility
 - ✅ Cross-platform (not just JS)
 
 **What incident.io teaches us:**
+
 - ✅ Consider CI-centric workflows
 - ✅ Don't over-invest in local builds
 - ✅ Fast iteration > perfect setup
@@ -565,4 +614,5 @@ fi
    - CI-only mode
    - Shared dependency strategies
 
-**Bottom line:** We're 90% there. The main gaps are **error handling** and **extensibility via hooks**. Fix those, and we'll have a best-in-class implementation.
+**Bottom line:** We're 90% there. The main gaps are **error handling** and **extensibility via
+hooks**. Fix those, and we'll have a best-in-class implementation.

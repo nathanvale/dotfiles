@@ -9,6 +9,7 @@ Detailed descriptions, usage patterns, pros/cons for all code analysis tools.
 **Purpose**: Blazing fast literal/regex search across files
 
 **When to use**:
+
 - Finding strings, TODOs, log lines, config values
 - Searching non-code assets (JSON, YAML, markdown)
 - Pre-filtering: narrow candidate files before precise analysis
@@ -17,11 +18,13 @@ Detailed descriptions, usage patterns, pros/cons for all code analysis tools.
 **Examples**: See @examples.md for detailed code examples
 
 **Pros**:
+
 - Fastest search tool available
 - Great for broad reconnaissance
 - Works on any text file
 
 **Cons**:
+
 - Matches text in comments/strings (false positives)
 - No structural understanding of code
 - Can't safely rewrite code
@@ -33,6 +36,7 @@ Detailed descriptions, usage patterns, pros/cons for all code analysis tools.
 **Purpose**: Parse code and match AST nodes, ignore comments/strings
 
 **When to use**:
+
 - Refactors/codemods: rename APIs, change imports, rewrite calls
 - Policy enforcement: ensure patterns across repo
 - Finding code patterns (not text): "all functions that call X"
@@ -41,12 +45,14 @@ Detailed descriptions, usage patterns, pros/cons for all code analysis tools.
 **Examples**: See @examples.md for detailed code examples
 
 **Pros**:
+
 - Structurally correct (ignores comments/strings)
 - Safe rewrites (first-class feature)
 - Low false positives
 - Can output JSON for tooling
 
 **Cons**:
+
 - Slower than ripgrep
 - Requires understanding AST patterns
 - Language-specific
@@ -58,6 +64,7 @@ Detailed descriptions, usage patterns, pros/cons for all code analysis tools.
 **Purpose**: Pattern search with Claude Code integration
 
 **When to use**:
+
 - Search file contents with regex
 - Get context lines (before/after)
 - Filter by file type or glob pattern
@@ -66,11 +73,13 @@ Detailed descriptions, usage patterns, pros/cons for all code analysis tools.
 **Examples**: See @examples.md for detailed usage
 
 **Pros**:
+
 - Integrated with Claude Code
 - Can get line numbers, context
 - Supports glob patterns
 
 **Cons**:
+
 - Not as fast as ripgrep
 - Text-based (no AST awareness)
 
@@ -81,18 +90,21 @@ Detailed descriptions, usage patterns, pros/cons for all code analysis tools.
 **Purpose**: Find files by name patterns
 
 **When to use**:
-- Find all files of a type: "*.test.ts"
-- Find files in directories: "src/**/*.tsx"
+
+- Find all files of a type: "\*.test.ts"
+- Find files in directories: "src/\*_/_.tsx"
 - Narrow file set before analysis
 
 **Examples**: See @examples.md for detailed usage
 
 **Pros**:
+
 - Fast file discovery
 - Supports complex glob patterns
 - Works across any codebase size
 
 **Cons**:
+
 - Only finds files, doesn't search content
 
 ---
@@ -102,6 +114,7 @@ Detailed descriptions, usage patterns, pros/cons for all code analysis tools.
 **Purpose**: Query and transform JSON data (configs, logs, API responses)
 
 **When to use**:
+
 - Parsing package.json, tsconfig.json, or other config files
 - Analyzing JSON log files and error reports
 - Extracting data from API responses or OpenAPI specs
@@ -110,12 +123,14 @@ Detailed descriptions, usage patterns, pros/cons for all code analysis tools.
 **Examples**: See @examples.md for detailed code examples
 
 **Pros**:
+
 - Fast JSON queries
 - Deterministic results
 - Low token cost
 - Works with any JSON file
 
 **Cons**:
+
 - Only works on JSON data
 - Requires understanding jq syntax
 
@@ -126,6 +141,7 @@ Detailed descriptions, usage patterns, pros/cons for all code analysis tools.
 **Purpose**: Statistical analysis, metrics calculation, complex computations
 
 **When to use**:
+
 - Calculating cyclomatic complexity
 - Analyzing import dependency graphs
 - Finding duplicate code blocks
@@ -135,12 +151,14 @@ Detailed descriptions, usage patterns, pros/cons for all code analysis tools.
 **Examples**: See @examples.md for script invocations
 
 **Pros**:
+
 - Complex algorithms implemented
 - Token-efficient (200-500 token responses)
 - Deterministic results
 - Fast execution
 
 **Cons**:
+
 - Requires Python runtime
 - May need custom scripts for specific tasks
 
@@ -151,6 +169,7 @@ Detailed descriptions, usage patterns, pros/cons for all code analysis tools.
 **Purpose**: Read actual source files for deep analysis
 
 **When to use**:
+
 - Understanding code logic
 - Verifying code smells found by graph analysis
 - Checking for edge cases
@@ -159,11 +178,13 @@ Detailed descriptions, usage patterns, pros/cons for all code analysis tools.
 **Examples**: See @examples.md for usage patterns
 
 **Pros**:
+
 - See actual code
 - Understand context
 - Verify issues
 
 **Cons**:
+
 - Slower than text search
 - Token usage for large files
 
@@ -174,6 +195,7 @@ Detailed descriptions, usage patterns, pros/cons for all code analysis tools.
 **Purpose**: Structured thinking for complex code analysis
 
 **When to use**:
+
 - Understanding "why" code is problematic
 - Analyzing edge cases and failure modes
 - Calculating production impact
@@ -182,10 +204,12 @@ Detailed descriptions, usage patterns, pros/cons for all code analysis tools.
 **Examples**: See @examples.md for analysis patterns
 
 **Pros**:
+
 - Deep analytical thinking
 - Structured reasoning
 - Uncovers hidden issues
 
 **Cons**:
+
 - Time-intensive
 - Use after narrowing candidates

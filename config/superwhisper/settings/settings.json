@@ -1,12 +1,5 @@
 {
-  "modeKeys" : [
-    "default",
-    "melanie"
-  ],
-  "replacements" : [
-
-  ],
-  "vocabulary" : [
-
-  ]
+  "modeKeys": ["default", "melanie"],
+  "replacements": [],
+  "vocabulary": []
 }

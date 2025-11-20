@@ -1,6 +1,7 @@
 # Error Handling & Troubleshooting
 
-This document covers common error scenarios encountered during task management and their resolutions.
+This document covers common error scenarios encountered during task management and their
+resolutions.
 
 ## Error Categories
 
@@ -17,17 +18,20 @@ This document covers common error scenarios encountered during task management a
 ### Error 1.1: Script Execution Failure
 
 **Symptoms:**
+
 ```bash
 $ pnpm tsx ~/.claude/skills/task-manager/select-task.ts
 Error: Cannot find module 'fs'
 ```
 
 **Causes:**
+
 - Node.js not installed
 - Script not found
 - Permissions issue
 
 **Resolution:**
+
 ```bash
 # Verify Node.js installed
 node --version  # Should show v18+
@@ -49,20 +53,23 @@ pnpm tsx ~/.claude/skills/task-manager/select-task.ts
 ### Error 1.2: No Ready Tasks Found
 
 **Symptoms:**
+
 ```json
 {
-  "success": false,
   "error": "No READY tasks found",
-  "message": "All tasks are either TODO, IN_PROGRESS, or DONE"
+  "message": "All tasks are either TODO, IN_PROGRESS, or DONE",
+  "success": false
 }
 ```
 
 **Causes:**
+
 - All tasks have unmet dependencies (TODO)
 - All tasks already in progress
 - All tasks completed
 
 **Resolution:**
+
 ```bash
 # Check task statuses
 grep "^status:" docs/tasks/T*.md
@@ -86,6 +93,7 @@ done
 ### Error 1.3: Task File Not Found
 
 **Symptoms:**
+
 ```bash
 $ pnpm tsx ~/.claude/skills/task-manager/select-task.ts --task-id=T0001
 {
@@ -95,11 +103,13 @@ $ pnpm tsx ~/.claude/skills/task-manager/select-task.ts --task-id=T0001
 ```
 
 **Causes:**
+
 - Task ID typo
 - Task file deleted or renamed
 - Wrong task directory
 
 **Resolution:**
+
 ```bash
 # List available tasks
 ls -1 docs/tasks/T*.md
@@ -118,20 +128,23 @@ grep -l "Fix query execution" docs/tasks/T*.md
 ### Error 1.4: Task Not Ready (Wrong Status)
 
 **Symptoms:**
+
 ```json
 {
-  "success": false,
   "error": "Task T0001 is not READY (current status: IN_PROGRESS)",
-  "message": "Only READY tasks can be started"
+  "message": "Only READY tasks can be started",
+  "success": false
 }
 ```
 
 **Causes:**
+
 - Task already in progress
 - Task completed
 - Task dependencies not met (should be TODO)
 
 **Resolution:**
+
 ```bash
 # Check current status
 grep "^status:" docs/tasks/T0001-*.md
@@ -153,16 +166,19 @@ grep -A2 "^## Dependencies" docs/tasks/T0001-*.md
 ### Error 2.1: Malformed YAML Frontmatter
 
 **Symptoms:**
+
 ```
 Error parsing task file: YAML syntax error at line 3
 ```
 
 **Causes:**
+
 - Missing closing `---`
 - Invalid YAML syntax
 - Incorrect indentation
 
 **Resolution:**
+
 ```bash
 # Validate YAML frontmatter
 python3 << 'EOF'
@@ -192,16 +208,19 @@ EOF
 ### Error 2.2: Missing Required Fields
 
 **Symptoms:**
+
 ```
 Error: Task file missing required field 'priority'
 ```
 
 **Causes:**
+
 - Incomplete task file template
 - Field name typo
 - Field value missing
 
 **Resolution:**
+
 ```bash
 # Check which fields are present
 grep "^[a-z].*:" docs/tasks/T0001-*.md | head -10
@@ -223,16 +242,19 @@ grep "^[a-z].*:" docs/tasks/T0001-*.md | head -10
 ### Error 2.3: Task File Empty or Corrupted
 
 **Symptoms:**
+
 ```
 Error: Cannot read task file (0 bytes)
 ```
 
 **Causes:**
+
 - File truncated during write
 - Disk full
 - Git conflict markers in file
 
 **Resolution:**
+
 ```bash
 # Check file size
 ls -lh docs/tasks/T0001-*.md
@@ -256,16 +278,19 @@ git show HEAD~1:docs/tasks/T0001-*.md > docs/tasks/T0001-*.md
 ### Error 3.1: Test Not Failing (RED State Not Reached)
 
 **Symptoms:**
+
 - Write test for unimplemented feature
 - Test passes immediately
 - Expected RED, got GREEN
 
 **Causes:**
+
 - Test is testing wrong thing
 - Feature already implemented
 - Test has logic error
 
 **Resolution:**
+
 ```bash
 # Verify test is actually running
 mcp__wallaby__wallaby_allTestsForFile \
@@ -285,16 +310,19 @@ mcp__wallaby__wallaby_allTestsForFile \
 ### Error 3.2: Can't Make Test Pass (Stuck on RED)
 
 **Symptoms:**
+
 - Implemented code but test still fails
 - Tried multiple approaches
 - Unclear why test fails
 
 **Causes:**
+
 - Misunderstanding acceptance criteria
 - Test expectation incorrect
 - Implementation logic error
 
 **Resolution:**
+
 ```bash
 # Use Wallaby MCP to debug
 mcp__wallaby__wallaby_testById --id="failing-test-id"
@@ -315,16 +343,19 @@ console.log('Expected:', expectedValue)
 ### Error 3.3: Tests Pass But Acceptance Criteria Not Met
 
 **Symptoms:**
+
 - All tests GREEN
 - Quality checks pass
 - But AC items not satisfied
 
 **Causes:**
+
 - Tests don't validate AC items
 - Missing tests for some criteria
 - AC items unclear or ambiguous
 
 **Resolution:**
+
 ```bash
 # Review Testing Requirements table
 # Map each test to AC items it validates
@@ -347,16 +378,19 @@ console.log('Expected:', expectedValue)
 ### Error 3.4: Wallaby MCP Tools Not Available
 
 **Symptoms:**
+
 ```
 Error: mcp__wallaby__wallaby_failingTests not found
 ```
 
 **Causes:**
+
 - Wallaby MCP not installed
 - Wallaby not connected
 - Tool name typo
 
 **Resolution:**
+
 ```bash
 # Check if Wallaby MCP is installed
 # Look in Claude Code MCP settings
@@ -377,17 +411,20 @@ pnpm test --reporter=verbose          # Detailed output
 ### Error 4.1: TypeScript Errors Won't Clear
 
 **Symptoms:**
+
 ```bash
 $ pnpm typecheck
 src/lib/mocks/mock-dataverse.ts:45:12 - error TS2532
 ```
 
 **Causes:**
+
 - Type inference failing
 - Missing type annotations
 - Incorrect type assertions
 
 **Resolution:**
+
 ```bash
 # Review `.claude/rules/typescript-patterns-condensed.md`
 # Apply pattern for specific error code (TS2532, etc.)
@@ -407,17 +444,20 @@ pnpm typecheck
 ### Error 4.2: Linter Errors After Code Changes
 
 **Symptoms:**
+
 ```bash
 $ pnpm lint
 src/lib/mocks/mock-dataverse.ts:45:5 - error unused variable 'error'
 ```
 
 **Causes:**
+
 - Catch variable not used
 - Empty catch block
 - Incorrect ESLint disable comment
 
 **Resolution:**
+
 ```bash
 # Fix unused catch variable
 # WRONG: catch (error) { }
@@ -439,16 +479,19 @@ pnpm lint
 ### Error 4.3: Tests Fail After Refactoring
 
 **Symptoms:**
+
 - Tests were GREEN
 - Refactored code
 - Now tests RED
 
 **Causes:**
+
 - Broke functionality during refactor
 - Changed API/interface
 - Introduced bug
 
 **Resolution:**
+
 ```bash
 # STOP refactoring immediately
 # Git diff to see what changed
@@ -470,16 +513,19 @@ pnpm test
 ### Error 4.4: Acceptance Criteria Incomplete
 
 **Symptoms:**
+
 - All quality checks pass
 - But some AC items unchecked
 - Can't determine if satisfied
 
 **Causes:**
+
 - AC item requires manual verification
 - AC item depends on external system
 - AC item unclear how to validate
 
 **Resolution:**
+
 ```bash
 # For each unchecked AC item:
 
@@ -509,6 +555,7 @@ pnpm test
 ### Error 5.1: Circular Dependencies Detected
 
 **Symptoms:**
+
 ```
 Task T0001 blocked by T0005
 Task T0005 blocked by T0001
@@ -516,11 +563,13 @@ Cannot determine ready tasks
 ```
 
 **Causes:**
+
 - Incorrect dependency specification
 - Task breakdown error
 - Misunderstanding of dependencies
 
 **Resolution:**
+
 ```bash
 # Visualize dependency graph
 for file in docs/tasks/T*.md; do
@@ -543,17 +592,20 @@ done
 ### Error 5.2: Dependency Task Not Found
 
 **Symptoms:**
+
 ```
 Task T0001 blocked by T9999
 Task T9999 does not exist
 ```
 
 **Causes:**
+
 - Task ID typo
 - Task deleted without updating dependents
 - Task not yet created
 
 **Resolution:**
+
 ```bash
 # Search for the task
 ls docs/tasks/T9999-*.md
@@ -575,6 +627,7 @@ git log --all --full-history -- "docs/tasks/T9999-*.md"
 ### Error 5.3: Task Marked READY But Has Unmet Dependencies
 
 **Symptoms:**
+
 ```
 Task T0001 status: READY
 Task T0001 blocked by T0005
@@ -582,11 +635,13 @@ Task T0005 status: IN_PROGRESS (not DONE)
 ```
 
 **Causes:**
+
 - Task status updated prematurely
 - Dependency status not updated
 - Manual status change error
 
 **Resolution:**
+
 ```bash
 # Verify all blocking tasks are DONE
 grep "Blocked By:" docs/tasks/T0001-*.md
@@ -688,4 +743,5 @@ If truly stuck:
 - [ ] No regressions introduced
 - [ ] Documentation updated
 
-By following these error handling procedures and prevention strategies, most issues can be resolved quickly and systematically.
+By following these error handling procedures and prevention strategies, most issues can be resolved
+quickly and systematically.

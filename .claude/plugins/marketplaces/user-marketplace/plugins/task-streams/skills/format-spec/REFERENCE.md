@@ -40,13 +40,11 @@ This skill handles three common spec formats:
 
 ### Functional Requirements
 
-FR1: System shall...
-FR2: User shall be able to...
+FR1: System shall... FR2: User shall be able to...
 
 ### Non-Functional Requirements
 
-NFR1: Performance...
-NFR2: Security...
+NFR1: Performance... NFR2: Security...
 
 ## Acceptance Criteria
 
@@ -120,9 +118,7 @@ NFR2: Security...
 ```markdown
 ## Requirements
 
-FR1: Implement OAuth2 authentication
-FR2: Add token refresh mechanism
-FR3: Migrate existing sessions
+FR1: Implement OAuth2 authentication FR2: Add token refresh mechanism FR3: Migrate existing sessions
 
 → Creates 3 tasks: T0001, T0002, T0003
 ```
@@ -137,8 +133,8 @@ FR3: Migrate existing sessions
 - User story summary: "US-001: User can log in with OAuth2"
 - Component name: "Implement OAuth Client Component"
 
-**Format:** `{extracted title without prefix}`
-**Example:** "Implement OAuth2 authentication" (not "FR1: Implement...")
+**Format:** `{extracted title without prefix}` **Example:** "Implement OAuth2 authentication" (not
+"FR1: Implement...")
 
 #### Description
 
@@ -323,8 +319,8 @@ For each AC, infer test type:
 **Format:**
 
 ```markdown
-**Blocking Dependencies:** T0001 (OAuth2 setup), T0003 (Database schema)
-**Blocks:** T0005 (User profile), T0007 (Admin panel)
+**Blocking Dependencies:** T0001 (OAuth2 setup), T0003 (Database schema) **Blocks:** T0005 (User
+profile), T0007 (Admin panel)
 
 **Prerequisites:**
 

@@ -1,16 +1,17 @@
 # Prompt Engineering Test Automation - Technical Specification
 
-**Version**: 1.0.0
-**Status**: Approved
-**Last Updated**: 2025-01-06
+**Version**: 1.0.0 **Status**: Approved **Last Updated**: 2025-01-06
 
 ---
 
 ## Executive Summary
 
-This specification defines an automated testing system for prompt engineering in the task-streams plugin. The system enables confident modification of SKILL.md prompts and supporting documentation by providing immediate feedback on structural validity, output quality, and consistency.
+This specification defines an automated testing system for prompt engineering in the task-streams
+plugin. The system enables confident modification of SKILL.md prompts and supporting documentation
+by providing immediate feedback on structural validity, output quality, and consistency.
 
-**Key Innovation**: Separate slow LLM invocation from fast validation via response caching, enabling deterministic, fast, free testing of non-deterministic LLM outputs.
+**Key Innovation**: Separate slow LLM invocation from fast validation via response caching, enabling
+deterministic, fast, free testing of non-deterministic LLM outputs.
 
 ---
 
@@ -116,20 +117,20 @@ test-cache/
 
 ```json
 {
-  "version": "1.0.0",
-  "lastUpdated": "2025-01-06T10:30:00Z",
   "entries": [
     {
-      "key": "sha256-abc123def456...",
-      "skill": "format-bug-findings",
-      "inputFile": "review-001-batch-failures.md",
-      "outputFile": "skill-responses/format-bug-findings/review-001-batch-failures.json",
-      "createdAt": "2025-01-05T09:00:00Z",
-      "promptVersion": "1.2.0",
       "apiModel": "claude-sonnet-4",
+      "createdAt": "2025-01-05T09:00:00Z",
+      "inputFile": "review-001-batch-failures.md",
+      "key": "sha256-abc123def456...",
+      "outputFile": "skill-responses/format-bug-findings/review-001-batch-failures.json",
+      "promptVersion": "1.2.0",
+      "skill": "format-bug-findings",
       "tokenCount": 8450
     }
-  ]
+  ],
+  "lastUpdated": "2025-01-06T10:30:00Z",
+  "version": "1.0.0"
 }
 ```
 
@@ -138,29 +139,20 @@ test-cache/
 ```typescript
 // tests/helpers/cache-manager.ts
 
-export function generateCacheKey(
-  skillName: string,
-  inputDocument: string
-): string {
+export function generateCacheKey(skillName: string, inputDocument: string): string {
   // Load ALL files that influence prompt behavior
-  const skillMd = readFileSync(
-    `.claude-plugins/task-streams/skills/${skillName}/SKILL.md`
-  )
-  const workflow = readFileSync(
-    `.claude-plugins/task-streams/skills/${skillName}/WORKFLOW.md`
-  )
-  const examples = readFileSync(
-    `.claude-plugins/task-streams/skills/${skillName}/EXAMPLES.md`
-  )
+  const skillMd = readFileSync(`.claude-plugins/task-streams/skills/${skillName}/SKILL.md`);
+  const workflow = readFileSync(`.claude-plugins/task-streams/skills/${skillName}/WORKFLOW.md`);
+  const examples = readFileSync(`.claude-plugins/task-streams/skills/${skillName}/EXAMPLES.md`);
   const troubleshooting = readFileSync(
     `.claude-plugins/task-streams/skills/${skillName}/TROUBLESHOOTING.md`
-  )
+  );
   const validation = readFileSync(
     `.claude-plugins/task-streams/skills/${skillName}/VALIDATION_CHECKLIST.md`
-  )
+  );
   const sharedEnrichments = readFileSync(
     `.claude-plugins/task-streams/skills/SHARED_ENRICHMENTS.md`
-  )
+  );
 
   // Combine everything that affects output
   const combined = [
@@ -172,9 +164,9 @@ export function generateCacheKey(
     `troubleshooting:${troubleshooting}`,
     `validation:${validation}`,
     `shared:${sharedEnrichments}`,
-  ].join("|||")
+  ].join("|||");
 
-  return crypto.createHash("sha256").update(combined).digest("hex")
+  return crypto.createHash("sha256").update(combined).digest("hex");
 }
 ```
 
@@ -212,71 +204,67 @@ pnpm test:prompt:clear-cache
 // tests/helpers/quality-assessor.ts
 
 interface SubstantivenessReport {
-  vacuousACs: Array<{ line: number; text: string }> // "Fix the bug"
-  genericDescriptions: Array<{ section: string; text: string }> // "This is a problem"
-  tbdMarkers: Array<{ location: string; context: string }> // "TBD", "[file]"
-  missingDetails: Array<{ enrichment: string; reason: string }> // No line ranges
-  score: number // 0-100
+  vacuousACs: Array<{ line: number; text: string }>; // "Fix the bug"
+  genericDescriptions: Array<{ section: string; text: string }>; // "This is a problem"
+  tbdMarkers: Array<{ location: string; context: string }>; // "TBD", "[file]"
+  missingDetails: Array<{ enrichment: string; reason: string }>; // No line ranges
+  score: number; // 0-100
 }
 
-export async function assessSubstantiveness(
-  output: string
-): Promise<SubstantivenessReport> {
+export async function assessSubstantiveness(output: string): Promise<SubstantivenessReport> {
   const report: SubstantivenessReport = {
     vacuousACs: [],
     genericDescriptions: [],
     tbdMarkers: [],
     missingDetails: [],
     score: 100,
-  }
+  };
 
   // Check acceptance criteria for vague language
-  const acSection = extractSection(output, "Acceptance Criteria")
-  const acLines = acSection
-    .split("\n")
-    .filter((l) => l.trim().startsWith("- [ ]"))
+  const acSection = extractSection(output, "Acceptance Criteria");
+  const acLines = acSection.split("\n").filter((l) => l.trim().startsWith("- [ ]"));
 
   const vacuousPatterns = [
     /fix the bug/i,
     /improve (performance|quality|code)/i,
     /add tests/i,
     /make it better/i,
-  ]
+  ];
 
   for (const [lineNum, line] of acLines.entries()) {
     for (const pattern of vacuousPatterns) {
       if (pattern.test(line)) {
-        report.vacuousACs.push({ line: lineNum, text: line })
-        report.score -= 10
+        report.vacuousACs.push({ line: lineNum, text: line });
+        report.score -= 10;
       }
     }
   }
 
   // Check file locations have line ranges
-  const fileLocations = extractFileLocations(output)
+  const fileLocations = extractFileLocations(output);
   for (const loc of fileLocations) {
     if (!loc.match(/\.\w+:\d+-\d+/)) {
       // file.ts:100-150
       report.missingDetails.push({
         enrichment: "File Locations",
         reason: `Missing line range: ${loc}`,
-      })
-      report.score -= 5
+      });
+      report.score -= 5;
     }
   }
 
   // Check for TBD markers
-  const tbdMatches = output.match(/\bTBD\b/gi) || []
+  const tbdMatches = output.match(/\bTBD\b/gi) || [];
   if (tbdMatches.length > 2) {
     // Allow 2, flag if more
     report.tbdMarkers.push({
       location: "Multiple sections",
       context: `Found ${tbdMatches.length} TBD markers`,
-    })
-    report.score -= 15
+    });
+    report.score -= 15;
   }
 
-  return report
+  return report;
 }
 ```
 
@@ -287,46 +275,44 @@ export async function assessSubstantiveness(
 ```typescript
 interface AdherenceReport {
   guidelineViolations: Array<{
-    guideline: string
-    severity: "CRITICAL" | "HIGH" | "MEDIUM" | "LOW"
-    location: string
-    example: string
-  }>
-  score: number // 0-100
+    guideline: string;
+    severity: "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
+    location: string;
+    example: string;
+  }>;
+  score: number; // 0-100
 }
 
 export async function assessAdherence(
   output: string,
   formatType: string
 ): Promise<AdherenceReport> {
-  const violations = []
-  let score = 100
+  const violations = [];
+  let score = 100;
 
   // CRITICAL: All 5 risk dimensions present
-  const riskSection = extractSection(output, "Regression Risk Details")
+  const riskSection = extractSection(output, "Regression Risk Details");
   const requiredDimensions = [
     "Impact:",
     "Blast Radius:",
     "Dependencies:",
     "Testing Gaps:",
     "Rollback Risk:",
-  ]
+  ];
 
-  const missingDimensions = requiredDimensions.filter(
-    (d) => !riskSection.includes(d)
-  )
+  const missingDimensions = requiredDimensions.filter((d) => !riskSection.includes(d));
   if (missingDimensions.length > 0) {
     violations.push({
       guideline: "All 5 risk dimensions required",
       severity: "CRITICAL",
       location: "Regression Risk Details",
       example: `Missing: ${missingDimensions.join(", ")}`,
-    })
-    score -= 20
+    });
+    score -= 20;
   }
 
   // HIGH: File locations use backticks and line ranges
-  const fileLocations = extractFileLocations(output)
+  const fileLocations = extractFileLocations(output);
   for (const loc of fileLocations) {
     if (!loc.startsWith("`") || !loc.endsWith("`")) {
       violations.push({
@@ -334,39 +320,39 @@ export async function assessAdherence(
         severity: "HIGH",
         location: loc,
         example: "Should be: `file.ts:100-150`",
-      })
-      score -= 10
+      });
+      score -= 10;
     }
   }
 
   // MEDIUM: Acceptance criteria use checkbox format
-  const acSection = extractSection(output, "Acceptance Criteria")
+  const acSection = extractSection(output, "Acceptance Criteria");
   if (!acSection.includes("- [ ]")) {
     violations.push({
       guideline: "Acceptance criteria must use - [ ] format",
       severity: "MEDIUM",
       location: "Acceptance Criteria",
       example: "Should be: - [ ] Specific criterion",
-    })
-    score -= 5
+    });
+    score -= 5;
   }
 
   // MEDIUM: Implementation steps numbered
-  const implSection = extractSection(output, "Implementation Steps")
+  const implSection = extractSection(output, "Implementation Steps");
   if (!implSection.match(/^\d+\./m)) {
     violations.push({
       guideline: "Implementation steps must be numbered",
       severity: "MEDIUM",
       location: "Implementation Steps",
       example: "Should be: 1. First step",
-    })
-    score -= 5
+    });
+    score -= 5;
   }
 
   return {
     guidelineViolations: violations,
     score: Math.max(0, score),
-  }
+  };
 }
 ```
 
@@ -376,11 +362,11 @@ export async function assessAdherence(
 
 ```typescript
 interface ConsistencyReport {
-  stableFields: string[] // Fields that matched across runs
-  unstableFields: string[] // Fields that varied
-  runs: number // Number of comparison runs
-  threshold: number // Acceptable variance (0-1)
-  score: number // 0-100
+  stableFields: string[]; // Fields that matched across runs
+  unstableFields: string[]; // Fields that varied
+  runs: number; // Number of comparison runs
+  threshold: number; // Acceptable variance (0-1)
+  score: number; // 0-100
 }
 
 export async function assessConsistency(
@@ -388,53 +374,52 @@ export async function assessConsistency(
   inputDocument: string,
   runs: number = 3
 ): Promise<ConsistencyReport> {
-  const outputs: string[] = []
+  const outputs: string[] = [];
 
   // Generate multiple outputs (SLOW - cache is bypassed)
   for (let i = 0; i < runs; i++) {
-    const output = await invokeSkillFresh(skillName, inputDocument)
-    outputs.push(output)
+    const output = await invokeSkillFresh(skillName, inputDocument);
+    outputs.push(output);
   }
 
   // Compare structural elements
-  const components = outputs.map((o) => extractComponent(o))
-  const priorities = outputs.map((o) => extractPriority(o))
-  const complexities = outputs.map((o) => extractComplexity(o))
-  const regressionRisks = outputs.map((o) => extractRegressionRisk(o))
+  const components = outputs.map((o) => extractComponent(o));
+  const priorities = outputs.map((o) => extractPriority(o));
+  const complexities = outputs.map((o) => extractComplexity(o));
+  const regressionRisks = outputs.map((o) => extractRegressionRisk(o));
 
-  const stableFields: string[] = []
-  const unstableFields: string[] = []
+  const stableFields: string[] = [];
+  const unstableFields: string[] = [];
 
   // Check component consistency
   if (allSame(components)) {
-    stableFields.push("component")
+    stableFields.push("component");
   } else {
-    unstableFields.push("component")
+    unstableFields.push("component");
   }
 
   // Check priority consistency
   if (allSame(priorities)) {
-    stableFields.push("priority")
+    stableFields.push("priority");
   } else {
-    unstableFields.push("priority")
+    unstableFields.push("priority");
   }
 
   // Check complexity consistency
   if (allSame(complexities)) {
-    stableFields.push("complexity")
+    stableFields.push("complexity");
   } else {
-    unstableFields.push("complexity")
+    unstableFields.push("complexity");
   }
 
   // Check regression risk consistency
   if (allSame(regressionRisks)) {
-    stableFields.push("regressionRisk")
+    stableFields.push("regressionRisk");
   } else {
-    unstableFields.push("regressionRisk")
+    unstableFields.push("regressionRisk");
   }
 
-  const stabilityRate =
-    stableFields.length / (stableFields.length + unstableFields.length)
+  const stabilityRate = stableFields.length / (stableFields.length + unstableFields.length);
 
   return {
     stableFields,
@@ -442,7 +427,7 @@ export async function assessConsistency(
     runs,
     threshold: 0.8, // 80% of fields should be stable
     score: stabilityRate * 100,
-  }
+  };
 }
 ```
 
@@ -464,30 +449,30 @@ describe("Prompt Engineering - Structure Tests", () => {
     { input: "tech-debt-q4-2025.md", skill: "format-tech-debt" },
     { input: "security-pentest-findings.md", skill: "format-security" },
     { input: "generic-api-improvements.md", skill: "format-generic" },
-  ]
+  ];
 
   fixtures.forEach(({ input, skill }) => {
     describe(`${skill} with ${input}`, () => {
-      let output: string
+      let output: string;
 
       beforeAll(async () => {
-        const inputDoc = await readFixture(input)
-        output = await invokeSkill(skill, inputDoc) // Uses cache by default
-      })
+        const inputDoc = await readFixture(input);
+        output = await invokeSkill(skill, inputDoc); // Uses cache by default
+      });
 
       it("should produce valid structure", async () => {
-        const validator = getValidatorForSkill(skill)
-        const result = validator.validate(output)
+        const validator = getValidatorForSkill(skill);
+        const result = validator.validate(output);
 
-        expect(result.passed).toBe(true)
-        expect(result.results.filter((r) => r.passed)).toHaveLength(12)
-      })
+        expect(result.passed).toBe(true);
+        expect(result.results.filter((r) => r.passed)).toHaveLength(12);
+      });
 
       it("should include all 10 enrichments", () => {
-        const validation = validateTemplateHasAllEnrichments(output)
-        expect(validation.passed).toBe(true)
-        expect(validation.missing).toHaveLength(0)
-      })
+        const validation = validateTemplateHasAllEnrichments(output);
+        expect(validation.passed).toBe(true);
+        expect(validation.missing).toHaveLength(0);
+      });
 
       it("should include all 5 risk dimensions", () => {
         const riskDimensions = [
@@ -496,19 +481,18 @@ describe("Prompt Engineering - Structure Tests", () => {
           "**Dependencies:**",
           "**Testing Gaps:**",
           "**Rollback Risk:**",
-        ]
+        ];
         riskDimensions.forEach((dimension) => {
-          expect(output).toContain(dimension)
-        })
-      })
-    })
-  })
-})
+          expect(output).toContain(dimension);
+        });
+      });
+    });
+  });
+});
 ```
 
-**Execution time**: < 10 seconds (cached)
-**Cost**: Free (uses cache)
-**Run frequency**: Every commit
+**Execution time**: < 10 seconds (cached) **Cost**: Free (uses cache) **Run frequency**: Every
+commit
 
 ### 4.2 Quality Test Suite (Medium, Non-Deterministic)
 
@@ -519,65 +503,60 @@ describe("Prompt Engineering - Quality Tests", () => {
   const fixtures = [
     { input: "review-001-batch-failures.md", skill: "format-bug-findings" },
     // ... same 5 fixtures
-  ]
+  ];
 
   fixtures.forEach(({ input, skill }) => {
     describe(`${skill} quality`, () => {
-      let output: string
+      let output: string;
 
       beforeAll(async () => {
-        const inputDoc = await readFixture(input)
-        output = await invokeSkill(skill, inputDoc)
-      })
+        const inputDoc = await readFixture(input);
+        output = await invokeSkill(skill, inputDoc);
+      });
 
       it("should produce substantive content", async () => {
-        const quality = await assessSubstantiveness(output)
+        const quality = await assessSubstantiveness(output);
 
         // No vague acceptance criteria
-        expect(quality.vacuousACs).toHaveLength(0)
+        expect(quality.vacuousACs).toHaveLength(0);
 
         // Minimal generic descriptions
-        expect(quality.genericDescriptions.length).toBeLessThan(2)
+        expect(quality.genericDescriptions.length).toBeLessThan(2);
 
         // Minimal TBD markers
-        expect(quality.tbdMarkers.length).toBeLessThan(3)
+        expect(quality.tbdMarkers.length).toBeLessThan(3);
 
         // High overall score
-        expect(quality.score).toBeGreaterThan(70)
-      })
+        expect(quality.score).toBeGreaterThan(70);
+      });
 
       it("should adhere to guidelines", async () => {
-        const adherence = await assessAdherence(output, skill)
+        const adherence = await assessAdherence(output, skill);
 
         // No critical violations
         const criticalViolations = adherence.guidelineViolations.filter(
           (v) => v.severity === "CRITICAL"
-        )
-        expect(criticalViolations).toHaveLength(0)
+        );
+        expect(criticalViolations).toHaveLength(0);
 
         // High adherence score
-        expect(adherence.score).toBeGreaterThan(85)
-      })
+        expect(adherence.score).toBeGreaterThan(85);
+      });
 
       it("should include line ranges in file locations", () => {
-        const fileLocations = extractFileLocations(output)
-        const withLineRanges = fileLocations.filter((loc) =>
-          loc.match(/\.\w+:\d+-\d+/)
-        )
+        const fileLocations = extractFileLocations(output);
+        const withLineRanges = fileLocations.filter((loc) => loc.match(/\.\w+:\d+-\d+/));
 
         // At least 80% should have line ranges
-        expect(withLineRanges.length / fileLocations.length).toBeGreaterThan(
-          0.8
-        )
-      })
-    })
-  })
-})
+        expect(withLineRanges.length / fileLocations.length).toBeGreaterThan(0.8);
+      });
+    });
+  });
+});
 ```
 
-**Execution time**: < 15 seconds (cached)
-**Cost**: Free (uses cache)
-**Run frequency**: Every commit
+**Execution time**: < 15 seconds (cached) **Cost**: Free (uses cache) **Run frequency**: Every
+commit
 
 ### 4.3 Consistency Test Suite (Slow, Multi-Run)
 
@@ -589,39 +568,37 @@ describe("Prompt Engineering - Consistency Tests", () => {
   const fixtures = [
     { input: "review-001-batch-failures.md", skill: "format-bug-findings" },
     { input: "spec-oauth-implementation.md", skill: "format-spec" },
-  ]
+  ];
 
   fixtures.forEach(({ input, skill }) => {
     it(
       `${skill} should produce consistent structural decisions`,
       async () => {
-        const inputDoc = await readFixture(input)
-        const report = await assessConsistency(skill, inputDoc, 3)
+        const inputDoc = await readFixture(input);
+        const report = await assessConsistency(skill, inputDoc, 3);
 
         // Component classification should be stable
-        expect(report.stableFields).toContain("component")
+        expect(report.stableFields).toContain("component");
 
         // Priority assessment should be stable
-        expect(report.stableFields).toContain("priority")
+        expect(report.stableFields).toContain("priority");
 
         // Overall stability threshold
-        expect(report.score).toBeGreaterThan(80)
+        expect(report.score).toBeGreaterThan(80);
 
         // At least 80% of fields stable
         const stabilityRate =
-          report.stableFields.length /
-          (report.stableFields.length + report.unstableFields.length)
-        expect(stabilityRate).toBeGreaterThan(0.8)
+          report.stableFields.length / (report.stableFields.length + report.unstableFields.length);
+        expect(stabilityRate).toBeGreaterThan(0.8);
       },
       { timeout: 120000 }
-    ) // 2 minute timeout per test
-  })
-})
+    ); // 2 minute timeout per test
+  });
+});
 ```
 
-**Execution time**: ~10 minutes (3 runs × 2 fixtures × ~1.5 min/run)
-**Cost**: ~$0.30 per run (assuming $0.05 per API call)
-**Run frequency**: Weekly or on-demand
+**Execution time**: ~10 minutes (3 runs × 2 fixtures × ~1.5 min/run) **Cost**: ~$0.30 per run
+(assuming $0.05 per API call) **Run frequency**: Weekly or on-demand
 
 ---
 
@@ -632,14 +609,14 @@ describe("Prompt Engineering - Consistency Tests", () => {
 ```typescript
 // tests/helpers/skill-invoker.ts
 
-import { Anthropic } from "@anthropic-ai/sdk"
-import { readFileSync } from "fs"
-import { generateCacheKey, loadFromCache, saveToCache } from "./cache-manager"
+import { Anthropic } from "@anthropic-ai/sdk";
+import { readFileSync } from "fs";
+import { generateCacheKey, loadFromCache, saveToCache } from "./cache-manager";
 
 interface InvokeOptions {
-  useCache?: boolean // Default: true
-  cacheOnly?: boolean // Default: false (fail if cache miss)
-  refreshCache?: boolean // Default: false (force API call)
+  useCache?: boolean; // Default: true
+  cacheOnly?: boolean; // Default: false (fail if cache miss)
+  refreshCache?: boolean; // Default: false (force API call)
 }
 
 export async function invokeSkill(
@@ -647,21 +624,21 @@ export async function invokeSkill(
   inputDocument: string,
   options: InvokeOptions = {}
 ): Promise<string> {
-  const { useCache = true, cacheOnly = false, refreshCache = false } = options
+  const { useCache = true, cacheOnly = false, refreshCache = false } = options;
 
   // Generate cache key
-  const cacheKey = generateCacheKey(skillName, inputDocument)
+  const cacheKey = generateCacheKey(skillName, inputDocument);
 
   // Check cache first (unless refreshing)
   if (useCache && !refreshCache) {
-    const cachedResponse = await loadFromCache(skillName, cacheKey)
+    const cachedResponse = await loadFromCache(skillName, cacheKey);
     if (cachedResponse) {
-      console.log(`✓ Cache hit: ${skillName}`)
-      return cachedResponse
+      console.log(`✓ Cache hit: ${skillName}`);
+      return cachedResponse;
     }
 
     if (cacheOnly) {
-      throw new Error(`Cache miss: ${skillName} (cacheOnly mode)`)
+      throw new Error(`Cache miss: ${skillName} (cacheOnly mode)`);
     }
   }
 
@@ -669,25 +646,24 @@ export async function invokeSkill(
   const skillMd = readFileSync(
     `.claude-plugins/task-streams/skills/${skillName}/SKILL.md`,
     "utf-8"
-  )
+  );
 
   // Construct full prompt
-  const fullPrompt = `${skillMd}\n\n---\n\n${inputDocument}`
+  const fullPrompt = `${skillMd}\n\n---\n\n${inputDocument}`;
 
   // Call Claude API
-  console.log(`⟳ API call: ${skillName}`)
+  console.log(`⟳ API call: ${skillName}`);
   const client = new Anthropic({
     apiKey: process.env.ANTHROPIC_API_KEY,
-  })
+  });
 
   const message = await client.messages.create({
     model: "claude-sonnet-4-20250514",
     max_tokens: 16000,
     messages: [{ role: "user", content: fullPrompt }],
-  })
+  });
 
-  const response =
-    message.content[0].type === "text" ? message.content[0].text : ""
+  const response = message.content[0].type === "text" ? message.content[0].text : "";
 
   // Save to cache
   if (useCache) {
@@ -696,25 +672,19 @@ export async function invokeSkill(
       promptVersion: extractPromptVersion(skillMd),
       apiModel: "claude-sonnet-4",
       tokenCount: message.usage.input_tokens + message.usage.output_tokens,
-    })
+    });
   }
 
-  return response
+  return response;
 }
 
 // Convenience wrappers
-export async function invokeSkillCached(
-  skillName: string,
-  inputDocument: string
-): Promise<string> {
-  return invokeSkill(skillName, inputDocument, { cacheOnly: true })
+export async function invokeSkillCached(skillName: string, inputDocument: string): Promise<string> {
+  return invokeSkill(skillName, inputDocument, { cacheOnly: true });
 }
 
-export async function invokeSkillFresh(
-  skillName: string,
-  inputDocument: string
-): Promise<string> {
-  return invokeSkill(skillName, inputDocument, { refreshCache: true })
+export async function invokeSkillFresh(skillName: string, inputDocument: string): Promise<string> {
+  return invokeSkill(skillName, inputDocument, { refreshCache: true });
 }
 ```
 
@@ -723,35 +693,32 @@ export async function invokeSkillFresh(
 ```typescript
 // tests/helpers/cache-manager.ts
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs"
-import { join } from "path"
-import crypto from "crypto"
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
+import { join } from "path";
+import crypto from "crypto";
 
 interface CacheEntry {
-  key: string
-  skill: string
-  inputFile: string
-  outputFile: string
-  createdAt: string
-  promptVersion: string
-  apiModel: string
-  tokenCount: number
+  key: string;
+  skill: string;
+  inputFile: string;
+  outputFile: string;
+  createdAt: string;
+  promptVersion: string;
+  apiModel: string;
+  tokenCount: number;
 }
 
 interface CacheManifest {
-  version: string
-  lastUpdated: string
-  entries: CacheEntry[]
+  version: string;
+  lastUpdated: string;
+  entries: CacheEntry[];
 }
 
-const CACHE_DIR = join(__dirname, "../../test-cache")
-const MANIFEST_PATH = join(CACHE_DIR, "cache-manifest.json")
+const CACHE_DIR = join(__dirname, "../../test-cache");
+const MANIFEST_PATH = join(CACHE_DIR, "cache-manifest.json");
 
-export function generateCacheKey(
-  skillName: string,
-  inputDocument: string
-): string {
-  const skillDir = `.claude-plugins/task-streams/skills/${skillName}`
+export function generateCacheKey(skillName: string, inputDocument: string): string {
+  const skillDir = `.claude-plugins/task-streams/skills/${skillName}`;
 
   // Load all files that influence output
   const files = [
@@ -760,29 +727,23 @@ export function generateCacheKey(
     readFileSync(`${skillDir}/EXAMPLES.md`, "utf-0"),
     readFileSync(`${skillDir}/TROUBLESHOOTING.md`, "utf-8"),
     readFileSync(`${skillDir}/VALIDATION_CHECKLIST.md`, "utf-8"),
-    readFileSync(
-      ".claude-plugins/task-streams/skills/SHARED_ENRICHMENTS.md",
-      "utf-8"
-    ),
-  ]
+    readFileSync(".claude-plugins/task-streams/skills/SHARED_ENRICHMENTS.md", "utf-8"),
+  ];
 
-  const combined = `${skillName}|||${inputDocument}|||${files.join("|||")}`
-  return crypto.createHash("sha256").update(combined).digest("hex")
+  const combined = `${skillName}|||${inputDocument}|||${files.join("|||")}`;
+  return crypto.createHash("sha256").update(combined).digest("hex");
 }
 
-export async function loadFromCache(
-  skillName: string,
-  cacheKey: string
-): Promise<string | null> {
-  const manifest = loadManifest()
-  const entry = manifest.entries.find((e) => e.key === cacheKey)
+export async function loadFromCache(skillName: string, cacheKey: string): Promise<string | null> {
+  const manifest = loadManifest();
+  const entry = manifest.entries.find((e) => e.key === cacheKey);
 
-  if (!entry) return null
+  if (!entry) return null;
 
-  const cachePath = join(CACHE_DIR, entry.outputFile)
-  if (!existsSync(cachePath)) return null
+  const cachePath = join(CACHE_DIR, entry.outputFile);
+  if (!existsSync(cachePath)) return null;
 
-  return readFileSync(cachePath, "utf-8")
+  return readFileSync(cachePath, "utf-8");
 }
 
 export async function saveToCache(
@@ -792,28 +753,28 @@ export async function saveToCache(
   metadata: Partial<CacheEntry>
 ): Promise<void> {
   // Create skill directory
-  const skillCacheDir = join(CACHE_DIR, "skill-responses", skillName)
+  const skillCacheDir = join(CACHE_DIR, "skill-responses", skillName);
   if (!existsSync(skillCacheDir)) {
-    mkdirSync(skillCacheDir, { recursive: true })
+    mkdirSync(skillCacheDir, { recursive: true });
   }
 
   // Save response
-  const outputFile = `skill-responses/${skillName}/${cacheKey}.json`
-  const cachePath = join(CACHE_DIR, outputFile)
-  writeFileSync(cachePath, JSON.stringify({ response }, null, 2))
+  const outputFile = `skill-responses/${skillName}/${cacheKey}.json`;
+  const cachePath = join(CACHE_DIR, outputFile);
+  writeFileSync(cachePath, JSON.stringify({ response }, null, 2));
 
   // Update manifest
-  const manifest = loadManifest()
+  const manifest = loadManifest();
   manifest.entries.push({
     key: cacheKey,
     skill: skillName,
     outputFile,
     createdAt: new Date().toISOString(),
     ...metadata,
-  } as CacheEntry)
+  } as CacheEntry);
 
-  manifest.lastUpdated = new Date().toISOString()
-  saveManifest(manifest)
+  manifest.lastUpdated = new Date().toISOString();
+  saveManifest(manifest);
 }
 
 function loadManifest(): CacheManifest {
@@ -822,13 +783,13 @@ function loadManifest(): CacheManifest {
       version: "1.0.0",
       lastUpdated: new Date().toISOString(),
       entries: [],
-    }
+    };
   }
-  return JSON.parse(readFileSync(MANIFEST_PATH, "utf-8"))
+  return JSON.parse(readFileSync(MANIFEST_PATH, "utf-8"));
 }
 
 function saveManifest(manifest: CacheManifest): void {
-  writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2))
+  writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2));
 }
 ```
 
@@ -883,13 +844,13 @@ pnpm test:prompt:cache-export > cache-report.json
 {
   "scripts": {
     "test:prompt": "vitest run tests/integration/prompt-engineering.test.ts",
-    "test:prompt:structure": "vitest run tests/integration/prompt-engineering.test.ts -t 'Structure Tests'",
-    "test:prompt:quality": "vitest run tests/integration/prompt-engineering.test.ts -t 'Quality Tests'",
-    "test:prompt:consistency": "vitest run tests/integration/prompt-engineering.test.ts -t 'Consistency Tests'",
-    "test:prompt:refresh": "REFRESH_CACHE=true vitest run tests/integration/prompt-engineering.test.ts",
+    "test:prompt:cache-clear": "tsx tests/helpers/cache-clear.ts",
     "test:prompt:cache-stats": "tsx tests/helpers/cache-stats.ts",
     "test:prompt:cache-validate": "tsx tests/helpers/cache-validate.ts",
-    "test:prompt:cache-clear": "tsx tests/helpers/cache-clear.ts"
+    "test:prompt:consistency": "vitest run tests/integration/prompt-engineering.test.ts -t 'Consistency Tests'",
+    "test:prompt:quality": "vitest run tests/integration/prompt-engineering.test.ts -t 'Quality Tests'",
+    "test:prompt:refresh": "REFRESH_CACHE=true vitest run tests/integration/prompt-engineering.test.ts",
+    "test:prompt:structure": "vitest run tests/integration/prompt-engineering.test.ts -t 'Structure Tests'"
   }
 }
 ```
@@ -1083,26 +1044,26 @@ pnpm test:prompt:cache-export > cache-report.json
 
 ```typescript
 interface TestReport {
-  timestamp: string
-  mode: "cached" | "fresh"
-  duration: number
+  timestamp: string;
+  mode: "cached" | "fresh";
+  duration: number;
   results: {
-    structure: { passed: number; failed: number }
+    structure: { passed: number; failed: number };
     quality: {
-      substantiveness: number // 0-100 score
-      adherence: number // 0-100 score
-    }
+      substantiveness: number; // 0-100 score
+      adherence: number; // 0-100 score
+    };
     consistency: {
-      stableFields: string[]
-      unstableFields: string[]
-      score: number // 0-100
-    }
-  }
+      stableFields: string[];
+      unstableFields: string[];
+      score: number; // 0-100
+    };
+  };
   cacheStats: {
-    hits: number
-    misses: number
-    hitRate: number
-  }
+    hits: number;
+    misses: number;
+    hitRate: number;
+  };
 }
 ```
 
@@ -1277,13 +1238,13 @@ No duplication - prompt tests are an automation layer above validators.
 
 ```json
 {
-  "key": "sha256-a3f2b1c8d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1",
-  "skill": "format-bug-findings",
-  "inputFile": "review-001-batch-failures.md (truncated: Batch operation fails without rollback\n\nThe `migrateBatch()` func...)",
-  "outputFile": "skill-responses/format-bug-findings/review-001-batch-failures.json",
-  "createdAt": "2025-01-05T09:15:32Z",
-  "promptVersion": "1.2.0",
   "apiModel": "claude-sonnet-4",
+  "createdAt": "2025-01-05T09:15:32Z",
+  "inputFile": "review-001-batch-failures.md (truncated: Batch operation fails without rollback\n\nThe `migrateBatch()` func...)",
+  "key": "sha256-a3f2b1c8d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1",
+  "outputFile": "skill-responses/format-bug-findings/review-001-batch-failures.json",
+  "promptVersion": "1.2.0",
+  "skill": "format-bug-findings",
   "tokenCount": 8450
 }
 ```
@@ -1300,13 +1261,16 @@ Corresponding output file:
 
 ## 14. Conclusion
 
-This prompt engineering test automation system enables confident, rapid iteration on skill prompts while maintaining quality standards. By separating slow LLM invocation from fast validation via intelligent caching, we achieve:
+This prompt engineering test automation system enables confident, rapid iteration on skill prompts
+while maintaining quality standards. By separating slow LLM invocation from fast validation via
+intelligent caching, we achieve:
 
 - **Speed**: < 10 second test runs (cached)
 - **Cost**: Free for most development (cache hit rate > 95%)
 - **Quality**: Automated detection of vague content and guideline violations
 - **Confidence**: Developers can refactor prompts without fear of breaking outputs
 
-The system integrates seamlessly with existing validators and test infrastructure, providing a complete quality assurance pipeline from prompt to production.
+The system integrates seamlessly with existing validators and test infrastructure, providing a
+complete quality assurance pipeline from prompt to production.
 
 **Next Steps**: Begin Phase 1 implementation (Core Infrastructure).

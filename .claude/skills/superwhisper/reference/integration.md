@@ -5,11 +5,12 @@
 ### Quick Capture to Inbox
 
 **Mode Configuration**:
+
 ```json
 {
-  "name": "Obsidian Inbox",
-  "key": "obsidian-inbox",
   "instructions": "Format for Obsidian: Use ## for headings, [[wikilinks]] for connections, #tags for categories. Keep paragraphs short (2-3 sentences). Add timestamp.",
+  "key": "obsidian-inbox",
+  "name": "Obsidian Inbox",
   "output": {
     "method": "paste"
   }
@@ -17,6 +18,7 @@
 ```
 
 **Workflow**:
+
 1. Open Obsidian inbox note
 2. Trigger: `cmd+shift+o`
 3. Speak thought
@@ -25,6 +27,7 @@
 ### Daily Notes Integration
 
 **AppleScript** (`~/Library/Scripts/SuperWhisper/ObsidianDaily.scpt`):
+
 ```applescript
 -- Open today's daily note and start SuperWhisper recording
 
@@ -46,6 +49,7 @@ do shell script "open 'superwhisper://mode?key=obsidian-daily&record=true'"
 ```
 
 **Shell Wrapper**:
+
 ```bash
 #!/bin/bash
 # ~/code/dotfiles/bin/vault/obsidian-voice-daily.sh
@@ -85,15 +89,16 @@ open "superwhisper://mode?key=$MODE&record=true"
 ### Code Documentation Mode
 
 **Mode Configuration**:
+
 ```json
 {
-  "name": "VS Code Documentation",
-  "key": "vscode-docs",
-  "instructions": "Format as JSDoc/TSDoc comment. Include @param, @returns, @example. Use markdown code blocks.",
   "context": {
     "clipboard": true,
     "selection": true
   },
+  "instructions": "Format as JSDoc/TSDoc comment. Include @param, @returns, @example. Use markdown code blocks.",
+  "key": "vscode-docs",
+  "name": "VS Code Documentation",
   "output": {
     "method": "paste"
   }
@@ -101,6 +106,7 @@ open "superwhisper://mode?key=$MODE&record=true"
 ```
 
 **Workflow**:
+
 1. Select function/class in VS Code
 2. Trigger: `cmd+shift+d`
 3. Dictate documentation
@@ -130,14 +136,15 @@ git commit
 ```
 
 **Commit Message Mode**:
+
 ```json
 {
-  "name": "Git Commit Message",
-  "key": "git-commit",
-  "instructions": "Write conventional commit message based on diff in clipboard. Format: type(scope): description. Types: feat, fix, docs, refactor, test, chore. Keep description under 50 chars.",
   "context": {
     "clipboard": true
   },
+  "instructions": "Write conventional commit message based on diff in clipboard. Format: type(scope): description. Types: feat, fix, docs, refactor, test, chore. Keep description under 50 chars.",
+  "key": "git-commit",
+  "name": "Git Commit Message",
   "output": {
     "method": "clipboard"
   }
@@ -149,11 +156,12 @@ git commit
 ### Message Drafting
 
 **Mode Configuration**:
+
 ```json
 {
-  "name": "Slack Message",
-  "key": "slack-message",
   "instructions": "Format for Slack: casual but professional tone, use *bold* for emphasis, bullet points for lists, `code` for technical terms, >quote blocks for references. Keep messages concise.",
+  "key": "slack-message",
+  "name": "Slack Message",
   "output": {
     "method": "paste"
   }
@@ -180,14 +188,15 @@ open "superwhisper://mode?key=slack-reply&record=true"
 ```
 
 **Slack Reply Mode** (with clipboard context):
+
 ```json
 {
-  "name": "Slack Reply",
-  "key": "slack-reply",
-  "instructions": "Read clipboard for thread context. Write reply referencing previous messages. Use conversational tone. Quote relevant parts with > if needed.",
   "context": {
     "clipboard": true
   },
+  "instructions": "Read clipboard for thread context. Write reply referencing previous messages. Use conversational tone. Quote relevant parts with > if needed.",
+  "key": "slack-reply",
+  "name": "Slack Reply",
   "output": {
     "method": "paste"
   }
@@ -227,15 +236,16 @@ open "superwhisper://mode?key=$MODE&record=true"
 ### Auto-Signature Integration
 
 **Mode with Context**:
+
 ```json
 {
-  "name": "Email New",
-  "key": "email-new",
-  "instructions": "Format as professional email. Include: clear subject line, polite greeting, structured body paragraphs, professional closing. Infer recipient formality from context.",
   "context": {
-    "clipboard": true,
-    "activeApp": true
+    "activeApp": true,
+    "clipboard": true
   },
+  "instructions": "Format as professional email. Include: clear subject line, polite greeting, structured body paragraphs, professional closing. Infer recipient formality from context.",
+  "key": "email-new",
+  "name": "Email New",
   "output": {
     "method": "paste"
   }
@@ -248,9 +258,9 @@ open "superwhisper://mode?key=$MODE&record=true"
 
 ```json
 {
-  "name": "Web Form",
-  "key": "web-form",
   "instructions": "Transcribe for form filling. Format: field_name: value. One field per line. No extra formatting.",
+  "key": "web-form",
+  "name": "Web Form",
   "output": {
     "method": "clipboard"
   }
@@ -258,6 +268,7 @@ open "superwhisper://mode?key=$MODE&record=true"
 ```
 
 **Usage**:
+
 1. Focus first form field
 2. Dictate: "Name: John Smith. Email: john at example dot com. Phone: 555-1234"
 3. Copy from clipboard
@@ -303,11 +314,12 @@ echo "Press Enter to execute, or edit first"
 ```
 
 **Terminal Command Mode**:
+
 ```json
 {
-  "name": "Terminal Command",
-  "key": "terminal-command",
   "instructions": "Transcribe as shell command. Replace natural language with actual commands: 'list files' → ls -la, 'change directory' → cd, 'search for text' → grep. Include flags. No explanations.",
+  "key": "terminal-command",
+  "name": "Terminal Command",
   "output": {
     "method": "clipboard"
   }
@@ -320,9 +332,9 @@ echo "Press Enter to execute, or edit first"
 
 ```json
 {
-  "name": "Meeting Notes",
-  "key": "meeting-notes",
   "instructions": "Format as meeting notes. Sections: ## Attendees, ## Key Points (bullets), ## Decisions (bullets), ## Action Items (- [ ] checkboxes), ## Next Steps. Use timestamps for important moments.",
+  "key": "meeting-notes",
+  "name": "Meeting Notes",
   "output": {
     "method": "paste"
   }
@@ -332,6 +344,7 @@ echo "Press Enter to execute, or edit first"
 ### Auto-Switch on Meeting Start
 
 **Hammerspoon** (`~/.hammerspoon/init.lua`):
+
 ```lua
 -- Detect Zoom/Teams and auto-switch SuperWhisper mode
 
@@ -362,9 +375,9 @@ appWatcher:start()
 
 ```json
 {
-  "name": "iMessage Reply",
-  "key": "imessage-reply",
   "instructions": "Write casual message reply. Use natural conversational tone. Include emoji if appropriate. Keep brief.",
+  "key": "imessage-reply",
+  "name": "iMessage Reply",
   "output": {
     "method": "paste"
   }
@@ -372,6 +385,7 @@ appWatcher:start()
 ```
 
 **Auto-Detect iMessage**:
+
 ```bash
 #!/bin/bash
 # Add to sw-smart.sh
@@ -416,14 +430,15 @@ open "superwhisper://mode?key=obsidian-email-note&record=true"
 ```
 
 **Mode with Email Context**:
+
 ```json
 {
-  "name": "Obsidian Email Note",
-  "key": "obsidian-email-note",
-  "instructions": "Create note about email in clipboard. Format: # Email Subject (from context), ## Summary (dictation), ## Action Items, ## Follow-up. Include [[contact links]] for people.",
   "context": {
     "clipboard": true
   },
+  "instructions": "Create note about email in clipboard. Format: # Email Subject (from context), ## Summary (dictation), ## Action Items, ## Follow-up. Include [[contact links]] for people.",
+  "key": "obsidian-email-note",
+  "name": "Obsidian Email Note",
   "output": {
     "method": "paste"
   }
@@ -468,6 +483,7 @@ echo "✅ Integration tests complete"
 ### Common Issues
 
 **Deep links not triggering**:
+
 ```bash
 # Ensure SuperWhisper is running
 ps aux | grep SuperWhisper
@@ -477,6 +493,7 @@ open "superwhisper://record"
 ```
 
 **Context not being passed**:
+
 ```bash
 # Verify clipboard/selection has content
 pbpaste
@@ -486,6 +503,7 @@ jq '.context' ~/Documents/SuperWhisper/modes/your-mode.json
 ```
 
 **Wrong mode activating**:
+
 ```bash
 # Verify mode key matches exactly
 jq -r '.key' ~/Documents/SuperWhisper/modes/*.json | grep your-mode
@@ -495,9 +513,11 @@ jq -r '.key' ~/Documents/SuperWhisper/modes/*.json | grep your-mode
 
 ### Floating Window Configuration
 
-SuperWhisper is configured to float on the current workspace to prevent unwanted workspace switching:
+SuperWhisper is configured to float on the current workspace to prevent unwanted workspace
+switching:
 
 **Configuration** (`~/code/dotfiles/config/aerospace/aerospace.toml`):
+
 ```toml
 [[on-window-detected]]
 if.app-id = 'com.superduper.superwhisper'
@@ -513,6 +533,7 @@ run = 'layout floating'
 ### Troubleshooting AeroSpace Integration
 
 **SuperWhisper still switching workspaces**:
+
 ```bash
 # Verify AeroSpace configuration
 grep -A 2 "com.superduper.superwhisper" ~/code/dotfiles/config/aerospace/aerospace.toml
@@ -525,6 +546,7 @@ osascript -e 'id of app "SuperWhisper"'
 ```
 
 **SuperWhisper not floating**:
+
 ```bash
 # Verify the app-id matches exactly
 aerospace list-windows | grep -i whisper

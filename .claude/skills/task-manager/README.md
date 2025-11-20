@@ -40,7 +40,7 @@ Claude automatically uses this skill when you say:
 
 Task files live in `docs/tasks/` with pattern `T####-*.md`:
 
-```markdown
+````markdown
 ---
 id: T0001
 title: Fix query execution error
@@ -54,53 +54,67 @@ source: docs/bugs/bug-report.md
 # T0001: Fix query execution error
 
 ## Description
+
 Problem statement...
 
 ## Acceptance Criteria
+
 - [ ] Criterion 1
 - [ ] Criterion 2
 
 ## Implementation Steps
+
 1. Step one...
 2. Step two...
 
 ## Files to Change
+
 ### Files to Modify
+
 - `file.ts:100-120` - Description
 
 ## Testing Requirements
-| Test Type | Validates AC | Description | Location |
-|-----------|--------------|-------------|----------|
+
+| Test Type | Validates AC | Description | Location        |
+| --------- | ------------ | ----------- | --------------- |
 | Unit      | AC1          | Test desc   | path/to/test.ts |
 
 ## Dependencies
-**Blocking:** None
-**Blocked By:** None
+
+**Blocking:** None **Blocked By:** None
 
 ## Regression Risk
-**Impact:** Description
-**Blast Radius:** Details
+
+**Impact:** Description **Blast Radius:** Details
 
 ## Code Examples
+
 **Current (Problematic):**
+
 ```typescript
 // Current code
 ```
+````
 
 **Proposed (Fixed):**
+
 ```typescript
 // Fixed code
 ```
 
 ## Notes
+
 Additional context...
+
 ```
 
 ## Task Status Flow
 
 ```
+
 TODO → READY → IN_PROGRESS → DONE
-```
+
+````
 
 - **TODO**: Has dependencies not yet completed
 - **READY**: All dependencies done, can start
@@ -138,7 +152,7 @@ pnpm typecheck    # 0 errors
 pnpm lint         # 0 errors
 pnpm test         # All passing
 pnpm format:check # 0 errors
-```
+````
 
 ## Common Commands
 
@@ -201,21 +215,25 @@ sed -i '' 's/^status: READY$/status: IN_PROGRESS/' docs/tasks/T0001-*.md
 ## Troubleshooting
 
 **Script fails:**
+
 - Check you're in project root: `pwd` should show `.../MPCU-Build-and-Deliver`
 - Check tasks directory exists: `ls docs/tasks/`
 - Read @ERROR_HANDLING.md for detailed scenarios
 
 **No ready tasks:**
+
 - Check task dependencies: some tasks may be blocked
 - Review task statuses: `grep "^status:" docs/tasks/T*.md`
 - Analyze blockers and update task dependencies
 
 **Quality checks fail:**
+
 - Review errors from `pnpm typecheck`, `pnpm lint`, `pnpm test`
 - Apply fixes from `.claude/rules/typescript-patterns-condensed.md`
 - Re-run checks until all pass
 
 **Tests not passing:**
+
 - Use Wallaby MCP tools to identify failures
 - Check test requirements match implementation
 - Verify acceptance criteria alignment

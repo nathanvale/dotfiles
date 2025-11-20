@@ -10,6 +10,7 @@ Start the next available READY task with automatic locking and worktree creation
 ---
 
 **Progress Checkpoints:**
+
 - ✅ Safe stopping point - No permanent state changes
 - ⚠️ State change - Worktree/lock/PR created, resume needed if interrupted
 
@@ -28,6 +29,7 @@ TASK_DIR="apps/.../tasks"     # Task directory
 ```
 
 **Lock System**:
+
 - Lock file exists = task locked, script skips to next
 - Lock created automatically when task selected
 - No PID checking, no manual lock operations
@@ -43,22 +45,25 @@ taskdock next --json
 ```
 
 **Success response:**
+
 ```json
 {
-  "taskId": "MPCU-0017",
   "filePath": "/full/path/to/task.md",
   "priority": "P1",
-  "title": "Task title",
-  "taskDir": "apps/migration-cli/docs/tasks"
+  "taskDir": "apps/migration-cli/docs/tasks",
+  "taskId": "MPCU-0017",
+  "title": "Task title"
 }
 ```
 
 **No tasks available:**
+
 ```json
 {}
 ```
 
 **IMPORTANT:**
+
 - This command **atomically locks** the task it returns
 - The returned task is **already locked** and ready to work on
 - DO NOT check if the task is locked - it's YOUR lock
@@ -66,11 +71,12 @@ taskdock next --json
 - If you get `{}`, all tasks are either locked by others or have unmet dependencies
 
 **Error Handling:**
+
 - If `{}`: Report "No READY tasks available" and exit
 - If command fails: Report error and exit
 
-**Dependency Resolution:**
-TaskDock automatically checks the `depends_on` field in task frontmatter:
+**Dependency Resolution:** TaskDock automatically checks the `depends_on` field in task frontmatter:
+
 - Task with `depends_on: [T0001, T0002]` requires both tasks to have `status: COMPLETED`
 - If dependencies aren't met, TaskDock skips that task and selects the next highest priority task
 - Tasks with no dependencies or all dependencies met are eligible for selection
@@ -86,6 +92,7 @@ Read(filePath)
 ```
 
 **Verify task contents:**
+
 - ✅ Has `status: READY` in frontmatter
 - ✅ Has acceptance criteria section
 - ✅ Has implementation notes
@@ -101,13 +108,15 @@ taskdock worktree create TASK_ID
 ```
 
 **What this does:**
+
 - Creates `.worktrees/TASK_ID` directory
 - Creates feature branch
 - Updates task status to IN_PROGRESS
 - Installs dependencies (if package.json exists)
 
-**Note for monorepos:**
-The script auto-detects the package location from the TASK_FILE path. For example:
+**Note for monorepos:** The script auto-detects the package location from the TASK_FILE path. For
+example:
+
 - Task file: `apps/migration-cli/docs/tasks/MPCU-0017.md`
 - Package location: `apps/migration-cli`
 - Package name: Extracted from `apps/migration-cli/package.json`
@@ -115,11 +124,12 @@ The script auto-detects the package location from the TASK_FILE path. For exampl
 No additional parameters needed - the script handles this automatically.
 
 **Error Handling:**
+
 - If worktree creation fails: Report error and exit
 - If dependencies fail: Continue (manual install may be needed)
 
-**For non-Node.js projects:**
-If your project doesn't have a package.json:
+**For non-Node.js projects:** If your project doesn't have a package.json:
+
 - Dependency installation is skipped automatically
 - The worktree is still created successfully
 - You can manually install dependencies if needed
@@ -132,10 +142,12 @@ If your project doesn't have a package.json:
 Work directly in the worktree. Use these patterns:
 
 **File Operations:**
+
 - ✅ Use Read, Edit, Write, Glob, Grep tools
 - ❌ Don't use `cat`, `sed`, `find` commands
 
 **Running Commands:**
+
 ```bash
 # Pattern 1: Use absolute paths
 pnpm --filter PACKAGE_NAME --prefix WORKTREE_ROOT typecheck
@@ -148,6 +160,7 @@ git -C WORKTREE_ROOT status
 ```
 
 **Never:**
+
 - ❌ `cd path && command && other-command` (chains break easily)
 - ❌ Mix relative and absolute paths
 
@@ -168,13 +181,13 @@ taskdock validate
 ```
 
 **This runs:**
+
 1. Format check: `pnpm format`
 2. Type check: `pnpm typecheck` (REQUIRED)
 3. Lint check: `pnpm lint`
 4. Tests: `pnpm test` (REQUIRED)
 
-**Configuration:**
-Validation can be customized in `.taskdock/config.yaml`:
+**Configuration:** Validation can be customized in `.taskdock/config.yaml`:
 
 ```yaml
 validation:
@@ -185,6 +198,7 @@ validation:
 ```
 
 **Error Handling:**
+
 - If validation fails: Fix issues and re-run
 - If tests fail: Update code or tests
 - Don't skip validation
@@ -238,6 +252,7 @@ EOF
 ```
 
 **Error Handling:**
+
 - If commit fails: Check for uncommitted files
 - If push fails: Check remote exists
 - If PR creation fails: Check gh CLI is authenticated
@@ -248,33 +263,36 @@ EOF
 
 Report to user:
 
-```markdown
+````markdown
 ✅ Task Complete: TASK_ID
 
-**Worktree:** .worktrees/TASK_ID
-**Branch:** feat/TASK_ID-slug
-**PR:** https://github.com/org/repo/pull/123
+**Worktree:** .worktrees/TASK_ID **Branch:** feat/TASK_ID-slug **PR:**
+https://github.com/org/repo/pull/123
 
 **Changes:**
+
 - Summary of what was implemented
 
 **Validation:** ✅ All checks passed
 
-**Lock Status:**
-Lock file (`TASK_ID.lock`) is stored in `.git/task-locks/` (shared across all worktrees).
-Lock remains active until PR is merged via `/merge` command.
-This prevents other agents from picking up the same task while your PR is in review.
+**Lock Status:** Lock file (`TASK_ID.lock`) is stored in `.git/task-locks/` (shared across all
+worktrees). Lock remains active until PR is merged via `/merge` command. This prevents other agents
+from picking up the same task while your PR is in review.
 
 **To check/manage locks:**
+
 ```bash
 taskdock locks list        # View all active locks
 taskdock locks unlock T0001  # Unlock a specific task (if needed)
 ```
+````
 
 **Next Steps:**
+
 1. Review the PR
 2. Run `/merge TASK_ID` when ready to merge
-```
+
+````
 
 ---
 
@@ -285,15 +303,17 @@ If your session is interrupted (network issue, crash, etc.), you can resume work
 **1. Identify your active worktree:**
 ```bash
 git worktree list
-```
+````
 
 **2. Find your task file:**
+
 ```bash
 # Look for locked tasks (works from anywhere - main repo or worktree)
 taskdock locks list
 ```
 
 **3. Resume from where you left off:**
+
 - Change to the worktree: `cd .worktrees/TASK_ID`
 - Check current status: `git status`
 - Continue implementation from Step 5
@@ -306,6 +326,7 @@ taskdock locks list
 ## Error Scenarios
 
 ### No Tasks Available
+
 ```
 ✅ No READY tasks available
 
@@ -316,10 +337,12 @@ All tasks are either:
 ```
 
 ### Lock Already Exists
-The script automatically skips locked tasks and returns the next available one.
-No action needed - continue with returned task.
+
+The script automatically skips locked tasks and returns the next available one. No action needed -
+continue with returned task.
 
 ### Worktree Creation Failed
+
 ```
 ❌ Worktree creation failed
 
@@ -332,6 +355,7 @@ Fix: Clean up manually and retry
 ```
 
 ### Validation Failed
+
 ```
 ❌ Validation failed: typecheck errors
 
@@ -344,6 +368,7 @@ Fix: Clean up manually and retry
 ```
 
 ### PR Creation Failed
+
 ```
 ❌ PR creation failed
 

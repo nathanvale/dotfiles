@@ -1,11 +1,16 @@
 ---
 name: format-generic
-description: Fallback formatter that extracts tasks from any document structure using best-effort pattern matching. Use when user says 'format unknown document', 'extract tasks from any document', 'process mixed content', 'handle custom format', or when detect-input-type returns 'generic'. Handles ADRs, custom docs, and novel structures in .md files. (plugin:task-streams)
+description:
+  Fallback formatter that extracts tasks from any document structure using best-effort pattern
+  matching. Use when user says 'format unknown document', 'extract tasks from any document',
+  'process mixed content', 'handle custom format', or when detect-input-type returns 'generic'.
+  Handles ADRs, custom docs, and novel structures in .md files. (plugin:task-streams)
 ---
 
 # Format Generic Skill
 
-Fallback formatter that handles documents not matching specific types (spec, review, ADR, tech debt, security). Uses best-effort extraction to create tasks from any structured content.
+Fallback formatter that handles documents not matching specific types (spec, review, ADR, tech debt,
+security). Uses best-effort extraction to create tasks from any structured content.
 
 ## When to Use
 
@@ -19,7 +24,8 @@ Use this skill when you need to:
 
 ## Purpose
 
-When document type is unclear or mixed, this skill provides **graceful degradation** - extract what's possible, mark unclear items as TBD, and let users refine via validation.
+When document type is unclear or mixed, this skill provides **graceful degradation** - extract
+what's possible, mark unclear items as TBD, and let users refine via validation.
 
 ## Core Capabilities
 
@@ -33,7 +39,8 @@ When document type is unclear or mixed, this skill provides **graceful degradati
 
 **Reference**: @../../templates/generic.template.md
 
-This skill generates enriched output that MUST conform to the template structure above. All output must include:
+This skill generates enriched output that MUST conform to the template structure above. All output
+must include:
 
 - All 10 universal enrichments (see template for details)
 - Proper frontmatter metadata (id, title, priority, component, status, created, source)
@@ -42,7 +49,8 @@ This skill generates enriched output that MUST conform to the template structure
 
 The template defines the structural contract. Your implementation fills in the actual values.
 
-**Integration with Validator**: Use `validate-generic` to verify your output matches this template before deploying.
+**Integration with Validator**: Use `validate-generic` to verify your output matches this template
+before deploying.
 
 ## Supporting Documentation
 

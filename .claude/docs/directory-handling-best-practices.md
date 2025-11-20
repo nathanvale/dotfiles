@@ -1,6 +1,8 @@
 # Directory Handling Best Practices for Shell Scripts
 
-Comprehensive guide for reliable directory navigation and path resolution in bash scripts. Based on research from Stack Overflow, Baeldung, and production patterns from git-worktree-runner and our dotfiles system.
+Comprehensive guide for reliable directory navigation and path resolution in bash scripts. Based on
+research from Stack Overflow, Baeldung, and production patterns from git-worktree-runner and our
+dotfiles system.
 
 ---
 
@@ -22,6 +24,7 @@ Comprehensive guide for reliable directory navigation and path resolution in bas
 **Why**: `cd` can fail, and after changing directory, relative paths become invalid.
 
 **Bad**:
+
 ```bash
 cd /some/directory
 cp foo.txt /output/
@@ -29,15 +32,19 @@ cp foo.txt /output/
 ```
 
 **Good**:
+
 ```bash
 cp /some/directory/foo.txt /output/
 # Always works regardless of current directory
 ```
 
-**Source**: [Unix StackExchange - Should shell scripts work in absolute or relative paths?](https://unix.stackexchange.com/questions/320662/should-shell-scripts-work-in-absolute-or-relative-paths)
+**Source**:
+[Unix StackExchange - Should shell scripts work in absolute or relative paths?](https://unix.stackexchange.com/questions/320662/should-shell-scripts-work-in-absolute-or-relative-paths)
 
 **Key Insight from Gilles**:
-> "Absolute paths are generally preferable. `cd` can fail. Be sure to handle errors properly. After a call to `cd`, relative paths become invalid."
+
+> "Absolute paths are generally preferable. `cd` can fail. Be sure to handle errors properly. After
+> a call to `cd`, relative paths become invalid."
 
 ---
 
@@ -46,18 +53,21 @@ cp /some/directory/foo.txt /output/
 If you must use `cd`, always verify it succeeded before continuing.
 
 **Bad**:
+
 ```bash
 cd "$SOME_DIR"
 rm -rf *  # Disaster if cd failed!
 ```
 
 **Good**:
+
 ```bash
 cd "$SOME_DIR" || exit 1
 rm -rf *  # Safe - only runs if cd succeeded
 ```
 
 **Better** (with message):
+
 ```bash
 cd "$SOME_DIR" || { echo "Failed to cd to $SOME_DIR" >&2; exit 1; }
 rm -rf *
@@ -70,17 +80,20 @@ rm -rf *
 For git repositories, use `git rev-parse --show-toplevel` as the canonical project root.
 
 **Pattern**:
+
 ```bash
 GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 cd "$GIT_ROOT"
 ```
 
 **Benefits**:
+
 - Works from any directory within the repo
 - Works across all worktrees (they share the same .git)
 - Fallback to `pwd` for non-git directories
 
-**Production Usage**: All our scripts use this pattern (create-worktree.sh, find-next-task.sh, parallel-claude.sh)
+**Production Usage**: All our scripts use this pattern (create-worktree.sh, find-next-task.sh,
+parallel-claude.sh)
 
 ---
 
@@ -89,11 +102,13 @@ cd "$GIT_ROOT"
 Use tools that support working in other directories without `cd`.
 
 **Tools with directory support**:
+
 - `git -C <dir> <command>` - Run git command in specific directory
 - `(cd <dir> && command)` - Run in subshell (doesn't affect parent)
 - Command-specific flags (many commands accept directory arguments)
 
 **Example from our codebase** (create-worktree.sh:476-477):
+
 ```bash
 # Run git commands in worktree without cd
 git -C "$WORKTREE_ABS_PATH" add "$WORKTREE_TASK_FILE"
@@ -101,6 +116,7 @@ git -C "$WORKTREE_ABS_PATH" commit -m "chore(${TASK_ID}): start task"
 ```
 
 **Example from cleanup-merged-worktrees.sh** (cleanup-merged-worktrees.sh:57):
+
 ```bash
 # Get branch without cd
 BRANCH=$(git -C "$WORKTREE_PATH" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
@@ -115,6 +131,7 @@ BRANCH=$(git -C "$WORKTREE_PATH" rev-parse --abbrev-ref HEAD 2>/dev/null || echo
 **Use when**: Script needs to source files relative to itself or access resources in same directory.
 
 **Universal solution** (handles symlinks, relative paths):
+
 ```bash
 SCRIPT_PATH="${BASH_SOURCE}"
 while [ -L "${SCRIPT_PATH}" ]; do
@@ -127,17 +144,20 @@ SCRIPT_DIR="$(cd -P "$(dirname -- "${SCRIPT_PATH}")" >/dev/null 2>&1 && pwd)"
 ```
 
 **Simpler version** (if symlinks aren't a concern):
+
 ```bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ```
 
 **Production example** (parallel-claude.sh:70-71):
+
 ```bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COLOUR_LOG_PATH="$(dirname "$SCRIPT_DIR")/utils/colour_log.sh"
 ```
 
-**Source**: [Baeldung - Get Bash Script Location From Within the Script](https://www.baeldung.com/linux/bash-get-location-within-script)
+**Source**:
+[Baeldung - Get Bash Script Location From Within the Script](https://www.baeldung.com/linux/bash-get-location-within-script)
 
 ---
 
@@ -146,12 +166,14 @@ COLOUR_LOG_PATH="$(dirname "$SCRIPT_DIR")/utils/colour_log.sh"
 **Use when**: Script operates on git repository and needs consistent anchor point.
 
 **Standard pattern**:
+
 ```bash
 GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 cd "$GIT_ROOT"
 ```
 
 **With error handling**:
+
 ```bash
 GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
 if [ -z "$GIT_ROOT" ]; then
@@ -162,6 +184,7 @@ cd "$GIT_ROOT" || exit 1
 ```
 
 **Production example** (find-next-task.sh:31-40):
+
 ```bash
 # Get the absolute path to the git repository root
 GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || echo "")
@@ -176,6 +199,7 @@ cd "$GIT_ROOT"
 ```
 
 **Production example** (parallel-claude.sh:33-35):
+
 ```bash
 # Get git root for config reading
 GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
@@ -189,12 +213,14 @@ cd "$GIT_ROOT"
 **Use when**: Need to run command in another directory but maintain current location.
 
 **Method 1: Subshell** (doesn't affect parent shell):
+
 ```bash
 (cd "$TARGET_DIR" && npm install)
 # Still in original directory here
 ```
 
 **Method 2: Git -C flag**:
+
 ```bash
 git -C "$WORKTREE_PATH" status
 git -C "$WORKTREE_PATH" add .
@@ -202,6 +228,7 @@ git -C "$WORKTREE_PATH" commit -m "message"
 ```
 
 **Method 3: Command-specific directory arguments**:
+
 ```bash
 # Many commands support directory arguments
 ls "$TARGET_DIR"
@@ -209,6 +236,7 @@ find "$TARGET_DIR" -name "*.md"
 ```
 
 **Production example** (create-worktree.sh:403-404):
+
 ```bash
 # Install in worktree without cd
 if (cd "$WORKTREE_ABS_PATH" && $PKG_MGR install 2>&1 | grep -v "deprecated"); then
@@ -223,21 +251,25 @@ fi
 **Use when**: Converting user-provided relative paths to absolute paths.
 
 **Using readlink**:
+
 ```bash
 ABSOLUTE_PATH=$(readlink -f "$RELATIVE_PATH")
 ```
 
 **Using pwd + dirname**:
+
 ```bash
 ABSOLUTE_PATH="$(cd "$(dirname "$RELATIVE_PATH")" && pwd)/$(basename "$RELATIVE_PATH")"
 ```
 
 **Manual prepend** (if already know you're in correct directory):
+
 ```bash
 ABSOLUTE_PATH="$PWD/$RELATIVE_PATH"
 ```
 
 **Production example** (get-project-lock-dir.sh:12-13):
+
 ```bash
 # Get absolute path to git repository root
 local git_root=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
@@ -252,17 +284,20 @@ local git_root=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 **Use when**: Script needs to load helper functions or libraries.
 
 **Pattern A: Source from script's directory**:
+
 ```bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/lib/helpers.sh"
 ```
 
 **Pattern B: Source from home directory**:
+
 ```bash
 source ~/.claude/scripts/lib/get-project-lock-dir.sh
 ```
 
 **Pattern C: Source with verification**:
+
 ```bash
 COLOUR_LOG_PATH="$(dirname "$SCRIPT_DIR")/utils/colour_log.sh"
 if [ -f "$COLOUR_LOG_PATH" ]; then
@@ -275,6 +310,7 @@ fi
 ```
 
 **Production example** (parallel-claude.sh:69-79):
+
 ```bash
 # Source color logging utilities if available
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -296,6 +332,7 @@ fi
 **Use when**: Ensuring directory exists before operations.
 
 **With error handling**:
+
 ```bash
 mkdir -p "$TARGET_DIR" || {
     echo "Failed to create directory: $TARGET_DIR" >&2
@@ -304,6 +341,7 @@ mkdir -p "$TARGET_DIR" || {
 ```
 
 **With verification**:
+
 ```bash
 if [ ! -d "$TARGET_DIR" ]; then
     mkdir -p "$TARGET_DIR"
@@ -311,6 +349,7 @@ fi
 ```
 
 **For critical operations**:
+
 ```bash
 mkdir -p "$TARGET_DIR" || exit 1
 if [ ! -d "$TARGET_DIR" ]; then
@@ -328,6 +367,7 @@ fi
 **Problem**: Script continues after `cd` fails, operating in wrong directory.
 
 **Example**:
+
 ```bash
 #!/bin/bash
 cd /nonexistent/path
@@ -337,12 +377,14 @@ rm -rf *  # Runs in current directory if cd failed!
 **Impact**: Data loss, file corruption, security issues.
 
 **Fix**:
+
 ```bash
 cd /target/path || exit 1
 # Or with set -e at top of script
 ```
 
-**Real-world consequence**: Without `set -e` or explicit error checking, destructive commands run in unintended locations.
+**Real-world consequence**: Without `set -e` or explicit error checking, destructive commands run in
+unintended locations.
 
 ---
 
@@ -351,6 +393,7 @@ cd /target/path || exit 1
 **Problem**: File paths passed as arguments become invalid after `cd`.
 
 **Example**:
+
 ```bash
 #!/bin/bash
 INPUT_FILE="$1"  # User passes: ./data/input.txt
@@ -361,6 +404,7 @@ process "$INPUT_FILE"
 ```
 
 **Fix**: Convert to absolute before cd:
+
 ```bash
 INPUT_FILE="$(readlink -f "$1")"
 cd /processing/directory
@@ -376,6 +420,7 @@ process "$INPUT_FILE"  # Now absolute path works
 **Problem**: Script assumes it's run from specific directory.
 
 **Bad**:
+
 ```bash
 #!/bin/bash
 # Assumes run from project root
@@ -383,6 +428,7 @@ npm install
 ```
 
 **Good**:
+
 ```bash
 #!/bin/bash
 GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
@@ -399,6 +445,7 @@ npm install
 **Problem**: `BASH_SOURCE` contains symlink path, not real script location.
 
 **Bad**:
+
 ```bash
 SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 source "$SCRIPT_DIR/config.sh"  # Fails if BASH_SOURCE is symlink to different directory
@@ -413,6 +460,7 @@ source "$SCRIPT_DIR/config.sh"  # Fails if BASH_SOURCE is symlink to different d
 **Problem**: Multiple processes changing to same directory can cause conflicts.
 
 **Example**:
+
 ```bash
 # Process 1
 cd "$SHARED_DIR"
@@ -424,6 +472,7 @@ echo "data" > output.txt  # Overwrites!
 ```
 
 **Fix**: Use unique filenames or absolute paths:
+
 ```bash
 OUTPUT_FILE="$SHARED_DIR/output-$$.txt"  # $$ is PID
 echo "data" > "$OUTPUT_FILE"
@@ -436,12 +485,14 @@ echo "data" > "$OUTPUT_FILE"
 **Problem**: Silencing errors from cd hides failures.
 
 **Bad**:
+
 ```bash
 cd "$TARGET_DIR" 2>/dev/null
 # Silently fails, script continues in wrong directory
 ```
 
 **Good**:
+
 ```bash
 cd "$TARGET_DIR" || {
     echo "Failed to cd to $TARGET_DIR" >&2
@@ -458,6 +509,7 @@ cd "$TARGET_DIR" || {
 **Why bad**: Increases failure surface, makes paths hard to track.
 
 **Bad**:
+
 ```bash
 cd /projects
 cd myproject
@@ -467,12 +519,14 @@ cd components
 ```
 
 **Good**:
+
 ```bash
 TARGET="/projects/myproject/src/components"
 cd "$TARGET" || exit 1
 ```
 
 **Better** (avoid cd entirely):
+
 ```bash
 ls /projects/myproject/src/components
 find /projects/myproject/src/components -name "*.js"
@@ -485,12 +539,14 @@ find /projects/myproject/src/components -name "*.js"
 **Why bad**: Silent failures lead to operations in wrong directory.
 
 **Bad**:
+
 ```bash
 cd "$USER_PROVIDED_PATH"
 rm -rf build/
 ```
 
 **Good**:
+
 ```bash
 cd "$USER_PROVIDED_PATH" || exit 1
 rm -rf build/
@@ -503,12 +559,14 @@ rm -rf build/
 **Why bad**: `$0` is unreliable when sourcing scripts.
 
 **Bad**:
+
 ```bash
 SCRIPT_DIR="$(dirname "$0")"
 source "$SCRIPT_DIR/lib.sh"  # Fails when script is sourced
 ```
 
 **Good**:
+
 ```bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/lib.sh"
@@ -521,6 +579,7 @@ source "$SCRIPT_DIR/lib.sh"
 **Why bad**: Unnecessary complexity, prone to errors.
 
 **Bad**:
+
 ```bash
 OLD_PWD=$(pwd)
 cd "$TARGET_DIR"
@@ -529,6 +588,7 @@ cd "$OLD_PWD"
 ```
 
 **Good**:
+
 ```bash
 cat "$TARGET_DIR/config.json"
 ```
@@ -540,6 +600,7 @@ cat "$TARGET_DIR/config.json"
 **Why bad**: Script continues after errors.
 
 **Bad**:
+
 ```bash
 #!/bin/bash
 cd /critical/path
@@ -547,6 +608,7 @@ rm -rf *  # Still runs even if cd failed
 ```
 
 **Good**:
+
 ```bash
 #!/bin/bash
 set -e  # Exit on any error
@@ -564,11 +626,13 @@ rm -rf *  # Only runs if cd succeeded
 **Why bad**: Not portable across systems or projects.
 
 **Bad**:
+
 ```bash
 cd /Users/nathanvale/code/myproject
 ```
 
 **Good**:
+
 ```bash
 GIT_ROOT=$(git rev-parse --show-toplevel)
 cd "$GIT_ROOT"
@@ -608,6 +672,7 @@ fi
 ```
 
 **Key takeaways**:
+
 - Single `cd` at start to establish anchor point
 - All subsequent paths relative to known location
 - Use `git -C` to avoid additional `cd` calls
@@ -643,6 +708,7 @@ MAX_AGENTS=$(git config --get gtr.parallel.max 2>/dev/null || echo "50")
 ```
 
 **Key takeaways**:
+
 - Know your anchor point (git root vs script directory)
 - Use appropriate pattern for each need
 - Always provide fallbacks for sourced files
@@ -683,6 +749,7 @@ fi
 ```
 
 **Key takeaways**:
+
 - Always handle non-git directories
 - Provide multiple fallback locations
 - Fail gracefully with appropriate exit codes
@@ -710,6 +777,7 @@ get_project_lock_dir() {
 ```
 
 **Key takeaways**:
+
 - Helper functions should return absolute paths
 - Don't change directory in library functions
 - Make paths portable via $HOME
@@ -772,14 +840,14 @@ Use this flowchart to choose the right pattern:
 
 **Quick selection guide**:
 
-| Scenario | Pattern | Example |
-|----------|---------|---------|
-| Git repo script | Get git root | `git rev-parse --show-toplevel` |
-| Source helper files | Get script dir | `dirname "${BASH_SOURCE[0]}"` |
-| Run single command elsewhere | Subshell | `(cd "$DIR" && cmd)` |
-| Run git commands elsewhere | git -C flag | `git -C "$DIR" status` |
-| User-provided paths | Make absolute | `readlink -f "$PATH"` |
-| Create directories | mkdir -p | `mkdir -p "$DIR" \|\| exit 1` |
+| Scenario                     | Pattern        | Example                         |
+| ---------------------------- | -------------- | ------------------------------- |
+| Git repo script              | Get git root   | `git rev-parse --show-toplevel` |
+| Source helper files          | Get script dir | `dirname "${BASH_SOURCE[0]}"`   |
+| Run single command elsewhere | Subshell       | `(cd "$DIR" && cmd)`            |
+| Run git commands elsewhere   | git -C flag    | `git -C "$DIR" status`          |
+| User-provided paths          | Make absolute  | `readlink -f "$PATH"`           |
+| Create directories           | mkdir -p       | `mkdir -p "$DIR" \|\| exit 1`   |
 
 ---
 
@@ -827,7 +895,8 @@ Use this checklist when writing new bash scripts:
 
 ### 🎯 Golden Rule
 
-**Establish your anchor point once (git root or script directory), then use absolute paths or tools that work from anywhere.**
+**Establish your anchor point once (git root or script directory), then use absolute paths or tools
+that work from anywhere.**
 
 ---
 
@@ -836,5 +905,6 @@ Use this checklist when writing new bash scripts:
 - [Stack Overflow: Get git root directory](https://stackoverflow.com/questions/957928/is-there-a-way-to-get-the-git-root-directory-in-one-command)
 - [Unix StackExchange: Absolute vs relative paths in scripts](https://unix.stackexchange.com/questions/320662/should-shell-scripts-work-in-absolute-or-relative-paths)
 - [Baeldung: Get Bash Script Location](https://www.baeldung.com/linux/bash-get-location-within-script)
-- [Our npm-install-analysis.md](./.claude/docs/npm-install-analysis.md) - Real-world worktree patterns
+- [Our npm-install-analysis.md](./.claude/docs/npm-install-analysis.md) - Real-world worktree
+  patterns
 - [Our git-config-options.md](./.claude/docs/git-config-options.md) - Git configuration patterns

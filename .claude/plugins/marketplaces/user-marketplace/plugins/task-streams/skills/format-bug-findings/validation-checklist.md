@@ -1,6 +1,7 @@
 # Validation Checklist
 
-Complete quality checklist to verify enriched findings before finalizing. Every item must pass before outputting tasks.
+Complete quality checklist to verify enriched findings before finalizing. Every item must pass
+before outputting tasks.
 
 ---
 
@@ -143,28 +144,23 @@ Additional rigor required:
 
 ### ❌ Missing File Change Details
 
-**Bad:**
-**Files to Modify:**
+**Bad:** **Files to Modify:**
 
 - src/lib/migration/referral.ts - Fix bug
 
-**Good:**
-**Files to Modify:**
+**Good:** **Files to Modify:**
 
 - `src/lib/migration/referral.ts:233-267` - Add rollback on batch failure
 
 ### ❌ Incomplete Testing Table
 
-**Bad:**
-| Test Type | Validates AC | Description | Location |
-|-----------|--------------|-------------|----------|
-| Unit | AC1 | Tests | tests/unit/test.ts |
+**Bad:** | Test Type | Validates AC | Description | Location |
+|-----------|--------------|-------------|----------| | Unit | AC1 | Tests | tests/unit/test.ts |
 
-**Good:**
-| Test Type | Validates AC | Description | Location |
-|-----------|--------------|-------------|----------|
-| Unit | AC1, AC2 | Test rollback compensation logic with mock failures | `src/__tests__/batch-rollback.test.ts` |
-| Integration | AC3, AC4 | Full batch failure scenario with 100 records | `tests/integration/batch-failure.test.ts` |
+**Good:** | Test Type | Validates AC | Description | Location |
+|-----------|--------------|-------------|----------| | Unit | AC1, AC2 | Test rollback compensation
+logic with mock failures | `src/__tests__/batch-rollback.test.ts` | | Integration | AC3, AC4 | Full
+batch failure scenario with 100 records | `tests/integration/batch-failure.test.ts` |
 
 ---
 
@@ -185,8 +181,7 @@ Before outputting, perform these final checks:
 
 After completing all checks:
 
-✅ **PASS** - All items verified, ready to output
-⚠️ **NEEDS WORK** - Missing items identified, requires revision
-❌ **FAIL** - Critical issues found, do not output
+✅ **PASS** - All items verified, ready to output ⚠️ **NEEDS WORK** - Missing items identified,
+requires revision ❌ **FAIL** - Critical issues found, do not output
 
 **If FAIL or NEEDS WORK**: Return to relevant workflow step and address issues before re-validating.

@@ -2,7 +2,9 @@
 
 **Agentic task orchestration and worktree management system**
 
-TaskDock is a CLI tool for managing multi-agent development workflows using git worktrees, task locking, and structured validation. It provides a unified interface for task selection, worktree lifecycle, validation pipelines, and merge operations.
+TaskDock is a CLI tool for managing multi-agent development workflows using git worktrees, task
+locking, and structured validation. It provides a unified interface for task selection, worktree
+lifecycle, validation pipelines, and merge operations.
 
 ## Quick Start
 
@@ -11,12 +13,14 @@ TaskDock is a CLI tool for managing multi-agent development workflows using git 
 TaskDock is installed in your dotfiles at `$HOME/code/dotfiles/apps/taskdock/`.
 
 1. **Run setup script:**
+
    ```bash
    cd ~/code/dotfiles
    ./apps/taskdock/setup.sh
    ```
 
 2. **Verify installation:**
+
    ```bash
    taskdock version
    taskdock doctor
@@ -58,6 +62,7 @@ taskdock next
 ### Core Commands
 
 #### `taskdock init`
+
 Initialize TaskDock in current repository. Creates `.taskdock/config.yaml` with required settings.
 
 ```bash
@@ -70,6 +75,7 @@ taskdock init --ticket-prefix PROJ
 ---
 
 #### `taskdock next`
+
 Select and lock the next highest-priority READY task.
 
 ```bash
@@ -78,6 +84,7 @@ taskdock next --json
 ```
 
 **Returns:**
+
 - Task ID, title, priority, file path
 - Automatically creates lock file
 - Checks dependencies before selection
@@ -85,6 +92,7 @@ taskdock next --json
 ---
 
 #### `taskdock worktree create <task-id>`
+
 Create git worktree for a task.
 
 ```bash
@@ -94,6 +102,7 @@ taskdock worktree create T0001 --no-install
 ```
 
 **Features:**
+
 - Auto-detects monorepo vs single-repo
 - Finds task file automatically
 - Creates feature branch (`feat/T0001-...`)
@@ -103,6 +112,7 @@ taskdock worktree create T0001 --no-install
 ---
 
 #### `taskdock validate`
+
 Run validation checks on worktree.
 
 ```bash
@@ -112,12 +122,14 @@ taskdock validate /path/to/worktree my-package
 ```
 
 **Runs:**
+
 - Format check (`format` script)
 - Type checking (`typecheck` script) - **REQUIRED**
 - Linting (`lint` script)
 - Tests (`test` script) - **REQUIRED**
 
 **Configurable via `.taskdock/config.yaml`:**
+
 ```yaml
 validation:
   run_format: true
@@ -129,6 +141,7 @@ validation:
 ---
 
 #### `taskdock merge pr [PR_NUM|TASK_ID|--current]`
+
 Merge PR and perform complete cleanup.
 
 ```bash
@@ -138,11 +151,13 @@ taskdock merge pr T0001            # Merge task T0001's PR
 ```
 
 **Supports:**
+
 - GitHub (via `gh` CLI)
 - Azure DevOps (via `az` CLI)
 - Auto-detection of git provider
 
 **Performs:**
+
 - PR status verification
 - Merge to main
 - Remote branch deletion
@@ -153,6 +168,7 @@ taskdock merge pr T0001            # Merge task T0001's PR
 ---
 
 #### `taskdock merge manual [branch]`
+
 Manual merge without PR (for quick fixes).
 
 ```bash
@@ -167,6 +183,7 @@ taskdock merge manual feat/my-fix  # Merge specific branch
 ### Worktree Management
 
 #### `taskdock worktree list`
+
 List all active worktrees with status.
 
 ```bash
@@ -175,6 +192,7 @@ taskdock worktree list --json
 ```
 
 **Shows:**
+
 - Task ID and path
 - Branch name
 - Lock status
@@ -184,6 +202,7 @@ taskdock worktree list --json
 ---
 
 #### `taskdock worktree status [task-id]`
+
 Show detailed status for a worktree.
 
 ```bash
@@ -194,6 +213,7 @@ taskdock worktree status T0001     # Specific task
 ---
 
 #### `taskdock worktree cleanup`
+
 Clean up merged worktrees.
 
 ```bash
@@ -203,6 +223,7 @@ taskdock worktree cleanup --quiet   # Minimal output
 ```
 
 **Automatically:**
+
 - Detects merged branches
 - Removes worktrees
 - Deletes branches
@@ -213,6 +234,7 @@ taskdock worktree cleanup --quiet   # Minimal output
 ### Lock Management
 
 #### `taskdock locks list`
+
 List all active task locks.
 
 ```bash
@@ -223,6 +245,7 @@ taskdock locks list --json
 ---
 
 #### `taskdock locks unlock <task-id>`
+
 Remove lock for a specific task.
 
 ```bash
@@ -232,6 +255,7 @@ taskdock locks unlock T0001
 ---
 
 #### `taskdock locks cleanup`
+
 Remove stale locks based on heartbeat age.
 
 ```bash
@@ -244,6 +268,7 @@ taskdock locks cleanup --quiet
 ---
 
 #### `taskdock heartbeat <task-id>`
+
 Update task lock heartbeat timestamp.
 
 ```bash
@@ -258,6 +283,7 @@ taskdock heartbeat T0001 --quiet
 ### Configuration
 
 #### `taskdock config show`
+
 Display merged configuration (all sources).
 
 ```bash
@@ -268,6 +294,7 @@ taskdock config show --json
 ---
 
 #### `taskdock config get <key>`
+
 Get specific config value.
 
 ```bash
@@ -279,6 +306,7 @@ taskdock config get validation.run_tests
 ---
 
 #### `taskdock config set <key> <value>`
+
 Update repo configuration.
 
 ```bash
@@ -289,6 +317,7 @@ taskdock config set lock_max_age_minutes 45
 ---
 
 #### `taskdock config check`
+
 Validate required configuration.
 
 ```bash
@@ -300,6 +329,7 @@ taskdock config check
 ### Observability
 
 #### `taskdock logs`
+
 View TaskDock telemetry logs.
 
 ```bash
@@ -313,6 +343,7 @@ taskdock logs --all
 ```
 
 **Features:**
+
 - Structured newline-delimited JSON
 - Correlation IDs for request tracing
 - Command filtering
@@ -321,6 +352,7 @@ taskdock logs --all
 ---
 
 #### `taskdock doctor`
+
 Check system dependencies and health.
 
 ```bash
@@ -329,6 +361,7 @@ taskdock doctor --json
 ```
 
 **Checks:**
+
 - Git installation
 - jq, yq, pnpm availability
 - Repository initialization status
@@ -338,6 +371,7 @@ taskdock doctor --json
 ---
 
 #### `taskdock version`
+
 Show TaskDock version.
 
 ```bash
@@ -361,37 +395,37 @@ Later sources override earlier ones.
 ### Required Configuration
 
 ```yaml
-ticket_prefix: "PROJ"  # Required: Task ID prefix
+ticket_prefix: "PROJ" # Required: Task ID prefix
 ```
 
 ### Optional Configuration
 
 ```yaml
 # Task management
-task_directory: "docs/tasks"      # Where task files live
-lock_max_age_minutes: 30          # Stale lock threshold
+task_directory: "docs/tasks" # Where task files live
+lock_max_age_minutes: 30 # Stale lock threshold
 
 # Worktree settings
-worktree_root: ".worktrees"       # Worktree location
-branch_prefix: "feat"             # Branch prefix
+worktree_root: ".worktrees" # Worktree location
+branch_prefix: "feat" # Branch prefix
 
 # Git settings
-default_branch: "main"            # Main branch name
-git_provider: "auto"              # "auto", "github", or "azure"
+default_branch: "main" # Main branch name
+git_provider: "auto" # "auto", "github", or "azure"
 
 # Validation
 validation:
-  run_format: true                # Run formatters
-  run_typecheck: true             # Run type checking
-  run_lint: true                  # Run linting
-  run_tests: true                 # Run tests
+  run_format: true # Run formatters
+  run_typecheck: true # Run type checking
+  run_lint: true # Run linting
+  run_tests: true # Run tests
 
 # Telemetry
-telemetry_enabled: true           # Enable logging
-log_retention_days: 7             # Log retention
+telemetry_enabled: true # Enable logging
+log_retention_days: 7 # Log retention
 
 # Output
-default_output_format: "human"    # "human" or "json"
+default_output_format: "human" # "human" or "json"
 ```
 
 ---
@@ -411,6 +445,7 @@ taskdock validate --json
 ```
 
 **Or set globally:**
+
 ```bash
 export TASKDOCK_OUTPUT=json
 ```
@@ -421,12 +456,12 @@ All operations logged with correlation IDs:
 
 ```json
 {
-  "timestamp": "2025-11-19T10:30:00Z",
-  "correlationId": "550e8400-e29b-41d4-a716-446655440000",
   "command": "next",
+  "correlationId": "550e8400-e29b-41d4-a716-446655440000",
+  "data": { "priority": "P0", "title": "Fix login bug" },
   "event": "task_selected",
   "taskId": "T0001",
-  "data": {"priority": "P0", "title": "Fix login bug"}
+  "timestamp": "2025-11-19T10:30:00Z"
 }
 ```
 
@@ -462,6 +497,7 @@ taskdock-vscode
 ```
 
 **This command:**
+
 1. Finds next available task
 2. Creates worktree
 3. Opens worktree in new VS Code window
@@ -470,15 +506,15 @@ taskdock-vscode
 
 ```json
 {
-  "version": "2.0.0",
   "tasks": [
     {
-      "label": "TaskDock: Next Task",
-      "type": "shell",
       "command": "taskdock-vscode",
-      "problemMatcher": []
+      "label": "TaskDock: Next Task",
+      "problemMatcher": [],
+      "type": "shell"
     }
-  ]
+  ],
+  "version": "2.0.0"
 }
 ```
 
@@ -502,14 +538,17 @@ github: https://github.com/org/repo/issues/123
 # P0: Fix login bug
 
 ## Description
+
 Users cannot log in with email addresses...
 
 ## Acceptance Criteria
+
 - [ ] Login with email works
 - [ ] Error messages are clear
 - [ ] Tests pass
 
 ## Technical Notes
+
 Check the authentication middleware...
 ```
 
@@ -572,20 +611,15 @@ taskdock/
 
 ### Key Concepts
 
-**Front-Door Pattern:**
-All commands route through `taskdock` CLI for consistency.
+**Front-Door Pattern:** All commands route through `taskdock` CLI for consistency.
 
-**Guard System:**
-Commands verify repository initialization before execution.
+**Guard System:** Commands verify repository initialization before execution.
 
-**Correlation IDs:**
-All operations tagged with unique ID for tracing.
+**Correlation IDs:** All operations tagged with unique ID for tracing.
 
-**Dual Output:**
-Human-friendly and JSON modes for all commands.
+**Dual Output:** Human-friendly and JSON modes for all commands.
 
-**Lock Heartbeats:**
-Prevent stale locks during long-running operations.
+**Lock Heartbeats:** Prevent stale locks during long-running operations.
 
 ---
 
@@ -598,6 +632,7 @@ Prevent stale locks during long-running operations.
 ```
 
 **Solution:**
+
 ```bash
 taskdock init
 ```
@@ -611,6 +646,7 @@ taskdock init
 ```
 
 **Check:**
+
 1. Task files exist in `docs/tasks/`
 2. Tasks have `status: READY`
 3. Dependencies are met
@@ -624,11 +660,13 @@ taskdock init
 ```
 
 **Check:**
+
 ```bash
 taskdock locks list
 ```
 
 **Unlock if stale:**
+
 ```bash
 taskdock locks unlock T0001
 # or
@@ -644,6 +682,7 @@ taskdock locks cleanup
 ```
 
 **Fix issues and re-run:**
+
 ```bash
 taskdock validate
 ```
@@ -659,6 +698,7 @@ taskdock validate
 ```
 
 **Resolution:**
+
 1. Pull latest main
 2. Resolve conflicts
 3. Push to branch
@@ -687,7 +727,8 @@ Part of nathanvale's dotfiles configuration.
 
 TaskDock implements comprehensive concurrency protection for multi-agent workflows:
 
-- **flock-based locking**: Prevents race conditions during task selection, config updates, and log writes
+- **flock-based locking**: Prevents race conditions during task selection, config updates, and log
+  writes
 - **Repo-level locks**: Shared across all worktrees via `.git/taskdock-locks/`
 - **Automatic cleanup**: Stale locks removed after timeout
 - **Zero data corruption**: All critical sections properly protected
@@ -711,5 +752,4 @@ For detailed information, see [CONCURRENCY.md](CONCURRENCY.md).
 
 ---
 
-**Version:** 0.1.0
-**Last Updated:** 2025-11-19
+**Version:** 0.1.0 **Last Updated:** 2025-11-19

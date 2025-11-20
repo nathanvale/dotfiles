@@ -108,19 +108,23 @@ taskdock locks cleanup --max-age 30
 ## Fixture Scenarios
 
 ### Scenario 1: Fresh Start
+
 All tasks are in initial state, T0001 should be selected.
 
 ### Scenario 2: Sequential Progress
+
 - T0001 → COMPLETED
 - T0002 should now be selectable
 - T0003 still BLOCKED
 
 ### Scenario 3: Active Lock
+
 - T0004 has active lock
 - Should not be selectable by another agent
 - Test heartbeat updates and stale detection
 
 ### Scenario 4: Complex Dependencies
+
 - Multiple tasks depend on same parent
 - T0002 and T0005 both depended on T0001
 - T0005 completed, T0002 still available

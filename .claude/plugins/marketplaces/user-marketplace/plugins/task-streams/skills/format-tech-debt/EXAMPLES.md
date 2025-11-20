@@ -8,15 +8,15 @@ Complete examples of properly enriched tech debts with all 10 required elements.
 
 ### P0: Batch operation fails silently without rollback
 
-**Component:** C03: Migration & Batch Processing
-**Location:** `src/lib/migration/referral.ts:233-267`
-**Estimated Effort:** 8h
-**Complexity:** HIGH
-**Regression Risk:** HIGH
+**Component:** C03: Migration & Batch Processing **Location:**
+`src/lib/migration/referral.ts:233-267` **Estimated Effort:** 8h **Complexity:** HIGH **Regression
+Risk:** HIGH
 
 **Description:**
 
-The `migrateBatch()` function does not properly handle partial failures. If a batch of 100 referrals fails at record 50, the first 49 records are committed to Dataverse but there's no rollback mechanism. This causes data inconsistency and silent failures that are difficult to debug.
+The `migrateBatch()` function does not properly handle partial failures. If a batch of 100 referrals
+fails at record 50, the first 49 records are committed to Dataverse but there's no rollback
+mechanism. This causes data inconsistency and silent failures that are difficult to debug.
 
 **Regression Risk Details:**
 
@@ -48,7 +48,7 @@ The `migrateBatch()` function does not properly handle partial failures. If a ba
 ```typescript
 async function migrateBatch(records: CsvRecord[]) {
   for (const record of records) {
-    await repository.create(record) // No error handling!
+    await repository.create(record); // No error handling!
   }
 }
 ```
@@ -57,23 +57,20 @@ async function migrateBatch(records: CsvRecord[]) {
 
 ```typescript
 async function migrateBatch(records: CsvRecord[]) {
-  const committed: string[] = []
+  const committed: string[] = [];
   try {
     for (const record of records) {
-      const result = await repository.create(record)
-      committed.push(result.id)
+      const result = await repository.create(record);
+      committed.push(result.id);
     }
   } catch (error) {
     // Rollback committed records
     for (const id of committed) {
-      await repository.delete(id)
+      await repository.delete(id);
     }
     // Quarantine failed batch
-    await fs.appendFile(
-      "quarantine.log",
-      JSON.stringify({ batchIds: committed, error })
-    )
-    throw error
+    await fs.appendFile("quarantine.log", JSON.stringify({ batchIds: committed, error }));
+    throw error;
   }
 }
 ```
@@ -101,8 +98,7 @@ async function migrateBatch(records: CsvRecord[]) {
 | Integration | AC3, AC4     | Test with mock service failures          | `tests/integration/batch-failure.test.ts`      |
 | E2E         | AC5          | Full migration with intentional failures | `tests/integration/referral-migration.test.ts` |
 
-**Blocking Dependencies:** None
-**Blocks:** P1-002 (Batch retry mechanism)
+**Blocking Dependencies:** None **Blocks:** P1-002 (Batch retry mechanism)
 
 **Prerequisites:**
 
@@ -116,15 +112,14 @@ async function migrateBatch(records: CsvRecord[]) {
 
 ### P1: Missing null check before property access
 
-**Component:** C02: CSV Parsing & Validation
-**Location:** `src/lib/adapters/worker-csv-adapter.ts:145-167`
-**Estimated Effort:** 2h
-**Complexity:** LOW
+**Component:** C02: CSV Parsing & Validation **Location:**
+`src/lib/adapters/worker-csv-adapter.ts:145-167` **Estimated Effort:** 2h **Complexity:** LOW
 **Regression Risk:** MEDIUM
 
 **Description:**
 
-The `mapContactDto()` function accesses `row.email` without checking if the field exists, causing crashes when processing CSV files with missing email columns.
+The `mapContactDto()` function accesses `row.email` without checking if the field exists, causing
+crashes when processing CSV files with missing email columns.
 
 **Regression Risk Details:**
 
@@ -156,7 +151,7 @@ The `mapContactDto()` function accesses `row.email` without checking if the fiel
 function mapContactDto(row: CsvRow): ContactDto {
   return {
     email: row.email.toLowerCase(), // No null check!
-  }
+  };
 }
 ```
 
@@ -166,7 +161,7 @@ function mapContactDto(row: CsvRow): ContactDto {
 function mapContactDto(row: CsvRow): ContactDto {
   return {
     email: row.email ? row.email.toLowerCase() : "noemail@example.com",
-  }
+  };
 }
 ```
 
@@ -190,8 +185,7 @@ function mapContactDto(row: CsvRow): ContactDto {
 | Unit        | AC1, AC2, AC5 | Test with missing email field      | `tests/unit/adapters/worker-csv-adapter.test.ts` |
 | Integration | AC3           | Full CSV parse with missing column | `tests/integration/csv-parse.test.ts`            |
 
-**Blocking Dependencies:** None
-**Blocks:** None
+**Blocking Dependencies:** None **Blocks:** None
 
 **Prerequisites:**
 
@@ -204,15 +198,13 @@ function mapContactDto(row: CsvRow): ContactDto {
 
 ### P2: Duplicate validation logic across 3 CSV adapters
 
-**Component:** C02: CSV Parsing & Validation
-**Location:** Multiple files (see Files to Modify)
-**Estimated Effort:** 4h
-**Complexity:** MEDIUM
-**Regression Risk:** LOW
+**Component:** C02: CSV Parsing & Validation **Location:** Multiple files (see Files to Modify)
+**Estimated Effort:** 4h **Complexity:** MEDIUM **Regression Risk:** LOW
 
 **Description:**
 
-Email validation logic is duplicated across worker, claimant, and contact CSV adapters. This violates DRY principles and makes maintenance difficult (bugs must be fixed in 3 places).
+Email validation logic is duplicated across worker, claimant, and contact CSV adapters. This
+violates DRY principles and makes maintenance difficult (bugs must be fixed in 3 places).
 
 **Regression Risk Details:**
 
@@ -245,7 +237,7 @@ Email validation logic is duplicated across worker, claimant, and contact CSV ad
 ```typescript
 // In worker-csv-adapter.ts
 function validateEmail(email: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 // Same function duplicated in claimant-csv-adapter.ts
@@ -257,11 +249,11 @@ function validateEmail(email: string): boolean {
 ```typescript
 // src/lib/utils/csv-validators.ts
 export function validateEmail(email: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 // In all 3 adapters
-import { validateEmail } from "lib/utils/csv-validators.js"
+import { validateEmail } from "lib/utils/csv-validators.js";
 ```
 
 **Files to Create:**
@@ -286,8 +278,7 @@ import { validateEmail } from "lib/utils/csv-validators.js"
 | Unit        | AC1, AC4      | Test shared validation logic            | `tests/unit/utils/csv-validators.test.ts` |
 | Integration | AC2, AC3, AC5 | Test all adapters with shared validator | `tests/unit/adapters/*.test.ts`           |
 
-**Blocking Dependencies:** None
-**Blocks:** None
+**Blocking Dependencies:** None **Blocks:** None
 
 **Prerequisites:**
 
@@ -303,14 +294,11 @@ Use this template when creating new enriched tech debt items:
 ````markdown
 ### [Priority]: [Concise title]
 
-**Component:** [C##: Component Name from component-manager]
-**Location:** `file.ts:lineStart-lineEnd`
-**Estimated Effort:** [X]h
-**Complexity:** [CRITICAL | HIGH | MEDIUM | LOW]
-**Regression Risk:** [HIGH | MEDIUM | LOW]
+**Component:** [C##: Component Name from component-manager] **Location:**
+`file.ts:lineStart-lineEnd` **Estimated Effort:** [X]h **Complexity:** [CRITICAL | HIGH | MEDIUM |
+LOW] **Regression Risk:** [HIGH | MEDIUM | LOW]
 
-**Description:**
-[2-4 sentences explaining what needs to be done and why it matters]
+**Description:** [2-4 sentences explaining what needs to be done and why it matters]
 
 **Regression Risk Details:**
 
@@ -361,14 +349,12 @@ Use this template when creating new enriched tech debt items:
 
 - `path/to/obsolete/file.ts` - Reason for deletion
 
-**Required Testing:**
-| Test Type | Validates AC | Description | Location |
-|-------------|--------------|-------------------------------------|-----------------------------------------------|
-| Unit | AC1, AC2 | [What this tests] | `tests/unit/...` |
-| Integration | AC3, AC4 | [What this tests] | `tests/integration/...` |
+| **Required Testing:** | Test Type               | Validates AC      | Description      | Location |
+| --------------------- | ----------------------- | ----------------- | ---------------- | -------- | ----------- | -------- | ---------- |
+| Unit                  | AC1, AC2                | [What this tests] | `tests/unit/...` |          | Integration | AC3, AC4 | [What this |
+| tests]                | `tests/integration/...` |
 
-**Blocking Dependencies:** [P0-001, P0-003, or "None"]
-**Blocks:** [P1-005, P2-012, or "None"]
+**Blocking Dependencies:** [P0-001, P0-003, or "None"] **Blocks:** [P1-005, P2-012, or "None"]
 
 **Prerequisites:**
 

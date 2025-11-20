@@ -1,6 +1,7 @@
 # Git Config Options for Parallel Claude Agents
 
-Git configuration options that control parallel agent behavior, worktree management, and resource limits. Compatible with git-worktree-runner (gtr) naming conventions.
+Git configuration options that control parallel agent behavior, worktree management, and resource
+limits. Compatible with git-worktree-runner (gtr) naming conventions.
 
 ---
 
@@ -31,13 +32,12 @@ git config --local gtr.tmux.mode manual        # Tmux launch mode
 
 ### `gtr.parallel.default`
 
-**Type:** Integer
-**Default:** `4`
-**Scope:** Local or global
+**Type:** Integer **Default:** `4` **Scope:** Local or global
 
 Default number of parallel agents to launch when not specified on command line.
 
 **Usage:**
+
 ```bash
 # Set default to 6 agents
 git config --local gtr.parallel.default 6
@@ -50,11 +50,13 @@ git config --local gtr.parallel.default 6
 ```
 
 **When to use:**
+
 - Set per-project based on typical workload
 - Larger projects → higher default
 - Resource-constrained systems → lower default
 
 **Examples:**
+
 ```bash
 # Small project with few concurrent tasks
 git config --local gtr.parallel.default 2
@@ -70,13 +72,12 @@ git config --global gtr.parallel.default 4
 
 ### `gtr.parallel.max`
 
-**Type:** Integer
-**Default:** `50`
-**Scope:** Local or global
+**Type:** Integer **Default:** `50` **Scope:** Local or global
 
 Maximum number of concurrent agents allowed. Prevents resource exhaustion.
 
 **Usage:**
+
 ```bash
 # Limit to 6 agents max
 git config --local gtr.parallel.max 6
@@ -88,16 +89,17 @@ git config --local gtr.parallel.max 6
 
 **Resource-based recommendations:**
 
-| System | Max Agents | Rationale |
-|--------|-----------|-----------|
-| 8GB RAM | 2-4 | Prevent memory exhaustion |
-| 16GB RAM | 4-8 | Moderate parallel work |
-| 32GB RAM | 8-16 | High parallel capacity |
-| 64GB+ RAM | 16-50 | Max throughput |
+| System    | Max Agents | Rationale                 |
+| --------- | ---------- | ------------------------- |
+| 8GB RAM   | 2-4        | Prevent memory exhaustion |
+| 16GB RAM  | 4-8        | Moderate parallel work    |
+| 32GB RAM  | 8-16       | High parallel capacity    |
+| 64GB+ RAM | 16-50      | Max throughput            |
 
 **Usage in find-next-task.sh:**
 
-If `gtr.parallel.max` is set, `find-next-task.sh` will refuse to select a new task when max concurrent agents are running:
+If `gtr.parallel.max` is set, `find-next-task.sh` will refuse to select a new task when max
+concurrent agents are running:
 
 ```bash
 # Set max to 4
@@ -109,6 +111,7 @@ git config --local gtr.parallel.max 4
 ```
 
 **Examples:**
+
 ```bash
 # Laptop development
 git config --global gtr.parallel.max 4
@@ -124,13 +127,12 @@ git config --global gtr.parallel.max 6
 
 ### `gtr.parallel.stagger`
 
-**Type:** Integer (seconds)
-**Default:** `2`
-**Scope:** Local or global
+**Type:** Integer (seconds) **Default:** `2` **Scope:** Local or global
 
 Delay in seconds between launching each agent to prevent race conditions.
 
 **Usage:**
+
 ```bash
 # Increase stagger to 3 seconds
 git config --local gtr.parallel.stagger 3
@@ -144,17 +146,19 @@ git config --local gtr.parallel.stagger 3
 
 **Why stagger matters:**
 
-Without stagger, all agents run `find-next-task.sh` simultaneously and may select the same task before locks are created.
+Without stagger, all agents run `find-next-task.sh` simultaneously and may select the same task
+before locks are created.
 
 **Recommended values:**
 
-| Filesystem Speed | Stagger | Reason |
-|-----------------|---------|--------|
-| Fast SSD | 1-2s | Quick lock file creation |
-| Network mount | 3-5s | Slower lock propagation |
-| Slow HDD | 2-4s | Moderate I/O latency |
+| Filesystem Speed | Stagger | Reason                   |
+| ---------------- | ------- | ------------------------ |
+| Fast SSD         | 1-2s    | Quick lock file creation |
+| Network mount    | 3-5s    | Slower lock propagation  |
+| Slow HDD         | 2-4s    | Moderate I/O latency     |
 
 **Examples:**
+
 ```bash
 # Fast local SSD
 git config --local gtr.parallel.stagger 1
@@ -170,13 +174,12 @@ git config --local gtr.parallel.stagger 2
 
 ### `gtr.parallel.auto`
 
-**Type:** Boolean
-**Default:** `true`
-**Scope:** Local or global
+**Type:** Boolean **Default:** `true` **Scope:** Local or global
 
 Automatically launch Claude in each pane, or require manual launch.
 
 **Usage:**
+
 ```bash
 # Disable auto-launch
 git config --local gtr.parallel.auto false
@@ -187,12 +190,14 @@ git config --local gtr.parallel.auto false
 ```
 
 **When to disable:**
+
 - Want to review task list before launching
 - Need to prepare environment variables first
 - Debugging worktree setup issues
 - Running pre-flight checks
 
 **Examples:**
+
 ```bash
 # Auto-launch enabled (default)
 git config --local gtr.parallel.auto true
@@ -207,13 +212,12 @@ git config --local gtr.parallel.auto false
 
 ### `gtr.worktree.path`
 
-**Type:** String (path)
-**Default:** `./.worktrees`
-**Scope:** Local or global
+**Type:** String (path) **Default:** `./.worktrees` **Scope:** Local or global
 
 Base directory for creating task worktrees.
 
 **Usage:**
+
 ```bash
 # Use different path
 git config --local gtr.worktree.path "../worktrees"
@@ -240,6 +244,7 @@ gtr.worktree.path = "/tmp/worktrees"
 ```
 
 **Examples:**
+
 ```bash
 # Keep worktrees with main repo (default)
 git config --local gtr.worktree.path "./.worktrees"
@@ -256,13 +261,13 @@ git config --local gtr.worktree.path "/tmp/worktrees"
 
 ### `claude.worktree.autoInstall`
 
-**Type:** Boolean
-**Default:** `true`
-**Scope:** Local or global
+**Type:** Boolean **Default:** `true` **Scope:** Local or global
 
-Automatically install dependencies when creating a worktree. When disabled, dependency installation is skipped unless explicitly requested.
+Automatically install dependencies when creating a worktree. When disabled, dependency installation
+is skipped unless explicitly requested.
 
 **Usage:**
+
 ```bash
 # Disable auto-install for this project
 git config --local claude.worktree.autoInstall false
@@ -275,18 +280,22 @@ git config --local claude.worktree.autoInstall false
 ```
 
 **When to disable:**
+
 - Working on documentation-only changes
 - Using CI-centric workflow (rely on CI for builds)
 - Testing worktree creation speed
 - Working in environment without network access
 
 **Benefits of pnpm with worktrees:**
-- **Global store with symlinks** - pnpm maintains a single content-addressable store at `~/.pnpm-store`
+
+- **Global store with symlinks** - pnpm maintains a single content-addressable store at
+  `~/.pnpm-store`
 - **No duplicate installs** - Worktrees symlink to global store instead of copying node_modules
 - **Instant installs** - If packages already in global store, install is nearly instant
 - **Disk space savings** - Multiple worktrees share the same physical packages
 
 **Examples:**
+
 ```bash
 # Default: auto-install enabled
 git config --local claude.worktree.autoInstall true
@@ -309,13 +318,13 @@ git config --local claude.worktree.autoInstall true
 
 ### `claude.hook.postCreate`
 
-**Type:** String (shell command)
-**Default:** `""`
-**Scope:** Local or global
+**Type:** String (shell command) **Default:** `""` **Scope:** Local or global
 
-Execute custom shell command after worktree creation completes. Similar to GTR's hook system, but Claude-specific.
+Execute custom shell command after worktree creation completes. Similar to GTR's hook system, but
+Claude-specific.
 
 **Usage:**
+
 ```bash
 # Simple hook: show message
 git config --local claude.hook.postCreate 'echo "Worktree ready for $TASK_ID"'
@@ -328,6 +337,7 @@ git config --local claude.hook.postCreate '~/.claude/hooks/post-create.sh'
 ```
 
 **Available environment variables:**
+
 ```bash
 WORKTREE_PATH       # Relative path (e.g., ./.worktrees/T0001)
 WORKTREE_ABS_PATH   # Absolute path (e.g., /Users/you/project/.worktrees/T0001)
@@ -339,6 +349,7 @@ IS_MONOREPO         # "true" or "false"
 ```
 
 **Example hook script** (`~/.claude/hooks/post-create.sh`):
+
 ```bash
 #!/bin/bash
 # Post-create hook example
@@ -361,6 +372,7 @@ fi
 ```
 
 **Common use cases:**
+
 - Run initial build or tests
 - Copy environment files (.env)
 - Notify team via Slack/Discord
@@ -368,11 +380,13 @@ fi
 - Warm up caches
 
 **Error handling:**
+
 - Hook failures are non-fatal - worktree is still created
 - Exit code and error message are displayed
 - Worktree remains usable even if hook fails
 
 **Examples:**
+
 ```bash
 # Build after creation (monorepo)
 git config --local claude.hook.postCreate 'pnpm build'
@@ -410,18 +424,18 @@ git config --local claude.hook.postCreate '~/.claude/hooks/post-create.sh'
 
 ### `gtr.tmux.enabled` (Future)
 
-**Type:** Boolean
-**Default:** `false`
-**Scope:** Local or global
+**Type:** Boolean **Default:** `false` **Scope:** Local or global
 
 Enable tmux-specific integrations (currently read but not actively used).
 
 **Usage:**
+
 ```bash
 git config --local gtr.tmux.enabled true
 ```
 
 **Future planned features:**
+
 - Auto-create tmux window after worktree creation
 - Launch Claude in new tmux pane automatically
 - Integrate with tmux session management
@@ -430,14 +444,13 @@ git config --local gtr.tmux.enabled true
 
 ### `gtr.tmux.mode` (Future)
 
-**Type:** String
-**Default:** `manual`
-**Scope:** Local or global
-**Values:** `manual`, `new-pane`, `new-window`, `background`
+**Type:** String **Default:** `manual` **Scope:** Local or global **Values:** `manual`, `new-pane`,
+`new-window`, `background`
 
 Control how worktrees integrate with tmux (currently read but not actively used).
 
 **Planned modes:**
+
 - `manual` - No automatic tmux integration
 - `new-pane` - Open worktree in new pane
 - `new-window` - Open worktree in new window
@@ -450,12 +463,14 @@ Control how worktrees integrate with tmux (currently read but not actively used)
 ### Local vs Global
 
 **Local config** (per-project):
+
 ```bash
 # Applies only to current repository
 git config --local gtr.parallel.max 10
 ```
 
 **Global config** (user-wide defaults):
+
 ```bash
 # Applies to all repositories for current user
 git config --global gtr.parallel.default 4
@@ -466,6 +481,7 @@ git config --global gtr.parallel.default 4
 ### Recommended Setup
 
 **Global defaults** (in `~/.gitconfig`):
+
 ```bash
 git config --global gtr.parallel.default 4
 git config --global gtr.parallel.max 8
@@ -474,6 +490,7 @@ git config --global gtr.parallel.auto true
 ```
 
 **Project-specific overrides**:
+
 ```bash
 # Large monorepo
 cd ~/code/enterprise-monorepo
@@ -505,6 +522,7 @@ git config --local gtr.parallel.max 4
 ```
 
 **Result:**
+
 - Default 8 agents per launch
 - Can scale up to 20 if needed
 - Fast stagger (1s) on SSD
@@ -525,6 +543,7 @@ git config --local gtr.parallel.max 4
 ```
 
 **Result:**
+
 - Conservative 2 agents default
 - Hard limit at 4 agents
 - Slower stagger for safety
@@ -545,6 +564,7 @@ git config --local gtr.parallel.max 4
 ```
 
 **Result:**
+
 - Standard agent count
 - Panes created but not auto-launched
 - User must manually start Claude
@@ -555,16 +575,19 @@ git config --local gtr.parallel.max 4
 ## Checking Current Configuration
 
 ### View all gtr settings:
+
 ```bash
 git config --get-regexp gtr
 ```
 
 ### View specific setting:
+
 ```bash
 git config --get gtr.parallel.max
 ```
 
 ### View with scope:
+
 ```bash
 # Local only
 git config --local --get gtr.parallel.max
@@ -578,16 +601,19 @@ git config --global --get gtr.parallel.max
 ## Unsetting Configuration
 
 ### Remove local setting:
+
 ```bash
 git config --local --unset gtr.parallel.max
 ```
 
 ### Remove global setting:
+
 ```bash
 git config --global --unset gtr.parallel.default
 ```
 
 ### Remove entire section:
+
 ```bash
 git config --remove-section gtr.parallel
 ```
@@ -601,11 +627,13 @@ git config --remove-section gtr.parallel
 **Cause:** `gtr.parallel.max` limit hit
 
 **Check:**
+
 ```bash
 git config --get gtr.parallel.max
 ```
 
 **Fix:**
+
 ```bash
 # Increase limit
 git config --local gtr.parallel.max 12
@@ -619,6 +647,7 @@ git config --local --unset gtr.parallel.max
 **Cause:** Stagger delay too short
 
 **Fix:**
+
 ```bash
 # Increase stagger delay
 git config --local gtr.parallel.stagger 3
@@ -629,6 +658,7 @@ git config --local gtr.parallel.stagger 3
 **Cause:** High `gtr.parallel.default` value
 
 **Fix:**
+
 ```bash
 # Lower default
 git config --local gtr.parallel.default 2
@@ -646,10 +676,12 @@ git config --local gtr.parallel.default 2
 
 2. **find-next-task.sh**
    - Reads: `gtr.parallel.max`
-   - Purpose: Enforce max parallel agents by counting active PIDs and refusing new tasks when limit reached
+   - Purpose: Enforce max parallel agents by counting active PIDs and refusing new tasks when limit
+     reached
 
 3. **create-worktree.sh**
-   - Reads: `gtr.worktree.path`, `gtr.tmux.enabled`, `gtr.tmux.mode`, `claude.worktree.autoInstall`, `claude.hook.postCreate`
+   - Reads: `gtr.worktree.path`, `gtr.tmux.enabled`, `gtr.tmux.mode`, `claude.worktree.autoInstall`,
+     `claude.hook.postCreate`
    - Purpose: Configure worktree location, dependency installation behavior, and post-creation hooks
 
 ---
@@ -663,8 +695,10 @@ git config --local gtr.parallel.default 2
 5. **Monitor first runs** with task monitor (`Ctrl-g M`)
 6. **Document project settings** in README for team
 7. **Use pnpm for worktrees** - Global store with symlinks provides best performance
-8. **Test hooks thoroughly** - Ensure post-create hooks are idempotent and handle failures gracefully
-9. **Disable auto-install for docs** - Set `claude.worktree.autoInstall=false` for documentation-only projects
+8. **Test hooks thoroughly** - Ensure post-create hooks are idempotent and handle failures
+   gracefully
+9. **Disable auto-install for docs** - Set `claude.worktree.autoInstall=false` for
+   documentation-only projects
 10. **Use --no-install for speed** - Skip installation when testing worktree creation workflows
 
 ---

@@ -1,10 +1,13 @@
 # Task Frontmatter Formatting Guide
 
-This document defines the standard frontmatter structure and formatting rules for all task-streams task files.
+This document defines the standard frontmatter structure and formatting rules for all task-streams
+task files.
 
 ## Overview
 
-All task files in the task-streams system use a consistent YAML frontmatter block at the beginning of the file. This frontmatter contains metadata that enables task tracking, prioritization, and workflow management.
+All task files in the task-streams system use a consistent YAML frontmatter block at the beginning
+of the file. This frontmatter contains metadata that enables task tracking, prioritization, and
+workflow management.
 
 ## Frontmatter Structure
 
@@ -29,6 +32,7 @@ notes: # Optional - Additional notes (filled by task manager)
 ## Field Definitions
 
 ### id (Required)
+
 - **Format**: `T####` where `####` is a zero-padded 4-digit number
 - **Range**: `T0001` to `T9999`
 - **Example**: `T0042`, `T1234`
@@ -36,6 +40,7 @@ notes: # Optional - Additional notes (filled by task manager)
 - **Validation**: Must match regex `^T\d{4}$`
 
 ### title (Required)
+
 - **Format**: Brief, descriptive text (typically 5-10 words)
 - **Guidelines**:
   - Use imperative mood ("Fix bug", not "Fixes bug" or "Fixed bug")
@@ -49,6 +54,7 @@ notes: # Optional - Additional notes (filled by task manager)
   - ✗ "Authentication" (not descriptive enough)
 
 ### priority (Required)
+
 - **Format**: `P#` where `#` is 0-3
 - **Valid Values**:
   - `P0`: Critical/Emergency - Production down, data loss, security breach
@@ -59,6 +65,7 @@ notes: # Optional - Additional notes (filled by task manager)
 - **Validation**: Must be one of `P0`, `P1`, `P2`, `P3`
 
 ### component (Required)
+
 - **Format**: `C##, Component Name` where `##` is a zero-padded 2-digit number
 - **Pattern**: Code followed by comma, space, then component name
 - **Range**: `C00` to `C99`
@@ -71,6 +78,7 @@ notes: # Optional - Additional notes (filled by task manager)
 - **Validation**: Must match regex `^C\d{2}, .+$`
 
 ### status (Required)
+
 - **Format**: ALL_CAPS keyword
 - **Valid Values**:
   - `READY`: Task is ready to be worked on, no blockers
@@ -81,6 +89,7 @@ notes: # Optional - Additional notes (filled by task manager)
 - **Validation**: Must be one of the four valid values
 
 ### created (Required)
+
 - **Format**: ISO 8601 timestamp with UTC timezone
 - **Pattern**: `YYYY-MM-DDTHH:MM:SSZ`
 - **Example**: `2025-11-07T10:30:00Z`
@@ -92,6 +101,7 @@ notes: # Optional - Additional notes (filled by task manager)
 - **Validation**: Must match ISO 8601 format
 
 ### source (Required)
+
 - **Format**: Relative or absolute file path
 - **Guidelines**:
   - Use forward slashes `/` even on Windows
@@ -105,6 +115,7 @@ notes: # Optional - Additional notes (filled by task manager)
   - `/absolute/path/to/document.md`
 
 ### location (Required)
+
 - **Format**: Comma-separated list of file paths with optional line ranges
 - **Pattern**: `path/to/file.ext:start-end` or `path/to/file.ext`
 - **Guidelines**:
@@ -119,6 +130,7 @@ notes: # Optional - Additional notes (filled by task manager)
   - `docs/README.md` (no line range for documentation)
 
 ### estimatedEffort (Required)
+
 - **Format**: Time estimate as human-readable string
 - **Guidelines**:
   - Use hours, days, or weeks as appropriate
@@ -134,6 +146,7 @@ notes: # Optional - Additional notes (filled by task manager)
 - **Validation**: Must be a non-empty string
 
 ### complexity (Required)
+
 - **Format**: Single word descriptor
 - **Valid Values**:
   - `Low`: Simple changes, minimal risk, straightforward implementation
@@ -144,6 +157,7 @@ notes: # Optional - Additional notes (filled by task manager)
 - **Validation**: Must be one of the four valid values (case-insensitive)
 
 ### regressionRisk (Required)
+
 - **Format**: Single word descriptor
 - **Valid Values**:
   - `Low`: Minimal chance of breaking existing functionality
@@ -154,6 +168,7 @@ notes: # Optional - Additional notes (filled by task manager)
 - **Validation**: Must be one of the four valid values (case-insensitive)
 
 ### completed (Optional)
+
 - **Format**: ISO 8601 timestamp with UTC timezone
 - **Pattern**: `YYYY-MM-DDTHH:MM:SSZ`
 - **Example**: `2025-11-07T16:45:00Z`
@@ -167,6 +182,7 @@ notes: # Optional - Additional notes (filled by task manager)
 - **Default**: Empty/not present until task completion
 
 ### notes (Optional)
+
 - **Format**: Free-form text string
 - **Guidelines**:
   - Use for additional context, observations, or updates
@@ -183,6 +199,7 @@ notes: # Optional - Additional notes (filled by task manager)
 ## Formatting Rules
 
 ### YAML Syntax
+
 - Use standard YAML syntax
 - No quotes needed for simple strings
 - Use quotes for strings containing special characters (`:`, `#`, etc.)
@@ -190,13 +207,16 @@ notes: # Optional - Additional notes (filled by task manager)
 - Use two-space indentation (when nesting, though frontmatter is flat)
 
 ### Whitespace
+
 - Start and end with `---` delimiter lines
 - No blank lines between fields
 - Single space after colon separator
 - No trailing whitespace
 
 ### Ordering
+
 Always use this field order:
+
 1. id
 2. title
 3. priority
@@ -214,6 +234,7 @@ Always use this field order:
 ## Complete Example
 
 ### With Required Fields Only
+
 ```yaml
 ---
 id: T0123
@@ -231,6 +252,7 @@ regressionRisk: Medium
 ```
 
 ### With Optional Fields (Completed Task)
+
 ```yaml
 ---
 id: T0123
@@ -342,16 +364,18 @@ All template files reference this formatter:
 - `generic.template.md`
 
 Each template includes:
-```markdown
+
+````markdown
 ## <!-- TASK OUTPUT FRONTMATTER STRUCTURE -->
 
 See @shared-frontmatter.md for complete formatting details and validation rules.
 
 ```yaml
 ---
-...
 ---
 ```
+````
+
 ```
 
 ### Required Fields (Always Present)
@@ -394,3 +418,4 @@ See `scripts/shared-formatter.ts` for implementation details.
   - Standardized frontmatter structure across all templates
   - Defined validation rules and formats
   - Created shared-formatter.ts script
+```

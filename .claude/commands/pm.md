@@ -9,6 +9,7 @@ Run the task orchestrator to find the next ready task and start working on it.
 ## Instructions
 
 1. **Find Next Task**: Run the task orchestrator script:
+
    ```bash
    cd /Users/nathanvale/code/MPCU-Build-and-Deliver/apps/migration-cli && bun scripts/task-orchestrator.ts --next
    ```
@@ -85,6 +86,7 @@ Claude: Marks T0029 as complete
 ## Context Awareness
 
 This command is designed for the VTM migration-cli project which uses:
+
 - Bun runtime
 - Vitest for testing
 - TDD workflow

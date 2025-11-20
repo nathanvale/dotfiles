@@ -7,7 +7,8 @@ tags: [task-management, reviews, task-creation]
 
 Decomposes review findings into individual task files in a worktree.
 
-Use this when you have a review document (security audit, code review, technical debt assessment, etc.) that needs to be broken down into actionable tasks.
+Use this when you have a review document (security audit, code review, technical debt assessment,
+etc.) that needs to be broken down into actionable tasks.
 
 ## Your Responsibilities
 
@@ -25,16 +26,19 @@ Use this when you have a review document (security audit, code review, technical
 Ask the user for the review source using these questions:
 
 **Question 1: Review Source**
+
 - "Do you have a review file/task to reference, or would you like to paste the review content?"
 - Options:
   - **Reference a file/task** (e.g., "docs/reviews/security-audit-2024.md" or "MPCU-0010")
   - **Paste content directly** (user provides review text)
 
 **Question 2: Review Name** (for branch/PR naming)
+
 - "What should I call this review?"
 - Examples: "security-audit", "code-review-q4", "tech-debt-assessment"
 
 **Auto-Detection** (no questions needed):
+
 - Task directory: Auto-detected using `get_task_directory`
 - Task prefix: Auto-detected using `detect_task_prefix` (analyzes existing tasks)
 
@@ -70,7 +74,8 @@ cd ".worktrees/${WORKTREE_NAME}"
 echo "✅ Created worktree: .worktrees/${WORKTREE_NAME}"
 ```
 
-**Important:** This does NOT create a lock file. Review task generation is independent of the task consumption workflow.
+**Important:** This does NOT create a lock file. Review task generation is independent of the task
+consumption workflow.
 
 ---
 
@@ -91,6 +96,7 @@ Store the pasted content in a variable for processing.
 ### Parse Review Structure
 
 Look for common review patterns:
+
 - **Findings/Issues**: Numbered lists, bullet points, sections
 - **Severity/Priority**: High/Medium/Low, P0/P1/P2/P3
 - **Categories**: Security, Performance, Code Quality, etc.
@@ -109,6 +115,7 @@ For each finding/issue in the review, create a task file:
 ```
 
 Examples:
+
 - `MPCU-0100-fix-sql-injection-vulnerability.md`
 - `MPCU-0101-add-input-validation-to-api-endpoints.md`
 - `MPCU-0102-implement-rate-limiting.md`
@@ -148,8 +155,7 @@ category: <security/performance/code-quality/etc>
 
 ## Review Reference
 
-Source: `<review-file-path or "Direct Input">`
-Finding: `<Finding number/section from review>`
+Source: `<review-file-path or "Direct Input">` Finding: `<Finding number/section from review>`
 
 ---
 
@@ -159,6 +165,7 @@ Finding: `<Finding number/section from review>`
 ### Priority Mapping:
 
 Map review severity to task priority:
+
 - **Critical/High** → `P0` (immediate action)
 - **Medium** → `P1` (high priority)
 - **Low** → `P2` (normal priority)
@@ -192,6 +199,7 @@ done
 ```
 
 **Note:**
+
 - This is a manual process until TaskDock review functionality is implemented
 - TaskDock v0.2+ will include `taskdock review create` for automated task generation
 - For now, ensure task numbering doesn't conflict with existing tasks
@@ -251,16 +259,14 @@ Return to user with:
 ```markdown
 ## ✅ Review Tasks Generated
 
-**Worktree:** `.worktrees/${WORKTREE_NAME}`
-**Branch:** `${BRANCH_NAME}`
-**Tasks Created:** ${TASK_COUNT}
+**Worktree:** `.worktrees/${WORKTREE_NAME}` **Branch:** `${BRANCH_NAME}` **Tasks Created:**
+${TASK_COUNT}
 
 ### Generated Tasks:
 
 1. **MPCU-XXXX**: <title> [P0]
 2. **MPCU-XXXX**: <title> [P1]
-3. **MPCU-XXXX**: <title> [P2]
-...
+3. **MPCU-XXXX**: <title> [P2] ...
 
 ### Pull Request
 
@@ -270,7 +276,8 @@ Return to user with:
 
 1. **Review the PR** - Check that tasks accurately reflect the review findings
 2. **Adjust if needed** - Edit task files in the worktree if priorities/details need changes
-3. **Merge when ready** - Run `/merge <pr-number>` (calls `taskdock merge pr <pr-number>`) to add tasks to main
+3. **Merge when ready** - Run `/merge <pr-number>` (calls `taskdock merge pr <pr-number>`) to add
+   tasks to main
 4. **Start working** - Run `/next` (calls `taskdock next`) to pick up the highest priority task
 
 ### Worktree Info
@@ -407,5 +414,7 @@ You:
 - **Task numbering**: Manual for now - TaskDock v0.2+ will include `taskdock review create`
 - **Flexible input**: Supports file references or direct paste
 - **Interactive**: Asks questions to gather all needed information
-- **Works in Claude Code and VS Code Copilot**: Uses standard prompting, falls back to text prompts if AskUserQuestion unavailable
-- **TaskDock integration**: Uses `taskdock config` for task directory/prefix, `taskdock merge` for PR merging
+- **Works in Claude Code and VS Code Copilot**: Uses standard prompting, falls back to text prompts
+  if AskUserQuestion unavailable
+- **TaskDock integration**: Uses `taskdock config` for task directory/prefix, `taskdock merge` for
+  PR merging

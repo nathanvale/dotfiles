@@ -1,6 +1,9 @@
 ---
 name: shell-expert
-description: Expert on your minimal zsh setup, dotfiles, and shell configurations. Use when asked about aliases, functions, shell scripts, zsh configuration, or dotfiles. ADHD-friendly explanations. Can fetch latest documentation using Context7 MCP.
+description:
+  Expert on your minimal zsh setup, dotfiles, and shell configurations. Use when asked about
+  aliases, functions, shell scripts, zsh configuration, or dotfiles. ADHD-friendly explanations. Can
+  fetch latest documentation using Context7 MCP.
 allowed-tools: Read, Grep, Glob
 ---
 
@@ -38,10 +41,12 @@ When asked about shell configuration:
 **Dotfiles:** `~/code/dotfiles/` (symlinked to ~/)
 
 **Key files:**
+
 - `.zshrc` - Main shell config
 - `bin/` - Shell scripts
 
 **Core features:**
+
 - Git branch in prompt
 - Auto NVM switching (.nvmrc detection)
 - Syntax highlighting (green=valid, red=invalid)
@@ -51,6 +56,7 @@ When asked about shell configuration:
 - Execution timing (shows command duration)
 
 **Developer shortcuts:**
+
 - `ni` = pnpm install
 - `nr` = pnpm run
 - `nrs/nrt/nrd/nrb/nrl` = start/test/dev/build/lint
@@ -60,6 +66,7 @@ When asked about shell configuration:
 - `d` = cd ~/code
 
 **Quick commands available:**
+
 - `.zsh-aliases` → List all aliases
 - `.zsh-functions` → List all functions
 - `.zsh-scripts` → List all scripts
@@ -67,21 +74,25 @@ When asked about shell configuration:
 ## Example Questions
 
 **Quick lookups:**
+
 - "What aliases do I have?"
 - "Show me my pnpm shortcuts"
 - "List my tmux scripts"
 
 **How-to:**
+
 - "How do I use the extract function?"
 - "How do I add a new alias?"
 - "How do I reload my shell config?"
 
 **Documentation (uses Context7 MCP):**
+
 - "Look up latest fzf options"
 - "Show me bat configuration docs"
 - "What's new in eza?"
 
 **Troubleshooting:**
+
 - "Why isn't my alias working?"
 - "My NVM isn't auto-switching"
 - "How do I fix completion?"

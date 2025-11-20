@@ -2,7 +2,9 @@
 
 **Token-efficient graph navigation for AI agents**
 
-Navigate PROJECT_INDEX.json to analyze code dependencies, find dead code, detect circular dependencies, and trace error propagation paths—all without loading 20K-50K tokens of code into context.
+Navigate PROJECT_INDEX.json to analyze code dependencies, find dead code, detect circular
+dependencies, and trace error propagation paths—all without loading 20K-50K tokens of code into
+context.
 
 ## Quick Start
 
@@ -73,6 +75,7 @@ python3 scripts/cross-domain.py csv-processing --json
 ```
 
 **Expected Output**:
+
 - isNonEmpty has 9 direct callers
 - 13 total affected functions (includes indirect)
 - Minimal external dependencies (good isolation)
@@ -100,6 +103,7 @@ bash scripts/find-callers.sh accountRepository --json
 ```
 
 **Expected Output**:
+
 - 4 circular dependencies (menu loop, self-recursion)
 - 51+ dead code candidates
 - Verification shows true dead code vs alternative implementations
@@ -129,6 +133,7 @@ bash scripts/find-calls.sh parseNumber --json
 ```
 
 **Expected Output**:
+
 - 1 caller (extractWorker)
 - 3 dependencies (parseDate, parseBoolean, parseNumber)
 - All dependencies are leaf utilities (no further deps)
@@ -153,6 +158,7 @@ python3 scripts/blast-radius.py executeCommand --json
 ```
 
 **Expected Output**:
+
 - Depth 1: 7 direct callers
 - Depth 2: 10 total affected functions
 - Depth 3: 12 total affected functions
@@ -180,6 +186,7 @@ python3 scripts/cross-domain.py migration-pipelines --json
 ```
 
 **Expected Output**:
+
 - csv-processing: 1 external dependency (core-cli → isNonEmpty)
 - core-cli: Central hub (many domains depend on it)
 - migration-pipelines: 3 external dependencies
@@ -208,11 +215,13 @@ python3 scripts/cycles.py --json | grep -E "showError|isNonEmpty|executeCommand"
 ```
 
 **Expected Output**:
+
 - showError: 19 callers (critical error handler)
 - isNonEmpty: 9 callers (core validation utility)
 - executeCommand: 7 callers (CLI dispatcher)
 
 **Risk Ranking**:
+
 1. showError - HIGH (19 callers, error path)
 2. isNonEmpty - MEDIUM (9 callers, validation)
 3. executeCommand - MEDIUM (7 callers, dispatcher)
@@ -240,11 +249,13 @@ python3 scripts/cycles.py --json
 ```
 
 **Expected Output**:
+
 - 10 hotspot functions needing priority test coverage
 - 51+ dead code candidates (potentially zero tests)
 - 4 circular dependencies (need integration tests)
 
 **Test Plan**:
+
 1. **Priority 1**: Hotspot functions (19 callers for showError)
 2. **Priority 2**: Functions in circular dependencies (menu loop)
 3. **Priority 3**: Dead code verification (are they really unused?)
@@ -255,16 +266,16 @@ python3 scripts/cycles.py --json
 
 ## Available Queries
 
-| Query | Purpose | Performance | Tool |
-|-------|---------|-------------|------|
-| **hotspots** | Most-connected functions | ~100ms | Bash/jq |
-| **find-callers** | Direct reverse dependencies | ~20ms | Bash/jq |
-| **find-calls** | Direct forward dependencies | ~20ms | Bash/jq |
-| **blast-radius** | Transitive callers (BFS) | ~300ms | Python |
-| **trace-to-error** | Call stacks to file:line | ~400ms | Python |
-| **cycles** | Circular dependencies (DFS) | ~500ms | Python |
-| **dead-code** | Functions never called | ~200ms | Bash/jq |
-| **cross-domain** | External dependencies | ~150ms | Python |
+| Query              | Purpose                     | Performance | Tool    |
+| ------------------ | --------------------------- | ----------- | ------- |
+| **hotspots**       | Most-connected functions    | ~100ms      | Bash/jq |
+| **find-callers**   | Direct reverse dependencies | ~20ms       | Bash/jq |
+| **find-calls**     | Direct forward dependencies | ~20ms       | Bash/jq |
+| **blast-radius**   | Transitive callers (BFS)    | ~300ms      | Python  |
+| **trace-to-error** | Call stacks to file:line    | ~400ms      | Python  |
+| **cycles**         | Circular dependencies (DFS) | ~500ms      | Python  |
+| **dead-code**      | Functions never called      | ~200ms      | Bash/jq |
+| **cross-domain**   | External dependencies       | ~150ms      | Python  |
 
 ---
 
@@ -274,23 +285,22 @@ All queries return **JSON** with consistent structure:
 
 ```json
 {
-  "status": "success",
   "query": "blast-radius",
-  "target": "parseDate",
-  "results": [
-    {"function": "mapRow", "file": "src/parser.ts", "line": 272, "depth": 1}
-  ],
-  "summary": {"total": 47, "max_depth": 3}
+  "results": [{ "depth": 1, "file": "src/parser.ts", "function": "mapRow", "line": 272 }],
+  "status": "success",
+  "summary": { "max_depth": 3, "total": 47 },
+  "target": "parseDate"
 }
 ```
 
 **Error Format**:
+
 ```json
 {
-  "status": "error",
   "error": "Function 'parsDate' not found",
-  "suggestions": ["parseDate", "parseData"],
-  "hint": "Use 'function-lookup' query to search all domains"
+  "hint": "Use 'function-lookup' query to search all domains",
+  "status": "error",
+  "suggestions": ["parseDate", "parseData"]
 }
 ```
 
@@ -298,9 +308,11 @@ All queries return **JSON** with consistent structure:
 
 ## Performance Characteristics
 
-See @performance.md for detailed performance data, optimization strategies, and scalability analysis.
+See @performance.md for detailed performance data, optimization strategies, and scalability
+analysis.
 
 **Quick Reference**:
+
 - Simple queries (find-callers, hotspots): ~20-200ms
 - Complex queries (blast-radius, cycles): ~300-1000ms
 - Token savings: 50-90% vs reading full files
@@ -310,27 +322,35 @@ See @performance.md for detailed performance data, optimization strategies, and 
 ## Common Workflows
 
 ### Debug Workflow
+
 ```
 trace-to-error (file:line) → blast-radius → find-calls
 ```
+
 **Use Case**: "I have an error, how did execution get here and what's affected?"
 
 ### Refactor Workflow
+
 ```
 hotspots → blast-radius → cross-domain
 ```
+
 **Use Case**: "What's safe to refactor and what has high change risk?"
 
 ### Cleanup Workflow
+
 ```
 cycles → dead-code → find-callers (verify)
 ```
+
 **Use Case**: "Find circular dependencies and unused code to remove"
 
 ### Test Planning Workflow
+
 ```
 hotspots → dead-code → cycles
 ```
+
 **Use Case**: "Where should I focus test coverage efforts?"
 
 ---
@@ -341,14 +361,15 @@ This skill is designed for **AI agents** to query deterministically:
 
 ```json
 {
-  "query": "blast-radius",
-  "target": "parseDate",
   "domain": "csv-processing",
-  "options": {"depth": 5, "limit": 100}
+  "options": { "depth": 5, "limit": 100 },
+  "query": "blast-radius",
+  "target": "parseDate"
 }
 ```
 
 **Agent Benefits**:
+
 - 📉 **50-90% token reduction** vs reading full files
 - ⚡ **<2s response time** for all queries
 - 🎯 **Exact file:line references** for targeted reads
@@ -361,6 +382,7 @@ This skill is designed for **AI agents** to query deterministically:
 See @error-handling.md for complete error patterns and recovery strategies.
 
 **Quick Reference**:
+
 - All queries return structured JSON errors with helpful hints
 - Common errors: PROJECT_INDEX.json missing, function not found, domain not found
 - Recovery guidance provided in `hint` field
@@ -394,11 +416,13 @@ index-graph-navigator/
 ## Token Efficiency
 
 **Without this skill** (reading code directly):
+
 - Read 20-50 files to understand call graph: **20K-50K tokens**
 - Analyze dependencies manually: **High cognitive load**
 - Risk of missing indirect dependencies
 
 **With this skill** (query-based navigation):
+
 - Run 1-3 queries to get exact information: **200-500 tokens**
 - JSON output ready to parse: **Low cognitive load**
 - Complete transitive closure (no missed dependencies)

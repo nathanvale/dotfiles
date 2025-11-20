@@ -1,47 +1,61 @@
 ---
 name: directory-handling
-description: Expert guidance for reliable bash script directory navigation and path handling. Use when writing new bash scripts, reviewing existing scripts, debugging directory-related failures, or when mentioned 'directory handling', 'bash paths', 'cd errors', 'script location', or 'git root'. Provides deterministic patterns to eliminate silent failures from unhandled cd, missing set -e, and path resolution issues.
+description:
+  Expert guidance for reliable bash script directory navigation and path handling. Use when writing
+  new bash scripts, reviewing existing scripts, debugging directory-related failures, or when
+  mentioned 'directory handling', 'bash paths', 'cd errors', 'script location', or 'git root'.
+  Provides deterministic patterns to eliminate silent failures from unhandled cd, missing set -e,
+  and path resolution issues.
 ---
 
 # Directory Handling Best Practices
 
-Provides expert guidance for writing reliable bash scripts with deterministic directory navigation and path handling. This skill eliminates entire classes of failures from unhandled `cd` calls, missing error handling, and incorrect path resolution.
+Provides expert guidance for writing reliable bash scripts with deterministic directory navigation
+and path handling. This skill eliminates entire classes of failures from unhandled `cd` calls,
+missing error handling, and incorrect path resolution.
 
 ## When to Use This Skill
 
 Trigger this skill proactively when:
+
 - Writing new bash scripts that navigate directories
 - Reviewing bash scripts for reliability issues
 - Debugging directory-related failures or "command not found" errors
 - Refactoring scripts with multiple `cd` calls
-- User mentions: "directory handling", "bash paths", "cd errors", "script location", "git root", "BASH_SOURCE", "set -e"
+- User mentions: "directory handling", "bash paths", "cd errors", "script location", "git root",
+  "BASH_SOURCE", "set -e"
 
 ## Core Principles
 
 ### 1. Always Use `set -e` for Error Handling
 
-Add `set -e` immediately after the shebang in all executable scripts (but NOT in library files that are sourced):
+Add `set -e` immediately after the shebang in all executable scripts (but NOT in library files that
+are sourced):
 
 ```bash
 #!/usr/bin/env bash
 set -e  # Exit immediately on error
 ```
 
-**Why**: Without `set -e`, scripts continue after errors, potentially executing destructive commands in wrong directories.
+**Why**: Without `set -e`, scripts continue after errors, potentially executing destructive commands
+in wrong directories.
 
-**Exception**: Library files (like `colour_log.sh`) that are sourced into other scripts should NOT use `set -e` as it affects the calling script.
+**Exception**: Library files (like `colour_log.sh`) that are sourced into other scripts should NOT
+use `set -e` as it affects the calling script.
 
 ### 2. Prefer Absolute Paths Over cd
 
 Use absolute paths instead of changing directories when possible:
 
 **Bad**:
+
 ```bash
 cd /some/directory
 cp foo.txt /output/
 ```
 
 **Good**:
+
 ```bash
 cp /some/directory/foo.txt /output/
 ```
@@ -62,6 +76,7 @@ cd "$GIT_ROOT" || exit 1
 ```
 
 **Why**:
+
 - `--show-superproject-working-tree` returns main repo path when in a worktree
 - Falls back to `--show-toplevel` when in main repo
 - Provides consistent base directory regardless of where script is run from
@@ -101,7 +116,9 @@ CONFIG_FILE="$GIT_ROOT/.config/settings.json"
 
 **When to use**: Scripts that work with git repositories, task files, or project structure.
 
-**Why worktree-safe**: If script runs from worktree (`.worktrees/T0042/`), this pattern ensures it still resolves to main repo path, not worktree path. Critical for:
+**Why worktree-safe**: If script runs from worktree (`.worktrees/T0042/`), this pattern ensures it
+still resolves to main repo path, not worktree path. Critical for:
+
 - Lock file coordination across parallel agents
 - Shared configuration access
 - Task file management
@@ -130,7 +147,8 @@ else
 fi
 ```
 
-**When to use**: Scripts that need to load configuration files or helper functions from known locations.
+**When to use**: Scripts that need to load configuration files or helper functions from known
+locations.
 
 **Examples**: parallel-claude.sh, hyperflow.sh
 
@@ -208,9 +226,12 @@ get_project_lock_dir() {
 LOCK_DIR=$(get_project_lock_dir)
 ```
 
-**When to use**: Creating reusable library functions that must work from both main repo and worktrees.
+**When to use**: Creating reusable library functions that must work from both main repo and
+worktrees.
 
-**Why critical**: Without `--show-superproject-working-tree`, this function returns different paths depending on whether called from main repo or worktree, breaking lock coordination and causing orphaned locks.
+**Why critical**: Without `--show-superproject-working-tree`, this function returns different paths
+depending on whether called from main repo or worktree, breaking lock coordination and causing
+orphaned locks.
 
 **Examples**: get-project-lock-dir.sh
 
@@ -221,6 +242,7 @@ This skill includes two automated scripts in `scripts/`:
 ### Audit Script: `audit-directory-handling.sh`
 
 Checks scripts for 7 violation types:
+
 1. Missing `set -e`
 2. Unhandled `cd` calls
 3. Uses `$0` instead of `BASH_SOURCE`
@@ -230,6 +252,7 @@ Checks scripts for 7 violation types:
 7. Git operations without root anchor
 
 **Usage**:
+
 ```bash
 scripts/audit-directory-handling.sh /path/to/project
 ```
@@ -241,6 +264,7 @@ scripts/audit-directory-handling.sh /path/to/project
 Automatically adds `set -e` to scripts missing it (skips library files).
 
 **Usage**:
+
 ```bash
 # Preview changes
 scripts/fix-directory-handling.sh --dry-run
@@ -370,6 +394,7 @@ get_lock_dir() {
 ```
 
 **Impact**:
+
 - Lock files not cleaned up after task completion
 - Parallel execution breaks (tasks appear locked forever)
 - State files diverge between main repo and worktrees
@@ -392,7 +417,8 @@ get_lock_dir() {
 # Result: Same lock directory = coordination works!
 ```
 
-**Real-world impact**: This exact bug blocked all parallel Claude Code agents because lock files weren't being cleaned up when tasks completed in worktrees. Fixed in commits 492f7e8 and 0ee9ce8.
+**Real-world impact**: This exact bug blocked all parallel Claude Code agents because lock files
+weren't being cleaned up when tasks completed in worktrees. Fixed in commits 492f7e8 and 0ee9ce8.
 
 ## Decision Tree
 
@@ -452,12 +478,14 @@ Detailed reference material is available in `references/`:
   - Examples of excellent scripts following best practices
 
 **When to read references**:
+
 - Detailed pattern examples needed
 - Understanding failure point impacts
 - Need production code examples
 - Researching specific anti-patterns
 
 **Search patterns for references**:
+
 ```bash
 # Find specific patterns
 grep -n "Pattern [0-9]:" references/best-practices.md
@@ -474,6 +502,7 @@ grep -n "Example [0-9]:" references/best-practices.md
 ### Writing a New Script
 
 1. **Start with worktree-safe template**:
+
    ```bash
    #!/usr/bin/env bash
    set -e
@@ -496,6 +525,7 @@ grep -n "Example [0-9]:" references/best-practices.md
 ### Reviewing Existing Scripts
 
 1. **Run audit** on directory or project:
+
    ```bash
    scripts/audit-directory-handling.sh /path/to/project
    ```
@@ -506,6 +536,7 @@ grep -n "Example [0-9]:" references/best-practices.md
    - Low: Uses `$0` instead of `BASH_SOURCE`
 
 3. **Apply automated fixes** where possible:
+
    ```bash
    scripts/fix-directory-handling.sh --dry-run  # Preview
    scripts/fix-directory-handling.sh            # Apply
@@ -516,12 +547,14 @@ grep -n "Example [0-9]:" references/best-practices.md
 ### Debugging Directory Issues
 
 When user reports:
+
 - "Command not found" errors
 - "File not found" in scripts
 - Silent failures
 - Incorrect file operations
 
 **Investigation steps**:
+
 1. Check if script has `set -e`
 2. Look for unhandled `cd` calls
 3. Verify anchor point is established
@@ -531,12 +564,14 @@ When user reports:
 ## Integration with Existing Workflows
 
 **Pre-commit hooks**:
+
 ```bash
 # Add to .git/hooks/pre-commit
 ~/.claude/skills/directory-handling/scripts/audit-directory-handling.sh --changed-files
 ```
 
 **CI/CD**:
+
 ```yaml
 # Add to GitHub Actions
 - name: Audit Directory Handling
@@ -544,6 +579,7 @@ When user reports:
 ```
 
 **Code review**:
+
 - Include audit results in PR descriptions
 - Link to specific violations in review comments
 - Reference pattern examples from best-practices.md
@@ -551,6 +587,7 @@ When user reports:
 ## Success Metrics
 
 Scripts following these practices will have:
+
 - ✅ Zero unhandled `cd` failures
 - ✅ Predictable behavior from any directory
 - ✅ Clear error messages when paths invalid
@@ -562,6 +599,7 @@ Scripts following these practices will have:
 ### Excellent: create-worktree.sh
 
 Demonstrates all best practices:
+
 - Uses `set -e` for error handling
 - Single `cd` to git root at start
 - Uses `git -C` to avoid additional `cd` calls
@@ -572,6 +610,7 @@ Demonstrates all best practices:
 ### Excellent: get-project-lock-dir.sh
 
 Demonstrates library pattern:
+
 - NO `set -e` (it's a library)
 - Returns absolute paths
 - No directory changes
@@ -580,9 +619,11 @@ Demonstrates library pattern:
 ### Excellent: parallel-claude.sh
 
 Demonstrates sourcing pattern:
+
 - Gets git root for config
 - Gets script directory for sourcing
 - Provides fallbacks for missing dependencies
 - Single `cd` to git root
 
-These examples are fully documented with line numbers and explanations in `references/best-practices.md`.
+These examples are fully documented with line numbers and explanations in
+`references/best-practices.md`.

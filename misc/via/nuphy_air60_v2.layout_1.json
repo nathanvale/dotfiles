@@ -1,7 +1,5 @@
 {
-  "name": "NuPhy Air60 V2",
-  "vendorProductId": 435499605,
-  "macros": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+  "encoders": [],
   "layers": [
     [
       "KC_ESC",
@@ -836,5 +834,7 @@
       "KC_TRNS"
     ]
   ],
-  "encoders": []
+  "macros": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+  "name": "NuPhy Air60 V2",
+  "vendorProductId": 435499605
 }

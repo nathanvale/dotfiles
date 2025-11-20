@@ -3,6 +3,7 @@
 **Complete reference for all supported query types**
 
 ## Table of Contents
+
 - [Query Type Index](#query-type-index)
 - [1. blast-radius](#1-blast-radius)
   - [Input Schema](#input-schema)
@@ -72,65 +73,70 @@
 **Use Case**: "What breaks if I refactor parseDate?"
 
 ### Input Schema
+
 ```json
 {
-  "query": "blast-radius",
-  "target": "parseDate",
   "domain": "csv-processing",
   "options": {
     "depth": 5,
     "limit": 100
-  }
+  },
+  "query": "blast-radius",
+  "target": "parseDate"
 }
 ```
 
-| Field | Required | Type | Description |
-|-------|----------|------|-------------|
-| query | ✅ | string | "blast-radius" |
-| target | ✅ | string | Function name to analyze |
-| domain | ✅ | string | Domain name from MANIFEST |
-| options.depth | ❌ | number | Max traversal depth (default: unlimited) |
-| options.limit | ❌ | number | Max results (default: 100) |
+| Field         | Required | Type   | Description                              |
+| ------------- | -------- | ------ | ---------------------------------------- |
+| query         | ✅       | string | "blast-radius"                           |
+| target        | ✅       | string | Function name to analyze                 |
+| domain        | ✅       | string | Domain name from MANIFEST                |
+| options.depth | ❌       | number | Max traversal depth (default: unlimited) |
+| options.limit | ❌       | number | Max results (default: 100)               |
 
 ### Output Schema
+
 ```json
 {
-  "status": "success",
-  "query": "blast-radius",
-  "target": "parseDate",
   "domain": "csv-processing",
+  "query": "blast-radius",
   "results": [
     {
-      "function": "mapRow",
-      "file": "apps/migration-cli/src/lib/csv/parser.ts",
-      "line": 272,
       "depth": 1,
+      "file": "apps/migration-cli/src/lib/csv/parser.ts",
+      "function": "mapRow",
+      "line": 272,
       "type": "direct-caller"
     },
     {
-      "function": "validateData",
-      "file": "apps/migration-cli/src/lib/validation.ts",
-      "line": 45,
       "depth": 2,
+      "file": "apps/migration-cli/src/lib/validation.ts",
+      "function": "validateData",
+      "line": 45,
       "type": "transitive-caller"
     }
   ],
+  "status": "success",
   "summary": {
-    "total": 47,
-    "max_depth": 3,
     "by_depth": {
       "1": 12,
       "2": 25,
       "3": 10
-    }
-  }
+    },
+    "max_depth": 3,
+    "total": 47
+  },
+  "target": "parseDate"
 }
 ```
 
 ### Algorithm
-Uses BFS (Breadth-First Search) to find all transitive callers. See @graph-algorithms.md for implementation.
+
+Uses BFS (Breadth-First Search) to find all transitive callers. See @graph-algorithms.md for
+implementation.
 
 ### Performance
+
 - ~300-500ms for typical functions (< 100 callers)
 - ~1-2s for hotspots (100+ callers)
 
@@ -143,52 +149,57 @@ Uses BFS (Breadth-First Search) to find all transitive callers. See @graph-algor
 **Use Case**: "Who directly calls showError?"
 
 ### Input Schema
+
 ```json
 {
+  "domain": "core-cli",
   "query": "find-callers",
-  "target": "showError",
-  "domain": "core-cli"
+  "target": "showError"
 }
 ```
 
-| Field | Required | Type | Description |
-|-------|----------|------|-------------|
-| query | ✅ | string | "find-callers" |
-| target | ✅ | string | Function name |
-| domain | ✅ | string | Domain name |
+| Field  | Required | Type   | Description    |
+| ------ | -------- | ------ | -------------- |
+| query  | ✅       | string | "find-callers" |
+| target | ✅       | string | Function name  |
+| domain | ✅       | string | Domain name    |
 
 ### Output Schema
+
 ```json
 {
-  "status": "success",
-  "query": "find-callers",
-  "target": "showError",
   "domain": "core-cli",
+  "query": "find-callers",
   "results": [
     {
-      "function": "executeValidate",
       "file": "src/commands/validate.ts",
+      "function": "executeValidate",
       "line": 67
     },
     {
-      "function": "executeMigration",
       "file": "src/commands/migrate.ts",
+      "function": "executeMigration",
       "line": 123
     }
   ],
+  "status": "success",
   "summary": {
     "total": 3
-  }
+  },
+  "target": "showError"
 }
 ```
 
 ### Algorithm
+
 Simple jq query on graph edges:
+
 ```bash
 jq -r --arg func "$TARGET" '.g[] | select(.[1] == $func) | .[0]' < domain.json
 ```
 
 ### Performance
+
 - ~20-50ms (jq query)
 
 ---
@@ -200,56 +211,61 @@ jq -r --arg func "$TARGET" '.g[] | select(.[1] == $func) | .[0]' < domain.json
 **Use Case**: "What does migrateAttachments call?"
 
 ### Input Schema
+
 ```json
 {
+  "domain": "migration-pipelines",
   "query": "find-calls",
-  "target": "migrateAttachments",
-  "domain": "migration-pipelines"
+  "target": "migrateAttachments"
 }
 ```
 
-| Field | Required | Type | Description |
-|-------|----------|------|-------------|
-| query | ✅ | string | "find-calls" |
-| target | ✅ | string | Function name |
-| domain | ✅ | string | Domain name |
+| Field  | Required | Type   | Description   |
+| ------ | -------- | ------ | ------------- |
+| query  | ✅       | string | "find-calls"  |
+| target | ✅       | string | Function name |
+| domain | ✅       | string | Domain name   |
 
 ### Output Schema
+
 ```json
 {
-  "status": "success",
-  "query": "find-calls",
-  "target": "migrateAttachments",
   "domain": "migration-pipelines",
+  "query": "find-calls",
   "results": [
     {
-      "function": "getBlobServiceClient",
+      "domain": "service-factory",
       "file": "src/lib/services/blob-storage.ts",
-      "line": 45,
-      "domain": "service-factory"
+      "function": "getBlobServiceClient",
+      "line": 45
     },
     {
-      "function": "logMigrationStart",
+      "domain": "utilities",
       "file": "src/lib/logging.ts",
-      "line": 89,
-      "domain": "utilities"
+      "function": "logMigrationStart",
+      "line": 89
     }
   ],
+  "status": "success",
   "summary": {
-    "total": 4,
+    "external": 2,
     "internal": 2,
-    "external": 2
-  }
+    "total": 4
+  },
+  "target": "migrateAttachments"
 }
 ```
 
 ### Algorithm
+
 Simple jq query on graph edges:
+
 ```bash
 jq -r --arg func "$TARGET" '.g[] | select(.[0] == $func) | .[1]' < domain.json
 ```
 
 ### Performance
+
 - ~20-50ms (jq query)
 
 ---
@@ -261,51 +277,54 @@ jq -r --arg func "$TARGET" '.g[] | select(.[0] == $func) | .[1]' < domain.json
 **Use Case**: "Error at src/parser.ts:123, how does code execution get there?"
 
 ### Input Schema
+
 ```json
 {
-  "query": "trace-to-error",
+  "domain": "csv-processing",
   "file": "apps/migration-cli/src/lib/csv/parser.ts",
   "line": 123,
-  "domain": "csv-processing"
+  "query": "trace-to-error"
 }
 ```
 
-| Field | Required | Type | Description |
-|-------|----------|------|-------------|
-| query | ✅ | string | "trace-to-error" |
-| file | ✅ | string | File path (relative to project root) |
-| line | ✅ | number | Line number where error occurs |
-| domain | ❌ | string | Domain name (auto-detected if omitted) |
+| Field  | Required | Type   | Description                            |
+| ------ | -------- | ------ | -------------------------------------- |
+| query  | ✅       | string | "trace-to-error"                       |
+| file   | ✅       | string | File path (relative to project root)   |
+| line   | ✅       | number | Line number where error occurs         |
+| domain | ❌       | string | Domain name (auto-detected if omitted) |
 
 ### Output Schema
+
 ```json
 {
-  "status": "success",
-  "query": "trace-to-error",
-  "file": "apps/migration-cli/src/lib/csv/parser.ts",
-  "line": 123,
-  "function_at_line": "parseDate",
   "call_stacks": [
     {
+      "depth": 3,
       "entry_point": "runCli",
       "path": [
-        {"function": "runCli", "file": "src/cli.ts", "line": 15},
-        {"function": "executeMigration", "file": "src/commands/migrate.ts", "line": 45},
-        {"function": "mapRow", "file": "src/lib/csv/parser.ts", "line": 272},
-        {"function": "parseDate", "file": "src/lib/csv/parser.ts", "line": 123}
-      ],
-      "depth": 3
+        { "file": "src/cli.ts", "function": "runCli", "line": 15 },
+        { "file": "src/commands/migrate.ts", "function": "executeMigration", "line": 45 },
+        { "file": "src/lib/csv/parser.ts", "function": "mapRow", "line": 272 },
+        { "file": "src/lib/csv/parser.ts", "function": "parseDate", "line": 123 }
+      ]
     }
   ],
+  "file": "apps/migration-cli/src/lib/csv/parser.ts",
+  "function_at_line": "parseDate",
+  "line": 123,
+  "query": "trace-to-error",
+  "status": "success",
   "summary": {
-    "total_paths": 2,
+    "max_depth": 4,
     "min_depth": 2,
-    "max_depth": 4
+    "total_paths": 2
   }
 }
 ```
 
 ### Algorithm
+
 1. Find which function is defined at file:line (from `.f` section)
 2. Run reverse BFS to find all paths to that function
 3. Return call chains from entry points
@@ -313,6 +332,7 @@ jq -r --arg func "$TARGET" '.g[] | select(.[0] == $func) | .[1]' < domain.json
 See @graph-algorithms.md for implementation.
 
 ### Performance
+
 - ~400-600ms (Python reverse BFS)
 
 ---
@@ -324,62 +344,66 @@ See @graph-algorithms.md for implementation.
 **Use Case**: "What can I safely delete from csv-processing domain?"
 
 ### Input Schema
+
 ```json
 {
-  "query": "dead-code",
   "domain": "csv-processing",
   "options": {
     "exclude_entry_points": true,
     "exclude_exports": false
-  }
+  },
+  "query": "dead-code"
 }
 ```
 
-| Field | Required | Type | Description |
-|-------|----------|------|-------------|
-| query | ✅ | string | "dead-code" |
-| domain | ✅ | string | Domain name |
-| options.exclude_entry_points | ❌ | boolean | Exclude main/CLI commands (default: true) |
-| options.exclude_exports | ❌ | boolean | Exclude exported functions (default: false) |
+| Field                        | Required | Type    | Description                                 |
+| ---------------------------- | -------- | ------- | ------------------------------------------- |
+| query                        | ✅       | string  | "dead-code"                                 |
+| domain                       | ✅       | string  | Domain name                                 |
+| options.exclude_entry_points | ❌       | boolean | Exclude main/CLI commands (default: true)   |
+| options.exclude_exports      | ❌       | boolean | Exclude exported functions (default: false) |
 
 ### Output Schema
+
 ```json
 {
-  "status": "success",
-  "query": "dead-code",
   "domain": "csv-processing",
+  "query": "dead-code",
   "results": [
     {
-      "function": "streamCsvChunked",
+      "exported": false,
       "file": "src/lib/csv/parser.ts",
+      "function": "streamCsvChunked",
       "line": 257,
-      "reason": "never_called",
-      "exported": false
+      "reason": "never_called"
     },
     {
-      "function": "cleanupTempFiles",
+      "exported": true,
       "file": "src/lib/utilities.ts",
+      "function": "cleanupTempFiles",
       "line": 89,
       "reason": "never_called",
-      "exported": true,
       "warning": "Exported but unused - may be public API"
     }
   ],
+  "status": "success",
   "summary": {
-    "total": 5,
+    "exported_unused": 2,
     "safe_to_delete": 3,
-    "exported_unused": 2
+    "total": 5
   }
 }
 ```
 
 ### Algorithm
+
 1. Extract all defined functions from `.f` section
 2. Extract all called functions from `.g` section
 3. Set difference: defined - called = dead code
 4. Filter entry points (main, CLI commands) if requested
 
 ### Performance
+
 - ~200-300ms (jq + set operations)
 
 ---
@@ -391,46 +415,48 @@ See @graph-algorithms.md for implementation.
 **Use Case**: "Are there any circular dependencies in this domain?"
 
 ### Input Schema
+
 ```json
 {
-  "query": "cycles",
-  "domain": "csv-processing"
+  "domain": "csv-processing",
+  "query": "cycles"
 }
 ```
 
-| Field | Required | Type | Description |
-|-------|----------|------|-------------|
-| query | ✅ | string | "cycles" |
-| domain | ✅ | string | Domain name |
+| Field  | Required | Type   | Description |
+| ------ | -------- | ------ | ----------- |
+| query  | ✅       | string | "cycles"    |
+| domain | ✅       | string | Domain name |
 
 ### Output Schema
+
 ```json
 {
-  "status": "success",
-  "query": "cycles",
   "domain": "csv-processing",
+  "query": "cycles",
   "results": [
     {
       "cycle": ["parseChunkSmart", "validateChunk", "parseChunkSmart"],
-      "length": 2,
-      "files": [
-        "src/lib/csv/chunked-parser.ts",
-        "src/lib/csv/validator.ts"
-      ]
+      "files": ["src/lib/csv/chunked-parser.ts", "src/lib/csv/validator.ts"],
+      "length": 2
     }
   ],
+  "status": "success",
   "summary": {
-    "total_cycles": 1,
+    "max_length": 2,
     "min_length": 2,
-    "max_length": 2
+    "total_cycles": 1
   }
 }
 ```
 
 ### Algorithm
-DFS (Depth-First Search) with cycle detection using recursion stack. See @graph-algorithms.md for implementation.
+
+DFS (Depth-First Search) with cycle detection using recursion stack. See @graph-algorithms.md for
+implementation.
 
 ### Performance
+
 - ~500ms-1s (Python DFS)
 
 ---
@@ -442,61 +468,66 @@ DFS (Depth-First Search) with cycle detection using recursion stack. See @graph-
 **Use Case**: "What functions have the most callers (highest risk to change)?"
 
 ### Input Schema
+
 ```json
 {
-  "query": "hotspots",
   "domain": "csv-processing",
   "options": {
     "limit": 10,
     "min_callers": 5
-  }
+  },
+  "query": "hotspots"
 }
 ```
 
-| Field | Required | Type | Description |
-|-------|----------|------|-------------|
-| query | ✅ | string | "hotspots" |
-| domain | ✅ | string | Domain name |
-| options.limit | ❌ | number | Max results (default: 10) |
-| options.min_callers | ❌ | number | Minimum callers to include (default: 3) |
+| Field               | Required | Type   | Description                             |
+| ------------------- | -------- | ------ | --------------------------------------- |
+| query               | ✅       | string | "hotspots"                              |
+| domain              | ✅       | string | Domain name                             |
+| options.limit       | ❌       | number | Max results (default: 10)               |
+| options.min_callers | ❌       | number | Minimum callers to include (default: 3) |
 
 ### Output Schema
+
 ```json
 {
-  "status": "success",
-  "query": "hotspots",
   "domain": "csv-processing",
+  "query": "hotspots",
   "results": [
     {
-      "function": "isNonEmpty",
-      "file": "src/lib/csv/domino-contact-normalizer.ts",
-      "line": 22,
       "callers": 9,
+      "file": "src/lib/csv/domino-contact-normalizer.ts",
+      "function": "isNonEmpty",
+      "line": 22,
       "rank": 1
     },
     {
-      "function": "parseDate",
-      "file": "src/lib/csv/parser.ts",
-      "line": 123,
       "callers": 7,
+      "file": "src/lib/csv/parser.ts",
+      "function": "parseDate",
+      "line": 123,
       "rank": 2
     }
   ],
+  "status": "success",
   "summary": {
-    "total": 10,
+    "avg_callers": 5.3,
     "max_callers": 9,
-    "avg_callers": 5.3
+    "total": 10
   }
 }
 ```
 
 ### Algorithm
+
 Group by callee, count, sort descending:
+
 ```bash
 jq '[.g[] | .[1]] | group_by(.) | map({func: .[0], callers: length}) | sort_by(-.callers)' < domain.json
 ```
 
 ### Performance
+
 - ~100-200ms (jq aggregation)
 
 ---
@@ -508,53 +539,57 @@ jq '[.g[] | .[1]] | group_by(.) | map({func: .[0], callers: length}) | sort_by(-
 **Use Case**: "What external functions does csv-processing depend on?"
 
 ### Input Schema
+
 ```json
 {
-  "query": "cross-domain",
-  "domain": "csv-processing"
+  "domain": "csv-processing",
+  "query": "cross-domain"
 }
 ```
 
-| Field | Required | Type | Description |
-|-------|----------|------|-------------|
-| query | ✅ | string | "cross-domain" |
-| domain | ✅ | string | Domain name |
+| Field  | Required | Type   | Description    |
+| ------ | -------- | ------ | -------------- |
+| query  | ✅       | string | "cross-domain" |
+| domain | ✅       | string | Domain name    |
 
 ### Output Schema
+
 ```json
 {
-  "status": "success",
-  "query": "cross-domain",
   "domain": "csv-processing",
+  "query": "cross-domain",
   "results": [
     {
-      "function": "getBlobServiceClient",
       "called_by": ["parseCsv", "loadCsvFromBlob"],
+      "coupling_strength": 2,
       "from_domain": "service-factory",
-      "coupling_strength": 2
+      "function": "getBlobServiceClient"
     },
     {
-      "function": "logError",
       "called_by": ["parseRow", "validateData"],
+      "coupling_strength": 2,
       "from_domain": "utilities",
-      "coupling_strength": 2
+      "function": "logError"
     }
   ],
+  "status": "success",
   "summary": {
-    "total_external_deps": 5,
     "coupled_domains": ["service-factory", "utilities", "dataverse-repositories"],
-    "coupling_score": 12
+    "coupling_score": 12,
+    "total_external_deps": 5
   }
 }
 ```
 
 ### Algorithm
+
 1. Extract functions defined in this domain (from `.f`)
 2. Extract functions called by this domain (from `.g`)
 3. Set difference: called - defined = external deps
 4. Group by source domain, count coupling strength
 
 ### Performance
+
 - ~150-250ms (jq set operations)
 
 ---
@@ -564,6 +599,7 @@ jq '[.g[] | .[1]] | group_by(.) | map({func: .[0], callers: length}) | sort_by(-
 ### Sequential Queries (Agent Workflow)
 
 **Example: Debug assistant investigating error**
+
 ```
 1. trace-to-error (file:line) → Get call stack
 2. find-calls for each function in stack → Understand data flow
@@ -571,6 +607,7 @@ jq '[.g[] | .[1]] | group_by(.) | map({func: .[0], callers: length}) | sort_by(-
 ```
 
 **Example: Refactor planner**
+
 ```
 1. blast-radius (target function) → Find affected code
 2. hotspots (domain) → Identify high-risk functions to avoid
@@ -580,6 +617,7 @@ jq '[.g[] | .[1]] | group_by(.) | map({func: .[0], callers: length}) | sort_by(-
 ### Combined Analysis
 
 **Example: Domain health assessment**
+
 ```
 1. dead-code → Find unused functions
 2. cycles → Find circular deps
@@ -593,9 +631,11 @@ Combined metrics → Domain health score
 
 ## Performance Summary
 
-See @performance.md for detailed performance characteristics, optimization strategies, and scalability limits.
+See @performance.md for detailed performance characteristics, optimization strategies, and
+scalability limits.
 
 **Quick Reference**:
+
 - Simple queries (find-callers, hotspots): ~20-200ms
 - Complex queries (blast-radius, cycles): ~300-1000ms
 - All queries complete in <2 seconds
@@ -607,6 +647,7 @@ See @performance.md for detailed performance characteristics, optimization strat
 See @error-handling.md for complete error patterns and recovery strategies.
 
 **Quick Reference**:
+
 - All queries return structured JSON errors with helpful hints
 - Common errors: function not found, domain not found, invalid query type
 - Recovery guidance provided in `hint` field

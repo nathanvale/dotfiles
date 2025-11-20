@@ -9,6 +9,7 @@ Multi-tool patterns for complex code analysis tasks.
 Use fast tools to narrow candidates, then precise tools for verification.
 
 **Workflow**:
+
 ```bash
 # Step 1: Fast recon with ripgrep
 rg -l 'useQuery\(' -t ts  # List files containing pattern
@@ -18,11 +19,13 @@ cat file_list | xargs ast-grep run -l TypeScript -p 'useQuery($A)'
 ```
 
 **When to use**:
+
 - Large codebase (>100k lines)
 - Need to find specific code patterns
 - Want to avoid false positives
 
 **Benefits**:
+
 - Fastest overall time
 - Low false positives
 - Scalable to large repos
@@ -34,6 +37,7 @@ cat file_list | xargs ast-grep run -l TypeScript -p 'useQuery($A)'
 Use JSON queries to find issues, then read code to understand why.
 
 **Workflow**:
+
 ```bash
 # Step 1: Find high-error endpoints with jq
 jq '.errors | group_by(.endpoint) | map({endpoint: .[0].endpoint, count: length}) | sort_by(.count) | reverse' error-logs.json
@@ -43,11 +47,13 @@ Read: src/api/endpoints/users.ts  # Inspect the error-prone endpoint
 ```
 
 **When to use**:
+
 - Have JSON logs, configs, or structured data
 - Need to understand failure patterns
 - Looking for refactoring targets
 
 **Benefits**:
+
 - Data-driven insights
 - Objective metrics
 - Reveals runtime issues
@@ -59,6 +65,7 @@ Read: src/api/endpoints/users.ts  # Inspect the error-prone endpoint
 Find code patterns, then calculate metrics on matches.
 
 **Workflow**:
+
 ```bash
 # Step 1: Find pattern with ast-grep
 ast-grep run -l TypeScript -p 'any'  # All 'any' types
@@ -68,11 +75,13 @@ python3 scripts/complexity.py --files matching_files.txt
 ```
 
 **When to use**:
+
 - Planning refactors
 - Assessing code quality issues
 - Prioritizing technical debt
 
 **Benefits**:
+
 - Quantify impact
 - Data-driven prioritization
 - Identify high-value fixes
@@ -84,6 +93,7 @@ python3 scripts/complexity.py --files matching_files.txt
 Combine multiple tools to verify findings.
 
 **Workflow**:
+
 ```bash
 # Step 1: jq to find unused dependencies
 jq '.dependencies | keys' package.json > all-deps.txt
@@ -100,11 +110,13 @@ Read: src/dynamic-loader.ts
 ```
 
 **When to use**:
+
 - High-stakes changes (dependency removal)
 - Need multiple confirmation sources
 - Complex edge cases
 
 **Benefits**:
+
 - Highest confidence
 - Catches edge cases
 - Comprehensive analysis

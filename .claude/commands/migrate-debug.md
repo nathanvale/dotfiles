@@ -1,20 +1,28 @@
 ---
 name: migrate-debug
-description: Debugs a migration run by analyzing logs for a specific correlation ID, then runs code analysis if issues are found. Use when troubleshooting failed or problematic migrations, or when mentioned 'debug migration', 'debug run', 'debug correlation'.
+description:
+  Debugs a migration run by analyzing logs for a specific correlation ID, then runs code analysis if
+  issues are found. Use when troubleshooting failed or problematic migrations, or when mentioned
+  'debug migration', 'debug run', 'debug correlation'.
 argument-hint: [correlation-id]
 ---
 
 # Debug Migration
 
-Debugs a migration run by analyzing logs for a specific correlation ID. Uses file-analyzer to examine migration logs for errors, warnings, validation issues, duplicates, rollback events, and success metrics. If any issues are found, runs code-analyzer to identify root causes and suggest fixes.
+Debugs a migration run by analyzing logs for a specific correlation ID. Uses file-analyzer to
+examine migration logs for errors, warnings, validation issues, duplicates, rollback events, and
+success metrics. If any issues are found, runs code-analyzer to identify root causes and suggest
+fixes.
 
 ## Pattern
 
 **Pattern 3**: Agent Orchestration
 
 Multi-step workflow that coordinates specialized agents to investigate and debug migration runs:
+
 1. **Log Extraction**: Filters migration logs by correlation ID from today's log file
-2. **File Analysis**: Examines logs for errors, warnings, validation issues, duplicates, rollback events, and success metrics
+2. **File Analysis**: Examines logs for errors, warnings, validation issues, duplicates, rollback
+   events, and success metrics
 3. **Code Analysis** (conditional): Only if issues found - identifies root causes in source code
 4. **Reporting**: Comprehensive debug report with findings, source locations, and suggested fixes
 
@@ -23,15 +31,19 @@ Multi-step workflow that coordinates specialized agents to investigate and debug
 ### Phase 1: Log Extraction & Confirmation
 
 Extracts all log entries matching the correlation ID from today's migration log file:
+
 ```
 apps/migration-cli/logs/migration-{YYYY-MM-DD}.jsonl
 ```
 
 **If correlation ID provided**: Proceeds directly to Phase 2.
 
-**If correlation ID not provided**: Automatically looks at the tail end of the log file to find the most recent migration run and extracts the correlation ID. Then **asks the user to confirm** with the correlation ID and the run date before proceeding.
+**If correlation ID not provided**: Automatically looks at the tail end of the log file to find the
+most recent migration run and extracts the correlation ID. Then **asks the user to confirm** with
+the correlation ID and the run date before proceeding.
 
 Example confirmation prompt:
+
 ```
 Detected most recent migration run:
 - Correlation ID: be8ce52a-cc8a-45da-9b7c-ef895b1c5c58
@@ -41,6 +53,7 @@ Proceed with analyzing this run?
 ```
 
 Each log entry contains:
+
 - `level`: 20=info, 30=warn, 40=error, 50=critical, 60=fatal
 - `correlationId`: Run identifier
 - `msg`: Human-readable message
@@ -53,25 +66,30 @@ Each log entry contains:
 Launches file-analyzer agent to examine extracted logs for:
 
 **Errors & Warnings**:
+
 - Level 40+ entries (errors, critical, fatal)
 - Level 30 entries (warnings)
 - TaxonomyError codes (e.g., DATAVERSE-E005)
 
 **Validation Issues**:
+
 - Query failures
 - OData filter syntax errors
 - Connection problems
 - Metadata resolution failures
 
 **Duplicate Operations**:
+
 - Repeated actions with same correlationId
 - Multiple attempts on same entity
 
 **Rollback Events**:
+
 - COMPENSATION phase entries
 - Rollback reasons and outcomes
 
 **Success Metrics**:
+
 - `successRate` percentage
 - `processedCount` and `failedRows`
 - `explosionRatio` (records created per CSV row)
@@ -96,11 +114,13 @@ Launches file-analyzer agent to examine extracted logs for:
 Consolidates findings:
 
 **If No Issues Found**:
+
 - Migration completed successfully
 - Summary of operations performed
 - Success metrics and performance
 
 **If Issues Found**:
+
 - Error count and types
 - Warning count by category
 - Source files affected with line numbers
@@ -125,17 +145,18 @@ Consolidates findings:
 ## Log Format Reference
 
 **JSONL Entry Example**:
+
 ```json
 {
-  "level": 40,
-  "time": "2025-11-11T03:05:17.232Z",
-  "correlationId": "be8ce52a-cc8a-45da-9b7c-ef895b1c5c58",
   "component": "referral-creation-service",
-  "msg": "[createReferral] OData query failed",
+  "correlationId": "be8ce52a-cc8a-45da-9b7c-ef895b1c5c58",
   "entity": "exco_referral",
-  "recordId": "c501f831-a5be-f011-bbd3-6045bdc366ee",
   "error": "Query failed: Invalid filter syntax",
-  "stack": "Error: OData filter parsing failed\n    at parseFilter (src/lib/services/dataverse-service.ts:152)\n    at createReferral (src/lib/services/referral-creation-service.ts:89)"
+  "level": 40,
+  "msg": "[createReferral] OData query failed",
+  "recordId": "c501f831-a5be-f011-bbd3-6045bdc366ee",
+  "stack": "Error: OData filter parsing failed\n    at parseFilter (src/lib/services/dataverse-service.ts:152)\n    at createReferral (src/lib/services/referral-creation-service.ts:89)",
+  "time": "2025-11-11T03:05:17.232Z"
 }
 ```
 

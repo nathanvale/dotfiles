@@ -15,7 +15,8 @@ system_profiler SPAudioDataType | grep -A 10 "Input Device"
 
 ## History Tab Debugging
 
-SuperWhisper's History tab is your most powerful diagnostic tool. It shows every recording with full metadata, context, and processing details.
+SuperWhisper's History tab is your most powerful diagnostic tool. It shows every recording with full
+metadata, context, and processing details.
 
 ### How to Open History
 
@@ -26,6 +27,7 @@ SuperWhisper's History tab is your most powerful diagnostic tool. It shows every
 ### What Information is Available
 
 Each history entry shows:
+
 - **Transcript**: Full transcribed text
 - **Timestamp**: When recording occurred
 - **Mode Used**: Which mode processed the recording
@@ -49,22 +51,27 @@ Each history entry shows:
 ### Common Patterns to Look For
 
 **Empty Context Fields**:
+
 - Indicates context not enabled in mode JSON
 - See "Context Not Captured" section below
 
 **Wrong Mode Used**:
+
 - Auto-activation not working
 - Check `activationApps` in mode JSON
 
 **Poor Transcription in History**:
+
 - Audio quality issue, not mode instruction issue
 - Try different voice model
 
 **Missing Recordings**:
+
 - May indicate permission issue
 - Check microphone and accessibility permissions
 
 **Slow Processing Time**:
+
 - Cloud model with poor internet
 - Switch to local model for testing
 
@@ -92,11 +99,13 @@ cp -r ~/Library/Application\ Support/SuperWhisper/history.db ~/Desktop/superwhis
 **Symptoms**: Mode doesn't switch automatically when opening specific apps
 
 **Causes**:
+
 - App name in `activationApps` doesn't match exactly
 - Missing required fields in mode JSON
 - SuperWhisper not restarted after mode changes
 
 **Fixes**:
+
 ```bash
 # 1. Verify app name matches exactly
 jq '.activationApps' ~/Documents/superwhisper/modes/your-mode.json
@@ -113,11 +122,13 @@ open -a SuperWhisper
 ### 2. Context Not Captured
 
 **Symptoms**:
+
 - History shows empty context fields
 - Mode instructions reference context but transcription doesn't use it
 - "Use context from application" not working
 
 **Causes**:
+
 - Context options not enabled in mode JSON
 - Context permissions not granted
 - SuperWhisper not restarted after enabling context
@@ -137,6 +148,7 @@ jq '{contextFromClipboard, contextFromApplication, contextFromSelection}' ~/Docu
 ```
 
 **Context Fields Explained**:
+
 - `contextFromClipboard`: Includes clipboard contents
 - `contextFromApplication`: Includes active app name/info
 - `contextFromSelection`: Includes selected text (if any)
@@ -144,20 +156,22 @@ jq '{contextFromClipboard, contextFromApplication, contextFromSelection}' ~/Docu
 **Fixes**:
 
 1. **Enable Context in Mode JSON**:
+
    ```json
    {
+     "contextFromApplication": true,
+     "contextFromClipboard": true,
+     "contextFromSelection": true,
      "key": "your-mode",
      "name": "Your Mode",
      "prompt": "Use context...",
-     "contextFromClipboard": true,
-     "contextFromApplication": true,
-     "contextFromSelection": true,
      "type": "custom",
      "version": 1
    }
    ```
 
 2. **Grant Context Permissions**:
+
    ```bash
    # Accessibility (for selection context)
    open "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"
@@ -167,6 +181,7 @@ jq '{contextFromClipboard, contextFromApplication, contextFromSelection}' ~/Docu
    ```
 
 3. **Restart SuperWhisper**:
+
    ```bash
    killall -9 superwhisper
    sleep 2
@@ -180,6 +195,7 @@ jq '{contextFromClipboard, contextFromApplication, contextFromSelection}' ~/Docu
    - Context fields should now be populated
 
 **Common Context Issues**:
+
 - **Context from Selection not working**: Grant Accessibility permission
 - **Context from Application empty**: Some apps don't expose info - try others
 - **Context from Clipboard empty**: Clipboard was empty during recording
@@ -189,10 +205,12 @@ jq '{contextFromClipboard, contextFromApplication, contextFromSelection}' ~/Docu
 **Symptoms**: SuperWhisper causes AeroSpace to switch workspaces when activating
 
 **Causes**:
+
 - AeroSpace floating rule not configured
 - Incorrect app-id in configuration
 
 **Fixes**:
+
 ```bash
 # 1. Verify AeroSpace configuration
 grep -A 2 "com.superduper.superwhisper" ~/code/dotfiles/config/aerospace/aerospace.toml
@@ -209,11 +227,13 @@ osascript -e 'id of app "SuperWhisper"'
 **Symptoms**: Keyboard shortcuts don't trigger recording
 
 **Causes**:
+
 - Accessibility permissions not granted
 - Shortcut conflict with another app
 - SuperWhisper not running
 
 **Fixes**:
+
 ```bash
 # 1. Check if running
 ps aux | grep SuperWhisper
@@ -227,6 +247,7 @@ open "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibil
 ```
 
 **Verify Shortcuts**:
+
 - Open SuperWhisper → Settings → Shortcuts
 - Test each shortcut
 - Look for conflicts with system shortcuts
@@ -236,11 +257,13 @@ open "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibil
 **Symptoms**: Recording starts but no transcription, or transcription is blank
 
 **Causes**:
+
 - Microphone permissions denied
 - Wrong input device selected
 - Microphone hardware issue
 
 **Fixes**:
+
 ```bash
 # 1. Check microphone permissions
 open "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone"
@@ -259,12 +282,14 @@ open "x-apple.systempreferences:com.apple.preference.sound"
 **Symptoms**: Lots of errors, missing words, wrong words
 
 **Causes**:
+
 - Noisy environment
 - Speaking too fast or unclear
 - Wrong voice model selected
 - Low-quality microphone
 
 **Fixes**:
+
 1. **Switch Voice Model**:
    - Settings → Voice Model
    - Try: Enhanced (more accurate, slower) vs Fast (less accurate, faster)
@@ -282,14 +307,17 @@ open "x-apple.systempreferences:com.apple.preference.sound"
 
 ### 7. Mode Not Switching or Custom Modes Not Showing
 
-**Symptoms**: Custom modes don't appear in Modes menu, deep links don't work, only "Default" mode visible
+**Symptoms**: Custom modes don't appear in Modes menu, deep links don't work, only "Default" mode
+visible
 
 **Causes**:
+
 - SuperWhisper preferences cache not reloaded
 - Mode JSON files valid but app hasn't detected them
 - Preferences database out of sync with mode files
 
 **Primary Fix** (Try first):
+
 ```bash
 # 1. Hard quit SuperWhisper
 killall -9 superwhisper
@@ -303,6 +331,7 @@ sleep 3
 ```
 
 **Destructive Fix** (Last resort - clears all preferences):
+
 ```bash
 # Only do this if hard restart doesn't work
 killall -9 superwhisper
@@ -316,6 +345,7 @@ sleep 3
 ```
 
 **Standard Troubleshooting** (if above doesn't work):
+
 ```bash
 # 1. Validate mode JSON syntax
 jq '.' ~/Documents/SuperWhisper/modes/your-mode.json
@@ -334,6 +364,7 @@ open "superwhisper://mode?key=exact-mode-key"
 ```
 
 **Important Notes**:
+
 - SuperWhisper looks for modes in `~/Documents/superwhisper/modes/` (lowercase)
 - Custom JSON files must have valid JSON syntax (use `jq` to validate)
 - If modes still don't appear after clean restart, create one in SuperWhisper UI as test
@@ -344,12 +375,15 @@ open "superwhisper://mode?key=exact-mode-key"
 **Symptoms**: Recording completes but text doesn't paste
 
 **Causes**:
+
 - Mode output set to clipboard instead of paste
 - Active app doesn't accept paste
 - Accessibility permissions issue
 
 **Fixes**:
+
 1. **Check Mode Output**:
+
    ```bash
    jq '.output.method' ~/Documents/SuperWhisper/modes/your-mode.json
    # Should be "paste" not "clipboard"
@@ -370,11 +404,13 @@ open "superwhisper://mode?key=exact-mode-key"
 **Symptoms**: App opens then immediately closes
 
 **Causes**:
+
 - Corrupted settings file
 - Incompatible mode configuration
 - macOS permissions issue
 
 **Fixes**:
+
 ```bash
 # 1. Check crash logs
 open ~/Library/Logs/DiagnosticReports/
@@ -393,11 +429,13 @@ rm -rf ~/Documents/SuperWhisper/settings.json
 **Symptoms**: `open "superwhisper://..."` doesn't trigger SuperWhisper
 
 **Causes**:
+
 - SuperWhisper not running
 - URL scheme not registered
 - Invalid deep link syntax
 
 **Fixes**:
+
 ```bash
 # 1. Start SuperWhisper first
 open -a SuperWhisper
@@ -413,7 +451,8 @@ open "superwhisper://record"
 
 ## Speaker Identification Issues
 
-Speaker identification (diarization) allows SuperWhisper to distinguish between multiple speakers in a recording.
+Speaker identification (diarization) allows SuperWhisper to distinguish between multiple speakers in
+a recording.
 
 ### Symptoms When Speaker ID Doesn't Work
 
@@ -428,29 +467,32 @@ Speaker identification must be enabled in your mode configuration:
 
 ```json
 {
-  "key": "your-mode",
-  "name": "Your Mode",
-  "instructions": "Transcribe conversation...",
   "audio": {
-    "speaker_identification": true,
-    "max_speakers": 2
-  }
+    "max_speakers": 2,
+    "speaker_identification": true
+  },
+  "instructions": "Transcribe conversation...",
+  "key": "your-mode",
+  "name": "Your Mode"
 }
 ```
 
 **Audio Options**:
+
 - `speaker_identification`: Boolean - enables/disables speaker detection
 - `max_speakers`: Number - maximum speakers to detect (2-10 typically)
 
 ### Troubleshooting Speaker Identification
 
 1. **Verify Mode Configuration**:
+
    ```bash
    jq '.audio' ~/Documents/superwhisper/modes/your-mode.json
    # Should show speaker_identification: true
    ```
 
 2. **Restart SuperWhisper After Enabling**:
+
    ```bash
    killall -9 superwhisper
    sleep 2
@@ -483,30 +525,35 @@ Speaker identification must be enabled in your mode configuration:
 ### Common Speaker ID Issues
 
 **Only One Speaker Detected**:
+
 - Voices too similar in tone/pitch
 - Poor audio quality obscuring differences
 - Speakers talking over each other
 - Try recording in quieter environment
 
 **Too Many Speakers Detected**:
+
 - `max_speakers` set too high
 - Background noise being detected as speakers
 - Reduce `max_speakers` to actual number
 - Improve audio quality
 
 **Inconsistent Speaker Labels**:
+
 - Speaker 1 sometimes labeled as Speaker 2
 - This is normal - labels are relative, not absolute
 - Focus on separation, not consistent labeling
 
 **Segments Tab Empty**:
+
 - Speaker identification not enabled in mode
 - Check mode JSON has `audio.speaker_identification: true`
 - Restart SuperWhisper after enabling
 
 ## Vocabulary & Text Replacement Issues
 
-Custom vocabulary and text replacements allow you to teach SuperWhisper domain-specific terms and preferred spellings.
+Custom vocabulary and text replacements allow you to teach SuperWhisper domain-specific terms and
+preferred spellings.
 
 ### Symptoms
 
@@ -519,6 +566,7 @@ Custom vocabulary and text replacements allow you to teach SuperWhisper domain-s
 ### Custom Vocabulary Not Being Applied
 
 **Vocabulary File Location**:
+
 ```bash
 # Default location (check in Settings → Advanced)
 ~/Documents/SuperWhisper/vocabulary.txt
@@ -533,6 +581,7 @@ Custom vocabulary and text replacements allow you to teach SuperWhisper domain-s
 ```
 
 **Verify File Location**:
+
 ```bash
 # Check if file exists
 ls -la ~/Documents/SuperWhisper/vocabulary.txt
@@ -542,6 +591,7 @@ cat ~/Documents/SuperWhisper/vocabulary.txt
 ```
 
 **Format Validation**:
+
 ```bash
 # Check for common issues:
 # - No blank lines at end
@@ -559,6 +609,7 @@ file ~/Documents/SuperWhisper/vocabulary.txt
 ```
 
 **Testing Vocabulary**:
+
 1. Add test term to vocabulary file
 2. Restart SuperWhisper (required!)
 3. Make recording using the term
@@ -574,6 +625,7 @@ file ~/Documents/SuperWhisper/vocabulary.txt
 ### Text Replacements Not Working
 
 **Replacement File Location**:
+
 ```bash
 # Default location (check in Settings → Advanced)
 ~/Documents/SuperWhisper/replacements.json
@@ -588,6 +640,7 @@ file ~/Documents/SuperWhisper/vocabulary.txt
 ```
 
 **Verify File Location and Format**:
+
 ```bash
 # Check if file exists
 ls -la ~/Documents/SuperWhisper/replacements.json
@@ -600,6 +653,7 @@ cat ~/Documents/SuperWhisper/replacements.json
 ```
 
 **Common Format Issues**:
+
 ```json
 // WRONG - Comments not allowed in JSON
 {
@@ -619,12 +673,14 @@ cat ~/Documents/SuperWhisper/replacements.json
 ```
 
 **Replacement Rules**:
+
 - Case-sensitive by default
 - Replacements applied after transcription
 - Order matters - first match wins
 - Use lowercase keys for case-insensitive matching
 
 **Testing Replacements**:
+
 1. Edit replacements.json
 2. Validate JSON: `jq '.' ~/Documents/SuperWhisper/replacements.json`
 3. Restart SuperWhisper (required!)
@@ -648,6 +704,7 @@ sleep 3  # Wait for full initialization
 ### Advanced Vocabulary Techniques
 
 **For Technical Terms**:
+
 ```
 # Add variations and common misspellings
 PostgreSQL
@@ -660,6 +717,7 @@ websocket
 ```
 
 **For Names and Brands**:
+
 ```
 # Add proper capitalization
 GitHub
@@ -671,6 +729,7 @@ Claude
 ```
 
 **For Acronyms**:
+
 ```
 # Add with and without periods
 API
@@ -691,13 +750,15 @@ GraphQL
 6. **Iterate**: If still wrong, try variations or replacements
 
 **Priority Order**:
+
 1. Try vocabulary.txt first (teaches model correct spelling)
 2. Use replacements.json for post-processing (find/replace after transcription)
 3. Combine both for best results
 
 ## File Transcription Issues
 
-SuperWhisper can transcribe audio from files, not just live recordings. However, file format and quality affect success.
+SuperWhisper can transcribe audio from files, not just live recordings. However, file format and
+quality affect success.
 
 ### Symptoms
 
@@ -710,12 +771,14 @@ SuperWhisper can transcribe audio from files, not just live recordings. However,
 ### File Format Problems
 
 **Optimal Formats**:
+
 - **MP3**: Best compatibility, good compression
 - **MP4**: Video files (audio extracted automatically)
 - **WAV (mono)**: Best quality, larger file size
 - **M4A**: Good for voice recordings
 
 **Supported Formats** (varies by SuperWhisper version):
+
 ```bash
 # Generally supported:
 .mp3, .mp4, .wav, .m4a, .aac, .flac, .ogg
@@ -726,6 +789,7 @@ file /path/to/audio.mp3
 ```
 
 **Problematic Formats**:
+
 - **Stereo WAV**: May need conversion to mono
 - **High sample rates**: >48kHz may cause issues
 - **Unusual codecs**: Proprietary formats may fail
@@ -757,6 +821,7 @@ done
 ```
 
 **Conversion Options Explained**:
+
 - `-i input.file`: Input file
 - `-ar 16000`: Set sample rate to 16kHz (optimal for speech)
 - `-ac 1`: Set to mono (1 audio channel)
@@ -764,6 +829,7 @@ done
 - `-vn`: No video (for extracting audio from video)
 
 **Check File Properties**:
+
 ```bash
 # Using ffmpeg
 ffmpeg -i input.mp3
@@ -780,6 +846,7 @@ ffmpeg -i input.mp3
 **Important**: File transcription uses the currently active mode's settings.
 
 **Mode Settings Applied to Files**:
+
 - **Instructions**: Processing instructions apply to file
 - **Output method**: Paste/clipboard behavior
 - **Context**: Context settings (though less relevant for files)
@@ -789,6 +856,7 @@ ffmpeg -i input.mp3
 **Workflow for File Transcription**:
 
 1. **Select appropriate mode** before transcribing file:
+
    ```bash
    # Switch to desired mode first
    open "superwhisper://mode?key=meeting-notes"
@@ -798,17 +866,18 @@ ffmpeg -i input.mp3
    ```
 
 2. **Create dedicated mode for file transcription**:
+
    ```json
    {
+     "audio": {
+       "max_speakers": 4,
+       "speaker_identification": true
+     },
+     "instructions": "Transcribe this audio file verbatim. Include speaker labels if multiple speakers. Format as clean paragraphs.",
      "key": "file-transcription",
      "name": "File Transcription",
-     "instructions": "Transcribe this audio file verbatim. Include speaker labels if multiple speakers. Format as clean paragraphs.",
      "output": {
        "method": "clipboard"
-     },
-     "audio": {
-       "speaker_identification": true,
-       "max_speakers": 4
      }
    }
    ```
@@ -848,18 +917,21 @@ ffmpeg -i input.mp3
 **Common File Issues**:
 
 **File Too Large**:
+
 ```bash
 # Split into smaller chunks (10-minute segments)
 ffmpeg -i large.mp3 -f segment -segment_time 600 -c copy chunk_%03d.mp3
 ```
 
 **Poor Quality Source**:
+
 ```bash
 # Enhance audio quality
 ffmpeg -i input.mp3 -af "highpass=f=200, lowpass=f=3000, volume=2" output.mp3
 ```
 
 **Background Noise**:
+
 ```bash
 # Reduce noise (basic)
 ffmpeg -i input.mp3 -af "anlmdn=s=10:p=0.002:r=0.002:m=15" output.mp3
@@ -872,11 +944,13 @@ ffmpeg -i input.mp3 -af "anlmdn=s=10:p=0.002:r=0.002:m=15" output.mp3
 **Symptoms**: Long delay between speaking and transcription appearing
 
 **Causes**:
+
 - Cloud model selected (requires internet)
 - Large mode instructions
 - System resource constraints
 
 **Fixes**:
+
 1. Switch to local model (Settings → Voice Model → Local)
 2. Simplify mode instructions (shorter = faster)
 3. Close resource-heavy apps
@@ -887,11 +961,13 @@ ffmpeg -i input.mp3 -af "anlmdn=s=10:p=0.002:r=0.002:m=15" output.mp3
 **Symptoms**: SuperWhisper draining battery quickly
 
 **Causes**:
+
 - Cloud model constant network usage
 - Always-on listening mode
 - Frequent background processing
 
 **Fixes**:
+
 1. Use local models instead of cloud
 2. Disable always-on listening (use push-to-talk)
 3. Settings → Advanced → Reduce background processing
@@ -899,6 +975,7 @@ ffmpeg -i input.mp3 -af "anlmdn=s=10:p=0.002:r=0.002:m=15" output.mp3
 ## Debug Mode
 
 **Enable Debug Logging**:
+
 ```bash
 # Check if debug mode available
 defaults read com.superwhisper.macos debugMode
@@ -915,9 +992,11 @@ killall SuperWhisper && open -a SuperWhisper
 ## Getting Help
 
 **Check Version**:
+
 - SuperWhisper → About SuperWhisper → Version
 
 **Export Diagnostic Info**:
+
 ```bash
 # System info
 system_profiler SPSoftwareDataType SPAudioDataType > ~/Desktop/superwhisper-diagnostics.txt
@@ -930,5 +1009,6 @@ ls -la ~/Documents/SuperWhisper/
 ```
 
 **Contact Support**:
+
 - Include: macOS version, SuperWhisper version, specific error messages
 - Attach: Diagnostic info, relevant mode JSON files

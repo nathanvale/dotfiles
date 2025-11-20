@@ -7,6 +7,7 @@ This document defines the complete validation procedure required before marking 
 **⚠️ CRITICAL**: A task cannot be marked DONE unless ALL quality checks pass. No exceptions.
 
 **Quality Gate Process:**
+
 ```
 1. Run Type Check → Must pass
    ↓
@@ -26,11 +27,13 @@ This document defines the complete validation procedure required before marking 
 ### Check 1: Type Safety
 
 **Command:**
+
 ```bash
 pnpm typecheck
 ```
 
 **What it validates:**
+
 - No TypeScript compilation errors
 - All types correctly inferred or annotated
 - No `any` types without justification
@@ -38,17 +41,20 @@ pnpm typecheck
 - Import paths correct with `.js` extensions
 
 **Expected output:**
+
 ```
 ✓ Type checking complete (0 errors)
 ```
 
 **If errors found:**
+
 ```
 src/lib/mocks/mock-dataverse.ts:45:12 - error TS2532: Object is possibly 'undefined'.
 src/lib/dynamics/contact-repository.ts:92:5 - error TS4114: This member must have an 'override' modifier.
 ```
 
 **Resolution:**
+
 1. Review error messages and file/line references
 2. Apply patterns from `.claude/rules/typescript-patterns-condensed.md`
 3. Fix each error one at a time
@@ -57,11 +63,13 @@ src/lib/dynamics/contact-repository.ts:92:5 - error TS4114: This member must hav
 ### Check 2: Code Linting
 
 **Command:**
+
 ```bash
 pnpm lint
 ```
 
 **What it validates:**
+
 - ESLint rules compliance
 - No unused variables (except `_error`)
 - No empty catch blocks (without underscore)
@@ -70,11 +78,13 @@ pnpm lint
 - SonarJS quality rules
 
 **Expected output:**
+
 ```
 ✓ Linting complete (0 errors, 0 warnings)
 ```
 
 **If errors found:**
+
 ```
 src/lib/mocks/mock-dataverse.ts
   45:5  error  'error' is defined but never used  @typescript-eslint/no-unused-vars
@@ -82,6 +92,7 @@ src/lib/mocks/mock-dataverse.ts
 ```
 
 **Resolution:**
+
 1. For unused catch variables: prefix with underscore `_error`
 2. For empty catch blocks: add comment or handle error
 3. For other errors: apply fix suggested by linter
@@ -90,11 +101,13 @@ src/lib/mocks/mock-dataverse.ts
 ### Check 3: Test Suite
 
 **Command:**
+
 ```bash
 pnpm test
 ```
 
 **What it validates:**
+
 - All unit tests passing
 - All integration tests passing
 - No skipped tests (`test.skip`)
@@ -102,6 +115,7 @@ pnpm test
 - Test coverage adequate
 
 **Expected output:**
+
 ```
 ✓ tests/unit/mocks/mock-dataverse.test.ts (3 tests)
 ✓ tests/unit/dynamics/contact-repository.test.ts (5 tests)
@@ -114,6 +128,7 @@ Test Files  3 passed (3)
 ```
 
 **If tests fail:**
+
 ```
 FAIL tests/unit/mocks/mock-dataverse.test.ts
   ● MockDataverseService.query() › should return empty array
@@ -125,6 +140,7 @@ FAIL tests/unit/mocks/mock-dataverse.test.ts
 ```
 
 **Resolution:**
+
 1. Identify failing test and error message
 2. Use Wallaby MCP to debug:
    ```bash
@@ -137,11 +153,13 @@ FAIL tests/unit/mocks/mock-dataverse.test.ts
 ### Check 4: Code Formatting
 
 **Command:**
+
 ```bash
 pnpm format:check
 ```
 
 **What it validates:**
+
 - Prettier formatting applied consistently
 - Proper indentation (2 spaces)
 - Line length under 100 characters
@@ -149,17 +167,20 @@ pnpm format:check
 - Trailing commas where appropriate
 
 **Expected output:**
+
 ```
 ✓ All files formatted correctly
 ```
 
 **If formatting issues found:**
+
 ```
 src/lib/mocks/mock-dataverse.ts
 src/lib/dynamics/contact-repository.ts
 ```
 
 **Resolution:**
+
 ```bash
 # Auto-fix formatting
 pnpm format
@@ -182,8 +203,10 @@ grep -A20 "^## Acceptance Criteria" docs/tasks/T0001-*.md
 ```
 
 Example:
+
 ```markdown
 ## Acceptance Criteria
+
 - [x] Mock query() returns empty array [] when no contacts match filter
 - [x] findByName() returns null when no contacts found
 - [x] Filter string parsing handles special characters safely
@@ -200,6 +223,7 @@ Example:
 3. **Update task file** to check the box
 
 **Example verification for AC4:**
+
 ```bash
 # Run migration with 100 rows
 USE_FIXTURES=true npx tsx src/cli.ts migrate referrals \
@@ -240,6 +264,7 @@ USE_FIXTURES=true npx tsx src/cli.ts migrate referrals \
 ```
 
 **Monitor for:**
+
 - ✅ No errors or exceptions
 - ✅ Expected output format
 - ✅ Performance acceptable
@@ -286,7 +311,9 @@ pnpm test
 
 ```markdown
 ## Regression Risk
+
 **Blast Radius:**
+
 - All contact creation operations during migration
 - Any code path using ContactRepository.findByName()
 - Potentially affects other repository findByX() methods
@@ -328,6 +355,7 @@ npx tsx src/cli.ts validate relationships worker
 **Before updating task status to DONE, verify:**
 
 ### Code Quality
+
 - [ ] `pnpm typecheck` → 0 errors
 - [ ] `pnpm lint` → 0 errors
 - [ ] `pnpm test` → All passing
@@ -337,12 +365,14 @@ npx tsx src/cli.ts validate relationships worker
 - [ ] No TODO comments without ticket reference
 
 ### Acceptance Criteria
+
 - [ ] All AC items checked in task file
 - [ ] Each AC manually verified
 - [ ] E2E validation completed (if required)
 - [ ] Live mode tested (if applicable)
 
 ### Testing
+
 - [ ] Unit tests written and passing
 - [ ] Integration tests written and passing
 - [ ] E2E tests completed (manual or automated)
@@ -350,12 +380,14 @@ npx tsx src/cli.ts validate relationships worker
 - [ ] Wallaby MCP confirms coverage
 
 ### Documentation
+
 - [ ] Code comments added where needed
 - [ ] Complex logic explained
 - [ ] Task file updated with completion notes
 - [ ] Related docs updated (if applicable)
 
 ### Regression Prevention
+
 - [ ] No existing tests broken
 - [ ] Related components validated
 - [ ] Smoke testing completed
@@ -378,6 +410,7 @@ vi docs/tasks/T0001-fix-query-execution-error-findbyname.md
 ```
 
 **Or use sed:**
+
 ```bash
 sed -i '' 's/^status: IN_PROGRESS$/status: DONE/' \
   docs/tasks/T0001-*.md
@@ -386,6 +419,7 @@ sed -i '' 's/^status: IN_PROGRESS$/status: DONE/' \
 ### Step 2: Add Completion Timestamp
 
 Add to task file frontmatter:
+
 ```yaml
 completed: 2025-11-07T14:30:00Z
 ```
@@ -457,11 +491,13 @@ Closes: #123"
 ### TypeScript Errors Don't Resolve
 
 **Symptoms:**
+
 - Fix applied but error persists
 - Error in different file than edited
 - Cascading errors
 
 **Actions:**
+
 1. Clean build: `rm -rf dist/ && pnpm typecheck`
 2. Restart IDE/editor TypeScript server
 3. Check import paths are correct
@@ -470,11 +506,13 @@ Closes: #123"
 ### Tests Fail Intermittently
 
 **Symptoms:**
+
 - Tests pass locally, fail in CI
 - Tests pass first run, fail second run
 - Random failures
 
 **Actions:**
+
 1. Check for test interdependencies (shared state)
 2. Add proper cleanup in `afterEach` hooks
 3. Use Wallaby to identify timing issues
@@ -483,10 +521,12 @@ Closes: #123"
 ### Linter Conflicts with Prettier
 
 **Symptoms:**
+
 - `pnpm lint` fails after `pnpm format`
 - Formatting changes rejected by linter
 
 **Actions:**
+
 1. Verify Prettier and ESLint configs compatible
 2. Run both in order: `pnpm format && pnpm lint`
 3. Check for conflicting rules in `.eslintrc`
@@ -495,10 +535,12 @@ Closes: #123"
 ### Acceptance Criteria Ambiguous
 
 **Symptoms:**
+
 - Unclear what "done" means for an AC item
 - AC seems satisfied but feels incomplete
 
 **Actions:**
+
 1. Re-read task Description section for context
 2. Check Code Examples for expected behavior
 3. Review Testing Requirements for validation approach

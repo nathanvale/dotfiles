@@ -3,6 +3,7 @@
 **Python and jq implementations for complex graph queries**
 
 ## Table of Contents
+
 - [Domain Index Structure Reference](#domain-index-structure-reference)
   - [Root Object](#root-object)
   - [File Entry (.f section)](#file-entry-f-section)
@@ -31,24 +32,32 @@
 ## Domain Index Structure Reference
 
 ### Root Object
+
 ```json
 {
+  "d": {
+    /* Dependencies */
+  },
+  "f": {
+    /* Files map */
+  },
+  "g": [
+    /* Graph edges */
+  ],
   "metadata": {
-    "timestamp": "2025-11-09T10:00:00Z",
+    "domain_files_count": 12,
     "domain_name": "CSV Processing",
-    "domain_files_count": 12
+    "timestamp": "2025-11-09T10:00:00Z"
   },
   "stats": {
     "domain_files": 12,
     "domain_functions": 35
-  },
-  "f": { /* Files map */ },
-  "g": [ /* Graph edges */ ],
-  "d": { /* Dependencies */ }
+  }
 }
 ```
 
 ### File Entry (`.f` section)
+
 ```json
 "file/path.ts": [
   "t",                          // Type indicator
@@ -65,6 +74,7 @@
 ```
 
 ### Graph Edges (`.g` section)
+
 ```json
 "g": [
   ["caller", "callee"],
@@ -83,6 +93,7 @@
 **Complexity**: O(E) where E = number of edges
 
 ### Bash Implementation (jq)
+
 ```bash
 #!/bin/bash
 # Usage: find-callers.sh <function_name> <domain_file>
@@ -96,6 +107,7 @@ jq -r --arg func "$FUNC" '
 ```
 
 ### Python Implementation
+
 ```python
 import json
 import sys
@@ -127,6 +139,7 @@ if __name__ == '__main__':
 **Complexity**: O(E)
 
 ### Bash Implementation (jq)
+
 ```bash
 #!/bin/bash
 # Usage: find-calls.sh <function_name> <domain_file>
@@ -150,6 +163,7 @@ jq -r --arg func "$FUNC" '
 **Complexity**: O(V + E) where V = vertices, E = edges
 
 ### Python Implementation
+
 ```python
 #!/usr/bin/env python3
 """
@@ -244,6 +258,7 @@ if __name__ == '__main__':
 **Performance**: ~300-500ms for typical functions
 
 **Example Output**:
+
 ```
 Blast Radius for 'parseDate':
 
@@ -268,6 +283,7 @@ Total affected functions: 5
 **Complexity**: O(V + E)
 
 ### Python Implementation
+
 ```python
 #!/usr/bin/env python3
 """
@@ -383,6 +399,7 @@ if __name__ == '__main__':
 **Complexity**: O(V + E)
 
 ### Python Implementation
+
 ```python
 #!/usr/bin/env python3
 """
@@ -469,6 +486,7 @@ if __name__ == '__main__':
 **Complexity**: O(V + E)
 
 ### Python Implementation
+
 ```python
 #!/usr/bin/env python3
 """
@@ -532,6 +550,7 @@ if __name__ == '__main__':
 **Complexity**: O(E)
 
 ### Bash Implementation (jq)
+
 ```bash
 #!/bin/bash
 # Usage: find-hotspots.sh <domain_file> [limit]
@@ -561,6 +580,7 @@ jq -r --argjson limit "$LIMIT" '
 **Complexity**: O(V + E)
 
 ### Python Implementation
+
 ```python
 #!/usr/bin/env python3
 """
@@ -667,18 +687,19 @@ if __name__ == '__main__':
 
 ## Performance Summary
 
-| Algorithm | Complexity | Typical Time | Scales To |
-|-----------|------------|--------------|-----------|
-| Find callers | O(E) | ~20ms (jq) | 10K edges |
-| Find calls | O(E) | ~20ms (jq) | 10K edges |
-| Blast radius | O(V+E) | ~300ms | 1K vertices |
-| Dead code | O(V+E) | ~200ms | 5K vertices |
-| Cycles | O(V+E) | ~500ms | 1K vertices |
-| Cross-domain | O(V+E) | ~150ms | 5K vertices |
-| Hotspots | O(E) | ~100ms (jq) | 10K edges |
-| Trace to error | O(V+E) | ~400ms | 1K vertices |
+| Algorithm      | Complexity | Typical Time | Scales To   |
+| -------------- | ---------- | ------------ | ----------- |
+| Find callers   | O(E)       | ~20ms (jq)   | 10K edges   |
+| Find calls     | O(E)       | ~20ms (jq)   | 10K edges   |
+| Blast radius   | O(V+E)     | ~300ms       | 1K vertices |
+| Dead code      | O(V+E)     | ~200ms       | 5K vertices |
+| Cycles         | O(V+E)     | ~500ms       | 1K vertices |
+| Cross-domain   | O(V+E)     | ~150ms       | 5K vertices |
+| Hotspots       | O(E)       | ~100ms (jq)  | 10K edges   |
+| Trace to error | O(V+E)     | ~400ms       | 1K vertices |
 
 **Optimization Strategy**:
+
 - Use **jq** for simple queries (find-callers, find-calls, hotspots)
 - Use **Python** for graph algorithms (blast-radius, cycles, trace-to-error)
 - Never load entire files (defeats token efficiency purpose)

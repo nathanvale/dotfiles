@@ -36,16 +36,12 @@ This skill handles three common tech debt formats:
 
 ### 1. Legacy Authentication System
 
-**Type:** Deprecated technology
-**Impact:** Security risk, blocks new features
-**Effort:** 40h
+**Type:** Deprecated technology **Impact:** Security risk, blocks new features **Effort:** 40h
 **ROI:** High - enables OAuth2, improves security
 
 ### 2. Outdated Express v4
 
-**Type:** Dependency upgrade
-**EOL Date:** 2025-06-30
-**Effort:** 16h
+**Type:** Dependency upgrade **EOL Date:** 2025-06-30 **Effort:** 16h
 ```
 
 ### Structure 2: Code Quality Report
@@ -76,12 +72,10 @@ This skill handles three common tech debt formats:
 
 ### Issue: N+1 Query Problem
 
-**Files Affected:** 47 files
-**Performance Impact:** 3-5s page load times
-**User Impact:** 10K users affected daily
+**Files Affected:** 47 files **Performance Impact:** 3-5s page load times **User Impact:** 10K users
+affected daily
 
-**Solution:** Implement dataloader pattern
-**Estimated Effort:** 24h
+**Solution:** Implement dataloader pattern **Estimated Effort:** 24h
 ```
 
 ---
@@ -228,21 +222,21 @@ Use ROI-based prioritization:
 
 ```typescript
 function classifyTechDebtPriority(debt: TechDebt): Priority {
-  const impact = calculateImpact(debt)
-  const effort = debt.estimatedEffortHours
-  const roi = impact / effort
+  const impact = calculateImpact(debt);
+  const effort = debt.estimatedEffortHours;
+  const roi = impact / effort;
 
   // Override rules
-  if (debt.businessRisk === "critical") return "P0"
-  if (debt.developmentVelocity === "blocking") return "P0"
-  if (debt.hasSecurityVulnerability) return "P0"
-  if (debt.eolDate && isWithin6Months(debt.eolDate)) return "P0"
+  if (debt.businessRisk === "critical") return "P0";
+  if (debt.developmentVelocity === "blocking") return "P0";
+  if (debt.hasSecurityVulnerability) return "P0";
+  if (debt.eolDate && isWithin6Months(debt.eolDate)) return "P0";
 
   // ROI-based
-  if (roi > 5.0) return "P0"
-  if (roi > 2.0) return "P1"
-  if (roi > 1.0) return "P2"
-  return "P3"
+  if (roi > 5.0) return "P0";
+  if (roi > 2.0) return "P1";
+  if (roi > 1.0) return "P2";
+  return "P3";
 }
 ```
 

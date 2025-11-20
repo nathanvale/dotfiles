@@ -33,6 +33,7 @@ chmod +x integration-test.sh
 ```
 
 **What it tests:**
+
 - Repository initialization
 - Task selection algorithm
 - Lock creation and management
@@ -41,6 +42,7 @@ chmod +x integration-test.sh
 - Health checks
 
 **Expected output:**
+
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 TaskDock Integration Test
@@ -101,6 +103,7 @@ rm -rf /tmp/test-taskdock
 ### Scenario 1: Task Selection Priority
 
 **Setup:**
+
 - T0001 (P0, READY)
 - T0002 (P1, READY, depends on T0001)
 - T0003 (P1, BLOCKED, depends on T0002)
@@ -108,6 +111,7 @@ rm -rf /tmp/test-taskdock
 - T0005 (P2, COMPLETED)
 
 **Expected behavior:**
+
 1. First `next`: Selects T0001 (highest priority, no dependencies)
 2. Second `next`: Selects T0002 (T0001 locked, T0002 is next priority)
 3. Mark T0001 COMPLETED: Now T0002 dependencies met
@@ -118,11 +122,13 @@ rm -rf /tmp/test-taskdock
 ### Scenario 2: Dependency Resolution
 
 **Setup:**
+
 - All tasks at READY status
 - T0002 depends_on: [T0001]
 - T0003 depends_on: [T0002]
 
 **Expected behavior:**
+
 1. Can only select T0001 (no dependencies)
 2. After T0001 → COMPLETED, can select T0002
 3. After T0002 → COMPLETED, can select T0003
@@ -130,10 +136,12 @@ rm -rf /tmp/test-taskdock
 ### Scenario 3: Lock Management
 
 **Setup:**
+
 - T0004 has active lock
 - Lock has recent heartbeat
 
 **Expected behavior:**
+
 1. `locks list` shows T0004 as locked
 2. Cannot select T0004 for new work
 3. `locks cleanup` with recent heartbeat keeps lock
@@ -143,10 +151,12 @@ rm -rf /tmp/test-taskdock
 ### Scenario 4: Concurrent Agents
 
 **Setup:**
+
 - Multiple agents running simultaneously
 - All agents call `next` at same time
 
 **Expected behavior:**
+
 1. Each agent gets different task
 2. No two agents get same task
 3. Atomic lock creation prevents race conditions
@@ -174,16 +184,16 @@ Tasks are prioritized P0 (highest) → P3 (lowest):
 
 ```json
 {
-  "taskId": "T0004",
   "agentId": "agent-1-12345",
-  "hostname": "macbook-pro.local",
-  "lockedAt": "2025-11-19T09:00:00Z",
-  "lastHeartbeat": "2025-11-19T09:45:00Z",
-  "status": "IN_PROGRESS",
-  "pid": 98765,
   "branch": "feat/T0004-refactor-profile-component",
-  "worktree": "/path/to/.worktrees/T0004",
-  "taskFile": "/path/to/docs/tasks/T0004-refactor-profile-component.md"
+  "hostname": "macbook-pro.local",
+  "lastHeartbeat": "2025-11-19T09:45:00Z",
+  "lockedAt": "2025-11-19T09:00:00Z",
+  "pid": 98765,
+  "status": "IN_PROGRESS",
+  "taskFile": "/path/to/docs/tasks/T0004-refactor-profile-component.md",
+  "taskId": "T0004",
+  "worktree": "/path/to/.worktrees/T0004"
 }
 ```
 
@@ -250,6 +260,7 @@ jobs:
 ### Tests fail with "command not found"
 
 Ensure TaskDock is in your PATH:
+
 ```bash
 export PATH="$HOME/code/dotfiles/bin:$PATH"
 ```
@@ -257,6 +268,7 @@ export PATH="$HOME/code/dotfiles/bin:$PATH"
 ### Tests fail with "jq not found"
 
 Install jq:
+
 ```bash
 # macOS
 brew install jq
@@ -268,6 +280,7 @@ sudo apt-get install jq
 ### Tests leave artifacts
 
 The integration test should clean up automatically, but if it fails:
+
 ```bash
 rm -rf /tmp/taskdock-integration-test-*
 ```

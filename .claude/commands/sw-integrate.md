@@ -49,6 +49,7 @@ open "superwhisper://mode?key=mode-key&record=true"
 ## Mode Configuration
 
 Create mode JSON with:
+
 - Clear instructions for AI formatting
 - Context settings (clipboard, selection, activeApp)
 - Output method (paste or clipboard)
@@ -57,6 +58,7 @@ Create mode JSON with:
 ## Testing Checklist
 
 After setup, verify:
+
 1. Script is executable: `chmod +x script.sh`
 2. Mode JSON is valid: `jq '.' mode.json`
 3. Deep link works: `open "superwhisper://mode?key=..."`

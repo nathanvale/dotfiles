@@ -60,10 +60,12 @@ open ~/Downloads/interview-*.m4a -a superwhisper
 ### Optimal File Formats
 
 **Best Performance**:
+
 - Audio: `.m4a`, `.mp3`, `.wav`, `.aac`
 - Video: `.mp4`, `.mov`, `.m4v`
 
 **Avoid**:
+
 - `.flac` (large files, slower processing)
 - `.avi` (compatibility issues)
 - Very long files (>2 hours) - split them first
@@ -100,16 +102,19 @@ done
 ```
 
 **Install fswatch** (required):
+
 ```bash
 brew install fswatch
 ```
 
 **Run in Background**:
+
 ```bash
 nohup ~/code/dotfiles/bin/utils/sw-watch-transcribe.sh &
 ```
 
 **Stop Watching**:
+
 ```bash
 pkill -f sw-watch-transcribe.sh
 ```
@@ -121,11 +126,13 @@ pkill -f sw-watch-transcribe.sh
 SuperWhisper includes a **Filesync** feature for backing up and syncing recordings across devices.
 
 **Enable in Settings**:
+
 ```
 SuperWhisper → Settings → Filesync
 ```
 
 **What Gets Synced**:
+
 - ✅ Audio recordings
 - ✅ Transcriptions
 - ✅ Custom modes
@@ -134,12 +141,14 @@ SuperWhisper → Settings → Filesync
 ### When to Enable Filesync
 
 **Enable If**:
+
 - You use multiple Macs
 - You want automatic backups
 - You need to access recordings from iOS
 - You collaborate and share modes
 
 **Disable If**:
+
 - Privacy concerns (recordings in cloud)
 - Limited iCloud storage
 - Only use one device
@@ -155,6 +164,7 @@ SuperWhisper → Settings → Filesync
 ### Manual Backup Commands
 
 **Backup All SuperWhisper Data**:
+
 ```bash
 #!/bin/bash
 # ~/code/dotfiles/bin/utils/sw-backup.sh
@@ -172,6 +182,7 @@ echo "Backup saved to: $BACKUP_DIR"
 ```
 
 **Restore from Backup**:
+
 ```bash
 #!/bin/bash
 # ~/code/dotfiles/bin/utils/sw-restore.sh
@@ -196,6 +207,7 @@ echo "Restart SuperWhisper to apply changes"
 ```
 
 **Automated Weekly Backup** (cron):
+
 ```bash
 # Add to crontab: crontab -e
 0 2 * * 0 ~/code/dotfiles/bin/utils/sw-backup.sh
@@ -203,7 +215,8 @@ echo "Restart SuperWhisper to apply changes"
 
 ## Settings Management via Automation
 
-SuperWhisper settings are stored in `~/Documents/SuperWhisper/settings.json`. You can modify settings programmatically for advanced automation.
+SuperWhisper settings are stored in `~/Documents/SuperWhisper/settings.json`. You can modify
+settings programmatically for advanced automation.
 
 ### Programmatic Settings Updates
 
@@ -236,6 +249,7 @@ echo "Switched to $MODEL model"
 ```
 
 **Usage**:
+
 ```bash
 sw-set-model.sh local-fast      # Fast local processing
 sw-set-model.sh local-accurate  # Better accuracy, slower
@@ -245,6 +259,7 @@ sw-set-model.sh cloud           # Cloud-based (requires internet)
 ### Common Settings Modifications
 
 **Toggle Auto-Activation**:
+
 ```bash
 #!/bin/bash
 # Enable/disable auto-activation
@@ -259,6 +274,7 @@ open -a SuperWhisper
 ```
 
 **Update Default Mode**:
+
 ```bash
 #!/bin/bash
 # Set default mode on launch
@@ -273,6 +289,7 @@ open -a SuperWhisper
 ```
 
 **Change Hotkey Programmatically**:
+
 ```bash
 #!/bin/bash
 # Update global recording hotkey
@@ -291,6 +308,7 @@ echo "Hotkey changed to: $HOTKEY"
 ### Important Notes
 
 **Always Restart After Changes**:
+
 ```bash
 # Quit and restart for settings to take effect
 osascript -e 'quit app "SuperWhisper"'
@@ -299,11 +317,13 @@ open -a SuperWhisper
 ```
 
 **Backup Before Modifications**:
+
 ```bash
 cp ~/Documents/SuperWhisper/settings.json ~/Documents/SuperWhisper/settings.json.backup
 ```
 
 **Validate JSON After Changes**:
+
 ```bash
 jq . ~/Documents/SuperWhisper/settings.json > /dev/null && echo "Valid JSON" || echo "Invalid JSON"
 ```
@@ -329,6 +349,7 @@ open "superwhisper://mode?key=$MODE_KEY&record=true"
 ```
 
 **Usage**:
+
 ```bash
 sw-mode.sh quick-note    # Switch to quick note mode
 sw-mode.sh email         # Switch to email mode
@@ -338,6 +359,7 @@ sw-mode.sh obsidian      # Switch to obsidian mode
 ### Context-Aware Mode Switching
 
 **Note**: This is **external automation** (not SuperWhisper's built-in auto-activation).
+
 - External scripts use **bundle IDs** to detect active apps (via osascript)
 - SuperWhisper's built-in `activationApps` uses **application names** (e.g., "Messages", "Mail")
 - Both approaches work, but built-in auto-activation is simpler for most use cases
@@ -413,6 +435,7 @@ Action: Prompt for User Input
 ### Install Raycast Extension
 
 **Check if Available**:
+
 ```bash
 open "raycast://extensions/superwhisper"
 ```
@@ -422,6 +445,7 @@ open "raycast://extensions/superwhisper"
 **Location**: `~/Library/Application Support/Raycast/Scripts/`
 
 **Quick Note Script** (`superwhisper-quick-note.sh`):
+
 ```bash
 #!/bin/bash
 
@@ -436,6 +460,7 @@ open "superwhisper://mode?key=quick-note&record=true"
 ```
 
 **Email Draft Script** (`superwhisper-email.sh`):
+
 ```bash
 #!/bin/bash
 
@@ -450,6 +475,7 @@ open "superwhisper://mode?key=email&record=true"
 ```
 
 **Make Executable**:
+
 ```bash
 chmod +x ~/Library/Application\ Support/Raycast/Scripts/superwhisper-*.sh
 ```
@@ -469,6 +495,7 @@ end run
 ```
 
 **Run from Shell**:
+
 ```bash
 osascript ~/Library/Scripts/SuperWhisper/RecordEmail.scpt
 ```
@@ -540,11 +567,13 @@ end)
 **Download/Create**: Alfred Workflow with Keyword triggers
 
 **Keyword Examples**:
+
 - `sw quick` → Switch to quick-note mode
 - `sw email` → Switch to email mode
 - `sw record` → Start recording current mode
 
 **Run Script Action**:
+
 ```bash
 open "superwhisper://mode?key={query}&record=true"
 ```
@@ -554,6 +583,7 @@ open "superwhisper://mode?key={query}&record=true"
 ### Touchbar Button
 
 **Setup**:
+
 1. BetterTouchTool → Touchbar → Add Widget → Button
 2. Label: "🎙️ Record"
 3. Action: Execute Shell Script
@@ -564,6 +594,7 @@ open "superwhisper://mode?key={query}&record=true"
 ### Gesture Triggers
 
 **Three-Finger Tap**:
+
 ```
 Trigger: Three Finger Tap
 Action: Execute Shell Script
@@ -585,6 +616,7 @@ bind W run-shell "~/code/dotfiles/bin/utils/sw-smart.sh"
 ```
 
 **Usage**:
+
 - `Ctrl-g w`: Start recording with current mode
 - `Ctrl-g W`: Smart mode selection based on tmux session
 
@@ -615,6 +647,7 @@ open "superwhisper://mode?key=$MODE&record=true"
 ```
 
 **Tmux Binding**:
+
 ```bash
 bind W run-shell "~/code/dotfiles/bin/tmux/sw-session-mode.sh"
 ```
@@ -632,6 +665,7 @@ exec-and-forget = ['bash', '-c', 'sw-workspace-mode.sh']
 ```
 
 **Script** (`~/code/dotfiles/bin/utils/sw-workspace-mode.sh`):
+
 ```bash
 #!/bin/bash
 
@@ -678,6 +712,7 @@ echo "Cleaned SuperWhisper history older than 30 days"
 ```
 
 **Run Weekly**:
+
 ```bash
 # Add to crontab
 0 0 * * 0 ~/code/dotfiles/bin/utils/sw-cleanup.sh
@@ -710,22 +745,23 @@ osascript -e 'display notification "Recording..." with title "SuperWhisper"'
 
 ```json
 {
-  "name": "ADHD Quick Capture",
-  "key": "adhd-quick",
-  "instructions": "Transcribe exactly as spoken. Short paragraphs (2-3 sentences). Use bullet points. No editing.",
   "context": {
+    "activeApp": false,
     "clipboard": false,
-    "selection": false,
-    "activeApp": false
+    "selection": false
   },
+  "instructions": "Transcribe exactly as spoken. Short paragraphs (2-3 sentences). Use bullet points. No editing.",
+  "key": "adhd-quick",
+  "model": "local-fast",
+  "name": "ADHD Quick Capture",
   "output": {
     "method": "paste"
-  },
-  "model": "local-fast"
+  }
 }
 ```
 
 **Why It Works**:
+
 - ✅ Local-fast = no waiting
 - ✅ Minimal instructions = faster processing
 - ✅ No context = instant mode switch

@@ -1,11 +1,17 @@
 ---
 name: format-tech-debt
-description: Transforms technical debt assessments into prioritized refactoring tasks with 15 enrichments (10 universal + 5 tech debt-specific including ROI analysis). Use when user says 'format tech debt', 'convert technical debt', 'process refactoring needs', 'prioritize tech debt', or when detect-input-type returns 'tech-debt'. Handles refactoring assessments and debt inventories in .md files. (plugin:task-streams)
+description:
+  Transforms technical debt assessments into prioritized refactoring tasks with 15 enrichments (10
+  universal + 5 tech debt-specific including ROI analysis). Use when user says 'format tech debt',
+  'convert technical debt', 'process refactoring needs', 'prioritize tech debt', or when
+  detect-input-type returns 'tech-debt'. Handles refactoring assessments and debt inventories in .md
+  files. (plugin:task-streams)
 ---
 
 # Format Tech Debt Skill
 
-Converts technical debt assessments, code quality reports, and refactoring proposals into actionable tasks with proper prioritization based on debt impact and remediation ROI.
+Converts technical debt assessments, code quality reports, and refactoring proposals into actionable
+tasks with proper prioritization based on debt impact and remediation ROI.
 
 ## When to Use
 
@@ -19,13 +25,16 @@ Use this skill when you need to:
 
 ## Purpose
 
-Tech debt documents identify **quality issues** that slow development. This skill extracts debt items, prioritizes by business impact (ROI analysis), and creates refactoring tasks with all 10 enrichments.
+Tech debt documents identify **quality issues** that slow development. This skill extracts debt
+items, prioritizes by business impact (ROI analysis), and creates refactoring tasks with all 10
+enrichments.
 
 ## Core Capabilities
 
 1. **Debt Extraction** - Identifies technical debt items from various document formats
 2. **ROI-Based Prioritization** - Maps debt impact to P0-P3 priorities using business value analysis
-3. **10 Enrichments** - Adds file locations, effort estimates, acceptance criteria, testing requirements, etc.
+3. **10 Enrichments** - Adds file locations, effort estimates, acceptance criteria, testing
+   requirements, etc.
 4. **Component Classification** - Invokes component-manager skill for consistent categorization
 5. **Task ID Generation** - Invokes id-generator skill with metadata tracking
 
@@ -33,7 +42,8 @@ Tech debt documents identify **quality issues** that slow development. This skil
 
 **Reference**: @../../templates/tech-debt.template.md
 
-This skill generates enriched output that MUST conform to the template structure above. All output must include:
+This skill generates enriched output that MUST conform to the template structure above. All output
+must include:
 
 - All 10 universal enrichments (see template for details)
 - Proper frontmatter metadata (id, title, priority, component, status, created, source)
@@ -42,13 +52,15 @@ This skill generates enriched output that MUST conform to the template structure
 
 The template defines the structural contract. Your implementation fills in the actual values.
 
-**Integration with Validator**: Use `validate-tech-debt` to verify your output matches this template before deploying.
+**Integration with Validator**: Use `validate-tech-debt` to verify your output matches this template
+before deploying.
 
 ## Supporting Documentation
 
 **See @../shared-enrichments.md** for the 10 universal enrichment patterns (common to all formats)
 
-**See @tech-debt-enrichments.md** for the 5 tech debt-specific enrichments (metrics, refactoring strategy, ROI analysis, quality improvements, safety mechanisms)
+**See @tech-debt-enrichments.md** for the 5 tech debt-specific enrichments (metrics, refactoring
+strategy, ROI analysis, quality improvements, safety mechanisms)
 
 **See @priority-guide.md** for ROI-based P0-P3 prioritization rules
 

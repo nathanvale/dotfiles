@@ -2,9 +2,8 @@
 
 ## Overview
 
-This directory contains scripts for managing, validating, and discovering
-templates in the Template System. All scripts are written in TypeScript and run
-via Bun.
+This directory contains scripts for managing, validating, and discovering templates in the Template
+System. All scripts are written in TypeScript and run via Bun.
 
 ---
 
@@ -24,33 +23,30 @@ via Bun.
 
 ### Purpose
 
-Provides core validation logic for verifying that templates contain all 10
-universal enrichments.
+Provides core validation logic for verifying that templates contain all 10 universal enrichments.
 
 ### Exports
 
 ```typescript
 // Enrichment definition
 interface EnrichmentDefinition {
-  id: number
-  name: string
-  requiredFields: string[]
-  requiredHeadings: string[]
+  id: number;
+  name: string;
+  requiredFields: string[];
+  requiredHeadings: string[];
 }
 
 // Array of 10 required enrichments
-const REQUIRED_ENRICHMENTS: readonly EnrichmentDefinition[]
+const REQUIRED_ENRICHMENTS: readonly EnrichmentDefinition[];
 
 // Validation result
 interface ValidationResult {
-  passed: boolean
-  missing: string[]
+  passed: boolean;
+  missing: string[];
 }
 
 // Validation function
-function validateTemplateHasAllEnrichments(
-  templateContent: string
-): ValidationResult
+function validateTemplateHasAllEnrichments(templateContent: string): ValidationResult;
 ```
 
 ### Usage
@@ -61,17 +57,17 @@ function validateTemplateHasAllEnrichments(
 import {
   validateTemplateHasAllEnrichments,
   REQUIRED_ENRICHMENTS,
-} from "./template-enrichment-validator.js"
+} from "./template-enrichment-validator.js";
 
-const templateContent = await readFile("template.md", "utf-8")
-const result = validateTemplateHasAllEnrichments(templateContent)
+const templateContent = await readFile("template.md", "utf-8");
+const result = validateTemplateHasAllEnrichments(templateContent);
 
 if (result.passed) {
-  console.log("✓ Template is valid")
+  console.log("✓ Template is valid");
 } else {
-  console.log("✗ Template has issues:")
+  console.log("✗ Template has issues:");
   for (const issue of result.missing) {
-    console.log(`  - ${issue}`)
+    console.log(`  - ${issue}`);
   }
 }
 ```
@@ -83,8 +79,7 @@ Checks for all 10 enrichments:
 1. **File Locations**: `**Location:**`
 2. **Effort Estimation**: `**Estimated Effort:**`
 3. **Complexity**: `**Complexity:**`
-4. **Acceptance Criteria**: `## Acceptance Criteria` +
-   `**Acceptance Criteria:**`
+4. **Acceptance Criteria**: `## Acceptance Criteria` + `**Acceptance Criteria:**`
 5. **Regression Risk (5D)**: `## Regression Risk Analysis` + 5 fields
    - `**Regression Risk Details:**`
    - `**Impact:**`
@@ -92,8 +87,7 @@ Checks for all 10 enrichments:
    - `**Dependencies:**`
    - `**Testing Gaps:**`
    - `**Rollback Risk:**`
-6. **Implementation Steps**: `## Implementation Plan` +
-   `**Implementation Steps:**`
+6. **Implementation Steps**: `## Implementation Plan` + `**Implementation Steps:**`
 7. **Code Examples**: `## Code Examples`
 8. **File Changes (3C)**: `## File Changes` + 3 fields
    - `**Files to Create:**`
@@ -129,8 +123,8 @@ Checks for all 10 enrichments:
 
 ### Purpose
 
-CLI tool for validating all templates in the templates directory. Exits with
-code 0 if all valid, code 1 if any invalid.
+CLI tool for validating all templates in the templates directory. Exits with code 0 if all valid,
+code 1 if any invalid.
 
 ### Usage
 
@@ -186,33 +180,33 @@ Validation failed: 1 template(s) invalid
 
 ```json
 {
-  "valid": [
-    {
-      "template": "bug-findings.template.md",
-      "passed": true,
-      "missing": []
-    },
-    {
-      "template": "generic.template.md",
-      "passed": true,
-      "missing": []
-    }
-  ],
   "invalid": [
     {
-      "template": "incomplete.template.md",
-      "passed": false,
       "missing": [
         "Enrichment #5 (Regression Risk): Missing field \"**Impact:**\"",
         "Enrichment #9 (Testing Table): Missing heading \"## Testing Requirements\""
-      ]
+      ],
+      "passed": false,
+      "template": "incomplete.template.md"
     }
   ],
   "summary": {
+    "invalid": 1,
     "total": 3,
-    "valid": 2,
-    "invalid": 1
-  }
+    "valid": 2
+  },
+  "valid": [
+    {
+      "missing": [],
+      "passed": true,
+      "template": "bug-findings.template.md"
+    },
+    {
+      "missing": [],
+      "passed": true,
+      "template": "generic.template.md"
+    }
+  ]
 }
 ```
 
@@ -258,34 +252,28 @@ exit $?
 
 ### Purpose
 
-Template discovery API for managing and querying task templates. Provides
-programmatic access to template metadata, content, and validation.
+Template discovery API for managing and querying task templates. Provides programmatic access to
+template metadata, content, and validation.
 
 ### Exports
 
 ```typescript
 // Template metadata interface
 interface TemplateMetadata {
-  templateName: string
-  templateVersion: string
-  description: string
-  requiredEnrichments: number
-  formatSkill: string
-  path: string
+  templateName: string;
+  templateVersion: string;
+  description: string;
+  requiredEnrichments: number;
+  formatSkill: string;
+  path: string;
 }
 
 // Template registry class
 class TemplateRegistry {
-  static async listTemplates(templatesDir?: string): Promise<TemplateMetadata[]>
-  static async getTemplate(name: string, templatesDir?: string): Promise<string>
-  static async getTemplateMetadata(
-    name: string,
-    templatesDir?: string
-  ): Promise<TemplateMetadata>
-  static async validateTemplate(
-    name: string,
-    templatesDir?: string
-  ): Promise<boolean>
+  static async listTemplates(templatesDir?: string): Promise<TemplateMetadata[]>;
+  static async getTemplate(name: string, templatesDir?: string): Promise<string>;
+  static async getTemplateMetadata(name: string, templatesDir?: string): Promise<TemplateMetadata>;
+  static async validateTemplate(name: string, templatesDir?: string): Promise<boolean>;
 }
 ```
 
@@ -294,23 +282,23 @@ class TemplateRegistry {
 **Import and use in code:**
 
 ```typescript
-import { TemplateRegistry } from "./template-registry.js"
+import { TemplateRegistry } from "./template-registry.js";
 
 // List all templates
-const templates = await TemplateRegistry.listTemplates()
-console.log(`Found ${templates.length} templates`)
+const templates = await TemplateRegistry.listTemplates();
+console.log(`Found ${templates.length} templates`);
 
 // Get template content
-const content = await TemplateRegistry.getTemplate("bug-findings")
-console.log(content)
+const content = await TemplateRegistry.getTemplate("bug-findings");
+console.log(content);
 
 // Get metadata only (faster)
-const metadata = await TemplateRegistry.getTemplateMetadata("bug-findings")
-console.log(metadata.description)
+const metadata = await TemplateRegistry.getTemplateMetadata("bug-findings");
+console.log(metadata.description);
 
 // Validate template
-const isValid = await TemplateRegistry.validateTemplate("bug-findings")
-console.log(isValid ? "✓ Valid" : "✗ Invalid")
+const isValid = await TemplateRegistry.validateTemplate("bug-findings");
+console.log(isValid ? "✓ Valid" : "✗ Invalid");
 ```
 
 ### API Methods
@@ -341,7 +329,7 @@ const templates = await TemplateRegistry.listTemplates()
 Returns full template content as string.
 
 ```typescript
-const content = await TemplateRegistry.getTemplate("bug-findings")
+const content = await TemplateRegistry.getTemplate("bug-findings");
 
 // Output:
 // ---
@@ -381,12 +369,12 @@ const metadata = await TemplateRegistry.getTemplateMetadata('bug-findings')
 Returns true if template has all 10 enrichments, false otherwise.
 
 ```typescript
-const isValid = await TemplateRegistry.validateTemplate("bug-findings")
+const isValid = await TemplateRegistry.validateTemplate("bug-findings");
 
 if (isValid) {
-  console.log("✓ Template is valid")
+  console.log("✓ Template is valid");
 } else {
-  console.log("✗ Template is invalid")
+  console.log("✗ Template is invalid");
 }
 ```
 
@@ -397,8 +385,7 @@ if (isValid) {
 All methods accept optional `templatesDir` parameter:
 
 ```typescript
-const customTemplates =
-  await TemplateRegistry.listTemplates("/path/to/templates")
+const customTemplates = await TemplateRegistry.listTemplates("/path/to/templates");
 ```
 
 ---
@@ -407,8 +394,8 @@ const customTemplates =
 
 ### Purpose
 
-CLI tool for listing all templates in the templates directory. Outputs JSON to
-stdout for easy consumption by external tools.
+CLI tool for listing all templates in the templates directory. Outputs JSON to stdout for easy
+consumption by external tools.
 
 ### Usage
 
@@ -440,20 +427,20 @@ bun scripts/list-templates.ts | jq '.[] | select(.formatSkill == "format-bug-fin
 ```json
 [
   {
-    "templateName": "bug-findings",
-    "templateVersion": "1.0.0",
     "description": "Template for bug findings",
-    "requiredEnrichments": 10,
     "formatSkill": "format-bug-findings",
-    "path": "/absolute/path/bug-findings.template.md"
+    "path": "/absolute/path/bug-findings.template.md",
+    "requiredEnrichments": 10,
+    "templateName": "bug-findings",
+    "templateVersion": "1.0.0"
   },
   {
-    "templateName": "generic",
-    "templateVersion": "1.0.0",
     "description": "Generic template",
-    "requiredEnrichments": 10,
     "formatSkill": "format-generic",
-    "path": "/absolute/path/generic.template.md"
+    "path": "/absolute/path/generic.template.md",
+    "requiredEnrichments": 10,
+    "templateName": "generic",
+    "templateVersion": "1.0.0"
   }
 ]
 ```
@@ -463,20 +450,20 @@ bun scripts/list-templates.ts | jq '.[] | select(.formatSkill == "format-bug-fin
 ```json
 [
   {
-    "templateName": "bug-findings",
-    "templateVersion": "1.0.0",
     "description": "Template for bug findings from code reviews",
-    "requiredEnrichments": 10,
     "formatSkill": "format-bug-findings",
-    "path": "/Users/username/project/.claude-plugins/task-streams/templates/bug-findings.template.md"
+    "path": "/Users/username/project/.claude-plugins/task-streams/templates/bug-findings.template.md",
+    "requiredEnrichments": 10,
+    "templateName": "bug-findings",
+    "templateVersion": "1.0.0"
   },
   {
-    "templateName": "generic",
-    "templateVersion": "1.0.0",
     "description": "Generic template for general tasks",
-    "requiredEnrichments": 10,
     "formatSkill": "format-generic",
-    "path": "/Users/username/project/.claude-plugins/task-streams/templates/generic.template.md"
+    "path": "/Users/username/project/.claude-plugins/task-streams/templates/generic.template.md",
+    "requiredEnrichments": 10,
+    "templateName": "generic",
+    "templateVersion": "1.0.0"
   }
 ]
 ```
@@ -527,16 +514,16 @@ for template in templates:
 **External plugin integration (Node.js):**
 
 ```javascript
-import { exec } from "child_process"
-import { promisify } from "util"
+import { exec } from "child_process";
+import { promisify } from "util";
 
-const execAsync = promisify(exec)
+const execAsync = promisify(exec);
 
-const { stdout } = await execAsync("bun scripts/list-templates.ts")
-const templates = JSON.parse(stdout)
+const { stdout } = await execAsync("bun scripts/list-templates.ts");
+const templates = JSON.parse(stdout);
 
 for (const template of templates) {
-  console.log(`Template: ${template.templateName}`)
+  console.log(`Template: ${template.templateName}`);
 }
 ```
 
@@ -546,8 +533,7 @@ for (const template of templates) {
 
 ### Purpose
 
-CLI tool for retrieving full template content by name. Outputs template content
-to stdout.
+CLI tool for retrieving full template content by name. Outputs template content to stdout.
 
 ### Usage
 
@@ -595,8 +581,8 @@ formatSkill: format-bug-findings
 
 ## Regression Risk Analysis
 
-**Regression Risk Details:** **Impact:** **Blast Radius:** **Dependencies:**
-**Testing Gaps:** **Rollback Risk:**
+**Regression Risk Details:** **Impact:** **Blast Radius:** **Dependencies:** **Testing Gaps:**
+**Rollback Risk:**
 
 ...
 ```
@@ -673,7 +659,7 @@ echo "$TEMPLATE" | grep "## Acceptance Criteria"
    ```typescript
    #!/usr/bin/env bun
 
-   import { TemplateRegistry } from "./template-registry.js"
+   import { TemplateRegistry } from "./template-registry.js";
    ```
 
 3. **Implement functionality:**
@@ -683,7 +669,7 @@ echo "$TEMPLATE" | grep "## Acceptance Criteria"
      // Your code here
    }
 
-   main().catch(console.error)
+   main().catch(console.error);
    ```
 
 4. **Make executable:**
@@ -692,8 +678,7 @@ echo "$TEMPLATE" | grep "## Acceptance Criteria"
    chmod +x scripts/my-new-script.ts
    ```
 
-5. **Add to this README:** Update the scripts index table and add full
-   documentation
+5. **Add to this README:** Update the scripts index table and add full documentation
 
 ### Testing Scripts
 
@@ -701,13 +686,13 @@ All scripts should have corresponding tests in `../tests/`:
 
 ```typescript
 // tests/scripts/my-script.test.ts
-import { describe, it, expect } from "vitest"
+import { describe, it, expect } from "vitest";
 
 describe("my-new-script", () => {
   it("should do something", async () => {
     // Test your script
-  })
-})
+  });
+});
 ```
 
 Run tests:

@@ -1,6 +1,8 @@
 # TaskDock
 
-**TaskDock** is an agentic task orchestration and worktree management system for multi-agent workflows. It provides a unified CLI for managing tasks, locks, worktrees, validation, merges, and observability—designed to be both human- and AI-agent-friendly.
+**TaskDock** is an agentic task orchestration and worktree management system for multi-agent
+workflows. It provides a unified CLI for managing tasks, locks, worktrees, validation, merges, and
+observability—designed to be both human- and AI-agent-friendly.
 
 ## Quick Start
 
@@ -71,4 +73,5 @@ TaskDock v0.1.0
 
 ---
 
-**Note**: TaskDock is designed for agentic workflows. All commands support `--json` output and provide actionable error messages with correlation IDs for debugging.
+**Note**: TaskDock is designed for agentic workflows. All commands support `--json` output and
+provide actionable error messages with correlation IDs for debugging.

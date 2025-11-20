@@ -1,40 +1,61 @@
 {
   "// This is what R0007's observability should have looked like with granular tracking": "",
 
-  "observability_OLD_FORMAT": {
-    "tools_used": [
-      "Read (6 files: referral.ts, contact-repository.ts, service-factory.ts, DataverseRepository.d.ts, dynamics.ts, contact-service.ts)",
-      "Bash/rg (10 searches: DynamicsWebApi initialization, repository patterns, ContactService usage)",
-      "Sequential Thinking (8 thoughts: traced error through call stack)"
+  "debugging_project_index_issues": {
+    "diagnosis_steps": [
+      "1. Check execution_context.cwd - agent should be in project root",
+      "2. Check execution_context.project_index_exists - should be true",
+      "3. Check execution_context.project_index_path - path where agent looked for file",
+      "4. If cwd != project_root, agent started in wrong directory",
+      "5. If project_index_exists = false, need to run /index command first"
     ],
-    "timing_ms": 180000,
-    "tokens": 62000,
-    "notes": "Started by searching for DynamicsWebApi initialization patterns. Used ripgrep to find ContactRepository instantiation points. Traced through service factory to understand fixture vs live mode. Read DataverseRepository type definitions from node_modules to understand required API surface. Sequential thinking traced error from ContactRepository.create() → DataverseRepository.createRequest() → dynamicsWebApi.create(). Discovered mismatch: DataverseService provides createRecord(), but DataverseRepository expects dynamicsWebApi.create(). Found incomplete apiWrapper mock at referral.ts:455-457 only providing retrieveMultiple. All 11 repositories extending DataverseRepository potentially affected. Fix is straightforward: add create, update, upsert, delete methods to apiWrapper.dynamicsWebApi object."
+    "prevention": "Always include execution_context in observability section. This makes debugging 100x easier.",
+    "solution_for_R0007": "execution_context shows project_index_exists=false. User needs to run '/index' in MPCU-Build-and-Deliver project before code-analyzer can use graph queries. Without PROJECT_INDEX.json, agent falls back to slower ripgrep searches (2K tokens vs 500 tokens for graph queries).",
+    "symptom": "Python scripts (find-callers.sh, blast-radius.py) fail with 'PROJECT_INDEX.json not found'"
   },
+  "lesson_learned": "For TypeError: 'X is not a function' errors with clear stack traces, sequential thinking is almost never necessary. The error message tells you exactly what's missing. Just read the relevant files, identify the incomplete mock/implementation, and generate the report.",
 
   "observability_NEW_FORMAT_HYPOTHESIS_1": {
     "SCENARIO": "Agent running from subdirectory, PROJECT_INDEX.json exists at root",
     "execution_context": {
+      "DIAGNOSIS": "Agent started in apps/migration-cli subdirectory! Python scripts look for PROJECT_INDEX.json in cwd, but it's at git root. This is why scripts failed even though file exists.",
+      "ROOT_CAUSE": "Python scripts use './PROJECT_INDEX.json' instead of finding git root first",
       "cwd": "/Users/nathanvale/code/MPCU-Build-and-Deliver/apps/migration-cli",
       "git_root": "/Users/nathanvale/code/MPCU-Build-and-Deliver",
-      "project_index_exists_in_cwd": false,
-      "project_index_exists_in_git_root": true,
-      "project_index_path_expected": "/Users/nathanvale/code/MPCU-Build-and-Deliver/PROJECT_INDEX.json",
       "ls_cwd": "ls: PROJECT_INDEX.json: No such file or directory",
       "ls_git_root": "-rw-r--r--  1 nathanvale  staff  2456789 Jan 10 15:30 /Users/nathanvale/code/MPCU-Build-and-Deliver/PROJECT_INDEX.json",
-      "DIAGNOSIS": "Agent started in apps/migration-cli subdirectory! Python scripts look for PROJECT_INDEX.json in cwd, but it's at git root. This is why scripts failed even though file exists.",
-      "ROOT_CAUSE": "Python scripts use './PROJECT_INDEX.json' instead of finding git root first"
+      "project_index_exists_in_cwd": false,
+      "project_index_exists_in_git_root": true,
+      "project_index_path_expected": "/Users/nathanvale/code/MPCU-Build-and-Deliver/PROJECT_INDEX.json"
+    },
+    "optimization_opportunities": [
+      "Skip sequential thinking for bugs with clear error messages (saved 18K tokens)",
+      "Start with graph queries to find 'who calls ContactRepository.create' before reading files (could save 2-3K tokens)",
+      "Read only essential files - dynamics.ts and contact-service.ts likely unnecessary (saved 2K tokens)",
+      "Potential savings: 20-23K tokens (38-47% reduction from 62K → 39-42K)"
+    ],
+    "timing_ms": 180000,
+    "token_breakdown": {
+      "ACTUAL_REPORTED": 62000,
+      "DISCREPANCY": 31700,
+      "POSSIBLE_EXPLANATION": "Sequential thinking may have consumed more tokens than estimated (perhaps 12-15 thoughts instead of 8?), or additional unreported tool calls occurred",
+      "file_reads": 8300,
+      "graph_queries": 0,
+      "pattern_searches": 2000,
+      "python_scripts": 0,
+      "report_generation": 2000,
+      "sequential_thinking": 18000,
+      "total": 30300
     },
     "tool_usage": [
       {
-        "tool": "Bash/rg",
         "calls": 10,
+        "notes": "Found 11 repositories extending DataverseRepository, located apiWrapper definition, identified missing methods",
         "purpose": "Pattern searches: 'DynamicsWebApi initialization', 'extends DataverseRepository', 'ContactRepository', 'apiWrapper', 'dynamicsWebApi.*create', etc.",
         "tokens_estimated": 2000,
-        "notes": "Found 11 repositories extending DataverseRepository, located apiWrapper definition, identified missing methods"
+        "tool": "Bash/rg"
       },
       {
-        "tool": "Read",
         "calls": 6,
         "files": [
           "referral.ts (2500 tokens) - apiWrapper definition",
@@ -44,63 +65,40 @@
           "dynamics.ts (900 tokens) - dynamics service implementation",
           "contact-service.ts (1100 tokens) - contact service usage"
         ],
+        "notes": "Read to understand call stack and identify missing methods in apiWrapper",
         "tokens_estimated": 8300,
-        "notes": "Read to understand call stack and identify missing methods in apiWrapper"
+        "tool": "Read"
       },
       {
-        "tool": "Sequential Thinking",
         "calls": 1,
+        "notes": "Traced error: ContactRepository.create() → DataverseRepository.createRequest() → dynamicsWebApi.create()",
+        "reason_unnecessary": "Error message 'this.dynamicsWebApi.create is not a function' clearly indicated missing method. Stack trace showed exact location. After reading referral.ts, the incomplete apiWrapper mock was obvious (only had retrieveMultiple). Sequential thinking re-traced the same call stack that was already visible in the error message and stack trace. Could have proceeded directly to generating report after file reads.",
         "thoughts": 8,
         "tokens_estimated": 18000,
-        "notes": "Traced error: ContactRepository.create() → DataverseRepository.createRequest() → dynamicsWebApi.create()",
-        "was_necessary": false,
-        "reason_unnecessary": "Error message 'this.dynamicsWebApi.create is not a function' clearly indicated missing method. Stack trace showed exact location. After reading referral.ts, the incomplete apiWrapper mock was obvious (only had retrieveMultiple). Sequential thinking re-traced the same call stack that was already visible in the error message and stack trace. Could have proceeded directly to generating report after file reads."
+        "tool": "Sequential Thinking",
+        "was_necessary": false
       },
       {
-        "tool": "index-graph-navigator (Python/Bash scripts)",
+        "WHY_NOT_USED": "Agent may have skipped Skill(index-graph-navigator) entirely, OR scripts failed silently and agent fell back to ripgrep",
+        "actual_tool_output": "N/A - Scripts were never invoked",
         "calls": 0,
+        "notes": "Blast radius analysis in report was manually inferred from rg search results (11 repositories), not from Python script execution. Scripts were likely never called by agent.",
         "purpose": "SHOULD have been used for 'who calls', 'blast radius' queries",
         "tokens_estimated": 0,
-        "actual_tool_output": "N/A - Scripts were never invoked",
-        "notes": "Blast radius analysis in report was manually inferred from rg search results (11 repositories), not from Python script execution. Scripts were likely never called by agent.",
-        "WHY_NOT_USED": "Agent may have skipped Skill(index-graph-navigator) entirely, OR scripts failed silently and agent fell back to ripgrep"
+        "tool": "index-graph-navigator (Python/Bash scripts)"
       }
     ],
-    "token_breakdown": {
-      "graph_queries": 0,
-      "pattern_searches": 2000,
-      "file_reads": 8300,
-      "sequential_thinking": 18000,
-      "python_scripts": 0,
-      "report_generation": 2000,
-      "total": 30300,
-      "ACTUAL_REPORTED": 62000,
-      "DISCREPANCY": 31700,
-      "POSSIBLE_EXPLANATION": "Sequential thinking may have consumed more tokens than estimated (perhaps 12-15 thoughts instead of 8?), or additional unreported tool calls occurred"
-    },
-    "timing_ms": 180000,
-    "workflow_notes": "Started with pattern searches to locate apiWrapper and repository usage. Read 6 files to understand the call stack. Used sequential thinking to trace error flow, but this was unnecessary since error message + stack trace + file reads already revealed the issue. Could have saved ~18K tokens by skipping sequential thinking. Total actual analysis could have been done in ~12K tokens (pattern searches + file reads + report generation).",
-
-    "optimization_opportunities": [
-      "Skip sequential thinking for bugs with clear error messages (saved 18K tokens)",
-      "Start with graph queries to find 'who calls ContactRepository.create' before reading files (could save 2-3K tokens)",
-      "Read only essential files - dynamics.ts and contact-service.ts likely unnecessary (saved 2K tokens)",
-      "Potential savings: 20-23K tokens (38-47% reduction from 62K → 39-42K)"
-    ]
+    "workflow_notes": "Started with pattern searches to locate apiWrapper and repository usage. Read 6 files to understand the call stack. Used sequential thinking to trace error flow, but this was unnecessary since error message + stack trace + file reads already revealed the issue. Could have saved ~18K tokens by skipping sequential thinking. Total actual analysis could have been done in ~12K tokens (pattern searches + file reads + report generation)."
   },
 
-  "lesson_learned": "For TypeError: 'X is not a function' errors with clear stack traces, sequential thinking is almost never necessary. The error message tells you exactly what's missing. Just read the relevant files, identify the incomplete mock/implementation, and generate the report.",
-
-  "debugging_project_index_issues": {
-    "symptom": "Python scripts (find-callers.sh, blast-radius.py) fail with 'PROJECT_INDEX.json not found'",
-    "diagnosis_steps": [
-      "1. Check execution_context.cwd - agent should be in project root",
-      "2. Check execution_context.project_index_exists - should be true",
-      "3. Check execution_context.project_index_path - path where agent looked for file",
-      "4. If cwd != project_root, agent started in wrong directory",
-      "5. If project_index_exists = false, need to run /index command first"
-    ],
-    "solution_for_R0007": "execution_context shows project_index_exists=false. User needs to run '/index' in MPCU-Build-and-Deliver project before code-analyzer can use graph queries. Without PROJECT_INDEX.json, agent falls back to slower ripgrep searches (2K tokens vs 500 tokens for graph queries).",
-    "prevention": "Always include execution_context in observability section. This makes debugging 100x easier."
+  "observability_OLD_FORMAT": {
+    "notes": "Started by searching for DynamicsWebApi initialization patterns. Used ripgrep to find ContactRepository instantiation points. Traced through service factory to understand fixture vs live mode. Read DataverseRepository type definitions from node_modules to understand required API surface. Sequential thinking traced error from ContactRepository.create() → DataverseRepository.createRequest() → dynamicsWebApi.create(). Discovered mismatch: DataverseService provides createRecord(), but DataverseRepository expects dynamicsWebApi.create(). Found incomplete apiWrapper mock at referral.ts:455-457 only providing retrieveMultiple. All 11 repositories extending DataverseRepository potentially affected. Fix is straightforward: add create, update, upsert, delete methods to apiWrapper.dynamicsWebApi object.",
+    "timing_ms": 180000,
+    "tokens": 62000,
+    "tools_used": [
+      "Read (6 files: referral.ts, contact-repository.ts, service-factory.ts, DataverseRepository.d.ts, dynamics.ts, contact-service.ts)",
+      "Bash/rg (10 searches: DynamicsWebApi initialization, repository patterns, ContactService usage)",
+      "Sequential Thinking (8 thoughts: traced error through call stack)"
+    ]
   }
 }

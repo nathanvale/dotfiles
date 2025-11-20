@@ -1,6 +1,7 @@
 # Bat with Fish Shell
 
-`bat` is a clone of `cat` with syntax highlighting and Git integration. It is a great tool for viewing files in the terminal with enhanced features.
+`bat` is a clone of `cat` with syntax highlighting and Git integration. It is a great tool for
+viewing files in the terminal with enhanced features.
 
 ## Basic Usage
 
@@ -11,7 +12,8 @@
 
 ## Keyboard Shortcuts
 
-When using `bat` interactively (e.g., through a pager like `less`), the following keyboard shortcuts can be very useful:
+When using `bat` interactively (e.g., through a pager like `less`), the following keyboard shortcuts
+can be very useful:
 
 - **Scroll Up**: `k` or `↑`
 - **Scroll Down**: `j` or `↓`

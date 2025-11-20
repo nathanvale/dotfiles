@@ -27,32 +27,32 @@ Every generated ID stores:
 
 ```json
 {
-  "paddingWidth": 4,
   "counter": 5,
   "history": [
     {
-      "id": "T0001",
       "created": "2025-11-05T10:50:15.223Z",
+      "id": "T0001",
+      "notes": "",
       "sourceDocument": "docs/specs/auth-feature.md",
-      "sourceType": "spec",
-      "notes": ""
+      "sourceType": "spec"
     },
     {
-      "id": "T0002",
       "created": "2025-11-05T10:51:03.456Z",
+      "id": "T0002",
+      "notes": "",
       "sourceDocument": "docs/specs/api-redesign.md",
-      "sourceType": "spec",
-      "notes": ""
+      "sourceType": "spec"
     },
     {
-      "id": "T0003",
       "created": "2025-11-05T10:52:18.789Z",
+      "id": "T0003",
+      "notes": "High-priority refactor",
       "sourceDocument": "docs/tech-debt/legacy-refactor.md",
-      "sourceType": "tech-debt",
-      "notes": "High-priority refactor"
+      "sourceType": "tech-debt"
     }
   ],
-  "lastUpdated": "2025-11-05T10:54:30.234Z"
+  "lastUpdated": "2025-11-05T10:54:30.234Z",
+  "paddingWidth": 4
 }
 ```
 

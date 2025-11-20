@@ -5,18 +5,18 @@
  * Implements TemplateRegistry class with static methods for template operations
  */
 
-import { readdir, readFile } from 'fs/promises'
-import { join, resolve } from 'path'
-import { parse as parseYaml } from 'yaml'
-import { validateTemplateHasAllEnrichments } from './template-enrichment-validator.js'
+import { readdir, readFile } from "fs/promises";
+import { join, resolve } from "path";
+import { parse as parseYaml } from "yaml";
+import { validateTemplateHasAllEnrichments } from "./template-enrichment-validator.js";
 
 export interface TemplateMetadata {
-  templateName: string
-  templateVersion: string
-  description: string
-  requiredEnrichments: number
-  formatSkill: string
-  path: string
+  templateName: string;
+  templateVersion: string;
+  description: string;
+  requiredEnrichments: number;
+  formatSkill: string;
+  path: string;
 }
 
 /**
@@ -27,7 +27,7 @@ export class TemplateRegistry {
    * Get default templates directory
    */
   private static defaultTemplatesDir(): string {
-    return join(process.cwd(), '.claude-plugins/task-streams/templates')
+    return join(process.cwd(), ".claude-plugins/task-streams/templates");
   }
 
   /**
@@ -35,36 +35,36 @@ export class TemplateRegistry {
    * Frontmatter is delimited by --- at start and end
    */
   private static extractFrontmatter(content: string): Record<string, unknown> {
-    const lines = content.split('\n')
-    const firstLine = lines[0]?.trim()
+    const lines = content.split("\n");
+    const firstLine = lines[0]?.trim();
 
-    if (firstLine !== '---') {
-      throw new Error('Template missing frontmatter (must start with ---)')
+    if (firstLine !== "---") {
+      throw new Error("Template missing frontmatter (must start with ---)");
     }
 
     // Find closing ---
-    let endIndex = -1
+    let endIndex = -1;
     for (let i = 1; i < lines.length; i++) {
-      if (lines[i]?.trim() === '---') {
-        endIndex = i
-        break
+      if (lines[i]?.trim() === "---") {
+        endIndex = i;
+        break;
       }
     }
 
     if (endIndex === -1) {
-      throw new Error('Template frontmatter not closed (missing ending ---)')
+      throw new Error("Template frontmatter not closed (missing ending ---)");
     }
 
     // Extract YAML content between delimiters
-    const yamlContent = lines.slice(1, endIndex).join('\n')
+    const yamlContent = lines.slice(1, endIndex).join("\n");
 
     try {
-      const parsed = parseYaml(yamlContent) as Record<string, unknown>
-      return parsed
+      const parsed = parseYaml(yamlContent) as Record<string, unknown>;
+      return parsed;
     } catch (error) {
       throw new Error(
         `Failed to parse template frontmatter YAML: ${error instanceof Error ? error.message : String(error)}`
-      )
+      );
     }
   }
 
@@ -76,47 +76,47 @@ export class TemplateRegistry {
    * @returns Array of template metadata objects
    */
   static async listTemplates(templatesDir?: string): Promise<TemplateMetadata[]> {
-    const dir = templatesDir ?? this.defaultTemplatesDir()
+    const dir = templatesDir ?? this.defaultTemplatesDir();
 
     try {
-      const files = await readdir(dir)
+      const files = await readdir(dir);
 
       // Filter for .template.md files only
-      const templateFiles = files.filter((file) => file.endsWith('.template.md'))
+      const templateFiles = files.filter((file) => file.endsWith(".template.md"));
 
-      const templates: TemplateMetadata[] = []
+      const templates: TemplateMetadata[] = [];
 
       for (const file of templateFiles) {
-        const filePath = join(dir, file)
-        const content = await readFile(filePath, 'utf-8')
+        const filePath = join(dir, file);
+        const content = await readFile(filePath, "utf-8");
 
         try {
-          const frontmatter = this.extractFrontmatter(content)
+          const frontmatter = this.extractFrontmatter(content);
 
           templates.push({
-            templateName: String(frontmatter.templateName ?? ''),
-            templateVersion: String(frontmatter.templateVersion ?? ''),
-            description: String(frontmatter.description ?? ''),
+            templateName: String(frontmatter.templateName ?? ""),
+            templateVersion: String(frontmatter.templateVersion ?? ""),
+            description: String(frontmatter.description ?? ""),
             requiredEnrichments: Number(frontmatter.requiredEnrichments ?? 0),
-            formatSkill: String(frontmatter.formatSkill ?? ''),
+            formatSkill: String(frontmatter.formatSkill ?? ""),
             path: resolve(filePath),
-          })
+          });
         } catch (error) {
           // Re-throw with file context
           throw new Error(
             `Error processing template "${file}": ${error instanceof Error ? error.message : String(error)}`
-          )
+          );
         }
       }
 
       // Sort by templateName
-      return templates.sort((a, b) => a.templateName.localeCompare(b.templateName))
+      return templates.sort((a, b) => a.templateName.localeCompare(b.templateName));
     } catch (error) {
-      if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+      if (error instanceof Error && "code" in error && error.code === "ENOENT") {
         // Directory doesn't exist - return empty array
-        return []
+        return [];
       }
-      throw error
+      throw error;
     }
   }
 
@@ -129,20 +129,20 @@ export class TemplateRegistry {
    * @throws Error if template not found
    */
   static async getTemplate(name: string, templatesDir?: string): Promise<string> {
-    const dir = templatesDir ?? this.defaultTemplatesDir()
-    const filePath = join(dir, `${name}.template.md`)
+    const dir = templatesDir ?? this.defaultTemplatesDir();
+    const filePath = join(dir, `${name}.template.md`);
 
     try {
-      const content = await readFile(filePath, 'utf-8')
-      return content
+      const content = await readFile(filePath, "utf-8");
+      return content;
     } catch (error) {
-      if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+      if (error instanceof Error && "code" in error && error.code === "ENOENT") {
         throw new Error(
           `Template "${name}" not found at path: ${filePath}\n` +
             `Make sure the file ${name}.template.md exists in the templates directory.`
-        )
+        );
       }
-      throw error
+      throw error;
     }
   }
 
@@ -155,23 +155,23 @@ export class TemplateRegistry {
    * @throws Error if template not found
    */
   static async getTemplateMetadata(name: string, templatesDir?: string): Promise<TemplateMetadata> {
-    const dir = templatesDir ?? this.defaultTemplatesDir()
-    const filePath = join(dir, `${name}.template.md`)
+    const dir = templatesDir ?? this.defaultTemplatesDir();
+    const filePath = join(dir, `${name}.template.md`);
 
     // Get full content first
-    const content = await this.getTemplate(name, templatesDir)
+    const content = await this.getTemplate(name, templatesDir);
 
     // Extract frontmatter
-    const frontmatter = this.extractFrontmatter(content)
+    const frontmatter = this.extractFrontmatter(content);
 
     return {
-      templateName: String(frontmatter.templateName ?? ''),
-      templateVersion: String(frontmatter.templateVersion ?? ''),
-      description: String(frontmatter.description ?? ''),
+      templateName: String(frontmatter.templateName ?? ""),
+      templateVersion: String(frontmatter.templateVersion ?? ""),
+      description: String(frontmatter.description ?? ""),
       requiredEnrichments: Number(frontmatter.requiredEnrichments ?? 0),
-      formatSkill: String(frontmatter.formatSkill ?? ''),
+      formatSkill: String(frontmatter.formatSkill ?? ""),
       path: resolve(filePath),
-    }
+    };
   }
 
   /**
@@ -184,11 +184,11 @@ export class TemplateRegistry {
    */
   static async validateTemplate(name: string, templatesDir?: string): Promise<boolean> {
     // Get template content
-    const content = await this.getTemplate(name, templatesDir)
+    const content = await this.getTemplate(name, templatesDir);
 
     // Use enrichment validator
-    const validation = validateTemplateHasAllEnrichments(content)
+    const validation = validateTemplateHasAllEnrichments(content);
 
-    return validation.passed
+    return validation.passed;
   }
 }

@@ -1,1 +1,2 @@
-- When a task is finished, should we also get the VS Code prompt to update the task correctly with an additon to this script, and change the dependencies because something's been updated?
+- When a task is finished, should we also get the VS Code prompt to update the task correctly with
+  an additon to this script, and change the dependencies because something's been updated?

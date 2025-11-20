@@ -15,12 +15,14 @@ Use this after `/next` has created a PR and it's been reviewed/approved.
 
 Use the AskUserQuestion tool to ask:
 
-**Question:** "How would you like to merge?"
-**Options:**
+**Question:** "How would you like to merge?" **Options:**
+
 1. **Manual Merge** - Merge current branch directly into main (no PR)
-   - Description: "Merge your changes directly to main branch, then clean up worktree and branch locally. No pull request created."
+   - Description: "Merge your changes directly to main branch, then clean up worktree and branch
+     locally. No pull request created."
 2. **Create/Merge PR** - Use the standard PR workflow
-   - Description: "Create or merge a pull request through GitHub/Azure DevOps with proper review workflow."
+   - Description: "Create or merge a pull request through GitHub/Azure DevOps with proper review
+     workflow."
 
 **Step 2: Execute based on choice**
 
@@ -37,8 +39,8 @@ WORKTREE_PATH=$(git worktree list --porcelain | grep "^worktree" | grep -v "$(gi
 
 Then use AskUserQuestion to confirm or allow manual entry:
 
-**Question:** "Confirm branch to merge and delete?"
-**Options:**
+**Question:** "Confirm branch to merge and delete?" **Options:**
+
 1. **Use Current Branch** - `$CURRENT_BRANCH`
    - Description: "Merge and delete the current branch: $CURRENT_BRANCH"
    - If worktree exists: "Worktree: $WORKTREE_PATH will also be removed"
@@ -58,6 +60,7 @@ taskdock merge manual <branch-name>
 ```
 
 The script will:
+
 1. Detect current branch and worktree (or use provided branch)
 2. Ask for final confirmation
 3. Update main branch
@@ -75,18 +78,21 @@ Parse user input and execute the merge script:
 
 1. **Determine the argument:**
    - If user provides a number (e.g., `/merge 123`) → Use that as the argument
-   - If user provides a task ID (e.g., `/merge T0030` or `/merge MPCU-0005`) → Use that as the argument
+   - If user provides a task ID (e.g., `/merge T0030` or `/merge MPCU-0005`) → Use that as the
+     argument
    - If user provides no argument (e.g., `/merge`) → Use `--current` flag
 
 2. **Run the command:**
+
    ```bash
    taskdock merge pr <argument>
    ```
 
-3. **Display the output:**
-   TaskDock provides comprehensive colored output showing each step of the merge process. Simply relay the output to the user.
+3. **Display the output:** TaskDock provides comprehensive colored output showing each step of the
+   merge process. Simply relay the output to the user.
 
 **TaskDock automatically handles:**
+
 1. Git remote type detection (GitHub/Azure DevOps)
 2. PR and branch identification
 3. PR status verification
@@ -101,12 +107,14 @@ Parse user input and execute the merge script:
 ## Usage Examples
 
 ### Example 1: Merge by PR Number
+
 ```bash
 User: "/merge 123"
 You: Run taskdock merge pr 123
 ```
 
 ### Example 2: Merge Current Worktree
+
 ```bash
 User: "/merge"
 # User is currently in a worktree
@@ -114,12 +122,14 @@ You: Run taskdock merge pr --current
 ```
 
 ### Example 3: Merge by Task ID
+
 ```bash
 User: "/merge T0030"
 You: Run taskdock merge pr T0030
 ```
 
 ### Example 4: Merge by Task ID (monorepo format)
+
 ```bash
 User: "/merge MPCU-0005"
 You: Run taskdock merge pr MPCU-0005
@@ -142,7 +152,8 @@ The script auto-detects the argument type:
 
 The script is optimized for speed:
 
-- **Batched API calls**: Single `gh pr view` call fetches all PR data (state, mergeable, title, etc.)
+- **Batched API calls**: Single `gh pr view` call fetches all PR data (state, mergeable, title,
+  etc.)
 - **Batched JSON parsing**: Single `jq` invocation processes multiple fields
 - **Reduced network round trips**: 2 GitHub API calls instead of 4-5
 - **Expected performance**: ~1.1 seconds (40-50% faster than inline approach)
@@ -194,7 +205,8 @@ The script handles all error scenarios:
 - **Already merged** → Gracefully handles already-merged PRs
 - **Network failures** → Exits cleanly without partial cleanup
 
-All operations are **atomic** - the script either completes fully or exits cleanly without partial state.
+All operations are **atomic** - the script either completes fully or exits cleanly without partial
+state.
 
 ---
 
@@ -203,6 +215,7 @@ All operations are **atomic** - the script either completes fully or exits clean
 **Source:** `taskdock merge pr` command
 
 The script supports:
+
 - GitHub (via `gh` CLI)
 - Azure DevOps (via `az` CLI)
 - Automatic git provider detection

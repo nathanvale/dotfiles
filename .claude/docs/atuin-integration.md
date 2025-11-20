@@ -2,11 +2,13 @@
 
 ## Overview
 
-This document details the atuin shell history integration with Claude Code, including architecture decisions, implementation options, and rationale for our approach.
+This document details the atuin shell history integration with Claude Code, including architecture
+decisions, implementation options, and rationale for our approach.
 
 ## Problem Statement
 
 **Original Goals:**
+
 1. **Write**: Bash commands executed by Claude Code should appear in your shell history
 2. **Read**: Claude Code should be able to query and learn from your command history patterns
 
@@ -57,12 +59,15 @@ This document details the atuin shell history integration with Claude Code, incl
 **File:** `.claude/hooks/atuin-post-tool.sh`
 
 **How it works:**
+
 1. Receives JSON from Claude Code after each Bash command execution
 2. Parses command and exit code
 3. Writes to `~/.zsh_history` in standard zsh format: `: <timestamp>:<duration>;<command>`
-4. Atuin automatically imports from zsh history (either on next shell start or via `atuin import auto`)
+4. Atuin automatically imports from zsh history (either on next shell start or via
+   `atuin import auto`)
 
 **Key Features:**
+
 - No external dependencies (pure bash)
 - Works without `$ATUIN_SESSION` environment variable
 - Idempotent (safe to run multiple times)
@@ -73,6 +78,7 @@ This document details the atuin shell history integration with Claude Code, incl
 **File:** `~/.claude/skills/bash-history-assistant/SKILL.md`
 
 **How it works:**
+
 1. Claude Code skill that guides Claude on using Atuin CLI directly
 2. No MCP server required (no ATUIN_SESSION dependency issues)
 3. Uses standard `atuin search`, `atuin stats`, and `atuin history` commands
@@ -108,14 +114,15 @@ Or manually add to `~/.claude/settings.json`:
 {
   "mcpServers": {
     "bash-history": {
-      "command": "bunx",
-      "args": ["github:nitsanavni/bash-history-mcp", "mcp"]
+      "args": ["github:nitsanavni/bash-history-mcp", "mcp"],
+      "command": "bunx"
     }
   }
 }
 ```
 
 **Pros:**
+
 - ✅ Zero maintenance (external dependency via bunx)
 - ✅ Well-designed MCP interface
 - ✅ Includes both search and recent history tools
@@ -125,7 +132,9 @@ Or manually add to `~/.claude/settings.json`:
 - ✅ Automatically benefits from upstream improvements
 
 **Cons:**
-- ❌ **FAILS IN CLAUDE CODE**: Requires `$ATUIN_SESSION` environment variable which doesn't exist in Claude Code
+
+- ❌ **FAILS IN CLAUDE CODE**: Requires `$ATUIN_SESSION` environment variable which doesn't exist in
+  Claude Code
 - ❌ External dependency (requires network on first run)
 - ❌ Requires bun runtime
 - ❌ MCP tools don't work without active shell session
@@ -134,17 +143,19 @@ Or manually add to `~/.claude/settings.json`:
 
 ```typescript
 // Search for git commands
-mcp__bash-history__search_history({
-  query: "git commit",
-  limit: 5,
-  include_failed: false
-})
+mcp__bash -
+  history__search_history({
+    query: "git commit",
+    limit: 5,
+    include_failed: false,
+  });
 
 // Get recent successful commands
-mcp__bash-history__get_recent_history({
-  limit: 10,
-  include_failed: false
-})
+mcp__bash -
+  history__get_recent_history({
+    limit: 10,
+    include_failed: false,
+  });
 ```
 
 ### Option B: Custom CLI Script
@@ -172,12 +183,14 @@ esac
 ```
 
 **Pros:**
+
 - ✅ No external dependencies
 - ✅ Full control over implementation
 - ✅ Simple bash script
 - ✅ Easy to customize
 
 **Cons:**
+
 - ❌ Requires manual Bash tool calls (less ergonomic)
 - ❌ No MCP integration (Claude can't discover it)
 - ❌ Need to maintain yourself
@@ -201,12 +214,14 @@ atuin search --limit 5 --search-mode fuzzy --format "{exit}\t{command}" "git"
 ```
 
 **Pros:**
+
 - ✅ No dependencies
 - ✅ Maximum flexibility
 - ✅ Direct access to all atuin features
 - ✅ Works in Claude Code (no environment variable requirements)
 
 **Cons:**
+
 - ❌ Claude needs to learn atuin CLI syntax
 - ❌ Verbose command syntax
 - ❌ No automatic discovery
@@ -219,12 +234,14 @@ atuin search --limit 5 --search-mode fuzzy --format "{exit}\t{command}" "git"
 **File:** `~/.claude/skills/bash-history-assistant/SKILL.md`
 
 **How it works:**
+
 1. Skill provides comprehensive documentation on atuin CLI usage
 2. Includes common search patterns, formatting options, and examples
 3. Automatically triggers on natural language queries about command history
 4. No MCP server or environment variables required
 
 **Pros:**
+
 - ✅ **Works reliably in Claude Code** (no ATUIN_SESSION required)
 - ✅ No external dependencies (just atuin CLI)
 - ✅ Natural language triggers ("what command did I use...")
@@ -235,17 +252,20 @@ atuin search --limit 5 --search-mode fuzzy --format "{exit}\t{command}" "git"
 - ✅ Automatic skill discovery by Claude
 
 **Cons:**
+
 - ❌ Not an MCP server (but this is actually a benefit - no environment issues)
 - ❌ Requires creating and maintaining skill file (already done)
 
 **Example Usage in Claude Code:**
 
 Natural language queries automatically trigger the skill:
+
 - "What kubectl commands have I run?"
 - "Show me failed git commands from today"
 - "What's my most common docker command?"
 
 Or invoke directly:
+
 ```bash
 /skill bash-history-assistant
 ```
@@ -304,12 +324,14 @@ Or invoke directly:
 ### ✅ Testing
 
 Try these queries in your next Claude Code session:
+
 - "What kubectl commands have I run?"
 - "Show me git commands from this week"
 - "What's my most common docker command?"
 - "Find that curl command I used"
 
 Or invoke the skill directly:
+
 ```bash
 /skill bash-history-assistant
 ```
@@ -317,6 +339,7 @@ Or invoke the skill directly:
 ### 🔧 Optional Enhancements
 
 1. **Enable debug logging for write hook:**
+
    ```bash
    export CLAUDE_ATUIN_DEBUG=1
    ```
@@ -333,26 +356,31 @@ Or invoke the skill directly:
 **Log file:** `.claude/hooks/atuin-hook.log`
 
 **Enable debug logging:**
+
 ```bash
 export CLAUDE_ATUIN_DEBUG=1
 ```
 
 **Verify commands are being logged:**
+
 ```bash
 tail -f .claude/hooks/atuin-hook.log
 ```
 
 **Verify commands in zsh history:**
+
 ```bash
 tail ~/.zsh_history | grep -a "command-to-find"
 ```
 
 **Verify commands in atuin:**
+
 ```bash
 atuin search "command-to-find"
 ```
 
 **Force import from zsh:**
+
 ```bash
 atuin import auto
 ```
@@ -360,11 +388,13 @@ atuin import auto
 ### MCP Server Debugging
 
 **Test MCP server directly:**
+
 ```bash
 bunx github:nitsanavni/bash-history-mcp mcp
 ```
 
 **Check Claude Code MCP configuration:**
+
 ```bash
 cat ~/.claude/settings.json | jq '.mcpServers'
 ```
@@ -373,27 +403,32 @@ cat ~/.claude/settings.json | jq '.mcpServers'
 
 ### Q: Why not use bash-history-mcp's hook implementation?
 
-**A:** The bash-history-mcp hook uses `atuin history start/end` which requires the `$ATUIN_SESSION` environment variable. This variable only exists in active shell sessions, not in Claude Code's subprocess environment. Our custom hook writes directly to `~/.zsh_history`, which atuin imports automatically.
+**A:** The bash-history-mcp hook uses `atuin history start/end` which requires the `$ATUIN_SESSION`
+environment variable. This variable only exists in active shell sessions, not in Claude Code's
+subprocess environment. Our custom hook writes directly to `~/.zsh_history`, which atuin imports
+automatically.
 
 ### Q: Will this work with bash instead of zsh?
 
-**A:** Yes, but you need to modify `.claude/hooks/atuin-post-tool.sh` to write to `~/.bash_history` instead and adjust the format. The zsh format is: `: <timestamp>:<duration>;<command>`
+**A:** Yes, but you need to modify `.claude/hooks/atuin-post-tool.sh` to write to `~/.bash_history`
+instead and adjust the format. The zsh format is: `: <timestamp>:<duration>;<command>`
 
 ### Q: Can I query atuin from within Claude Code?
 
 **A:** Yes! We use the bash-history-assistant skill which:
+
 1. **Skill-based (Implemented):** Uses `~/.claude/skills/bash-history-assistant/`
    - Automatically triggers on natural language queries
    - Uses direct atuin CLI (no environment variables needed)
    - Works reliably in Claude Code subprocess environment
 
-Alternative approaches (not recommended):
-2. **MCP Server:** Doesn't work - requires ATUIN_SESSION environment variable
-3. **Direct atuin:** Works but requires manual Bash tool calls
+Alternative approaches (not recommended): 2. **MCP Server:** Doesn't work - requires ATUIN_SESSION
+environment variable 3. **Direct atuin:** Works but requires manual Bash tool calls
 
 ### Q: How do I clear the atuin database?
 
 **A:**
+
 ```bash
 # Clear all history
 atuin history clear
@@ -404,7 +439,8 @@ rm -rf ~/.local/share/atuin/history.db
 
 ### Q: Does this sync across machines?
 
-**A:** If you have atuin sync enabled (via `atuin register` or `atuin login`), yes! Commands added to your local database will sync to other machines.
+**A:** If you have atuin sync enabled (via `atuin register` or `atuin login`), yes! Commands added
+to your local database will sync to other machines.
 
 ## References
 

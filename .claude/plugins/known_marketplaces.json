@@ -1,26 +1,26 @@
 {
-  "claude-code-workflows": {
-    "source": {
-      "source": "github",
-      "repo": "wshobson/agents"
-    },
-    "installLocation": "/Users/nathanvale/.claude/plugins/marketplaces/claude-code-workflows",
-    "lastUpdated": "2025-11-06T22:57:13.665Z"
-  },
-  "user-marketplace": {
-    "source": {
-      "source": "directory",
-      "path": "/Users/nathanvale/.claude/plugins/marketplaces/user-marketplace"
-    },
-    "installLocation": "/Users/nathanvale/.claude/plugins/marketplaces/user-marketplace",
-    "lastUpdated": "2025-11-07T00:58:49.531Z"
-  },
   "awesome-claude-skills": {
+    "installLocation": "/Users/nathanvale/.claude/plugins/marketplaces/awesome-claude-skills",
+    "lastUpdated": "2025-11-14T20:40:55.081Z",
     "source": {
       "source": "git",
       "url": "git@github.com:ComposioHQ/awesome-claude-skills.git"
-    },
-    "installLocation": "/Users/nathanvale/.claude/plugins/marketplaces/awesome-claude-skills",
-    "lastUpdated": "2025-11-14T20:40:55.081Z"
+    }
+  },
+  "claude-code-workflows": {
+    "installLocation": "/Users/nathanvale/.claude/plugins/marketplaces/claude-code-workflows",
+    "lastUpdated": "2025-11-06T22:57:13.665Z",
+    "source": {
+      "repo": "wshobson/agents",
+      "source": "github"
+    }
+  },
+  "user-marketplace": {
+    "installLocation": "/Users/nathanvale/.claude/plugins/marketplaces/user-marketplace",
+    "lastUpdated": "2025-11-07T00:58:49.531Z",
+    "source": {
+      "path": "/Users/nathanvale/.claude/plugins/marketplaces/user-marketplace",
+      "source": "directory"
+    }
   }
 }

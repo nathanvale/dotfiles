@@ -5,6 +5,7 @@
 ### Local vs Cloud Models
 
 **Local Models**:
+
 - ✅ Fast (no network latency)
 - ✅ Private (never leaves device)
 - ✅ Works offline
@@ -13,6 +14,7 @@
 - ❌ Limited language support
 
 **Cloud Models**:
+
 - ✅ More accurate transcription
 - ✅ Better accent recognition
 - ✅ More languages supported
@@ -23,16 +25,17 @@
 
 ### Recommended Models by Use Case
 
-| Use Case | Recommended Model | Why |
-|----------|------------------|-----|
-| Quick notes | Local (Fast) | Speed > accuracy |
-| Email drafts | Cloud (Enhanced) | Professionalism needs accuracy |
-| Meeting notes | Cloud (Enhanced) | Multiple speakers, accents |
-| Code comments | Local (Fast) | Technical terms, speed matters |
-| Offline work | Local (any) | No internet access |
-| ADHD quick capture | Local (Fast) | Minimize friction |
+| Use Case           | Recommended Model | Why                            |
+| ------------------ | ----------------- | ------------------------------ |
+| Quick notes        | Local (Fast)      | Speed > accuracy               |
+| Email drafts       | Cloud (Enhanced)  | Professionalism needs accuracy |
+| Meeting notes      | Cloud (Enhanced)  | Multiple speakers, accents     |
+| Code comments      | Local (Fast)      | Technical terms, speed matters |
+| Offline work       | Local (any)       | No internet access             |
+| ADHD quick capture | Local (Fast)      | Minimize friction              |
 
 **Switch Models**:
+
 ```bash
 # Via Settings
 # SuperWhisper → Settings → Voice Model → Select
@@ -43,7 +46,9 @@
 ## Optimizing Transcription Speed
 
 ### 1. Model Selection
+
 **Fastest to Slowest**:
+
 1. Local Fast (< 1 second)
 2. Local Enhanced (1-2 seconds)
 3. Cloud Fast (2-3 seconds)
@@ -72,12 +77,14 @@
 ### 3. Context Awareness Settings
 
 **Performance Impact**:
+
 - No context: Fastest
 - Clipboard only: Fast
 - Selection + clipboard: Medium
 - Active app + clipboard + selection: Slowest
 
 **Optimize**:
+
 ```json
 // ❌ SLOW - All context enabled
 {
@@ -99,6 +106,7 @@
 ```
 
 **When to Use Context**:
+
 - **Clipboard**: Only if AI needs to reference copied text
 - **Selection**: Only for editing/expanding existing text
 - **Active App**: Only for app-specific formatting
@@ -108,12 +116,14 @@
 ### Recording Duration
 
 **Impact on Speed**:
+
 - < 10 seconds: Near-instant processing
 - 10-30 seconds: 1-3 second delay
 - 30-60 seconds: 3-5 second delay
 - > 60 seconds: 5+ second delay
 
 **ADHD Strategy**: Break long dictations into multiple short recordings
+
 ```bash
 # Instead of: 2-minute monologue
 # Do: 4x 30-second chunks
@@ -122,15 +132,18 @@
 ### Audio Quality vs Speed
 
 **High Quality** (Settings → Audio Quality → High):
+
 - More accurate transcription
 - Larger files to process
 - Slower processing
 
 **Normal Quality** (Default):
+
 - Balanced accuracy/speed
 - Recommended for most users
 
 **Fast Quality** (Settings → Audio Quality → Fast):
+
 - Fastest processing
 - Slightly less accurate
 - Good for quick notes
@@ -179,6 +192,7 @@ open -a "Activity Monitor"
    - Reduces network overhead
 
 3. **Check Connection Quality**:
+
    ```bash
    # Test network speed
    ping -c 5 8.8.8.8
@@ -191,11 +205,13 @@ open -a "Activity Monitor"
 ### macOS Settings
 
 **Reduce System Load**:
+
 1. Close unnecessary apps during dictation
 2. Disable visual effects: System Preferences → Accessibility → Display → Reduce motion
 3. Keep at least 20% free disk space
 
 **Check Resource Usage**:
+
 ```bash
 # CPU usage
 top -l 1 | grep SuperWhisper
@@ -210,6 +226,7 @@ df -h ~/Documents/SuperWhisper/
 ### Mode Optimization Checklist
 
 **For Every Custom Mode, Ask**:
+
 - [ ] Are instructions minimal and clear?
 - [ ] Is context awareness limited to what's needed?
 - [ ] Is output method appropriate (paste vs clipboard)?
@@ -221,9 +238,11 @@ df -h ~/Documents/SuperWhisper/
 ### 1. Optimize for Friction Reduction
 
 **Slowest (avoid)**:
+
 1. Open app → select mode → start recording → wait → paste
 
 **Fastest (use this)**:
+
 1. Press shortcut → speak → auto-paste
    ```bash
    # One-step activation
@@ -233,14 +252,15 @@ df -h ~/Documents/SuperWhisper/
 ### 2. Pre-Configure Common Modes
 
 **Create Keyboard Shortcuts**:
+
 - `cmd+shift+q`: Quick note (local, fast, paste)
 - `cmd+shift+e`: Email (cloud, accurate, paste)
 - `cmd+shift+o`: Obsidian (local, fast, paste with markdown)
 
 ### 3. Use Local Models Default
 
-**Why**: Eliminates "waiting for internet" friction
-**Exception**: Only use cloud for important/formal writing
+**Why**: Eliminates "waiting for internet" friction **Exception**: Only use cloud for
+important/formal writing
 
 ## Benchmarking Your Setup
 
@@ -265,11 +285,13 @@ done
 ### Measure Your Results
 
 **Track**:
+
 - Time from recording start to paste (use stopwatch)
 - Accuracy (count errors per 100 words)
 - Battery drain (Activity Monitor → Energy)
 
 **Optimize Based on Your Needs**:
+
 - Need speed? → Local Fast
 - Need accuracy? → Cloud Enhanced
 - Need balance? → Local Enhanced
@@ -277,6 +299,7 @@ done
 ## Quick Performance Checklist
 
 **Before Each Session**:
+
 - [ ] Right voice model for task?
 - [ ] Mode instructions concise?
 - [ ] Unnecessary context disabled?

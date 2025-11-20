@@ -10,13 +10,9 @@ formatSkill: format-tech-debt
 
 ## <!-- TASK OUTPUT FRONTMATTER STRUCTURE -->
 
-id: # T#### format (auto-generated)
-title: # Brief task description
-priority: # P0, P1, P2, or P3
-component: # C##  code from component-manager
-status: # READY, IN_PROGRESS, BLOCKED, DONE
-created: # ISO 8601 timestamp
-source: # Original document path
+id: # T#### format (auto-generated) title: # Brief task description priority: # P0, P1, P2, or P3
+component: # C## code from component-manager status: # READY, IN_PROGRESS, BLOCKED, DONE created: #
+ISO 8601 timestamp source: # Original document path
 
 ---
 
@@ -24,11 +20,7 @@ source: # Original document path
 
 ## Core Metadata
 
-**Component:**
-**Location:**
-**Estimated Effort:**
-**Complexity:**
-**Regression Risk:**
+**Component:** **Location:** **Estimated Effort:** **Complexity:** **Regression Risk:**
 
 ## Description
 
@@ -84,10 +76,8 @@ source: # Original document path
 
 ## Testing Requirements
 
-**Required Testing:**
-| Test Type | Validates AC | Description | Location |
-|-----------|--------------|-------------|----------|
-| | | | |
+**Required Testing:** | Test Type | Validates AC | Description | Location |
+|-----------|--------------|-------------|----------| | | | | |
 
 ## Dependencies
 
@@ -106,36 +96,21 @@ source: # Original document path
 
 ## Code Metrics
 
-**Cyclomatic Complexity**:
-**Test Coverage**:
-**Maintainability Index**:
-**Technical Debt Ratio**:
+**Cyclomatic Complexity**: **Test Coverage**: **Maintainability Index**: **Technical Debt Ratio**:
 **Duplicated Code**:
 
 ## Refactoring Strategy
 
-**Approach**:
-**Timeline**:
-**Phases**:
+**Approach**: **Timeline**: **Phases**:
 
 ## ROI Analysis
 
-**Current Cost**:
-**Investment**:
-**Savings**:
-**Payback Period**:
-**3-Year ROI**:
+**Current Cost**: **Investment**: **Savings**: **Payback Period**: **3-Year ROI**:
 
 ## Quality Improvements
 
-**Design Patterns**:
-**SOLID Violations Fixed**:
-**Test Coverage**:
-**Complexity**:
+**Design Patterns**: **SOLID Violations Fixed**: **Test Coverage**: **Complexity**:
 
 ## Safety Mechanisms
 
-**Parallel Run**:
-**Rollback Plan**:
-**Rollout**:
-**Auto-rollback If**:
+**Parallel Run**: **Rollback Plan**: **Rollout**: **Auto-rollback If**:

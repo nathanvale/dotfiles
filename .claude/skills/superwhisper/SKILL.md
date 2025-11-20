@@ -1,9 +1,29 @@
 ---
 name: superwhisper
-description: Expert on SuperWhisper AI dictation setup, custom modes, automation, and troubleshooting. Use when user mentions SuperWhisper, 'voice dictation', 'custom modes', voice AI, mode files (*.json), deep links (superwhisper://), or asks 'create a mode', 'SuperWhisper not working', 'dictation setup'. Also for files in ~/Documents/superwhisper/ or ~/Documents/SuperWhisper/, or integration with Raycast.
+description:
+  Expert on SuperWhisper AI dictation setup, custom modes, automation, and troubleshooting. Use when
+  user mentions SuperWhisper, 'voice dictation', 'custom modes', voice AI, mode files (*.json), deep
+  links (superwhisper://), or asks 'create a mode', 'SuperWhisper not working', 'dictation setup'.
+  Also for files in ~/Documents/superwhisper/ or ~/Documents/SuperWhisper/, or integration with
+  Raycast.
 version: 1.0.0
-tags: [dictation, ai, voice, automation, productivity, superwhisper, advanced-workflows, context-stacking, deep-links, community]
-allowed-tools: Read, Grep, Glob, Edit, Write, WebFetch, mcp__mcp-server-firecrawl__firecrawl_scrape, mcp__mcp-server-firecrawl__firecrawl_search, Bash(jq:*), Bash(killall:*), Bash(open:*), Bash(ls:*), Bash(osascript:*), Bash(mkdir:*), Bash(chmod:*), Bash(ps:*), Bash(sleep:*)
+tags:
+  [
+    dictation,
+    ai,
+    voice,
+    automation,
+    productivity,
+    superwhisper,
+    advanced-workflows,
+    context-stacking,
+    deep-links,
+    community,
+  ]
+allowed-tools:
+  Read, Grep, Glob, Edit, Write, WebFetch, mcp__mcp-server-firecrawl__firecrawl_scrape,
+  mcp__mcp-server-firecrawl__firecrawl_search, Bash(jq:*), Bash(killall:*), Bash(open:*),
+  Bash(ls:*), Bash(osascript:*), Bash(mkdir:*), Bash(chmod:*), Bash(ps:*), Bash(sleep:*)
 ---
 
 # SuperWhisper Expert
@@ -34,17 +54,20 @@ When asked about SuperWhisper:
 3. **Quick usage info:**
    - Keyboard shortcut: `Option+Space` to trigger recording
    - Auto-mode selection: Based on active application
-   - All modes use cloud processing: `sw-gpt-4o-mini` language model, `sw-ultra-cloud-v1-east` voice processing
+   - All modes use cloud processing: `sw-gpt-4o-mini` language model, `sw-ultra-cloud-v1-east` voice
+     processing
 
 4. **For external documentation (use in this priority order):**
 
    **Primary: Firecrawl** (Best - Full page scraping, always up-to-date):
+
    ```
    mcp__mcp-server-firecrawl__firecrawl_scrape
    url: https://superwhisper.com/docs/[section]
    formats: ["markdown"]
    onlyMainContent: true
    ```
+
    Common sections:
    - `/docs/modes/custom` - Custom mode configuration
    - `/docs/modes/modes` - Mode settings and auto-activation
@@ -53,6 +76,7 @@ When asked about SuperWhisper:
    - `/docs/modes/switching-modes` - Mode switching methods
 
    **Secondary: Firecrawl Search** (Good - Find relevant docs):
+
    ```
    mcp__mcp-server-firecrawl__firecrawl_search
    query: "superwhisper [your search terms]"
@@ -60,6 +84,7 @@ When asked about SuperWhisper:
    ```
 
    **Fallback: WebFetch** (If Firecrawl unavailable):
+
    ```
    WebFetch
    url: https://superwhisper.com/docs/[section]
@@ -78,18 +103,21 @@ When asked about SuperWhisper:
 ## Common Tasks
 
 ### Mode Management
+
 - **List all modes**: `ls ~/Documents/SuperWhisper/modes/`
 - **Edit mode**: `code ~/Documents/SuperWhisper/modes/[mode-name].json`
 - **Create mode**: Copy existing mode JSON and customize
 - **Test mode**: Use deep link `open "superwhisper://mode?key=mode-key"`
 
 ### Troubleshooting
+
 - **Check if running**: `ps aux | grep -i superwhisper`
 - **View logs**: Check Console.app for "SuperWhisper"
 - **Reset settings**: Backup and delete `~/Documents/SuperWhisper/`
 - **Test shortcuts**: Menu Bar > Settings > Shortcuts
 
 ### Automation
+
 - **Switch mode + record**: See `@reference/automation.md`
 - **Integrate with Raycast**: Install extension
 - **Deep link patterns**: See `@reference/integration.md`
@@ -129,31 +157,37 @@ defaults read com.superwhisper.macos activeMode
 ## Example Questions
 
 **Mode Setup:**
+
 - "Create a mode for technical documentation"
 - "How do I add context awareness to a mode?"
 - "Show me an email drafting mode example"
 
 **Troubleshooting:**
+
 - "SuperWhisper isn't picking up my voice"
 - "My custom mode isn't working"
 - "Keyboard shortcuts not responding"
 
 **Performance:**
+
 - "Which voice model should I use?"
 - "How do I speed up transcription?"
 - "Cloud vs local models?"
 
 **Settings:**
+
 - "What does silence_removal do?"
 - "How do I configure paste behavior?"
 - "Explain voice_model_active_duration"
 
 **Automation:**
+
 - "Integrate SuperWhisper with Raycast"
 - "Create a mode switcher for different apps"
 - "Automate mode selection based on active window"
 
 **Advanced Workflows:**
+
 - "What are people building with SuperWhisper beyond dictation?"
 - "Show me voice-driven coding examples"
 - "How can I use voice to trigger web research?"

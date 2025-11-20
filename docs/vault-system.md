@@ -1,15 +1,18 @@
 # 🗂️ Vault System - ADHD-Friendly Repository Management
 
-A streamlined, smart vault system that automatically organizes your code repositories in Obsidian without the mental overhead.
+A streamlined, smart vault system that automatically organizes your code repositories in Obsidian
+without the mental overhead.
 
 ## 🎯 Quick Start
 
 **In Tmux:**
+
 - `Ctrl-g V` → Interactive manager (checkboxes to select repos)
 - `Ctrl-g H` → Health check (finds moved repos, fixes problems)
 - `Ctrl-g v` → Open current project's vault
 
 **Command Line:**
+
 ```bash
 vault manage    # Interactive checkbox interface
 vault health    # Check and fix all vaults
@@ -20,17 +23,20 @@ vault status    # Show registered repos
 ## ✨ How It Works
 
 ### Auto-Registration 🤖
+
 - **New tmux sessions automatically register** if they contain `.agent-os` or `docs` folders
 - **Manual registration**: Run `vault register` in any project directory
 - **No .agent-os folder?** The system creates one automatically
 
 ### Smart Tracking 🧠
+
 - Each repo gets a unique `.vault-id` file (auto-gitignored)
 - **Rename repos freely** - system finds them by ID
 - **Move repos anywhere** - health check reconnects everything
 - **Multiple clones?** Git remote URLs provide backup identification
 
 ### Health Check 🩺
+
 - Automatically finds moved/renamed repositories
 - Fixes broken symlinks
 - Updates Obsidian vault connections
@@ -56,6 +62,7 @@ Your repositories appear in **one unified Obsidian vault**:
 ## 🎮 Interactive Manager
 
 **Checkbox Interface** (`vault manage` or `Ctrl-g V`):
+
 - ✅ Checked = Registered in vault
 - ⬜ Unchecked = Not in vault
 - **Space** = Toggle selection
@@ -65,24 +72,28 @@ Your repositories appear in **one unified Obsidian vault**:
 ## 🔧 Troubleshooting
 
 ### "Repository moved/renamed?"
+
 ```bash
 vault health
 # → Automatically finds and reconnects
 ```
 
 ### "Want to see what's registered?"
+
 ```bash
 vault status
 # → Lists all registered repositories
 ```
 
 ### "Obsidian shows wrong repos?"
+
 ```bash
 vault health
 # → Fixes Obsidian vault connections
 ```
 
 ### "Started new project, want it in vault?"
+
 ```bash
 cd ~/code/new-project
 vault register
@@ -92,21 +103,25 @@ vault register
 ## 🧠 ADHD-Friendly Features
 
 ### ✅ **Zero Mental Overhead**
+
 - Auto-registration when creating tmux sessions
 - Smart health checks fix problems automatically
 - Repositories survive any reorganization
 
 ### ✅ **Visual Management**
+
 - Checkbox interface for bulk operations
 - Clear status indicators
 - Simple, memorable tmux bindings
 
 ### ✅ **Forgiving System**
+
 - Move/rename repos freely
 - Health check fixes everything
 - No broken connections
 
 ### ✅ **Minimal Commands**
+
 - Only 4 main commands to remember
 - Intuitive tmux bindings
 - Everything "just works"
@@ -129,24 +144,28 @@ bin/
 ## 🚀 Advanced Usage
 
 ### Custom Search Paths
+
 ```bash
 export VAULT_SEARCH_PATHS="$HOME/code:$HOME/projects"
 ```
 
 ### Manual Health Check
+
 ```bash
 vault health
 # Runs after moving/renaming multiple repos
 ```
 
 ### Register Specific Directory
+
 ```bash
 vault register ~/path/to/project
 ```
 
 ## 🔄 Migration from Old System
 
-The old vault scripts have been archived to `bin/archive/vault-old-scripts/`. The new unified system automatically handles existing registrations.
+The old vault scripts have been archived to `bin/archive/vault-old-scripts/`. The new unified system
+automatically handles existing registrations.
 
 **No action needed** - your existing vaults continue working with the new system.
 
@@ -159,4 +178,5 @@ The old vault scripts have been archived to `bin/archive/vault-old-scripts/`. Th
 
 ---
 
-**🎯 TL;DR**: Use `Ctrl-g V` for management, `Ctrl-g H` for health checks, and `Ctrl-g v` to open vaults. Everything else happens automatically.
+**🎯 TL;DR**: Use `Ctrl-g V` for management, `Ctrl-g H` for health checks, and `Ctrl-g v` to open
+vaults. Everything else happens automatically.

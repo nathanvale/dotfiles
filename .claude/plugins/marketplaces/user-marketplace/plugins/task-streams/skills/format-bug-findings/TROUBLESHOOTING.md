@@ -137,7 +137,7 @@ Common issues when enriching bug findings and their solutions.
    ```typescript
    // No error handling in batch loop
    for (const record of batch) {
-     await create(record) // Throws on failure
+     await create(record); // Throws on failure
    }
    ```
 
@@ -147,12 +147,12 @@ Common issues when enriching bug findings and their solutions.
    // Wrap with rollback compensation
    try {
      for (const record of batch) {
-       await create(record)
-       committed.push(record.id)
+       await create(record);
+       committed.push(record.id);
      }
    } catch (error) {
-     await rollback(committed)
-     throw error
+     await rollback(committed);
+     throw error;
    }
    ```
    ````
@@ -160,11 +160,9 @@ Common issues when enriching bug findings and their solutions.
 2. **Use architectural diagrams** (markdown format):
 
    ```markdown
-   **Current Architecture:**
-   CSV → Parser → Direct DB Write (no rollback)
+   **Current Architecture:** CSV → Parser → Direct DB Write (no rollback)
 
-   **Proposed Architecture:**
-   CSV → Parser → Transaction Manager → DB Write (with rollback)
+   **Proposed Architecture:** CSV → Parser → Transaction Manager → DB Write (with rollback)
    ```
 
 3. **Skip code examples** if truly not applicable:
@@ -267,21 +265,20 @@ Common issues when enriching bug findings and their solutions.
 1. **For isolated changes**:
 
    ```markdown
-   **Blocking Dependencies:** None
-   **Blocks:** None
+   **Blocking Dependencies:** None **Blocks:** None
    ```
 
 2. **For known dependencies**:
 
    ```markdown
-   **Blocking Dependencies:** P0-001 (Service factory refactoring must complete first)
-   **Blocks:** P1-005 (Batch retry depends on this rollback logic)
+   **Blocking Dependencies:** P0-001 (Service factory refactoring must complete first) **Blocks:**
+   P1-005 (Batch retry depends on this rollback logic)
    ```
 
 3. **For uncertain dependencies**:
    ```markdown
-   **Blocking Dependencies:** TBD - requires review of current task graph
-   **Blocks:** Potentially P1-005, P1-006 (batch-related tasks)
+   **Blocking Dependencies:** TBD - requires review of current task graph **Blocks:** Potentially
+   P1-005, P1-006 (batch-related tasks)
    ```
 
 ---
@@ -376,7 +373,8 @@ Is it a code quality or technical debt issue?
 
 3. **Mark as epic requiring decomposition**:
    ```markdown
-   **Note:** This finding represents an epic-level change. Recommend decomposing into 3-5 sub-tasks before implementation.
+   **Note:** This finding represents an epic-level change. Recommend decomposing into 3-5 sub-tasks
+   before implementation.
    ```
 
 ---

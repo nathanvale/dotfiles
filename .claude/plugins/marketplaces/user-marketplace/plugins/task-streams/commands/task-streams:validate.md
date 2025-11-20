@@ -1,10 +1,13 @@
 ---
-description: Validates task files for conformance to task-streams format standard and optionally auto-fixes violations
+description:
+  Validates task files for conformance to task-streams format standard and optionally auto-fixes
+  violations
 ---
 
 # Validate Command
 
-Checks task files for conformance to the task-streams 10-enrichment standard. Reports violations and optionally auto-fixes common issues.
+Checks task files for conformance to the task-streams 10-enrichment standard. Reports violations and
+optionally auto-fixes common issues.
 
 ## Usage
 
@@ -49,7 +52,7 @@ Checks task files for conformance to the task-streams 10-enrichment standard. Re
 Based on the provided path parameter:
 
 ```typescript
-const taskFiles = await discoverTaskFiles(path)
+const taskFiles = await discoverTaskFiles(path);
 // Returns array of file paths matching pattern
 ```
 
@@ -66,37 +69,37 @@ For each discovered file:
 
 ```typescript
 interface ParsedTask {
-  filePath: string
+  filePath: string;
   frontmatter: {
-    id?: string
-    title?: string
-    priority?: string
-    component?: string
-    status?: string
-    created?: string
-    source?: string
-  }
+    id?: string;
+    title?: string;
+    priority?: string;
+    component?: string;
+    status?: string;
+    created?: string;
+    source?: string;
+  };
   content: {
-    description?: string
-    acceptanceCriteria?: string[]
-    implementationSteps?: string[]
-    filesToCreate?: string[]
-    filesToModify?: string[]
-    filesToDelete?: string[]
-    testingTable?: string
+    description?: string;
+    acceptanceCriteria?: string[];
+    implementationSteps?: string[];
+    filesToCreate?: string[];
+    filesToModify?: string[];
+    filesToDelete?: string[];
+    testingTable?: string;
     dependencies?: {
-      blocking?: string[]
-      blockedBy?: string[]
-    }
-    prerequisites?: string[]
-    regressionRisk?: string
+      blocking?: string[];
+      blockedBy?: string[];
+    };
+    prerequisites?: string[];
+    regressionRisk?: string;
     codeExamples?: {
-      current?: string
-      proposed?: string
-    }
-    notes?: string
-  }
-  raw: string
+      current?: string;
+      proposed?: string;
+    };
+    notes?: string;
+  };
+  raw: string;
 }
 ```
 
@@ -465,8 +468,7 @@ Parsing tasks...
 ```markdown
 ## Dependencies
 
-**Blocking:** T0001, T0003
-**Blocked By:** None
+**Blocking:** T0001, T0003 **Blocked By:** None
 ```
 
 **Violations:**
@@ -549,17 +551,17 @@ Group violations by severity and file:
 ```typescript
 interface ValidationReport {
   summary: {
-    filesChecked: number
-    errors: number
-    warnings: number
-    passed: number
-  }
+    filesChecked: number;
+    errors: number;
+    warnings: number;
+    passed: number;
+  };
   byFile: {
     [filePath: string]: {
-      errors: Violation[]
-      warnings: Violation[]
-    }
-  }
+      errors: Violation[];
+      warnings: Violation[];
+    };
+  };
 }
 ```
 
@@ -620,11 +622,11 @@ docs/tasks/T0003-refactor-service.md:
 
 ```typescript
 if (errors > 0) {
-  exitCode = 1 // Failure
+  exitCode = 1; // Failure
 } else if (strict && warnings > 0) {
-  exitCode = 1 // Strict mode: warnings = failure
+  exitCode = 1; // Strict mode: warnings = failure
 } else {
-  exitCode = 0 // Success
+  exitCode = 0; // Success
 }
 ```
 

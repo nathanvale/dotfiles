@@ -1,6 +1,7 @@
 # Template ↔ Enrichment Mapping
 
-**Purpose**: This document shows EXACTLY how each template includes all 10 universal enrichments from SHARED_ENRICHMENTS.md
+**Purpose**: This document shows EXACTLY how each template includes all 10 universal enrichments
+from SHARED_ENRICHMENTS.md
 
 ---
 
@@ -90,7 +91,8 @@
 
 **Flow**: SHARED_ENRICHMENTS.md → Validator Array → Templates → Skills → Output → Validators
 
-**Key Insight**: The REQUIRED_ENRICHMENTS array is the SINGLE SOURCE OF TRUTH that connects everything!
+**Key Insight**: The REQUIRED_ENRICHMENTS array is the SINGLE SOURCE OF TRUTH that connects
+everything!
 
 ---
 
@@ -280,14 +282,14 @@ Every template MUST include these 10 enrichments. Here's how they map to templat
 **Current Code (BUGGY):**
 
 ```typescript
-const result = data[0].field // No bounds check!
+const result = data[0].field; // No bounds check!
 ```
 
 **Proposed Fix:**
 
 ```typescript
 if (data.length > 0) {
-  const result = data[0].field
+  const result = data[0].field;
 }
 ```
 ````
@@ -364,11 +366,10 @@ if (data.length > 0) {
 **From SHARED_ENRICHMENTS.md:**
 
 ```markdown
-**Required Testing:**
-| Test Type | Validates AC | Description | Location |
-|-------------|--------------|--------------------------|---------------------------------------------|
-| Unit | AC1, AC2 | Test fixture mode guard | `src/__tests__/service-factory.test.ts` |
-| Integration | AC3, AC4 | Verify no real API calls | `tests/integration/fixture-mode.test.ts` |
+| **Required Testing:** | Test Type | Validates AC             | Description                              | Location |
+| --------------------- | --------- | ------------------------ | ---------------------------------------- | -------- |
+| Unit                  | AC1, AC2  | Test fixture mode guard  | `src/__tests__/service-factory.test.ts`  |          |
+| Integration           | AC3, AC4  | Verify no real API calls | `tests/integration/fixture-mode.test.ts` |
 ```
 
 **In Template (Structure Only):**
@@ -376,10 +377,8 @@ if (data.length > 0) {
 ```markdown
 ## Testing Requirements
 
-**Required Testing:**
-| Test Type | Validates AC | Description | Location |
-|-----------|--------------|-------------|----------|
-| | | | |
+**Required Testing:** | Test Type | Validates AC | Description | Location |
+|-----------|--------------|-------------|----------| | | | | |
 ```
 
 **Validator Checks For:**
@@ -395,8 +394,7 @@ if (data.length > 0) {
 **From SHARED_ENRICHMENTS.md:**
 
 ```markdown
-**Blocking Dependencies:** P0-001, P0-003
-**Blocks:** P1-005, P2-012
+**Blocking Dependencies:** P0-001, P0-003 **Blocks:** P1-005, P2-012
 
 **Prerequisites:**
 
@@ -440,15 +438,15 @@ requiredEnrichments: 10
 formatSkill: format-bug-findings
 ---
 
-## <!-- TASK OUTPUT FRONTMATTER STRUCTURE -->
+## TASK OUTPUT FRONTMATTER STRUCTURE
 
-id: # T#### format (auto-generated)
-title: # Brief task description
-priority: # P0, P1, P2, or P3
-component: # C## code from component-manager
-status: # READY, IN_PROGRESS, BLOCKED, DONE
-created: # ISO 8601 timestamp
-source: # Original document path
+- `id:` T#### format (auto-generated)
+- `title:` Brief task description
+- `priority:` P0, P1, P2, or P3
+- `component:` C## code from component-manager
+- `status:` READY, IN_PROGRESS, BLOCKED, DONE
+- `created:` ISO 8601 timestamp
+- `source:` Original document path
 
 ---
 
@@ -456,83 +454,129 @@ source: # Original document path
 
 ## Core Metadata
 
-**Component:** # ← NOT one of the 10 (but required)
-**Location:** # ← ENRICHMENT #1
-**Estimated Effort:** # ← ENRICHMENT #2
-**Complexity:** # ← ENRICHMENT #3
-**Regression Risk:** # ← Overall level (HIGH/MEDIUM/LOW)
+**Component:** `[component code]` ← NOT one of the 10 (but required)
+
+**Location:** `[file:line]` ← ENRICHMENT #1
+
+**Estimated Effort:** `[hours]` ← ENRICHMENT #2
+
+**Complexity:** `[HIGH/MEDIUM/LOW]` ← ENRICHMENT #3
+
+**Regression Risk:** `[HIGH/MEDIUM/LOW]` ← Overall level
 
 ## Description
 
-**Description:** # ← NOT one of the 10 (but required)
+**Description:** [task description] ← NOT one of the 10 (but required)
 
-## Regression Risk Analysis # ← ENRICHMENT #5 (Heading)
+## Regression Risk Analysis
 
-**Regression Risk Details:** # ← ENRICHMENT #5 (Field)
+← ENRICHMENT #5 (Heading)
 
-- **Impact:** # ← ENRICHMENT #5 (Dimension 1/5)
-- **Blast Radius:** # ← ENRICHMENT #5 (Dimension 2/5)
-- **Dependencies:** # ← ENRICHMENT #5 (Dimension 3/5)
-- **Testing Gaps:** # ← ENRICHMENT #5 (Dimension 4/5)
-- **Rollback Risk:** # ← ENRICHMENT #5 (Dimension 5/5)
+**Regression Risk Details:**
 
-## Acceptance Criteria # ← ENRICHMENT #4 (Heading)
+← ENRICHMENT #5 (Field)
 
-**Acceptance Criteria:** # ← ENRICHMENT #4 (Field)
+- **Impact:** [description] ← ENRICHMENT #5 (Dimension 1/5)
+- **Blast Radius:** [description] ← ENRICHMENT #5 (Dimension 2/5)
+- **Dependencies:** [description] ← ENRICHMENT #5 (Dimension 3/5)
+- **Testing Gaps:** [description] ← ENRICHMENT #5 (Dimension 4/5)
+- **Rollback Risk:** [description] ← ENRICHMENT #5 (Dimension 5/5)
 
-- [ ]                             # ← ENRICHMENT #4 (Checkbox format)
-- [ ]
-- [ ]
+## Acceptance Criteria
 
-## Implementation Plan # ← ENRICHMENT #6 (Heading)
+← ENRICHMENT #4 (Heading)
 
-**Implementation Steps:** # ← ENRICHMENT #6 (Field)
+**Acceptance Criteria:**
 
-1.                                       # ← ENRICHMENT #6 (Numbered list)
-2.
-3.
+← ENRICHMENT #4 (Field)
 
-## Code Examples # ← ENRICHMENT #7 (Heading)
+- [ ] [criterion 1] ← ENRICHMENT #4 (Checkbox format)
+- [ ] [criterion 2]
+- [ ] [criterion 3]
+
+## Implementation Plan
+
+← ENRICHMENT #6 (Heading)
+
+**Implementation Steps:**
+
+← ENRICHMENT #6 (Field)
+
+1. [step 1] ← ENRICHMENT #6 (Numbered list)
+2. [step 2]
+3. [step 3]
+
+## Code Examples
+
+← ENRICHMENT #7 (Heading)
 
 **Current Code (BUGGY):**
 
 ```typescript
-
+[buggy code here]
 ```
-````
 
 **Proposed Fix:**
 
 ```typescript
-
+[fixed code here]
 ```
 
-## File Changes # ← ENRICHMENT #8 (Heading)
+## File Changes
 
-## **Files to Create:** # ← ENRICHMENT #8 (Category 1/3)
+← ENRICHMENT #8 (Heading)
 
-## **Files to Modify:** # ← ENRICHMENT #8 (Category 2/3)
+**Files to Create:**
 
-## **Files to Delete:** # ← ENRICHMENT #8 (Category 3/3)
+← ENRICHMENT #8 (Category 1/3)
 
-## Testing Requirements # ← ENRICHMENT #9 (Heading)
+- None
 
-**Required Testing:** # ← ENRICHMENT #9 (Field)
+**Files to Modify:**
+
+← ENRICHMENT #8 (Category 2/3)
+
+- None
+
+**Files to Delete:**
+
+← ENRICHMENT #8 (Category 3/3)
+
+- None
+
+## Testing Requirements
+
+← ENRICHMENT #9 (Heading)
+
+**Required Testing:**
+
+← ENRICHMENT #9 (Field)
+
 | Test Type | Validates AC | Description | Location |
-|-----------|--------------|-------------|----------|
-| | | | |
+| --------- | ------------ | ----------- | -------- |
+|           |              |             |          |
 
-## Dependencies # ← ENRICHMENT #10 (Heading)
+## Dependencies
 
-**Blocking Dependencies:** # ← ENRICHMENT #10 (Field 1/3)
+← ENRICHMENT #10 (Heading)
 
-**Blocks:** # ← ENRICHMENT #10 (Field 2/3)
+**Blocking Dependencies:**
 
-**Prerequisites:** # ← ENRICHMENT #10 (Field 3/3)
+← ENRICHMENT #10 (Field 1/3)
 
-- [ ]
+[none]
 
-````
+**Blocks:**
+
+← ENRICHMENT #10 (Field 2/3)
+
+[none]
+
+**Prerequisites:**
+
+← ENRICHMENT #10 (Field 3/3)
+
+- [ ] [prerequisite]
 
 ---
 
@@ -546,108 +590,103 @@ Here's how the validator checks for all 10 enrichments:
 export const REQUIRED_ENRICHMENTS = [
   {
     id: 1,
-    name: 'File Locations',
-    requiredFields: ['**Location:**'],
-    requiredHeadings: []
+    name: "File Locations",
+    requiredFields: ["**Location:**"],
+    requiredHeadings: [],
   },
   {
     id: 2,
-    name: 'Effort Estimation',
-    requiredFields: ['**Estimated Effort:**'],
-    requiredHeadings: []
+    name: "Effort Estimation",
+    requiredFields: ["**Estimated Effort:**"],
+    requiredHeadings: [],
   },
   {
     id: 3,
-    name: 'Complexity Classification',
-    requiredFields: ['**Complexity:**'],
-    requiredHeadings: []
+    name: "Complexity Classification",
+    requiredFields: ["**Complexity:**"],
+    requiredHeadings: [],
   },
   {
     id: 4,
-    name: 'Acceptance Criteria',
-    requiredFields: ['**Acceptance Criteria:**'],
-    requiredHeadings: ['## Acceptance Criteria']
+    name: "Acceptance Criteria",
+    requiredFields: ["**Acceptance Criteria:**"],
+    requiredHeadings: ["## Acceptance Criteria"],
   },
   {
     id: 5,
-    name: 'Regression Risk (5 Dimensions)',
+    name: "Regression Risk (5 Dimensions)",
     requiredFields: [
-      '**Regression Risk Details:**',
-      '**Impact:**',
-      '**Blast Radius:**',
-      '**Dependencies:**',
-      '**Testing Gaps:**',
-      '**Rollback Risk:**'
+      "**Regression Risk Details:**",
+      "**Impact:**",
+      "**Blast Radius:**",
+      "**Dependencies:**",
+      "**Testing Gaps:**",
+      "**Rollback Risk:**",
     ],
-    requiredHeadings: ['## Regression Risk Analysis']
+    requiredHeadings: ["## Regression Risk Analysis"],
   },
   {
     id: 6,
-    name: 'Implementation Steps',
-    requiredFields: ['**Implementation Steps:**'],
-    requiredHeadings: ['## Implementation Plan']
+    name: "Implementation Steps",
+    requiredFields: ["**Implementation Steps:**"],
+    requiredHeadings: ["## Implementation Plan"],
   },
   {
     id: 7,
-    name: 'Code Examples',
+    name: "Code Examples",
     requiredFields: [],
-    requiredHeadings: ['## Code Examples']
+    requiredHeadings: ["## Code Examples"],
   },
   {
     id: 8,
-    name: 'File Change Scope (3 Categories)',
-    requiredFields: [
-      '**Files to Create:**',
-      '**Files to Modify:**',
-      '**Files to Delete:**'
-    ],
-    requiredHeadings: ['## File Changes']
+    name: "File Change Scope (3 Categories)",
+    requiredFields: ["**Files to Create:**", "**Files to Modify:**", "**Files to Delete:**"],
+    requiredHeadings: ["## File Changes"],
   },
   {
     id: 9,
-    name: 'Testing Table',
-    requiredFields: ['**Required Testing:**'],
-    requiredHeadings: ['## Testing Requirements']
+    name: "Testing Table",
+    requiredFields: ["**Required Testing:**"],
+    requiredHeadings: ["## Testing Requirements"],
   },
   {
     id: 10,
-    name: 'Dependencies and Blocking',
-    requiredFields: [
-      '**Blocking Dependencies:**',
-      '**Blocks:**',
-      '**Prerequisites:**'
-    ],
-    requiredHeadings: ['## Dependencies']
-  }
-] as const
+    name: "Dependencies and Blocking",
+    requiredFields: ["**Blocking Dependencies:**", "**Blocks:**", "**Prerequisites:**"],
+    requiredHeadings: ["## Dependencies"],
+  },
+] as const;
 
-export function validateTemplateHasAllEnrichments(
-  templateContent: string
-): { passed: boolean; missing: string[] } {
-  const missing: string[] = []
+export function validateTemplateHasAllEnrichments(templateContent: string): {
+  passed: boolean;
+  missing: string[];
+} {
+  const missing: string[] = [];
 
   for (const enrichment of REQUIRED_ENRICHMENTS) {
     // Check headings
     for (const heading of enrichment.requiredHeadings || []) {
       if (!templateContent.includes(heading)) {
-        missing.push(`Enrichment #${enrichment.id} (${enrichment.name}): Missing heading "${heading}"`)
+        missing.push(
+          `Enrichment #${enrichment.id} (${enrichment.name}): Missing heading "${heading}"`
+        );
       }
     }
 
     // Check fields
     for (const field of enrichment.requiredFields || []) {
       if (!templateContent.includes(field)) {
-        missing.push(`Enrichment #${enrichment.id} (${enrichment.name}): Missing field "${field}"`)
+        missing.push(`Enrichment #${enrichment.id} (${enrichment.name}): Missing field "${field}"`);
       }
     }
   }
 
   return {
     passed: missing.length === 0,
-    missing
-  }
+    missing,
+  };
 }
-````
+```
 
 ---
 
@@ -742,14 +781,20 @@ When creating a template, verify:
 - [ ] **Enrichment #1**: `**Location:**` field present
 - [ ] **Enrichment #2**: `**Estimated Effort:**` field present
 - [ ] **Enrichment #3**: `**Complexity:**` field present
-- [ ] **Enrichment #4**: `## Acceptance Criteria` heading + `**Acceptance Criteria:**` field + checkbox format
-- [ ] **Enrichment #5**: `## Regression Risk Analysis` heading + `**Regression Risk Details:**` field + ALL 5 dimensions (Impact, Blast Radius, Dependencies, Testing Gaps, Rollback Risk)
-- [ ] **Enrichment #6**: `## Implementation Plan` heading + `**Implementation Steps:**` field + numbered list
+- [ ] **Enrichment #4**: `## Acceptance Criteria` heading + `**Acceptance Criteria:**` field +
+      checkbox format
+- [ ] **Enrichment #5**: `## Regression Risk Analysis` heading + `**Regression Risk Details:**`
+      field + ALL 5 dimensions (Impact, Blast Radius, Dependencies, Testing Gaps, Rollback Risk)
+- [ ] **Enrichment #6**: `## Implementation Plan` heading + `**Implementation Steps:**` field +
+      numbered list
 - [ ] **Enrichment #7**: `## Code Examples` heading + code block structure
 - [ ] **Enrichment #8**: `## File Changes` heading + ALL 3 categories (Create, Modify, Delete)
-- [ ] **Enrichment #9**: `## Testing Requirements` heading + `**Required Testing:**` field + table structure
-- [ ] **Enrichment #10**: `## Dependencies` heading + ALL 3 fields (Blocking Dependencies, Blocks, Prerequisites)
+- [ ] **Enrichment #9**: `## Testing Requirements` heading + `**Required Testing:**` field + table
+      structure
+- [ ] **Enrichment #10**: `## Dependencies` heading + ALL 3 fields (Blocking Dependencies, Blocks,
+      Prerequisites)
 
 **Total fields to check**: ~25-30 individual fields across 10 enrichments
 
 **Validator runs automatically**: Pre-commit hook prevents invalid templates from being committed!
+````

@@ -1,11 +1,9 @@
 {
-  "title": "Vim style escape key mapping",
   "rules": [
     {
       "description": "Map ctrl + [ to escape",
       "manipulators": [
         {
-          "type": "basic",
           "from": {
             "key_code": "open_bracket",
             "modifiers": {
@@ -17,9 +15,11 @@
             {
               "key_code": "escape"
             }
-          ]
+          ],
+          "type": "basic"
         }
       ]
     }
-  ]
+  ],
+  "title": "Vim style escape key mapping"
 }

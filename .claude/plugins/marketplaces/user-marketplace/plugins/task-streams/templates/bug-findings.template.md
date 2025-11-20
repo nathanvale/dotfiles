@@ -10,13 +10,9 @@ formatSkill: format-bug-findings
 
 ## <!-- TASK OUTPUT FRONTMATTER STRUCTURE -->
 
-id: # T#### format (auto-generated)
-title: # Brief task description
-priority: # P0, P1, P2, or P3
-component: # C## code from component-manager
-status: # READY, IN_PROGRESS, BLOCKED, DONE
-created: # ISO 8601 timestamp
-source: # Original document path
+id: # T#### format (auto-generated) title: # Brief task description priority: # P0, P1, P2, or P3
+component: # C## code from component-manager status: # READY, IN_PROGRESS, BLOCKED, DONE created: #
+ISO 8601 timestamp source: # Original document path
 
 ---
 
@@ -24,11 +20,7 @@ source: # Original document path
 
 ## Core Metadata
 
-
-**Location:**
-**Estimated Effort:**
-**Complexity:**
-**Regression Risk:**
+**Location:** **Estimated Effort:** **Complexity:** **Regression Risk:**
 
 ## Description
 
@@ -84,10 +76,8 @@ source: # Original document path
 
 ## Testing Requirements
 
-**Required Testing:**
-| Test Type | Validates AC | Description | Location |
-|-----------|--------------|-------------|----------|
-| | | | |
+**Required Testing:** | Test Type | Validates AC | Description | Location |
+|-----------|--------------|-------------|----------| | | | | |
 
 ## Dependencies
 
@@ -106,17 +96,11 @@ source: # Original document path
 
 ## Root Cause
 
-**Bug Type**:
-**Root Cause** (5 Whys):
-**Contributing Factors**:
-**First Introduced**:
+**Bug Type**: **Root Cause** (5 Whys): **Contributing Factors**: **First Introduced**:
 
 ## Impact Analysis
 
-**Users Affected**:
-**Financial**:
-**Data Corruption**:
-**SLA Breach**:
+**Users Affected**: **Financial**: **Data Corruption**: **SLA Breach**:
 
 ## Reproduction
 
@@ -127,10 +111,7 @@ source: # Original document path
 
 ## Hotfix Decision
 
-**Decision**:
-**Timeline**:
-**Approach**:
-**Risk**:
+**Decision**: **Timeline**: **Approach**: **Risk**:
 
 ## Pattern Detection
 

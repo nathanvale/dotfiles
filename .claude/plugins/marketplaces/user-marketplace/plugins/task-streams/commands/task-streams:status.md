@@ -1,10 +1,13 @@
 ---
-description: Inspect state files, task registry, and plugin health - shows task counter, component registry, and TASKS.md statistics
+description:
+  Inspect state files, task registry, and plugin health - shows task counter, component registry,
+  and TASKS.md statistics
 ---
 
 # Status Command
 
-Provides health check and statistics for the task-streams plugin, including state file contents, task registry stats, and component usage.
+Provides health check and statistics for the task-streams plugin, including state file contents,
+task registry stats, and component usage.
 
 ## Usage
 
@@ -46,32 +49,32 @@ Check for existence of state files:
 ```typescript
 interface StateFiles {
   taskCounter: {
-    exists: boolean
-    path: string
+    exists: boolean;
+    path: string;
     content?: {
-      counter: number
-      tasks: Record<string, TaskMetadata>
-    }
-  }
+      counter: number;
+      tasks: Record<string, TaskMetadata>;
+    };
+  };
   componentRegistry: {
-    exists: boolean
-    path: string
+    exists: boolean;
+    path: string;
     content?: {
-      nextCode: number
-      components: Record<string, ComponentMetadata>
-    }
-  }
+      nextCode: number;
+      components: Record<string, ComponentMetadata>;
+    };
+  };
   tasksIndex: {
-    exists: boolean
-    path: string
-    lastModified?: string
-    taskCount?: number
-  }
+    exists: boolean;
+    path: string;
+    lastModified?: string;
+    taskCount?: number;
+  };
   taskDirectory: {
-    exists: boolean
-    path: string
-    fileCount?: number
-  }
+    exists: boolean;
+    path: string;
+    fileCount?: number;
+  };
 }
 ```
 
@@ -223,7 +226,7 @@ const checks = {
     status: taskDirectory.exists,
     severity: taskDirectory.exists ? "OK" : "ERROR",
   },
-}
+};
 ```
 
 ### Check 2: Data Consistency
@@ -246,7 +249,7 @@ const consistency = {
     status: validateComponentTaskCounts(),
     severity: status ? "OK" : "WARNING",
   },
-}
+};
 ```
 
 ### Health Check Report

@@ -34,6 +34,7 @@ All mode files are stored in: `~/Documents/superwhisper/modes/`
 ## Testing Pattern
 
 After creating/editing, test with:
+
 ```bash
 open "superwhisper://mode?key=mode-key&record=true"
 ```

@@ -13,7 +13,8 @@ github: https://github.com/example/repo/issues/102
 
 ## Description
 
-Current error handling in the authentication module is inconsistent and provides poor user feedback. Need to standardize error responses and improve error messages.
+Current error handling in the authentication module is inconsistent and provides poor user feedback.
+Need to standardize error responses and improve error messages.
 
 ## Current Issues
 
@@ -41,15 +42,18 @@ Current error handling in the authentication module is inconsistent and provides
 ## Technical Notes
 
 **Files to Create:**
+
 - `src/auth/errors/AuthErrors.ts` - Custom error classes
 - `src/auth/errors/errorCodes.ts` - Error code constants
 
 **Files to Update:**
+
 - `src/auth/middleware/authenticate.ts`
 - `src/auth/controllers/login.ts`
 - `src/auth/controllers/signup.ts`
 
 **Error Codes:**
+
 - `AUTH_001` - Invalid credentials
 - `AUTH_002` - Account locked
 - `AUTH_003` - Email not verified

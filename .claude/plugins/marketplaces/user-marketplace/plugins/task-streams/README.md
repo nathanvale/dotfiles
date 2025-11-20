@@ -1,14 +1,13 @@
 # task-streams Plugin
 
-Pure document-to-tasks converter with intelligent type detection. Transforms any
-planning document (specs, reviews, ADRs, tech debt, security audits) into
-standardized task files. Platform design with discovery API for plugin ecosystem
-integration.
+Pure document-to-tasks converter with intelligent type detection. Transforms any planning document
+(specs, reviews, ADRs, tech debt, security audits) into standardized task files. Platform design
+with discovery API for plugin ecosystem integration.
 
 ## Overview
 
-**Problem:** Tasks come from many sources (specs, reviews, ADRs, tech debt docs,
-security audits), but each has different structure and format.
+**Problem:** Tasks come from many sources (specs, reviews, ADRs, tech debt docs, security audits),
+but each has different structure and format.
 
 **Solution:** task-streams is a **generic conversion tool** that:
 
@@ -18,8 +17,8 @@ security audits), but each has different structure and format.
 - Provides discovery API for other plugins to integrate
 - Validates conformance to task format standard
 
-**Key Principle:** ONE tool that converts ANY document to tasks, not separate
-tools for each input type.
+**Key Principle:** ONE tool that converts ANY document to tasks, not separate tools for each input
+type.
 
 ## Architecture
 
@@ -61,8 +60,8 @@ tools for each input type.
 
 **Pure conversion:** Document → Task files
 
-Intelligently detects input type (spec, review, ADR, tech debt, security) and
-generates standardized task files with all 10 enrichments.
+Intelligently detects input type (spec, review, ADR, tech debt, security) and generates standardized
+task files with all 10 enrichments.
 
 **Usage:**
 
@@ -102,8 +101,8 @@ generates standardized task files with all 10 enrichments.
 
 **Conformance checker:** Validates task files + auto-fix
 
-Checks task files for conformance to the 10-enrichment standard and optionally
-auto-fixes violations.
+Checks task files for conformance to the 10-enrichment standard and optionally auto-fixes
+violations.
 
 **Usage:**
 
@@ -129,12 +128,10 @@ auto-fixes violations.
 
 **What it checks:**
 
-- ✅ Valid YAML frontmatter with required fields (id, title, priority,
-  component, status, created, source)
-- ✅ All 10 enrichments present (description, acceptance criteria,
-  implementation steps, etc.)
-- ✅ Correct formats (checkboxes for AC, numbered lists for steps, table for
-  testing)
+- ✅ Valid YAML frontmatter with required fields (id, title, priority, component, status, created,
+  source)
+- ✅ All 10 enrichments present (description, acceptance criteria, implementation steps, etc.)
+- ✅ Correct formats (checkboxes for AC, numbered lists for steps, table for testing)
 - ✅ Valid task IDs (T####), component codes (C##), priorities (P0-P3)
 - ✅ Three file change categories (Create/Modify/Delete)
 - ✅ Testing table maps to acceptance criteria
@@ -152,9 +149,8 @@ auto-fixes violations.
 
 **Discovery API:** Returns task format schema
 
-Provides machine-readable (JSON) and human-readable (Markdown) specification of
-the task format, enabling other plugins to generate conformant tasks without
-knowing implementation details.
+Provides machine-readable (JSON) and human-readable (Markdown) specification of the task format,
+enabling other plugins to generate conformant tasks without knowing implementation details.
 
 **Usage:**
 
@@ -197,8 +193,7 @@ knowing implementation details.
 
 **Health check:** Inspect state files + statistics
 
-Shows plugin health, state file contents, task registry stats, and component
-usage.
+Shows plugin health, state file contents, task registry stats, and component usage.
 
 **Usage:**
 
@@ -282,8 +277,8 @@ All utility skills embedded in plugin (no external dependencies):
 
 ### id-generator
 
-Generates unique task IDs (T0001, T0002, T0003...) with rich metadata tracking.
-Stores creation date, source document, type, and notes for every generated ID.
+Generates unique task IDs (T0001, T0002, T0003...) with rich metadata tracking. Stores creation
+date, source document, type, and notes for every generated ID.
 
 **State file:** `.claude/state/task-streams/id-generator.json`
 
@@ -356,26 +351,26 @@ Other plugins can integrate with task-streams:
 
 ```typescript
 // Your plugin code
-const schema = await queryCapabilities() // /task-streams:capabilities --format=json
-const task = generateTaskFollowingSchema(schema)
-await writeTaskFile(task)
-await validate() // /task-streams:validate <your-output>
+const schema = await queryCapabilities(); // /task-streams:capabilities --format=json
+const task = generateTaskFollowingSchema(schema);
+await writeTaskFile(task);
+await validate(); // /task-streams:validate <your-output>
 ```
 
 ### Pattern 2: Generate Doc, Convert
 
 ```typescript
 // Your plugin code
-await generateIntermediateDoc("my-output.md")
-await convert("my-output.md") // /task-streams:convert
+await generateIntermediateDoc("my-output.md");
+await convert("my-output.md"); // /task-streams:convert
 ```
 
 ### Pattern 3: Validate Only
 
 ```typescript
 // Your plugin code (custom task generation)
-await generateTasks()
-await validate() // /task-streams:validate
+await generateTasks();
+await validate(); // /task-streams:validate
 // Fix violations
 ```
 
@@ -451,8 +446,7 @@ Use task-manager plugin to execute:
 
 ## Priority Classification
 
-- **P0 (Critical)**: Security vulnerabilities, data loss risks, system-breaking
-  bugs
+- **P0 (Critical)**: Security vulnerabilities, data loss risks, system-breaking bugs
 - **P1 (High)**: Significant functionality issues, performance problems
 - **P2 (Medium)**: Code quality issues, technical debt, missing tests
 - **P3 (Low)**: Minor improvements, style inconsistencies
@@ -478,8 +472,8 @@ claude plugin install task-streams-v1.0.0.tar.gz
 
 ## Project-Specific Wrapper Pattern
 
-Live code analysis should stay in **project-specific commands**, not in this
-plugin. This plugin is a **pure conversion tool** for documents.
+Live code analysis should stay in **project-specific commands**, not in this plugin. This plugin is
+a **pure conversion tool** for documents.
 
 **Example:** `/review-referral-migration` (project command)
 

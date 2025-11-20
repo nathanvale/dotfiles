@@ -7,12 +7,14 @@ HyperFlow now includes integrated window management using Raycast + Karabiner.
 **Hyper Key = Ctrl + Option + Command (all held together)**
 
 ### Window Positioning (Vim-style)
+
 - **Hyper + H**: Move window to left half
 - **Hyper + J**: Move window to bottom half
 - **Hyper + K**: Move window to top half
 - **Hyper + L**: Move window to right half
 
 ### Other Window Commands
+
 - **Hyper + M**: Maximize window
 - **Hyper + F**: Toggle fullscreen
 - **Hyper + C**: Center window
@@ -44,6 +46,7 @@ Rule: "Window Management - Hyper Key (Ctrl+Opt+Cmd) + Vim Keys"
 ## Testing
 
 Try these combinations:
+
 1. Open any app (e.g., Chrome)
 2. Press **Ctrl+Opt+Cmd+H** → Window moves to left half
 3. Press **Ctrl+Opt+Cmd+L** → Window moves to right half
@@ -55,12 +58,13 @@ Try these combinations:
 ### Shortcuts not working
 
 1. **Check Karabiner is running**:
+
    ```bash
    ps aux | grep karabiner
    ```
 
-2. **Check Raycast has Accessibility permissions**:
-   System Settings → Privacy & Security → Accessibility
+2. **Check Raycast has Accessibility permissions**: System Settings → Privacy & Security →
+   Accessibility
 
 3. **Test Raycast deeplink manually**:
    ```bash
@@ -111,7 +115,9 @@ Edit `config/karabiner/karabiner.json` and add new manipulators:
 ```json
 {
   "from": { "key_code": "u", "modifiers": { "mandatory": ["control", "option", "command"] } },
-  "to": [{ "shell_command": "open 'raycast://extensions/raycast/window-management/top-left-quarter'" }],
+  "to": [
+    { "shell_command": "open 'raycast://extensions/raycast/window-management/top-left-quarter'" }
+  ],
   "type": "basic"
 }
 ```
@@ -119,6 +125,7 @@ Edit `config/karabiner/karabiner.json` and add new manipulators:
 ### Change Hyper Key Combination
 
 Modify the `"mandatory"` array to use different modifiers:
+
 - `"control"` = Ctrl
 - `"option"` = Option/Alt
 - `"command"` = Cmd
@@ -128,19 +135,19 @@ Modify the `"mandatory"` array to use different modifiers:
 
 If you were using AeroSpace before:
 
-✅ **Removed**: AeroSpace workspace management
-✅ **Kept**: SuperWhisper mode switching (still works!)
-✅ **Added**: Raycast window management
-✅ **Simplified**: One less background daemon
+✅ **Removed**: AeroSpace workspace management ✅ **Kept**: SuperWhisper mode switching (still
+works!) ✅ **Added**: Raycast window management ✅ **Simplified**: One less background daemon
 
 ### What Changed
 
 **Before (with AeroSpace):**
+
 - AeroSpace managed workspaces + windows
 - Custom keybindings in `aerospace.toml`
 - app-launcher.sh triggered by AeroSpace
 
 **Now (without AeroSpace):**
+
 - Karabiner triggers app launches directly
 - Raycast handles window positioning
 - No tiling manager needed

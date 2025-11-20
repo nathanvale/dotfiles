@@ -14,11 +14,13 @@ This directory contains standardized templates for agents, skills, and commands 
 ### report-output.json
 
 **Used by:**
+
 - `code-analyzer` agent
 - `format-bug-findings` skill
 - Any other code analysis agents/skills
 
 **Structure:**
+
 - 15 enrichments (10 universal + 5 bug-specific)
 - Task-streams compatible
 - Observability metadata included
@@ -26,13 +28,12 @@ This directory contains standardized templates for agents, skills, and commands 
 **Usage in agents/skills:**
 
 ```markdown
-Write(
-  file_path="docs/reports/R001-description.json",
-  content='<JSON matching .claude/templates/report-output.json structure>'
-)
+Write( file_path="docs/reports/R001-description.json", content='<JSON matching
+.claude/templates/report-output.json structure>' )
 ```
 
 **Important:** When writing JSON files:
+
 - Construct JSON object fresh as a string
 - Never copy Read tool formatted output (no line numbers, no STDIN header)
 - Use the template as a structure reference, fill with actual data

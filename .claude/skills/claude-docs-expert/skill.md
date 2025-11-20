@@ -1,10 +1,14 @@
 # Claude Docs Expert Skill
 
-A comprehensive Claude skill that provides seamless access to Claude Code documentation with sync status checking, topic browsing, and recent changes tracking.
+A comprehensive Claude skill that provides seamless access to Claude Code documentation with sync
+status checking, topic browsing, and recent changes tracking.
 
 ## Description
 
-The `claude-docs-expert` skill is a wrapper around the Claude Code documentation helper script that provides structured access to official Claude Code documentation. It enables users and other skills to easily browse available topics, read specific documentation sections, check sync status, and stay updated with recent changes.
+The `claude-docs-expert` skill is a wrapper around the Claude Code documentation helper script that
+provides structured access to official Claude Code documentation. It enables users and other skills
+to easily browse available topics, read specific documentation sections, check sync status, and stay
+updated with recent changes.
 
 ## Features
 
@@ -17,7 +21,8 @@ The `claude-docs-expert` skill is a wrapper around the Claude Code documentation
 
 ## Installation
 
-The skill is located at `~/.claude/skills/claude-docs-expert/` and requires the Claude Code documentation helper to be installed at `~/.claude-code-docs/claude-docs-helper.sh`.
+The skill is located at `~/.claude/skills/claude-docs-expert/` and requires the Claude Code
+documentation helper to be installed at `~/.claude-code-docs/claude-docs-helper.sh`.
 
 ### Prerequisites
 
@@ -64,26 +69,30 @@ claude-docs-expert "whats new"
 ## Available Commands
 
 ### `/docs` (No Arguments)
+
 - **Purpose**: List all available documentation topics
 - **Usage**: `/docs`
 - **Output**: Complete list of available documentation sections
 - **Aliases**: `docs`, `documentation`
 
 ### `/docs <topic>`
+
 - **Purpose**: Read specific documentation with links to official docs
 - **Usage**: `/docs <topic>`
-- **Examples**: 
+- **Examples**:
   - `/docs mcp` - Read MCP documentation
   - `/docs artifacts` - Read artifacts documentation
   - `/docs tools` - Read tools documentation
 - **Output**: Full documentation content with official links
 
 ### `/docs -t`
+
 - **Purpose**: Check sync status without reading documentation
 - **Usage**: `/docs -t`
 - **Output**: Sync status information and last update timestamps
 
 ### `/docs -t <topic>`
+
 - **Purpose**: Check freshness then read documentation for a specific topic
 - **Usage**: `/docs -t <topic>`
 - **Examples**:
@@ -92,6 +101,7 @@ claude-docs-expert "whats new"
 - **Output**: Freshness status followed by documentation content
 
 ### `/docs whats new`
+
 - **Purpose**: Show recent documentation changes and updates
 - **Usage**: `/docs whats new` or `/docs "what's new"`
 - **Output**: List of recent changes, new features, and updates
@@ -135,6 +145,7 @@ recent_changes=$(claude-docs-expert "whats new")
 The skill provides structured output in markdown format:
 
 ### Topic Listing Output
+
 ```
 Available Claude Code Documentation Topics:
 - mcp: Model Context Protocol integration
@@ -146,17 +157,20 @@ Links: https://claude.ai/code/docs
 ```
 
 ### Specific Topic Output
+
 ```markdown
 # [Topic Name]
 
 [Detailed documentation content]
 
 ## Links
+
 - Official Documentation: https://claude.ai/code/docs/[topic]
 - Last Updated: [timestamp]
 ```
 
 ### Sync Status Output
+
 ```
 Documentation Sync Status:
 - Last Sync: [timestamp]
@@ -227,6 +241,7 @@ MIT License - See skill metadata for details.
 ## Support
 
 For issues with this skill:
+
 1. Check the troubleshooting section above
 2. Verify all dependencies are installed
 3. Ensure proper permissions on all files

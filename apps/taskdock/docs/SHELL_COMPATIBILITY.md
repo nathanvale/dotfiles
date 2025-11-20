@@ -21,6 +21,7 @@ TaskDock is designed to work with **Bash 4.0+** across different platforms.
 ## Platform Support
 
 ### Linux
+
 - ✅ **Ubuntu 18.04+**: Bash 4.4+ (native)
 - ✅ **Debian 10+**: Bash 5.0+ (native)
 - ✅ **RHEL/CentOS 7+**: Bash 4.2+ (native)
@@ -28,10 +29,12 @@ TaskDock is designed to work with **Bash 4.0+** across different platforms.
 - ✅ **Arch**: Bash 5.0+ (native)
 
 ### macOS
+
 - ✅ **macOS 10.13+**: Bash 3.2 (built-in) - **Limited**
 - ✅ **macOS with Homebrew**: Bash 5.0+ (recommended)
 
 **Installation:**
+
 ```bash
 brew install bash
 # Add to /etc/shells
@@ -41,6 +44,7 @@ chsh -s /usr/local/bin/bash
 ```
 
 ### Windows
+
 - ✅ **WSL (Ubuntu)**: Bash 5.0+ (native)
 - ✅ **WSL (Debian)**: Bash 5.0+ (native)
 - ✅ **Git Bash**: Bash 4.4+ (works with limitations)
@@ -52,6 +56,7 @@ chsh -s /usr/local/bin/bash
 TaskDock uses the following bash-specific features that are NOT POSIX-compatible:
 
 ### 1. Arrays
+
 ```bash
 # Used extensively for task lists, arguments, etc.
 local tasks=()
@@ -59,6 +64,7 @@ tasks+=("item1" "item2")
 ```
 
 ### 2. `[[` Test Operator
+
 ```bash
 # More powerful than [ ]
 if [[ "$var" == "value" ]]; then
@@ -67,18 +73,21 @@ fi
 ```
 
 ### 3. `$()` Command Substitution
+
 ```bash
 # POSIX but preferred over backticks
 result=$(command)
 ```
 
 ### 4. `local` Variables
+
 ```bash
 # Function-local scope
 local var="value"
 ```
 
 ### 5. `set -euo pipefail`
+
 ```bash
 # Strict error handling
 # -e: exit on error
@@ -87,6 +96,7 @@ local var="value"
 ```
 
 ### 6. Process Substitution
+
 ```bash
 # Used for reading command output
 while read -r line; do
@@ -95,24 +105,28 @@ done < <(command)
 ```
 
 ### 7. `${var:-default}` Parameter Expansion
+
 ```bash
 # Default values
 value="${VAR:-default}"
 ```
 
 ### 8. `${var//pattern/replacement}` String Manipulation
+
 ```bash
 # String replacement
 cleaned="${str//search/replace}"
 ```
 
 ### 9. `printf` with `-v` flag
+
 ```bash
 # Assign to variable (bash 3.1+)
 printf -v formatted "%04d" "$number"
 ```
 
 ### 10. File Descriptor Management
+
 ```bash
 # Used in flock implementation
 exec {fd}>"$file"
@@ -158,6 +172,7 @@ fi
 ### macOS vs Linux
 
 #### 1. `date` Command
+
 ```bash
 # macOS uses BSD date
 date -u -j -f "%Y-%m-%dT%H:%M:%SZ" "$timestamp" +%s
@@ -169,6 +184,7 @@ date -u -d "$timestamp" +%s
 ```
 
 #### 2. `sed` Command
+
 ```bash
 # macOS requires -i '' for in-place editing
 sed -i '' 's/old/new/' file
@@ -180,6 +196,7 @@ sed -i 's/old/new/' file
 ```
 
 #### 3. `readlink` Command
+
 ```bash
 # macOS doesn't have readlink -f
 # TaskDock uses alternative methods
@@ -187,6 +204,7 @@ realpath=$(cd "$(dirname "$file")" && pwd)
 ```
 
 #### 4. `flock` Command
+
 ```bash
 # Linux: /usr/bin/flock (util-linux)
 # macOS: Not included by default
@@ -219,6 +237,7 @@ shellcheck taskdock/lib/common.sh
 ### Shellcheck Configuration
 
 Disabled warnings:
+
 - `SC1090`: Can't follow non-constant source (expected)
 - `SC1091`: Not following sourced files (expected)
 - `SC2034`: Variable appears unused (many are exported)
@@ -240,6 +259,7 @@ If you need to port TaskDock to another shell:
 ### To POSIX sh
 
 **Challenges:**
+
 1. Replace all arrays with space-delimited strings
 2. Replace `[[` with `[`
 3. Remove process substitution
@@ -251,6 +271,7 @@ If you need to port TaskDock to another shell:
 ### To zsh
 
 **Challenges:**
+
 1. Array indices start at 1 (vs 0 in bash)
 2. Some string operations differ
 3. Parameter expansion differences
@@ -260,6 +281,7 @@ If you need to port TaskDock to another shell:
 ### To fish
 
 **Challenges:**
+
 1. Completely different syntax
 2. No compatibility with bash
 3. Would need full rewrite
@@ -270,16 +292,16 @@ If you need to port TaskDock to another shell:
 
 TaskDock should be tested on:
 
-| Platform | Shell | Version | Status |
-|----------|-------|---------|--------|
-| Ubuntu 22.04 | bash | 5.1.16 | ✅ Tested |
-| Ubuntu 20.04 | bash | 5.0.17 | ✅ Tested |
-| macOS 13 (Ventura) | bash | 3.2.57 | ⚠️ Limited |
-| macOS 13 + Homebrew | bash | 5.2.15 | ✅ Tested |
-| macOS 14 (Sonoma) | bash | 3.2.57 | ⚠️ Limited |
-| macOS 14 + Homebrew | bash | 5.2.21 | ✅ Tested |
-| WSL Ubuntu | bash | 5.1.16 | ✅ Tested |
-| Git Bash (Windows) | bash | 4.4.23 | ⚠️ Works |
+| Platform            | Shell | Version | Status     |
+| ------------------- | ----- | ------- | ---------- |
+| Ubuntu 22.04        | bash  | 5.1.16  | ✅ Tested  |
+| Ubuntu 20.04        | bash  | 5.0.17  | ✅ Tested  |
+| macOS 13 (Ventura)  | bash  | 3.2.57  | ⚠️ Limited |
+| macOS 13 + Homebrew | bash  | 5.2.15  | ✅ Tested  |
+| macOS 14 (Sonoma)   | bash  | 3.2.57  | ⚠️ Limited |
+| macOS 14 + Homebrew | bash  | 5.2.21  | ✅ Tested  |
+| WSL Ubuntu          | bash  | 5.1.16  | ✅ Tested  |
+| Git Bash (Windows)  | bash  | 4.4.23  | ⚠️ Works   |
 
 ## Requirements Documentation
 
@@ -310,22 +332,26 @@ dependencies:
 ### Installation Instructions
 
 **Ubuntu/Debian:**
+
 ```bash
 sudo apt-get update
 sudo apt-get install -y bash jq git flock
 ```
 
 **macOS:**
+
 ```bash
 brew install bash jq git flock yq gh
 ```
 
 **RHEL/CentOS:**
+
 ```bash
 sudo yum install -y bash jq git util-linux
 ```
 
 **Arch:**
+
 ```bash
 sudo pacman -S bash jq git util-linux
 ```
@@ -333,17 +359,20 @@ sudo pacman -S bash jq git util-linux
 ## Best Practices for Contributors
 
 ### 1. Use Bash Shebang
+
 ```bash
 #!/usr/bin/env bash
 # NOT #!/bin/sh or #!/bin/bash
 ```
 
 ### 2. Use Strict Mode
+
 ```bash
 set -euo pipefail
 ```
 
 ### 3. Use `[[` for Tests
+
 ```bash
 # Good
 if [[ "$var" == "value" ]]; then
@@ -353,6 +382,7 @@ if [ "$var" = "value" ]; then
 ```
 
 ### 4. Quote Variables
+
 ```bash
 # Good
 echo "$var"
@@ -364,6 +394,7 @@ $command $arg
 ```
 
 ### 5. Use Arrays for Lists
+
 ```bash
 # Good
 items=("one" "two" "three")
@@ -379,6 +410,7 @@ done
 ```
 
 ### 6. Use `$()` Over Backticks
+
 ```bash
 # Good
 result=$(command)
@@ -388,6 +420,7 @@ result=`command`
 ```
 
 ### 7. Check Command Existence
+
 ```bash
 # Good
 if command -v jq >/dev/null; then
@@ -401,6 +434,7 @@ fi
 ```
 
 ### 8. Handle Errors
+
 ```bash
 # Good
 if ! command; then
@@ -420,6 +454,7 @@ command || {
 ### `.shellcheckrc` (Recommended)
 
 Create in project root:
+
 ```bash
 # TaskDock Shellcheck Config
 
@@ -440,33 +475,39 @@ severity=style
 ### VS Code Integration
 
 Install ShellCheck extension:
+
 ```json
 {
   "shellcheck.enable": true,
-  "shellcheck.run": "onSave",
-  "shellcheck.exclude": ["1090", "1091", "2034"]
+  "shellcheck.exclude": ["1090", "1091", "2034"],
+  "shellcheck.run": "onSave"
 }
 ```
 
 ## Troubleshooting
 
 ### "Bad substitution" Error
+
 **Cause:** Using bash syntax in sh/dash  
 **Fix:** Ensure shebang is `#!/usr/bin/env bash`
 
 ### "command not found: [["
+
 **Cause:** Script running in sh instead of bash  
 **Fix:** Check shebang, make script executable
 
 ### "array: not found"
+
 **Cause:** Arrays not supported in sh  
 **Fix:** Use bash, not sh
 
 ### flock: command not found (macOS)
+
 **Cause:** flock not installed  
 **Fix:** `brew install flock`
 
 ### Slow performance on Windows
+
 **Cause:** Git Bash/Windows filesystem overhead  
 **Fix:** Use WSL for better performance
 

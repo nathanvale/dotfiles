@@ -1,6 +1,7 @@
 # Nathan's Dotfiles
 
-A comprehensive macOS development environment setup featuring terminal tools, window management, and productivity extensions.
+A comprehensive macOS development environment setup featuring terminal tools, window management, and
+productivity extensions.
 
 ## Features
 
@@ -22,6 +23,7 @@ cd dotfiles
 ## Installation Options
 
 ### Individual Components
+
 ```bash
 # Install specific components from bin/dotfiles/, bin/system/, etc.
 ./bin/dotfiles/symlinks/symlinks_install.sh      # Configuration symlinks
@@ -31,7 +33,9 @@ cd dotfiles
 ```
 
 ### Uninstallation
+
 Run corresponding uninstall scripts in reverse order:
+
 ```bash
 ./bin/dotfiles/symlinks/symlinks_uninstall.sh
 ./bin/system/macos/macos_preferences_uninstall.sh
@@ -41,21 +45,25 @@ Run corresponding uninstall scripts in reverse order:
 ## Key Components
 
 ### Terminal Configuration
+
 - **tmux**: Custom configuration with Ctrl-g prefix
 - **tmuxinator**: Project session templates
 - **Night Owl theme**: Consistent theming across terminal tools
 
 ### Development Tools
+
 - **Git**: Custom configurations and ignore patterns
 - **Lazygit**: Terminal UI for git operations
 - **Homebrew**: Package management with curated Brewfile
 
 ### Productivity Extensions
+
 - **Raycast**: Custom extensions for workflow automation
 - **AeroSpace**: Tiling window manager for macOS
 - **Karabiner-Elements**: Advanced keyboard customization
 
 ### Key Bindings
+
 - **tmux prefix**: Ctrl-g
 - **Vi-style navigation**: Throughout terminal applications
 - **Custom key mappings**: Via Karabiner-Elements
@@ -85,14 +93,18 @@ misc/             # Fonts, themes, and assets
 ## Customization
 
 ### Adding Packages
+
 Edit `config/brew/Brewfile` to add new Homebrew packages:
+
 ```ruby
 brew "package-name"
 cask "application-name"
 ```
 
 ### Tmux Projects
+
 Create new tmuxinator projects in `config/tmuxinator/`:
+
 ```yaml
 name: my-project
 root: ~/code/my-project
@@ -102,18 +114,22 @@ windows:
 ```
 
 ### Raycast Extensions
+
 Custom extensions are located in `config/raycast/extensions/`
 
 ## Development
 
 ### Individual Scripts
+
 All installation scripts can be run independently:
+
 - Symlinks management in `bin/dotfiles/symlinks/`
 - macOS preferences in `bin/system/macos/`
 - iTerm2 settings in `bin/system/iterm/`
 - Font installation in `bin/system/fonts/`
 
 ### Script Guidelines
+
 - All scripts use `set -e` for immediate exit on errors
 - Scripts are idempotent and can be run multiple times
 - Individual components can be installed/uninstalled independently

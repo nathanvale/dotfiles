@@ -1,10 +1,12 @@
 # SuperWhisper Advanced Features
 
-Advanced capabilities for power users: XML instructions, file transcription, speaker identification, recording customization, context awareness, and more.
+Advanced capabilities for power users: XML instructions, file transcription, speaker identification,
+recording customization, context awareness, and more.
 
 ## XML-Based AI Instructions
 
-**Why XML?** More powerful than plain text for complex AI instructions. Provides structure and clarity for multi-step prompts.
+**Why XML?** More powerful than plain text for complex AI instructions. Provides structure and
+clarity for multi-step prompts.
 
 ### XML Structure
 
@@ -158,12 +160,14 @@ Date: [Date]
 ### Referencing Context in XML
 
 In your instructions, reference these content types:
+
 - **User Message**: The dictated transcription
 - **Application Context**: Active window data (captured after transcription)
 - **Clipboard Context**: Copied text (captured 3 seconds before/during recording)
 - **Text Selection Context**: Highlighted text (captured when recording starts)
 
 **Example with conditional logic:**
+
 ```xml
 <instructions>
 If Application Context shows a code editor:
@@ -183,15 +187,18 @@ Transcribe audio/video files using SuperWhisper's voice engine.
 ### How to Transcribe Files
 
 **Method 1: Menu Bar**
+
 1. Click SuperWhisper menu bar icon
 2. Select "Transcribe File"
 3. Choose your audio/video file
 
 **Method 2: Finder Context Menu**
+
 1. Right-click audio/video file
 2. Select "Open With" → "SuperWhisper"
 
 **Method 3: Command Line**
+
 ```bash
 # Basic transcription
 open /path/to/recording.mp3 -a superwhisper
@@ -206,11 +213,13 @@ open ~/Downloads/interview.wav -a superwhisper
 ### Optimal File Formats
 
 **Best formats:**
+
 - **MP3**: Most common, well-supported
 - **MP4**: Video files (audio extracted automatically)
 - **WAV**: Mono, 16 kHz sample rate (highest quality)
 
 **Processing behavior:**
+
 - Uses current active mode's voice and AI settings
 - Switch to appropriate mode before transcription
 - Results appear in History tab
@@ -218,6 +227,7 @@ open ~/Downloads/interview.wav -a superwhisper
 ### Common Workflows
 
 **Meeting Recordings:**
+
 ```bash
 # 1. Switch to meeting notes mode
 open "superwhisper://mode?key=meeting-notes"
@@ -229,6 +239,7 @@ open ~/Documents/meetings/team-sync-2024-11-08.mp3 -a superwhisper
 ```
 
 **Podcast Interviews:**
+
 ```bash
 # 1. Switch to transcription-only mode (no AI formatting)
 open "superwhisper://mode?key=default"
@@ -240,6 +251,7 @@ open ~/Podcasts/episode-42.mp3 -a superwhisper
 ```
 
 **Research Interviews:**
+
 ```bash
 # 1. Create custom mode for research notes
 # 2. Set AI instructions to format as research notes
@@ -254,47 +266,51 @@ Separate transcription by speaker for multi-person recordings.
 ### Setup
 
 **Enable in Custom Mode:**
+
 1. Select or create a Custom Mode
 2. Open mode settings
 3. Enable "Record from System Audio"
 4. Enable "Identify Speakers"
 
 **Or configure via JSON:**
+
 ```json
 {
-  "name": "Meeting with Speakers",
-  "key": "meeting-speakers",
   "audio_options": {
-    "record_system_audio": true,
     "identify_speakers": true,
     "mute_audio_while_recording": false,
-    "pause_media_while_recording": true
-  }
+    "pause_media_while_recording": true,
+    "record_system_audio": true
+  },
+  "key": "meeting-speakers",
+  "name": "Meeting with Speakers"
 }
 ```
 
 ### Viewing Speaker Segments
 
 **After recording:**
+
 1. Open History (Menu Bar → History)
 2. Select your meeting recording
 3. Click "Segments" tab
 4. View speaker-separated transcription
 
-**Note:** Waveform stays static when recording system audio (expected behavior). Verify capture in History tab.
+**Note:** Waveform stays static when recording system audio (expected behavior). Verify capture in
+History tab.
 
 ### Example Meeting Mode with Speaker ID
 
 ```json
 {
-  "name": "Team Meeting",
-  "key": "team-meeting",
-  "prompt": "<role>You are a meeting assistant</role>\n\n<instructions>\nFormat the transcript with speaker labels, timestamps, and clear sections.\nExtract action items and decisions.\n</instructions>\n\n<output-format>\n# Meeting Transcript\n\n## Speaker 1 (00:00-02:30)\n[Content]\n\n## Speaker 2 (02:30-05:15)\n[Content]\n\n## Action Items\n- [Item]\n</output-format>",
-  "useSystemAudio": true,
-  "diarize": true,
   "contextFromApplication": true,
   "contextFromClipboard": true,
+  "diarize": true,
+  "key": "team-meeting",
+  "name": "Team Meeting",
+  "prompt": "<role>You are a meeting assistant</role>\n\n<instructions>\nFormat the transcript with speaker labels, timestamps, and clear sections.\nExtract action items and decisions.\n</instructions>\n\n<output-format>\n# Meeting Transcript\n\n## Speaker 1 (00:00-02:30)\n[Content]\n\n## Speaker 2 (02:30-05:15)\n[Content]\n\n## Action Items\n- [Item]\n</output-format>",
   "type": "custom",
+  "useSystemAudio": true,
   "version": 1
 }
 ```
@@ -302,6 +318,7 @@ Separate transcription by speaker for multi-person recordings.
 ### Workflow: Record → Transcribe → Export
 
 **Complete workflow:**
+
 ```bash
 # 1. Switch to meeting mode with speaker ID
 open "superwhisper://mode?key=team-meeting"
@@ -329,6 +346,7 @@ Customize the visual recording interface for different workflows.
 **Access:** Menu Bar → Settings → Advanced → Recording Window
 
 **Available options:**
+
 - **Recording Window Enabled**: Show/hide visual interface during recording
 - **Auto-Close Window**: Close automatically after each dictation
 - **Mini Recording Window**: Use compact view by default
@@ -337,22 +355,26 @@ Customize the visual recording interface for different workflows.
 ### Mini Recording Window
 
 **Compact view features:**
+
 - Minimal screen real estate
 - Hover to show controls
 - Quick mode switching
 - Expand on demand
 
 **Hover actions:**
+
 1. Change Mode
 2. Start Recording
 3. Expand to Regular Window
 
 **Right-click menu:**
+
 - Expand Window
 - Open Settings
 - Open History
 
 **Toggle views:**
+
 - Hover over recording window
 - Click resize toggle (top area)
 - Switch between mini and regular
@@ -360,24 +382,27 @@ Customize the visual recording interface for different workflows.
 ### Configuration Examples
 
 **Distraction-free workflow:**
+
 ```json
 {
-  "recording_window_enabled": true,
   "auto_close_window": true,
-  "mini_recording_window": true
+  "mini_recording_window": true,
+  "recording_window_enabled": true
 }
 ```
 
 **Always visible indicator:**
+
 ```json
 {
-  "recording_window_enabled": true,
   "always_show_mini_recording_window": true,
-  "auto_close_window": false
+  "auto_close_window": false,
+  "recording_window_enabled": true
 }
 ```
 
 **Hidden mode (keyboard-only):**
+
 ```json
 {
   "recording_window_enabled": false,
@@ -388,16 +413,19 @@ Customize the visual recording interface for different workflows.
 ### Tips for Different Workflows
 
 **Focus mode (writing, coding):**
+
 - Enable Mini Recording Window
 - Enable Auto-Close
 - Use keyboard shortcuts only
 
 **Meeting mode (visible recording indicator):**
+
 - Enable Regular Window
 - Disable Auto-Close
 - Show in dock for easy access
 
 **Quick capture (ADHD-friendly):**
+
 - Always Show Mini Recording Window
 - Enable Auto-Close
 - Quick visual feedback without distraction
@@ -409,16 +437,19 @@ SuperWhisper captures three types of context for smarter AI processing.
 ### Three Context Types
 
 **1. Selection Context**
+
 - **What**: Text highlighted when recording starts
 - **When**: Captured at recording start
 - **Use for**: Editing, expanding, reformatting existing text
 
 **2. Application Context**
+
 - **What**: Active window data (input fields, titles, app info)
 - **When**: Captured after transcription, before AI processing
 - **Use for**: App-specific formatting and smart mode switching
 
 **3. Clipboard Context**
+
 - **What**: Recently copied text content
 - **When**: Captured 3 seconds before or during recording
 - **Use for**: Follow-up questions, referencing copied material
@@ -439,13 +470,14 @@ User Action Timeline:
 ### Enable Context in Custom Modes
 
 **Via JSON configuration:**
+
 ```json
 {
-  "name": "Context-Aware Mode",
-  "key": "context-aware",
-  "contextFromSelection": true,
   "contextFromApplication": true,
   "contextFromClipboard": true,
+  "contextFromSelection": true,
+  "key": "context-aware",
+  "name": "Context-Aware Mode",
   "type": "custom",
   "version": 1
 }
@@ -456,6 +488,7 @@ User Action Timeline:
 ### Examples: Using Context for Smarter Formatting
 
 **Example 1: Expand on copied code**
+
 ```xml
 <!-- Setup: Copy code snippet, then dictate -->
 <instructions>
@@ -467,12 +500,14 @@ If Clipboard Context contains code:
 ```
 
 **Workflow:**
+
 1. Copy function code to clipboard
 2. Start recording
 3. Dictate: "Explain what this does and add usage examples"
 4. AI uses clipboard code + your dictation
 
 **Example 2: Edit selected text**
+
 ```xml
 <!-- Setup: Highlight paragraph, then dictate -->
 <instructions>
@@ -484,12 +519,14 @@ If Text Selection Context is present:
 ```
 
 **Workflow:**
+
 1. Select paragraph in document
 2. Start recording
 3. Dictate: "Make this more concise"
 4. AI rewrites selected text
 
 **Example 3: Context-aware email replies**
+
 ```xml
 <!-- Setup: Copy received email, then dictate -->
 <instructions>
@@ -502,6 +539,7 @@ If Clipboard Context contains an email:
 ```
 
 **Workflow:**
+
 1. Copy received email
 2. Switch to email mode
 3. Dictate your response
@@ -510,6 +548,7 @@ If Clipboard Context contains an email:
 ### Verify Context Capture
 
 **Check what was captured:**
+
 1. Menu Bar → History
 2. Select your dictation
 3. View "Context" section
@@ -522,20 +561,24 @@ Control SuperWhisper recordings with keyboard shortcuts and deep links.
 ### Toggle Recording
 
 **Start and stop with same shortcut**
+
 - **Default**: Right Command key
 - **Configure**: Menu Bar → Settings → Shortcuts → Toggle Recording
 
 **Behavior:**
+
 - Press once: Start recording
 - Press again: Stop recording and process
 
 ### Push-to-Talk Mode
 
 **Hold to record, release to stop**
+
 - Can share same shortcut as Toggle Recording
 - **Configure**: Menu Bar → Settings → Shortcuts → Push-to-Talk
 
 **Use cases:**
+
 - Quick dictations
 - Gaming-style "press and hold"
 - Avoid accidental recordings
@@ -543,10 +586,12 @@ Control SuperWhisper recordings with keyboard shortcuts and deep links.
 ### Cancel Recording
 
 **Abort current recording**
+
 - **Default**: Escape key
 - **Configure**: Menu Bar → Settings → Shortcuts → Cancel Recording
 
 **Behavior:**
+
 - Recordings < 30 seconds: Cancel immediately
 - Recordings > 30 seconds: Show confirmation prompt
 - No processing, recording discarded
@@ -567,6 +612,7 @@ open "superwhisper://settings"
 ```
 
 **Automation example:**
+
 ```bash
 # Raycast script or Keyboard Maestro macro
 open "superwhisper://mode?key=email"
@@ -589,6 +635,7 @@ Improve transcription accuracy for technical terms, proper nouns, and jargon.
 ### Text Replacement Format
 
 **JSON structure:**
+
 ```json
 {
   "replacements": [
@@ -687,6 +734,7 @@ Improve transcription accuracy for technical terms, proper nouns, and jargon.
 ### How It Works
 
 **Processing order:**
+
 1. You speak: "I'm using react jay ess with type script"
 2. Voice engine transcribes: "I'm using react jay ess with type script"
 3. Text replacement applied: "I'm using React.js with TypeScript"
@@ -724,15 +772,18 @@ Sync configurations and history across devices or create backups.
 ### Filesync Feature
 
 **Enable cloud sync:**
+
 1. Menu Bar → Settings → Advanced → Folder Location
 2. Toggle "Filesync"
 3. Point to cloud storage (Dropbox, iCloud Drive, etc.)
 
 **Requirements:**
+
 - Same license on all devices
 - Cloud storage provider (Dropbox, iCloud, OneDrive)
 
 **What syncs:**
+
 - Custom modes (`modes/`)
 - History (`history/`)
 - Vocabulary (`vocabulary/`)
@@ -741,6 +792,7 @@ Sync configurations and history across devices or create backups.
 ### Manual Backup Process
 
 **Backup everything:**
+
 ```bash
 # Create timestamped backup
 cp -r ~/Documents/SuperWhisper ~/Backups/SuperWhisper-$(date +%Y%m%d)
@@ -750,6 +802,7 @@ cp -r ~/Documents/SuperWhisper ~/Dropbox/Backups/SuperWhisper-$(date +%Y%m%d)
 ```
 
 **Backup just modes:**
+
 ```bash
 # Backup modes only
 cp -r ~/Documents/SuperWhisper/modes ~/code/dotfiles/config/superwhisper/modes
@@ -761,6 +814,7 @@ git commit -m "Backup SuperWhisper modes"
 ```
 
 **Backup specific files:**
+
 ```bash
 # Settings only
 cp ~/Documents/SuperWhisper/settings.json ~/Backups/
@@ -772,6 +826,7 @@ cp -r ~/Documents/SuperWhisper/vocabulary ~/Backups/
 ### Restore to New Machine
 
 **Complete restore:**
+
 ```bash
 # 1. Install SuperWhisper on new machine
 # 2. Copy backup to SuperWhisper directory
@@ -782,6 +837,7 @@ killall superwhisper && open -a SuperWhisper
 ```
 
 **Restore from dotfiles:**
+
 ```bash
 # If you've stored modes in dotfiles repo
 cp -r ~/code/dotfiles/config/superwhisper/modes ~/Documents/SuperWhisper/modes
@@ -793,6 +849,7 @@ killall superwhisper && open -a SuperWhisper
 ### Automated Backup with Cron
 
 **Daily backup script:**
+
 ```bash
 #!/bin/bash
 # Save as: ~/bin/backup-superwhisper.sh
@@ -808,6 +865,7 @@ ls -t "$HOME/Backups" | grep SuperWhisper | tail -n +8 | xargs -I {} rm -rf "$HO
 ```
 
 **Add to crontab:**
+
 ```bash
 # Edit crontab
 crontab -e
@@ -819,12 +877,14 @@ crontab -e
 ### Selective Sync Strategy
 
 **Strategy for ADHD workflow:**
+
 - **Sync modes**: Always (consistent across devices)
 - **Sync vocabulary**: Always (technical terms needed everywhere)
 - **Sync history**: Optional (can get large, may slow sync)
 - **Sync settings**: Usually (unless device-specific preferences)
 
 **Exclude history from sync:**
+
 ```bash
 # If using Dropbox/iCloud, symlink modes only
 mkdir -p ~/Dropbox/SuperWhisper
@@ -835,6 +895,7 @@ ln -s ~/Dropbox/SuperWhisper/modes ~/Documents/SuperWhisper/modes
 ## Tips for Advanced Users
 
 **Combine features for powerful workflows:**
+
 1. **XML instructions** + **Context awareness** = Smart formatting based on clipboard/selection
 2. **File transcription** + **Speaker ID** = Meeting notes from recordings
 3. **Vocabulary** + **Custom modes** = Accurate technical documentation
@@ -842,6 +903,7 @@ ln -s ~/Dropbox/SuperWhisper/modes ~/Documents/SuperWhisper/modes
 5. **Backup & sync** + **Version control** = Track mode evolution in git
 
 **Performance tips:**
+
 - Use text replacement for frequently misheard terms
 - Keep XML instructions focused and clear
 - Enable only needed context types (reduces processing)
@@ -849,6 +911,7 @@ ln -s ~/Dropbox/SuperWhisper/modes ~/Documents/SuperWhisper/modes
 - Backup modes before experimenting
 
 **Troubleshooting:**
+
 - Check History tab to verify context capture
 - Use Segments tab to confirm speaker identification
 - Test vocabulary replacements with simple phrases first

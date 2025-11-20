@@ -1,11 +1,17 @@
 ---
 name: format-security
-description: Transforms security audits and vulnerability assessments into prioritized remediation tasks with 15 enrichments (10 universal + 5 security-specific). Use when user says 'format security audit', 'process vulnerabilities', 'convert security findings', 'prioritize security issues', or when detect-input-type returns 'security'. Handles CVE reports, penetration test results, and security scans in .md files. (plugin:task-streams)
+description:
+  Transforms security audits and vulnerability assessments into prioritized remediation tasks with
+  15 enrichments (10 universal + 5 security-specific). Use when user says 'format security audit',
+  'process vulnerabilities', 'convert security findings', 'prioritize security issues', or when
+  detect-input-type returns 'security'. Handles CVE reports, penetration test results, and security
+  scans in .md files. (plugin:task-streams)
 ---
 
 # Format Security Skill
 
-Converts security audit reports, penetration test results, and vulnerability assessments into actionable remediation tasks with proper risk-based prioritization.
+Converts security audit reports, penetration test results, and vulnerability assessments into
+actionable remediation tasks with proper risk-based prioritization.
 
 ## When to Use
 
@@ -19,13 +25,16 @@ Use this skill when you need to:
 
 ## Purpose
 
-Security audits identify **vulnerabilities** that need fixing. This skill extracts vulnerabilities, maps them to P0-P3 priorities based on severity (CVSS/OWASP), and creates remediation tasks with security-specific enrichments.
+Security audits identify **vulnerabilities** that need fixing. This skill extracts vulnerabilities,
+maps them to P0-P3 priorities based on severity (CVSS/OWASP), and creates remediation tasks with
+security-specific enrichments.
 
 ## Core Capabilities
 
 1. **Vulnerability Extraction** - Identifies security issues from various audit formats
 2. **CVSS-Based Prioritization** - Maps CVSS scores and severity to P0-P3 priorities
-3. **10 Enrichments** - Adds file locations, effort estimates, acceptance criteria, testing requirements, etc.
+3. **10 Enrichments** - Adds file locations, effort estimates, acceptance criteria, testing
+   requirements, etc.
 4. **Component Classification** - Invokes component-manager skill for consistent categorization
 5. **Task ID Generation** - Invokes id-generator skill with metadata tracking
 
@@ -33,7 +42,8 @@ Security audits identify **vulnerabilities** that need fixing. This skill extrac
 
 **Reference**: @../../templates/security.template.md
 
-This skill generates enriched output that MUST conform to the template structure above. All output must include:
+This skill generates enriched output that MUST conform to the template structure above. All output
+must include:
 
 - All 10 universal enrichments (see template for details)
 - Proper frontmatter metadata (id, title, priority, component, status, created, source)
@@ -42,13 +52,15 @@ This skill generates enriched output that MUST conform to the template structure
 
 The template defines the structural contract. Your implementation fills in the actual values.
 
-**Integration with Validator**: Use `validate-security` to verify your output matches this template before deploying.
+**Integration with Validator**: Use `validate-security` to verify your output matches this template
+before deploying.
 
 ## Supporting Documentation
 
 **See @../shared-enrichments.md** for the 10 universal enrichment patterns (common to all formats)
 
-**See @security-enrichments.md** for the 5 security-specific enrichments (CVSS, threat model, compliance, controls, verification)
+**See @security-enrichments.md** for the 5 security-specific enrichments (CVSS, threat model,
+compliance, controls, verification)
 
 **See @priority-guide.md** for CVSS → P0-P3 mapping with escalation rules
 

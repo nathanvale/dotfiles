@@ -7,97 +7,70 @@
   },
   "includeCoAuthoredBy": false,
   "mcpServers": {
-    "wallaby": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "-c",
-        "node ~/.wallaby/mcp/"
-      ],
-      "env": {}
-    },
-    "sequential-thinking": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-sequential-thinking"
-      ],
-      "env": {}
+    "bash-history": {
+      "args": ["/Users/nathanvale/code/dotfiles/.claude/mcp-servers/bash-history/index.js"],
+      "command": "node",
+      "env": {},
+      "type": "stdio"
     },
     "context7": {
-      "type": "stdio",
+      "args": ["-y", "@upstash/context7-mcp"],
       "command": "npx",
-      "args": [
-        "-y",
-        "@upstash/context7-mcp"
-      ],
-      "env": {}
-    },
-    "tavily-mcp": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "tavily-mcp@0.1.2"
-      ],
-      "env": {
-        "TAVILY_API_KEY": "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"
-      }
-    },
-    "mcp-server-firecrawl": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "firecrawl-mcp"
-      ],
-      "env": {
-        "FIRECRAWL_API_KEY": "fc-82f608b6be8b4e0aab9ec1b423382de3"
-      }
-    },
-    "magic": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@21st-dev/magic@latest",
-        "API_KEY=\"api-key\""
-      ],
-      "env": {}
-    },
-    "playwright": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "@playwright/mcp@latest"
-      ],
-      "env": {}
+      "env": {},
+      "type": "stdio"
     },
     "filesystem": {
-      "command": "npx",
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
         "/Users/nathanvale/code",
         "/Users/nathanvale/Documents"
-      ]
+      ],
+      "command": "npx"
+    },
+    "magic": {
+      "args": ["-y", "@21st-dev/magic@latest", "API_KEY=\"api-key\""],
+      "command": "npx",
+      "env": {},
+      "type": "stdio"
+    },
+    "mcp-server-firecrawl": {
+      "args": ["-y", "firecrawl-mcp"],
+      "command": "npx",
+      "env": {
+        "FIRECRAWL_API_KEY": "fc-82f608b6be8b4e0aab9ec1b423382de3"
+      }
+    },
+    "playwright": {
+      "args": ["@playwright/mcp@latest"],
+      "command": "npx",
+      "env": {},
+      "type": "stdio"
     },
     "puppeteer": {
+      "args": ["-y", "puppeteer-mcp-server"],
       "command": "npx",
-      "args": [
-        "-y",
-        "puppeteer-mcp-server"
-      ],
       "env": {}
     },
-    "bash-history": {
-      "type": "stdio",
-      "command": "node",
-      "args": [
-        "/Users/nathanvale/code/dotfiles/.claude/mcp-servers/bash-history/index.js"
-      ],
-      "env": {}
+    "sequential-thinking": {
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "command": "npx",
+      "env": {},
+      "type": "stdio"
+    },
+    "tavily-mcp": {
+      "args": ["-y", "tavily-mcp@0.1.2"],
+      "command": "npx",
+      "env": {
+        "TAVILY_API_KEY": "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"
+      },
+      "type": "stdio"
+    },
+    "wallaby": {
+      "args": ["-y", "-c", "node ~/.wallaby/mcp/"],
+      "command": "npx",
+      "env": {},
+      "type": "stdio"
     }
   },
   "permissions": {

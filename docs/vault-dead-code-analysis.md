@@ -1,18 +1,21 @@
 # Vault System Dead Code Analysis
 
-**Date**: 2025-11-14
-**Purpose**: Document deprecated vault manager scripts and their consolidation into unified `vault` command
+**Date**: 2025-11-14 **Purpose**: Document deprecated vault manager scripts and their consolidation
+into unified `vault` command
 
 ## Summary
 
-The vault system has been successfully consolidated from 8 separate scripts (2,944 total lines) into a single unified `vault` command (573 lines). All old scripts have been replaced with the new unified interface.
+The vault system has been successfully consolidated from 8 separate scripts (2,944 total lines) into
+a single unified `vault` command (573 lines). All old scripts have been replaced with the new
+unified interface.
 
 ## Deprecated Scripts
 
 ### 1. vault-manager.sh (1,116 lines)
-**Status**: DEPRECATED - Replaced by unified `vault` command
-**Purpose**: Legacy vault management with separate register-aos/register-docs commands
-**Key Features**:
+
+**Status**: DEPRECATED - Replaced by unified `vault` command **Purpose**: Legacy vault management
+with separate register-aos/register-docs commands **Key Features**:
+
 - Separate registration for Agent OS and docs folders
 - Complex registry structure with multiple vault types
 - Individual vault management per folder
@@ -21,9 +24,10 @@ The vault system has been successfully consolidated from 8 separate scripts (2,9
 **Replacement**: `vault register <path>` (auto-detects both .agent-os and docs)
 
 ### 2. vault-smart-manager.sh (530 lines)
-**Status**: DEPRECATED - Replaced by unified `vault` command
-**Purpose**: Smart vault manager with auto-discovery
-**Key Features**:
+
+**Status**: DEPRECATED - Replaced by unified `vault` command **Purpose**: Smart vault manager with
+auto-discovery **Key Features**:
+
 - Automatic discovery of vaultable content
 - Smart registration based on folder types
 - Health checking and repair
@@ -31,9 +35,10 @@ The vault system has been successfully consolidated from 8 separate scripts (2,9
 **Replacement**: `vault manage` (interactive checkbox interface with auto-discovery)
 
 ### 3. vault-discover.sh (403 lines)
-**Status**: DEPRECATED - Replaced by unified `vault` command
-**Purpose**: Discovery tool for finding unregistered repositories
-**Key Features**:
+
+**Status**: DEPRECATED - Replaced by unified `vault` command **Purpose**: Discovery tool for finding
+unregistered repositories **Key Features**:
+
 - Scans file system for .agent-os and docs folders
 - Reports unregistered vaultable content
 - Batch registration interface
@@ -41,9 +46,10 @@ The vault system has been successfully consolidated from 8 separate scripts (2,9
 **Replacement**: `vault manage` (combines discovery + interactive selection)
 
 ### 4. vault-interactive-manager.sh (372 lines)
-**Status**: DEPRECATED - Replaced by unified `vault` command
-**Purpose**: Interactive fzf-based vault browser
-**Key Features**:
+
+**Status**: DEPRECATED - Replaced by unified `vault` command **Purpose**: Interactive fzf-based
+vault browser **Key Features**:
+
 - fzf interface for vault selection
 - Multi-select registration
 - Visual vault browser
@@ -51,9 +57,10 @@ The vault system has been successfully consolidated from 8 separate scripts (2,9
 **Replacement**: `vault manage` (improved fzf interface with checkboxes)
 
 ### 5. vault-open-current.sh (181 lines)
-**Status**: DEPRECATED - Replaced by unified `vault` command
-**Purpose**: Open vault for current working directory
-**Key Features**:
+
+**Status**: DEPRECATED - Replaced by unified `vault` command **Purpose**: Open vault for current
+working directory **Key Features**:
+
 - Detects current project
 - Opens corresponding Obsidian vault
 - Auto-registers if needed
@@ -61,9 +68,10 @@ The vault system has been successfully consolidated from 8 separate scripts (2,9
 **Replacement**: `vault open` (same functionality, cleaner implementation)
 
 ### 6. vault-quick-menu.sh (155 lines)
-**Status**: DEPRECATED - Replaced by unified `vault` command
-**Purpose**: Quick tmux popup menu for vault operations
-**Key Features**:
+
+**Status**: DEPRECATED - Replaced by unified `vault` command **Purpose**: Quick tmux popup menu for
+vault operations **Key Features**:
+
 - Tmux popup integration
 - Quick vault selection
 - Project-specific vault opening
@@ -71,9 +79,10 @@ The vault system has been successfully consolidated from 8 separate scripts (2,9
 **Replacement**: Direct tmux bindings to `vault manage` and `vault open`
 
 ### 7. vault-docs-menu.sh (113 lines)
-**Status**: DEPRECATED - Replaced by unified `vault` command
-**Purpose**: Docs-specific vault browser
-**Key Features**:
+
+**Status**: DEPRECATED - Replaced by unified `vault` command **Purpose**: Docs-specific vault
+browser **Key Features**:
+
 - Browse only docs vaults
 - Quick switching between doc folders
 - Project documentation navigation
@@ -81,9 +90,10 @@ The vault system has been successfully consolidated from 8 separate scripts (2,9
 **Replacement**: `vault manage` (shows all vaults with component indicators)
 
 ### 8. vault-register-obsidian.sh (74 lines)
-**Status**: DEPRECATED - No longer needed
-**Purpose**: Register vaults with Obsidian config
-**Key Features**:
+
+**Status**: DEPRECATED - No longer needed **Purpose**: Register vaults with Obsidian config **Key
+Features**:
+
 - Modified Obsidian vault configuration
 - Added vault entries to obsidian.json
 
@@ -92,6 +102,7 @@ The vault system has been successfully consolidated from 8 separate scripts (2,9
 ## Migration Summary
 
 ### Old Command Pattern
+
 ```bash
 # Separate commands for different vault types
 vault-manager.sh register-aos /path/to/.agent-os project-name
@@ -106,6 +117,7 @@ vault-smart-manager.sh
 ```
 
 ### New Unified Command Pattern
+
 ```bash
 # Single registration command, auto-detects all vaultable content
 vault register /path/to/project
@@ -124,40 +136,49 @@ vault open
 ## Key Improvements
 
 ### 1. Simplified API
+
 - **Before**: 8 different scripts with overlapping functionality
 - **After**: Single `vault` command with 6 subcommands
 
 ### 2. Unified Repository Tracking
-- **Before**: Separate tracking for aos-*, docs-*, and project vaults
+
+- **Before**: Separate tracking for aos-_, docs-_, and project vaults
 - **After**: Single repository entry with component flags (.agent-os, docs)
 
 ### 3. Better Resilience
+
 - **Before**: Repositories tracked by path only, broke on renames
 - **After**: Vault ID fingerprinting survives renames and moves
 
 ### 4. Auto-Discovery
+
 - **Before**: Required running vault-discover.sh separately
 - **After**: Built into `vault manage` command
 
 ### 5. Hardcoded Paths Removed
+
 - **Before**: `/Users/nathanvale` hardcoded throughout scripts
 - **After**: Uses `$HOME` and configurable environment variables:
-  - `REPOS_VAULT_PATH`: Location of repos vault (default: `$HOME/Documents/ObsidianVaults/Repos/repos`)
+  - `REPOS_VAULT_PATH`: Location of repos vault (default:
+    `$HOME/Documents/ObsidianVaults/Repos/repos`)
   - `VAULT_SEARCH_PATHS`: Where to search for repositories (default: `$HOME/code`)
   - `PERSONAL_VAULT_PATH`: Personal vault location (default: `$HOME/code/my-second-brain`)
 
 ### 6. Subshell Bug Fixed
+
 - **Before**: Success messages never displayed due to subshell variable scope issue
 - **After**: Proper counting mechanism shows exact registration/unregistration counts
 
 ## Files Updated to Use New Vault Command
 
 ### Scripts
+
 - `/Users/nathanvale/code/dotfiles/bin/tmux/new-project.sh`
 - `/Users/nathanvale/code/dotfiles/bin/tmux/startup.sh`
 - `/Users/nathanvale/code/dotfiles/config/tmuxinator/scripts/common-setup.sh`
 
 ### Tmuxinator Configs
+
 - `/Users/nathanvale/code/dotfiles/config/tmuxinator/mpcu-build-and-deliver.yml`
 - `/Users/nathanvale/code/dotfiles/config/tmuxinator/entain-next-to-go.yml`
 - `/Users/nathanvale/code/dotfiles/config/tmuxinator/imessage-timeline.yml`
@@ -207,6 +228,7 @@ export PERSONAL_VAULT_PATH="$HOME/Documents/my-brain"
 ## Conclusion
 
 The vault system consolidation has successfully:
+
 1. Reduced code from 2,944 lines to 573 lines (80% reduction)
 2. Eliminated 8 overlapping scripts
 3. Fixed critical bugs (subshell scope, hardcoded paths)

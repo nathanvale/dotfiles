@@ -1,7 +1,9 @@
 ---
 description: Troubleshoot SuperWhisper issues using the superwhisper skill
 argument-hint: [issue-description]
-allowed-tools: Read, Bash(ps:*), Bash(ls:*), Bash(grep:*), Bash(killall:*), Bash(open:*), Bash(jq:*), Bash(osascript:*)
+allowed-tools:
+  Read, Bash(ps:*), Bash(ls:*), Bash(grep:*), Bash(killall:*), Bash(open:*), Bash(jq:*),
+  Bash(osascript:*)
 ---
 
 # SuperWhisper Troubleshooting
@@ -30,16 +32,19 @@ $ARGUMENTS
 Run these automatically to gather context:
 
 **Check if SuperWhisper is running:**
+
 ```bash
 !`ps aux | grep -i superwhisper | grep -v grep`
 ```
 
 **Verify modes directory:**
+
 ```bash
 !`ls -la ~/Documents/superwhisper/modes/`
 ```
 
 **Check mode JSON validity:**
+
 ```bash
 !`ls ~/Documents/superwhisper/modes/*.json`
 ```
@@ -47,6 +52,7 @@ Run these automatically to gather context:
 Then use the Read tool to inspect individual mode files for JSON validity.
 
 **Check AeroSpace config (if workspace switching issue):**
+
 ```bash
 !`grep -A 2 "com.superduper.superwhisper" ~/code/dotfiles/config/aerospace/aerospace.toml`
 ```

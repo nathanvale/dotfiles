@@ -1,41 +1,13 @@
 {
-  "report_id": "R0001",
-  "report_path": "docs/reports/R0001-brief-description.json",
   "category": "Code Quality | Performance | Security | Architecture | Bug Hunt",
-  "scope": "file/path/to/analyzed.ts:10-50, another/file.ts",
   "findings": [
     {
-      "title": "Brief issue title",
-      "priority": "P0 | P1 | P2 | P3",
-      "severity": "P0 | P1 | P2 | P3",
-      "stink_index": 8,
-      "component": "C01: Component Name",
-
       "// --- 10 UNIVERSAL ENRICHMENTS ---": "",
-      "location": "src/services/service.ts:45-67",
-      "estimated_effort": "0.5h | 1h | 4h | 16h",
-      "complexity": "LOW | MEDIUM | HIGH | CRITICAL",
-      "regression_risk": "LOW | MEDIUM | HIGH",
-      "description": "Detailed description of the issue, why it's problematic, and what impact it has.",
-
-      "regression_risk_details": {
-        "impact": "Description of what breaks if this changes",
-        "blast_radius": "Number of affected components/functions",
-        "dependencies": "What depends on this code",
-        "testing_gaps": "What tests are missing",
-        "rollback_risk": "How easy/hard to revert"
-      },
-
+      "// --- 5 BUG-SPECIFIC ENRICHMENTS ---": "",
       "acceptance_criteria": [
         "Specific, testable criterion 1",
         "Specific, testable criterion 2",
         "Specific, testable criterion 3"
-      ],
-
-      "implementation_steps": [
-        "Step 1: Concrete action with file/line references",
-        "Step 2: Next action",
-        "Step 3: Verification step"
       ],
 
       "code_examples": {
@@ -43,20 +15,8 @@
         "proposed": "// Fixed code\nfunction good() {\n  // solution here\n}"
       },
 
-      "file_changes": {
-        "to_create": ["new/file.ts - Purpose of new file"],
-        "to_modify": ["existing/file.ts:45-67 - Description of changes"],
-        "to_delete": ["obsolete/file.ts - Reason for deletion"]
-      },
-
-      "testing_requirements": [
-        {
-          "test_type": "Unit | Integration | E2E",
-          "validates_ac": ["AC1", "AC2"],
-          "description": "What this test validates",
-          "location": "src/__tests__/file.test.ts"
-        }
-      ],
+      "complexity": "LOW | MEDIUM | HIGH | CRITICAL",
+      "component": "C01: Component Name",
 
       "dependencies": {
         "blocking": ["Task/issue IDs that must complete first"],
@@ -64,73 +24,110 @@
         "prerequisites": ["Required setup or conditions"]
       },
 
-      "// --- 5 BUG-SPECIFIC ENRICHMENTS ---": "",
+      "description": "Detailed description of the issue, why it's problematic, and what impact it has.",
+
+      "estimated_effort": "0.5h | 1h | 4h | 16h",
+      "file_changes": {
+        "to_create": ["new/file.ts - Purpose of new file"],
+        "to_delete": ["obsolete/file.ts - Reason for deletion"],
+        "to_modify": ["existing/file.ts:45-67 - Description of changes"]
+      },
+
+      "hotfix_decision": {
+        "approach": "Description of fix approach and any shortcuts",
+        "decision": "HOTFIX | REGULAR_SPRINT",
+        "risk": "LOW | MEDIUM | HIGH",
+        "timeline": "Xh dev + Xh testing"
+      },
+
+      "impact_analysis": {
+        "data_corruption": "None | Description of data corruption risk",
+        "financial_impact": "$0 | $X estimated revenue impact",
+        "sla_breach": "None | Description of SLA impact",
+        "users_affected": "Number or percentage of users affected"
+      },
+
+      "implementation_steps": [
+        "Step 1: Concrete action with file/line references",
+        "Step 2: Next action",
+        "Step 3: Verification step"
+      ],
+
+      "location": "src/services/service.ts:45-67",
+      "pattern_detection": "rg 'pattern' --type ts\n# Command to find similar issues across codebase",
+      "priority": "P0 | P1 | P2 | P3",
+      "regression_risk": "LOW | MEDIUM | HIGH",
+      "regression_risk_details": {
+        "blast_radius": "Number of affected components/functions",
+        "dependencies": "What depends on this code",
+        "impact": "Description of what breaks if this changes",
+        "rollback_risk": "How easy/hard to revert",
+        "testing_gaps": "What tests are missing"
+      },
+
+      "reproduction_steps": "bash command or step-by-step instructions to reproduce the bug",
+
       "root_cause": {
         "bug_type": "Race Condition | Null Pointer | Logic Error | Type Mismatch | etc",
-        "root_cause_5_whys": "Why 1 → Why 2 → Why 3 → Why 4 → Why 5 (root cause)",
         "contributing_factors": [
           "Factor 1: Missing validation",
           "Factor 2: No test coverage",
           "Factor 3: Unclear documentation"
         ],
-        "first_introduced": "commit abc123 (2024-03-15) or 'unknown'"
+        "first_introduced": "commit abc123 (2024-03-15) or 'unknown'",
+        "root_cause_5_whys": "Why 1 → Why 2 → Why 3 → Why 4 → Why 5 (root cause)"
       },
 
-      "impact_analysis": {
-        "users_affected": "Number or percentage of users affected",
-        "financial_impact": "$0 | $X estimated revenue impact",
-        "data_corruption": "None | Description of data corruption risk",
-        "sla_breach": "None | Description of SLA impact"
-      },
+      "severity": "P0 | P1 | P2 | P3",
+      "stink_index": 8,
+      "testing_requirements": [
+        {
+          "description": "What this test validates",
+          "location": "src/__tests__/file.test.ts",
+          "test_type": "Unit | Integration | E2E",
+          "validates_ac": ["AC1", "AC2"]
+        }
+      ],
 
-      "reproduction_steps": "bash command or step-by-step instructions to reproduce the bug",
-
-      "hotfix_decision": {
-        "decision": "HOTFIX | REGULAR_SPRINT",
-        "timeline": "Xh dev + Xh testing",
-        "approach": "Description of fix approach and any shortcuts",
-        "risk": "LOW | MEDIUM | HIGH"
-      },
-
-      "pattern_detection": "rg 'pattern' --type ts\n# Command to find similar issues across codebase"
+      "title": "Brief issue title"
     }
   ],
-  "stats": {
-    "files_analyzed": 12,
-    "issues_found": 5,
-    "p0_count": 0,
-    "p1_count": 2,
-    "p2_count": 2,
-    "p3_count": 1
-  },
   "observability": {
     "execution_context": {
+      "NOTE": "If cwd != git_root, or if ls_cwd shows 'No such file' but ls_git_root works, agent is running from subdirectory",
       "cwd": "/Users/nathanvale/code/MPCU-Build-and-Deliver",
       "git_root": "/Users/nathanvale/code/MPCU-Build-and-Deliver",
-      "project_index_exists_in_cwd": true,
-      "project_index_exists_in_git_root": true,
-      "project_index_path_expected": "/Users/nathanvale/code/MPCU-Build-and-Deliver/PROJECT_INDEX.json",
       "ls_cwd": "-rw-r--r--  1 user  staff  2456789 Jan 10 15:30 PROJECT_INDEX.json",
       "ls_git_root": "-rw-r--r--  1 user  staff  2456789 Jan 10 15:30 /Users/nathanvale/code/MPCU-Build-and-Deliver/PROJECT_INDEX.json",
-      "NOTE": "If cwd != git_root, or if ls_cwd shows 'No such file' but ls_git_root works, agent is running from subdirectory"
+      "project_index_exists_in_cwd": true,
+      "project_index_exists_in_git_root": true,
+      "project_index_path_expected": "/Users/nathanvale/code/MPCU-Build-and-Deliver/PROJECT_INDEX.json"
+    },
+    "timing_ms": 180000,
+    "token_breakdown": {
+      "file_reads": 8300,
+      "graph_queries": 500,
+      "pattern_searches": 800,
+      "report_generation": 2000,
+      "sequential_thinking": 18000,
+      "total": 29600
     },
     "tool_usage": [
       {
-        "tool": "index-graph-navigator",
         "calls": 2,
+        "notes": "Found 23 callers, blast radius: 40 functions",
         "purpose": "who calls createRole, blast radius of createRole",
         "tokens_estimated": 500,
-        "notes": "Found 23 callers, blast radius: 40 functions"
+        "tool": "index-graph-navigator"
       },
       {
-        "tool": "Bash/rg",
         "calls": 3,
+        "notes": "Found 11 repositories extending DataverseRepository",
         "purpose": "Pattern searches: 'extends DataverseRepository', 'dynamicsWebApi.*create', 'ContactService'",
         "tokens_estimated": 800,
-        "notes": "Found 11 repositories extending DataverseRepository"
+        "tool": "Bash/rg"
       },
       {
-        "tool": "Read",
         "calls": 6,
         "files": [
           "referral.ts (2.5K tokens)",
@@ -140,28 +137,31 @@
           "dynamics.ts (0.9K tokens)",
           "contact-service.ts (1.1K tokens)"
         ],
+        "notes": "Read to trace error through call stack",
         "tokens_estimated": 8300,
-        "notes": "Read to trace error through call stack"
+        "tool": "Read"
       },
       {
-        "tool": "Sequential Thinking",
         "calls": 1,
+        "notes": "Traced error from ContactRepository.create() → DataverseRepository.createRequest() → dynamicsWebApi.create()",
+        "reason_unnecessary": "Error message was clear, stack trace revealed location, fix was obvious after reading files",
         "thoughts": 8,
         "tokens_estimated": 18000,
-        "notes": "Traced error from ContactRepository.create() → DataverseRepository.createRequest() → dynamicsWebApi.create()",
-        "was_necessary": false,
-        "reason_unnecessary": "Error message was clear, stack trace revealed location, fix was obvious after reading files"
+        "tool": "Sequential Thinking",
+        "was_necessary": false
       }
     ],
-    "token_breakdown": {
-      "graph_queries": 500,
-      "pattern_searches": 800,
-      "file_reads": 8300,
-      "sequential_thinking": 18000,
-      "report_generation": 2000,
-      "total": 29600
-    },
-    "timing_ms": 180000,
     "workflow_notes": "Started with graph queries to find callers. Used ripgrep to identify repository patterns. Read 6 files to trace call stack. Sequential thinking traced error flow but was unnecessary given clear error message. All tools performed as expected - no blockers."
+  },
+  "report_id": "R0001",
+  "report_path": "docs/reports/R0001-brief-description.json",
+  "scope": "file/path/to/analyzed.ts:10-50, another/file.ts",
+  "stats": {
+    "files_analyzed": 12,
+    "issues_found": 5,
+    "p0_count": 0,
+    "p1_count": 2,
+    "p2_count": 2,
+    "p3_count": 1
   }
 }

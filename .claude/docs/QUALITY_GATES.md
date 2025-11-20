@@ -11,34 +11,42 @@ No exceptions. No "it was already broken" excuses. No "I'll fix it later" promis
 Before marking any task as COMPLETED, ALL of the following must pass:
 
 ### ✅ Type Checking
+
 ```bash
 pnpm typecheck  # or npm run typecheck, tsc --noEmit, etc.
 ```
+
 - **Must return**: Exit code 0
 - **No errors allowed**: Not even "errors in dependencies"
 - **Pre-existing errors**: Stop and fix the build first
 
 ### ✅ Linting
+
 ```bash
 pnpm lint  # or npm run lint, eslint ., etc.
 ```
+
 - **Must return**: Exit code 0
 - **No errors allowed**: Warnings are ok, errors are not
 - **Auto-fixable**: Run `pnpm lint --fix` first
 
 ### ✅ Testing
+
 ```bash
 pnpm test  # or npm test, jest, vitest, etc.
 ```
+
 - **Must return**: Exit code 0
 - **All tests passing**: 100% pass rate required
 - **No skipped tests**: Due to errors (skipped by design is ok)
 - **Test timeouts**: Increase timeout or fix the test
 
 ### ✅ Formatting
+
 ```bash
 pnpm format  # or prettier --check, etc.
 ```
+
 - **Must return**: Exit code 0
 - **No formatting issues**: Run `pnpm format` to auto-fix
 - **Consistent style**: Follow project conventions
@@ -48,6 +56,7 @@ pnpm format  # or prettier --check, etc.
 ### Scenario 1: Your Code Broke It
 
 **What to do:**
+
 1. Read the error message carefully
 2. Use Edit tool to fix the issue
 3. Re-run the validation
@@ -56,6 +65,7 @@ pnpm format  # or prettier --check, etc.
 6. Only then mark as COMPLETED
 
 **Example:**
+
 ```bash
 # Oh no, tests are failing
 pnpm test
@@ -78,6 +88,7 @@ pnpm test
 **This is serious and requires a different approach.**
 
 #### Step 1: Verify Main is Broken
+
 ```bash
 # Save your work
 git stash
@@ -91,6 +102,7 @@ pnpm test
 ```
 
 #### Step 2: Create a Fix-Build Task
+
 ```yaml
 ---
 id: T0999
@@ -120,6 +132,7 @@ Main branch has failing tests:
 ```
 
 #### Step 3: Work on Fix-Build First
+
 ```bash
 # Switch to fixing the build
 /next  # Will pick up T0999 (P0)
@@ -131,6 +144,7 @@ Main branch has failing tests:
 ```
 
 #### Step 4: Return to Original Task
+
 ```bash
 # Now go back to your original task
 git checkout feat/T0035-your-feature
@@ -150,12 +164,14 @@ pnpm test
 If you've genuinely tried 3+ times and cannot resolve the issue:
 
 **What to do:**
+
 1. **Leave task as IN_PROGRESS** (not COMPLETED!)
 2. Document the blocker in task file:
+
    ```yaml
    ---
    id: T0035
-   status: IN_PROGRESS  # ← Still in progress!
+   status: IN_PROGRESS # ← Still in progress!
    blockers:
      - "Tests fail with timeout on CI but pass locally"
      - "Suspected flaky test, needs investigation"
@@ -164,6 +180,7 @@ If you've genuinely tried 3+ times and cannot resolve the issue:
    ```
 
 3. Create PR as **DRAFT**:
+
    ```bash
    gh pr create --draft \
      --title "[WIP] feat(T0035): Feature name" \
@@ -184,6 +201,7 @@ If you've genuinely tried 3+ times and cannot resolve the issue:
    ```
 
 4. Ask user for guidance:
+
    ```
    I've completed the implementation for T0035, but tests are failing
    with a timeout issue that I can't resolve. The tests pass locally
@@ -200,13 +218,16 @@ If you've genuinely tried 3+ times and cannot resolve the issue:
 ## Common Mistakes
 
 ### ❌ "It was already broken"
+
 **Wrong approach:**
+
 ```
 Tests are failing, but they were already failing on main,
 so I'll just mark this as done.
 ```
 
 **Right approach:**
+
 ```
 Tests are failing. Let me check if main is broken.
 [Checks main] Yes, main is broken.
@@ -214,24 +235,30 @@ I'll create a P0 task to fix the build first.
 ```
 
 ### ❌ "I'll fix it in the next task"
+
 **Wrong approach:**
+
 ```
 I'll merge this with failing tests and fix it in the next task.
 ```
 
 **Right approach:**
+
 ```
 I cannot merge failing tests. I'll fix them now before marking
 this task as complete.
 ```
 
 ### ❌ "The tests are flaky anyway"
+
 **Wrong approach:**
+
 ```
 These tests are flaky, so I'll just ignore the failures.
 ```
 
 **Right approach:**
+
 ```
 These tests are flaky. I'll either:
 1. Fix the flaky tests, or
@@ -243,18 +270,21 @@ before marking this complete.
 ## Why This Matters
 
 ### For Solo Developers
+
 - Prevents you from breaking your own build
 - Maintains a clean, working main branch
 - Avoids the "death by a thousand cuts" scenario
 - Forces you to fix problems immediately
 
 ### For Teams
+
 - Prevents blocking other developers
 - Maintains CI/CD pipeline health
 - Ensures code review focuses on logic, not "does it build?"
 - Respects everyone's time
 
 ### For Production
+
 - Reduces deployment failures
 - Prevents production incidents
 - Maintains code quality
@@ -265,6 +295,7 @@ before marking this complete.
 The `/next` command is designed to enforce these quality gates:
 
 **Step 5.6: Validation Phase**
+
 ```
 Run all validation checks.
 If any fail, fix and re-run.
@@ -272,6 +303,7 @@ Do NOT proceed to Step 6 until all pass.
 ```
 
 **Step 6: Complete Task**
+
 ```
 ⚠️ VALIDATION GATE: DO NOT PROCEED UNLESS:
 - ✅ All tests pass
@@ -281,6 +313,7 @@ Do NOT proceed to Step 6 until all pass.
 ```
 
 **Step 6.1: Update Task File**
+
 ```
 Only after all validation passes, update task status to COMPLETED.
 ```
@@ -290,6 +323,7 @@ Only after all validation passes, update task status to COMPLETED.
 ### Before Marking COMPLETED
 
 Run this checklist:
+
 ```bash
 # 1. Type check
 pnpm typecheck || echo "❌ FAIL - Do not proceed"
@@ -316,7 +350,6 @@ echo "✅ All validation passed - safe to mark COMPLETED"
 
 ## Remember
 
-> "Working software is the primary measure of progress."
-> — Agile Manifesto
+> "Working software is the primary measure of progress." — Agile Manifesto
 
 If the tests don't pass, it's not working software. Period.

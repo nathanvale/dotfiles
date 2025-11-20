@@ -13,7 +13,8 @@ github: https://github.com/example/repo/issues/104
 
 ## Description
 
-The UserProfile component has grown too large (500+ lines) and has multiple responsibilities. Needs to be split into smaller, focused components.
+The UserProfile component has grown too large (500+ lines) and has multiple responsibilities. Needs
+to be split into smaller, focused components.
 
 ## Current Status
 
@@ -55,12 +56,14 @@ UserProfile/
 ## Technical Notes
 
 **Current Issues:**
+
 - Too many useState hooks (12+)
 - Mixed concerns (data, UI, validation)
 - Hard to test due to size
 - Performance issues with re-renders
 
 **Improvements:**
+
 - Use custom hooks for state management
 - Implement proper memoization
 - Split by feature boundaries

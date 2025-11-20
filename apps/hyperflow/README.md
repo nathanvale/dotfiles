@@ -5,6 +5,7 @@ Simple keyboard-driven app launching and SuperWhisper mode switching powered by 
 ## Overview
 
 Replaces AeroSpace with a simpler, more powerful solution:
+
 - **Hyper Key** (Caps Lock) - One modifier key for everything
 - **Karabiner** for keyboard shortcuts
 - **One script** (`hyperflow.sh`) for all app launching
@@ -16,13 +17,15 @@ Replaces AeroSpace with a simpler, more powerful solution:
 **Caps Lock = Hyper Key (Ctrl+Opt+Cmd+Shift)** when held, Caps Lock when tapped alone.
 
 This unlocks a **completely conflict-free namespace** of shortcuts:
+
 - ✅ **No conflicts** - macOS and apps rarely use this modifier combo
 - ✅ **Ergonomic** - One pinky hold + right hand for any key
 - ✅ **Scalable** - 26+ letters, 10 numbers, all symbols available
 - ✅ **Muscle memory** - Single modifier for all custom workflows
 - ✅ **Future-proof** - Add new shortcuts without breaking existing ones
 
-**Why this is powerful**: You have an entire keyboard layer just for you. No more memorizing complex Cmd+Opt+Shift+X combos or worrying about conflicts with app shortcuts.
+**Why this is powerful**: You have an entire keyboard layer just for you. No more memorizing complex
+Cmd+Opt+Shift+X combos or worrying about conflicts with app shortcuts.
 
 ## Architecture
 
@@ -41,6 +44,7 @@ Opens Ghostty + switches to "default" mode
 **All shortcuts use the Hyper Key (Caps Lock when held):**
 
 ### Navigation & Editing
+
 - **Hyper+H**: Left arrow
 - **Hyper+J**: Down arrow
 - **Hyper+K**: Up arrow
@@ -49,6 +53,7 @@ Opens Ghostty + switches to "default" mode
 - **Hyper+\\**: Cycle tmux sessions
 
 ### Primary Apps (Hyper+Number)
+
 - **Hyper+1**: Ghostty (Terminal)
 - **Hyper+2**: Visual Studio Code
 - **Hyper+3**: Arc (Browser)
@@ -58,6 +63,7 @@ Opens Ghostty + switches to "default" mode
 - **Hyper+7**: Microsoft Outlook
 
 ### Secondary Apps (Hyper+Letter)
+
 - **Hyper+C**: ChatGPT
 - **Hyper+M**: Messages
 - **Hyper+F**: Finder
@@ -69,7 +75,9 @@ Opens Ghostty + switches to "default" mode
 - **Hyper+S**: Structured
 
 ### Window Management (Raycast Native Hotkeys)
+
 Set these directly in Raycast (not through Karabiner):
+
 - Left/Right/Top/Bottom Half, Maximize, Center, Toggle Fullscreen
 
 📖 See [WINDOW_MANAGEMENT.md](./WINDOW_MANAGEMENT.md) for setup instructions.
@@ -165,6 +173,7 @@ Result: VS Code focused, voice dictation in coding mode
 ### 1. Set Up Hyper Key
 
 In Karabiner-Elements:
+
 1. Go to **Complex Modifications** tab
 2. Click **"Add predefined rule"**
 3. Search for: **"Caps Lock → Hyper Key (⌃⌥⇧⌘) (Caps Lock if alone)"**
@@ -175,6 +184,7 @@ This maps Caps Lock to Hyper when held, Caps Lock when tapped.
 ### 2. Configure App Launching
 
 The Karabiner configuration in `config/karabiner/karabiner.json` is already set up with:
+
 - Hyper key app launching (Hyper+1-7, Hyper+Letters)
 - Navigation shortcuts (Hyper+H/J/K/L for arrows, Hyper+[ for escape)
 - tmux session cycling (Hyper+backslash)
@@ -191,6 +201,7 @@ chmod +x ~/code/dotfiles/bin/hyperflow/superwhisper-mode-switch.sh
 ## Usage
 
 Just press the keyboard shortcut - the script handles:
+
 1. Opening/activating the application
 2. Switching SuperWhisper to the appropriate mode
 3. Debouncing rapid key presses (via SuperWhisper mode switcher)
@@ -199,18 +210,19 @@ Just press the keyboard shortcut - the script handles:
 
 Each app automatically switches to the appropriate mode:
 
-| App | Mode |
-|-----|------|
-| Ghostty, VSCode, Arc, Obsidian, Finder, 1Password, Notion, Reminders, Music, Podcasts, Structured | `default` |
-| Microsoft Teams | `professional-engineer` |
-| Microsoft Outlook | `email` |
-| Messages | `casual-text` |
+| App                                                                                               | Mode                    |
+| ------------------------------------------------------------------------------------------------- | ----------------------- |
+| Ghostty, VSCode, Arc, Obsidian, Finder, 1Password, Notion, Reminders, Music, Podcasts, Structured | `default`               |
+| Microsoft Teams                                                                                   | `professional-engineer` |
+| Microsoft Outlook                                                                                 | `email`                 |
+| Messages                                                                                          | `casual-text`           |
 
 ## Window Management (Optional)
 
 Use Raycast's built-in Window Management for positioning:
 
 **Recommended Raycast Shortcuts:**
+
 - **Ctrl+Alt+Left**: Left Half
 - **Ctrl+Alt+Right**: Right Half
 - **Ctrl+Alt+Up**: Top Half
@@ -243,15 +255,18 @@ Edit the mode in the script's case statement for that app.
 ## Troubleshooting
 
 ### App not opening
+
 - Check if the app name is correct: `ls /Applications/`
 - Ensure script is executable: `chmod +x hyperflow.sh`
 
 ### SuperWhisper mode not switching
+
 - Check if SuperWhisper is running: `ps aux | grep -i superwhisper`
 - Enable debug mode: `export SUPERWHISPER_DEBUG=1`
 - View logs: `tail -f /tmp/superwhisper-debug.log`
 
 ### Keyboard shortcut not working
+
 - Check Karabiner is running
 - Verify JSON syntax in `karabiner.json`
 - Look at Karabiner EventViewer to see if key is detected
@@ -290,12 +305,9 @@ bin/hyperflow/
 
 ## Advantages Over AeroSpace
 
-✅ Simpler - one script, no tiling manager complexity
-✅ Faster - no workspace management overhead
-✅ Native - uses macOS app activation
-✅ Flexible - easy to add/remove apps
-✅ Portable - works on any Mac with Karabiner
-✅ Maintainable - single script to understand
+✅ Simpler - one script, no tiling manager complexity ✅ Faster - no workspace management overhead
+✅ Native - uses macOS app activation ✅ Flexible - easy to add/remove apps ✅ Portable - works on
+any Mac with Karabiner ✅ Maintainable - single script to understand
 
 ## Notes
 

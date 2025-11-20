@@ -1,10 +1,13 @@
 ---
-description: Generic document-to-tasks converter - intelligently detects input types (specs, reviews, ADRs, tech debt, security audits) and generates standardized task files
+description:
+  Generic document-to-tasks converter - intelligently detects input types (specs, reviews, ADRs,
+  tech debt, security audits) and generates standardized task files
 ---
 
 # Convert Command
 
-Pure conversion tool that transforms any planning document into standardized task files. Intelligently detects input type and applies appropriate formatting.
+Pure conversion tool that transforms any planning document into standardized task files.
+Intelligently detects input type and applies appropriate formatting.
 
 ## Usage
 
@@ -41,7 +44,7 @@ Pure conversion tool that transforms any planning document into standardized tas
 Read the provided document path:
 
 ```typescript
-const content = await readFile(documentPath)
+const content = await readFile(documentPath);
 ```
 
 ### Step 1.2: Detect Input Type
@@ -49,7 +52,7 @@ const content = await readFile(documentPath)
 Use the `detect-input-type` skill to identify document type:
 
 ```typescript
-const inputType = detectInputType(content, documentPath)
+const inputType = detectInputType(content, documentPath);
 // Returns: 'review' | 'spec' | 'adr' | 'tech-debt' | 'security' | 'generic'
 ```
 
@@ -90,7 +93,7 @@ const formatSkill = {
   "tech-debt": "format-tech-debt",
   security: "format-security",
   generic: "format-generic",
-}[inputType]
+}[inputType];
 ```
 
 ### Invoke Format Skill
@@ -99,7 +102,8 @@ const formatSkill = {
 Applying {formatSkill} skill...
 ```
 
-Each format skill extracts domain-specific information and transforms it into the universal task structure with 10 enrichments.
+Each format skill extracts domain-specific information and transforms it into the universal task
+structure with 10 enrichments.
 
 ---
 
@@ -107,7 +111,8 @@ Each format skill extracts domain-specific information and transforms it into th
 
 ### Step 3.1: Component Classification
 
-For each extracted finding/task, invoke the **component-manager skill** to classify with component code:
+For each extracted finding/task, invoke the **component-manager skill** to classify with component
+code:
 
 **Component Classification Workflow:**
 
@@ -129,11 +134,13 @@ For each extracted finding/task, invoke the **component-manager skill** to class
 **Component:** C02: Service Factory & Mode Selection
 ```
 
-The component-manager skill manages the component registry and ensures consistent component codes across all tasks.
+The component-manager skill manages the component registry and ensures consistent component codes
+across all tasks.
 
 ### Step 3.2: Generate Task IDs
 
-For each extracted finding/task, invoke the **id-generator skill** to generate unique task IDs with metadata tracking:
+For each extracted finding/task, invoke the **id-generator skill** to generate unique task IDs with
+metadata tracking:
 
 **ID Generation Workflow:**
 
@@ -151,13 +158,15 @@ For each extracted finding/task, invoke the **id-generator skill** to generate u
 
 **Example:**
 
-- Invoke: `id-generator skill --task --source="docs/reviews/R001-audit.md" --source-type="review" --notes="SQL injection fix"`
+- Invoke:
+  `id-generator skill --task --source="docs/reviews/R001-audit.md" --source-type="review" --notes="SQL injection fix"`
 - Returns: T0001
 - Full audit trail stored in id-generator state
 
 **Task ID Format:** T#### (T0001, T0002, T0003...)
 
-The id-generator skill manages task ID sequencing and provides complete audit trail of all generated IDs.
+The id-generator skill manages task ID sequencing and provides complete audit trail of all generated
+IDs.
 
 ### Step 3.3: Priority Classification
 
@@ -199,11 +208,8 @@ source: docs/specs/auth-redesign-spec.md
 
 # T0001: Implement OAuth2 authentication flow
 
-**Component:** C05: Authentication & Authorization
-**Priority:** P0 (Critical)
-**Status:** READY
-**Estimated Effort:** 12h
-**Complexity:** CRITICAL
+**Component:** C05: Authentication & Authorization **Priority:** P0 (Critical) **Status:** READY
+**Estimated Effort:** 12h **Complexity:** CRITICAL
 
 ## Description
 
@@ -251,8 +257,7 @@ source: docs/specs/auth-redesign-spec.md
 
 ## Dependencies
 
-**Blocking:** None
-**Blocked By:** None
+**Blocking:** None **Blocked By:** None
 
 ## Prerequisites
 
@@ -262,10 +267,8 @@ source: docs/specs/auth-redesign-spec.md
 
 ## Regression Risk
 
-**Impact:** High - Core authentication mechanism
-**Blast Radius:** All authenticated users
-**Testing Gaps:** No current OAuth tests
-**Rollback Risk:** Medium - Can revert to legacy auth
+**Impact:** High - Core authentication mechanism **Blast Radius:** All authenticated users **Testing
+Gaps:** No current OAuth tests **Rollback Risk:** Medium - Can revert to legacy auth
 
 ## Code Examples
 
@@ -303,8 +306,7 @@ Create a master index file at project root:
 ```markdown
 # Tasks Index
 
-Last updated: 2025-11-05T14:30:22Z
-Total tasks: 18
+Last updated: 2025-11-05T14:30:22Z Total tasks: 18
 
 ## Statistics
 
@@ -412,7 +414,9 @@ Conversion is successful when:
 - ✅ All extracted items have task IDs (T####)
 - ✅ All tasks have component codes (C##)
 - ✅ All tasks have P0-P3 priorities
-- ✅ **Each task includes all 10 enrichments** (description, acceptance criteria, implementation steps, files to change in 3 categories, testing requirements, dependencies, prerequisites, regression risk, code examples where applicable, notes)
+- ✅ **Each task includes all 10 enrichments** (description, acceptance criteria, implementation
+  steps, files to change in 3 categories, testing requirements, dependencies, prerequisites,
+  regression risk, code examples where applicable, notes)
 - ✅ Individual task files created in docs/tasks/
 - ✅ TASKS.md index updated
 - ✅ State files updated (task counter, component registry)

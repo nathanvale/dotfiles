@@ -13,12 +13,12 @@
 
 ```typescript
 interface DetectionInput {
-  content: string // Full document content
-  filename: string // Document filename
-  firstLines: string[] // First 50 lines (for efficiency)
-  headings: string[] // All markdown headings
-  hasFrontmatter: boolean // YAML frontmatter present
-  frontmatter?: any // Parsed frontmatter if present
+  content: string; // Full document content
+  filename: string; // Document filename
+  firstLines: string[]; // First 50 lines (for efficiency)
+  headings: string[]; // All markdown headings
+  hasFrontmatter: boolean; // YAML frontmatter present
+  frontmatter?: any; // Parsed frontmatter if present
 }
 ```
 
@@ -26,10 +26,10 @@ interface DetectionInput {
 
 ```typescript
 interface DetectionResult {
-  type: "review" | "spec" | "adr" | "tech-debt" | "security" | "generic"
-  confidence: "high" | "medium" | "low"
-  signals: string[] // List of detection signals found
-  formatSkill: string // Which format skill to use
+  type: "review" | "spec" | "adr" | "tech-debt" | "security" | "generic";
+  confidence: "high" | "medium" | "low";
+  signals: string[]; // List of detection signals found
+  formatSkill: string; // Which format skill to use
 }
 ```
 
@@ -66,8 +66,7 @@ interface DetectionResult {
 ```markdown
 # Code Review - R015
 
-**Review ID:** R015
-**Review Type:** Security & Performance
+**Review ID:** R015 **Review Type:** Security & Performance
 
 ## Findings Summary
 
@@ -115,8 +114,7 @@ Current auth system uses legacy password-based auth...
 
 ### Functional Requirements
 
-FR1: System shall support OAuth2 authentication
-FR2: Users shall be able to...
+FR1: System shall support OAuth2 authentication FR2: Users shall be able to...
 
 ## Acceptance Criteria
 
@@ -154,8 +152,7 @@ FR2: Users shall be able to...
 ```markdown
 # ADR-005: Adopt OAuth2 for Authentication
 
-**Status:** Accepted
-**Date:** 2025-11-05
+**Status:** Accepted **Date:** 2025-11-05
 
 ## Context
 
@@ -260,9 +257,7 @@ We will adopt OAuth2 with Azure AD B2C...
 
 ### VULN-001: SQL Injection in User Search
 
-**Severity:** Critical (CVSS 9.8)
-**CVE:** CVE-2024-5678
-**OWASP:** A03:2021 - Injection
+**Severity:** Critical (CVSS 9.8) **CVE:** CVE-2024-5678 **OWASP:** A03:2021 - Injection
 
 The user search endpoint is vulnerable to SQL injection...
 
@@ -306,7 +301,7 @@ function parseDocument(content: string, filename: string) {
     headings: extractMarkdownHeadings(content),
     hasFrontmatter: content.startsWith("---"),
     frontmatter: parseFrontmatter(content),
-  }
+  };
 }
 ```
 
@@ -314,11 +309,11 @@ function parseDocument(content: string, filename: string) {
 
 ```typescript
 interface TypeScores {
-  review: number
-  spec: number
-  adr: number
-  techDebt: number
-  security: number
+  review: number;
+  spec: number;
+  adr: number;
+  techDebt: number;
+  security: number;
 }
 
 function calculateScores(input: DetectionInput): TypeScores {
@@ -328,12 +323,12 @@ function calculateScores(input: DetectionInput): TypeScores {
     adr: 0,
     techDebt: 0,
     security: 0,
-  }
+  };
 
   // Check each signal and add weights
   // Strong signals: +3, Medium: +2, Weak: +1
 
-  return scores
+  return scores;
 }
 ```
 
@@ -371,10 +366,10 @@ const SKILL_ROUTING = {
   "tech-debt": "format-tech-debt",
   security: "format-security",
   generic: "format-generic",
-}
+};
 
 function getFormatSkill(type: string): string {
-  return SKILL_ROUTING[type]
+  return SKILL_ROUTING[type];
 }
 ```
 
@@ -452,17 +447,15 @@ User creates custom documentation format not matching any pattern.
 
 ```typescript
 // In convert command
-const input = parseDocument(content, filename)
-const detection = detectInputType(input)
+const input = parseDocument(content, filename);
+const detection = detectInputType(input);
 
-console.log(
-  `Detected type: ${detection.type} (${detection.confidence} confidence)`
-)
-console.log(`Using format skill: ${detection.formatSkill}`)
+console.log(`Detected type: ${detection.type} (${detection.confidence} confidence)`);
+console.log(`Using format skill: ${detection.formatSkill}`);
 
 // Route to appropriate format skill
-const formatSkill = loadSkill(detection.formatSkill)
-const formattedTasks = formatSkill.format(content, detection)
+const formatSkill = loadSkill(detection.formatSkill);
+const formattedTasks = formatSkill.format(content, detection);
 ```
 
 ## Testing Strategy

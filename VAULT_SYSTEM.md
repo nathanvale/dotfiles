@@ -2,9 +2,13 @@
 
 ## Overview
 
-The vault system is an ADHD-friendly repository management system that auto-discovers and registers projects containing `.agent-os` (Agent OS vault) or `docs` folders, creating symlinks to a unified Obsidian vault structure.
+The vault system is an ADHD-friendly repository management system that auto-discovers and registers
+projects containing `.agent-os` (Agent OS vault) or `docs` folders, creating symlinks to a unified
+Obsidian vault structure.
 
-**Key principle:** "Registry as source of truth" - A JSON registry tracks all registered repositories with fingerprints (vault ID, git remote, components) allowing the system to survive repository moves and renames.
+**Key principle:** "Registry as source of truth" - A JSON registry tracks all registered
+repositories with fingerprints (vault ID, git remote, components) allowing the system to survive
+repository moves and renames.
 
 ## Architecture
 
@@ -55,6 +59,7 @@ Auto-discovery
 **Purpose:** ADHD-friendly checkbox interface for bulk registration
 
 **How it works:**
+
 1. Scans $VAULT_SEARCH_PATHS for directories with `.agent-os` or `docs`
 2. Shows fzf interactive selection with checkmarks
 3. Compares selected repos against registry
@@ -62,6 +67,7 @@ Auto-discovery
 5. Shows feedback for each operation
 
 **Key functions:**
+
 - `interactive_manage()` - Main orchestrator (lines 362-468)
 - Uses fzf with multi-select, space to toggle, Ctrl-A/Ctrl-D to select all/none
 - Stores repo metadata: name, path, fingerprint, components, registration timestamp
@@ -73,6 +79,7 @@ Auto-discovery
 **Purpose:** Detect and fix broken vaults when repositories are moved/renamed/deleted
 
 **How it works:**
+
 1. Loads registry and iterates through registered repos
 2. For each repo:
    - ✅ **Exists at recorded path** → Check if symlinks are valid, recreate if needed
@@ -84,6 +91,7 @@ Auto-discovery
 **Key function:** `health_check()` (lines 208-356)
 
 **Features:**
+
 - Vault ID matching using `find_repo_by_id()` to relocate moved repos
 - Atomic registry updates
 - Clear user feedback with color coding
@@ -93,6 +101,7 @@ Auto-discovery
 **Purpose:** Open Obsidian vault for current project with auto-registration
 
 **How it works:**
+
 1. Gets current directory
 2. Checks if registered in vault system
 3. If not registered:
@@ -107,6 +116,7 @@ Auto-discovery
 **Purpose:** Manually register a repository
 
 **How it works:**
+
 1. Normalizes path to absolute
 2. Generates/retrieves vault ID from `.vault-id` file
 3. Creates `.vault-id` if missing
@@ -117,6 +127,7 @@ Auto-discovery
 **Key function:** `register_repo()` (lines 125-175)
 
 **Fingerprint includes:**
+
 - `vault_id` - UUID or generated ID
 - `git_remote` - Git origin URL
 - `has_agent_os` - Boolean
@@ -130,6 +141,7 @@ Auto-discovery
 **File:** `bin/tmux/startup.sh` (84 lines)
 
 **What happens when you open a terminal:**
+
 1. Checks if already in tmux session (exits if yes)
 2. Lists existing tmux sessions
 3. Shows options:
@@ -145,6 +157,7 @@ Auto-discovery
 **File:** `bin/tmux/new-project.sh` (434 lines)
 
 **What happens when you run `tmuxnew`:**
+
 1. **Project name normalization** - Sanitizes name for tmux/tmuxinator compatibility
    - Removes leading dots (`.foo` → `dot-foo`)
    - Removes special chars, spaces, uppercase
@@ -167,11 +180,13 @@ Auto-discovery
 6. **Starts session** if user confirms
 
 **Key functions:**
+
 - `detect_project_type()` (lines 120-182) - Framework detection
 - `detect_vaults()` (lines 185-216) - Vault discovery
 - `normalize_project_name()` (lines 32-83) - Name sanitization with 8-step process
 
-**Issue identified:** Calls old `vault-manager.sh register-aos/register-docs` commands (line 192-207) - should use unified `vault register`
+**Issue identified:** Calls old `vault-manager.sh register-aos/register-docs` commands (line
+192-207) - should use unified `vault register`
 
 ### Vault Tmux Bindings
 
@@ -186,6 +201,7 @@ bind v run-shell "~/code/dotfiles/bin/vault/vault open"
 **Prefix:** Ctrl-g (set in tmux.conf line 6)
 
 **Usage:**
+
 - `Ctrl-g V` - Open interactive vault manager in popup
 - `Ctrl-g H` - Run health check in popup
 - `Ctrl-g v` - Open current project's vault (simpler, no popup)
@@ -196,36 +212,36 @@ bind v run-shell "~/code/dotfiles/bin/vault/vault open"
 
 ```json
 {
-  "version": "3.0.0",
+  "lastUpdated": "2025-11-14T12:30:00Z",
   "vaults": {
     "personal": {
-      "type": "personal",
-      "path": "/Users/nathanvale/code/my-second-brain"
+      "path": "/Users/nathanvale/code/my-second-brain",
+      "type": "personal"
     },
     "repos": {
-      "type": "unified",
       "path": "/Users/nathanvale/Documents/ObsidianVaults/Repos",
       "repositories": [
         {
-          "name": "my-project",
-          "path": "/Users/nathanvale/code/my-project",
-          "fingerprint": {
-            "vault_id": "abc-123-def",
-            "git_remote": "https://github.com/user/my-project",
-            "has_agent_os": true,
-            "has_docs": true,
-            "name": "my-project"
-          },
           "components": {
             "agentOS": true,
             "docs": true
           },
+          "fingerprint": {
+            "git_remote": "https://github.com/user/my-project",
+            "has_agent_os": true,
+            "has_docs": true,
+            "name": "my-project",
+            "vault_id": "abc-123-def"
+          },
+          "name": "my-project",
+          "path": "/Users/nathanvale/code/my-project",
           "registered": "2025-11-14T12:30:00Z"
         }
-      ]
+      ],
+      "type": "unified"
     }
   },
-  "lastUpdated": "2025-11-14T12:30:00Z"
+  "version": "3.0.0"
 }
 ```
 
@@ -242,6 +258,7 @@ Simple UUID or generated ID, stored in repo root, added to .gitignore.
 ### Environment Variables
 
 **`VAULT_SEARCH_PATHS`** (default: `$HOME/code`)
+
 - Colon-separated paths to scan for repositories
 - Example: `export VAULT_SEARCH_PATHS="$HOME/code:$HOME/projects:$HOME/work"`
 
@@ -256,6 +273,7 @@ Simple UUID or generated ID, stored in repo root, added to .gitignore.
 ## Known Issues & Improvements
 
 ### Critical (P0)
+
 1. **Shell injection vulnerability** (line 195, 371)
    - `find $SEARCH_PATHS` vulnerable to command injection
    - **Fix:** Quote: `find "$SEARCH_PATHS"`
@@ -265,6 +283,7 @@ Simple UUID or generated ID, stored in repo root, added to .gitignore.
    - **Fix:** Add error handling: `cd "$repo_path" || return 1`
 
 ### High (P1)
+
 3. **Race condition in registry updates**
    - No file locking - concurrent operations corrupt JSON
    - **Fix:** Use `flock` and atomic writes (temp file → mv)
@@ -282,11 +301,13 @@ Simple UUID or generated ID, stored in repo root, added to .gitignore.
    - **Fix:** Add `|| { log_error "..."; return 1; }`
 
 ### Medium (P2)
+
 7. **Code duplication** - Symlink creation pattern repeated 3× (lines 152, 242, 275)
 8. **Subshell variable scope bug** - success message never shown (line 448-467)
 9. **Hardcoded user paths** - Breaks portability (line 18, startup.sh:53, 82)
 
 ### Low (P3)
+
 10. **Inefficient subprocess spawning** - dirname/cat in loops (100+ repos = 300+ processes)
 
 ## Auto-Discovery Flow
@@ -317,6 +338,7 @@ Show summary of changes
 ## Dead Code Analysis
 
 **Unused scripts (133 total functions found as dead code):**
+
 - `vault-discover.sh` - Old discovery script
 - `vault-manager.sh` - Legacy manager
 - `vault-smart-manager.sh` - Smart manager
@@ -330,6 +352,7 @@ All functionality consolidated into `bin/vault/vault` main script.
 ## Usage Examples
 
 ### Open vault for current project
+
 ```bash
 # In any project directory
 vault open
@@ -341,6 +364,7 @@ vault open
 ```
 
 ### Bulk register repositories
+
 ```bash
 # Show checkbox interface
 vault manage
@@ -350,6 +374,7 @@ vault manage
 ```
 
 ### Run health check
+
 ```bash
 # Check vault health
 vault health
@@ -362,11 +387,13 @@ vault health
 ```
 
 ### Register specific repo
+
 ```bash
 vault register /path/to/repo
 ```
 
 ### Show registered repos
+
 ```bash
 vault status
 ```
@@ -374,21 +401,25 @@ vault status
 ## Improvements Roadmap
 
 **Phase 1 (Critical):**
+
 - [ ] Fix shell injection vulnerability (quote $SEARCH_PATHS)
 - [ ] Add error handling for path resolution
 - [ ] Update new-project.sh to use unified vault API
 
 **Phase 2 (Performance):**
+
 - [ ] Add -prune to find commands
 - [ ] Implement file locking for registry
 - [ ] Add write operation error handling
 
 **Phase 3 (Refactoring):**
+
 - [ ] Extract symlink creation to function
 - [ ] Fix subshell variable scope
 - [ ] Replace hardcoded paths with variables
 
 **Phase 4 (Testing):**
+
 - [ ] Add unit tests for registry operations
 - [ ] Test race conditions
 - [ ] Test on different systems

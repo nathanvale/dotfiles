@@ -10,13 +10,9 @@ formatSkill: format-spec
 
 ## <!-- TASK OUTPUT FRONTMATTER STRUCTURE -->
 
-id: # T#### format (auto-generated)
-title: # Brief task description
-priority: # P0, P1, P2, or P3
-component: # C## code from component-manager
-status: # READY, IN_PROGRESS, BLOCKED, DONE
-created: # ISO 8601 timestamp
-source: # Original document path
+id: # T#### format (auto-generated) title: # Brief task description priority: # P0, P1, P2, or P3
+component: # C## code from component-manager status: # READY, IN_PROGRESS, BLOCKED, DONE created: #
+ISO 8601 timestamp source: # Original document path
 
 ---
 
@@ -24,11 +20,7 @@ source: # Original document path
 
 ## Core Metadata
 
-**Component:**
-**Location:**
-**Estimated Effort:**
-**Complexity:**
-**Regression Risk:**
+**Component:** **Location:** **Estimated Effort:** **Complexity:** **Regression Risk:**
 
 ## Description
 
@@ -84,10 +76,8 @@ source: # Original document path
 
 ## Testing Requirements
 
-**Required Testing:**
-| Test Type | Validates AC | Description | Location |
-|-----------|--------------|-------------|----------|
-| | | | |
+**Required Testing:** | Test Type | Validates AC | Description | Location |
+|-----------|--------------|-------------|----------| | | | | |
 
 ## Dependencies
 
@@ -106,34 +96,20 @@ source: # Original document path
 
 ## User Flow
 
-**Persona**:
-**Current**:
-**Proposed**:
-**Key Interactions**:
+**Persona**: **Current**: **Proposed**: **Key Interactions**:
 
 ## API Contract
 
-**Endpoint**:
-**Auth**:
-**Rate Limit**:
-**Idempotency**:
-**Versioning**:
+**Endpoint**: **Auth**: **Rate Limit**: **Idempotency**: **Versioning**:
 
 ## Feature Flags
 
-**Flag**:
-**Rollout**:
-**Kill Switch**:
+**Flag**: **Rollout**: **Kill Switch**:
 
 ## Data Model
 
-**New Table**:
-**Modified**:
-**Migration**:
-**Indexes**:
+**New Table**: **Modified**: **Migration**: **Indexes**:
 
 ## Success Metrics
 
-**North Star**:
-**KPIs**:
-**Instrumentation**:
+**North Star**: **KPIs**: **Instrumentation**:

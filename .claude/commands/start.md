@@ -15,7 +15,8 @@ You orchestrate task initiation across any project structure.
 4. Create worktree using universal script
 5. Spawn parallel-worker agent to execute
 
-**Important**: You are the orchestrator. You don't delegate to an orchestrator agent - you ARE the orchestration.
+**Important**: You are the orchestrator. You don't delegate to an orchestrator agent - you ARE the
+orchestration.
 
 ---
 
@@ -37,12 +38,14 @@ fi
 ## Step 2: Find Task Files
 
 ### For Single Repo:
+
 ```bash
 # Search common locations
 find . -maxdepth 3 \( -path "*/docs/tasks/*.md" -o -path "*/tasks/*.md" -o -path "*/.tasks/*.md" \) -type f
 ```
 
 ### For Monorepo (Multi-Package):
+
 ```bash
 # Find ALL packages with tasks
 find . \( -path "*/apps/*/docs/tasks" -o -path "*/packages/*/docs/tasks" \) -type d
@@ -54,6 +57,7 @@ find . \( -path "*/apps/*/docs/tasks" -o -path "*/packages/*/docs/tasks" \) -typ
 ```
 
 **If multiple packages found**, ask user:
+
 ```
 Found tasks in multiple packages:
   1. api (3 tasks)
@@ -68,21 +72,22 @@ Which package? (or 'all' to search across all)
 ## Step 3: Parse User Request
 
 ### Pattern 1: Explicit Task ID
-**User**: "Start task T0030"
-**User**: "Start T0030"
+
+**User**: "Start task T0030" **User**: "Start T0030"
 
 Action:
+
 1. Find task file matching T0030
 2. If monorepo and multiple packages: search all packages
 3. If found in multiple packages: ask which one
 4. Proceed to Step 4
 
 ### Pattern 2: Next Task
-**User**: "Start next task"
-**User**: "/next"
-**User**: "What should I work on"
+
+**User**: "Start next task" **User**: "/next" **User**: "What should I work on"
 
 Action:
+
 1. If monorepo: ask which package (or search all)
 2. Find all READY tasks
 3. Use advanced selector if exists, else simple priority-based
@@ -90,10 +95,11 @@ Action:
 5. Proceed to Step 4
 
 ### Pattern 3: New Task (Planning)
-**User**: "Start new task: add authentication"
-**User**: "Create task for retry logic"
+
+**User**: "Start new task: add authentication" **User**: "Create task for retry logic"
 
 Action:
+
 1. If monorepo: ask which package
 2. Spawn planner agent to create task file
 3. Return task ID
@@ -104,6 +110,7 @@ Action:
 ## Step 4: Select Task
 
 ### Try Advanced Selector First (Optional)
+
 ```bash
 # Check for project-specific orchestrator
 if [ -f "scripts/task-orchestrator.ts" ]; then
@@ -118,6 +125,7 @@ fi
 ```
 
 ### Simple Priority-Based Selection (Fallback)
+
 ```bash
 # 1. Find READY tasks in target directory
 find $TASK_DIR -name "*.md" -type f | while read file; do
@@ -152,6 +160,7 @@ taskdock worktree create $TASK_ID apps/api
 ```
 
 **What this does**:
+
 - Creates git worktree at `./worktrees/$TASK_ID`
 - Updates task status to IN_PROGRESS (in worktree)
 - Creates lock file
@@ -193,8 +202,8 @@ You are parallel-worker agent in an isolated git worktree.
 - Use Task tool to spawn sub-agents in parallel
 - Return ONLY final summary (not implementation details)
 
-Proceed with execution.`
-})
+Proceed with execution.`,
+});
 ```
 
 ---
@@ -206,11 +215,10 @@ After parallel-worker completes:
 ```markdown
 ## Task Started: T0030
 
-**Worktree**: ./worktrees/T0030
-**Branch**: feat/T0030-description
-**Status**: Work in progress
+**Worktree**: ./worktrees/T0030 **Branch**: feat/T0030-description **Status**: Work in progress
 
 Parallel-worker is executing the task with these streams:
+
 - Stream 1: Error classifier
 - Stream 2: Retry queue logic
 - Stream 3: CLI flag
@@ -223,29 +231,35 @@ You will be notified when complete.
 ## Monorepo Multi-Package Handling
 
 ### Scenario 1: User Specifies Package
+
 ```
 User: "Start next task in api"
 User: "Start T0030 from web package"
 ```
 
 Action:
+
 - Target package directory directly
 - No disambiguation needed
 
 ### Scenario 2: User Doesn't Specify
+
 ```
 User: "Start next task"
 ```
 
 Action:
+
 ```markdown
 Found tasks in multiple packages:
 
 **api** (apps/api/docs/tasks/):
+
 - T0001 (P0, READY): Add authentication
 - T0002 (P1, READY): Add logging
 
 **web** (apps/web/docs/tasks/):
+
 - T0003 (P0, READY): Update UI
 - T0004 (P2, READY): Fix layout
 
@@ -261,6 +275,7 @@ User response: "api" or "all"
 ## Advanced vs Simple Selection
 
 ### When Advanced Exists (Optional)
+
 ```bash
 # scripts/task-orchestrator.ts provides:
 - Conflict analysis using PROJECT_INDEX.json
@@ -270,6 +285,7 @@ User response: "api" or "all"
 ```
 
 ### When Advanced Missing (Fallback)
+
 ```bash
 # Simple selection provides:
 - Priority-based sorting (P0 > P1 > P2 > P3)
@@ -285,6 +301,7 @@ User response: "api" or "all"
 ## Error Handling
 
 ### Git Not Clean
+
 ```
 ❌ Working directory has uncommitted changes.
 Please commit or stash before starting a task.
@@ -295,6 +312,7 @@ M src/file.ts
 ```
 
 ### Task Not Found
+
 ```
 ❌ Task T0030 not found.
 
@@ -308,6 +326,7 @@ Please verify task ID or create a new task.
 ```
 
 ### Multiple Packages, No Disambiguation
+
 ```
 ⚠️  Found T0030 in multiple packages:
 - apps/api/docs/tasks/T0030-add-auth.md
@@ -317,6 +336,7 @@ Which package?
 ```
 
 ### No READY Tasks
+
 ```
 ✅ All tasks are IN_PROGRESS or COMPLETED!
 
@@ -335,6 +355,7 @@ Would you like to:
 ## Example Flows
 
 ### Flow 1: Single Repo, Explicit Task
+
 ```
 User: "Start T0030"
 
@@ -346,6 +367,7 @@ User: "Start T0030"
 ```
 
 ### Flow 2: Monorepo, Next Task
+
 ```
 User: "/next"
 
@@ -362,6 +384,7 @@ User: "/next"
 ```
 
 ### Flow 3: Monorepo, All Packages
+
 ```
 User: "/next" → "all"
 
@@ -383,6 +406,7 @@ User: "/next" → "all"
 See `~/.claude/docs/TASK_FILE_FORMAT.md` for the complete standard format.
 
 **Minimal required fields**:
+
 ```yaml
 ---
 id: T0001
@@ -400,6 +424,7 @@ created: 2025-11-16
 **You orchestrate, you don't delegate to an orchestrator agent.**
 
 Your workflow:
+
 1. Detect structure
 2. Find/select task (handle monorepo multi-package)
 3. Create worktree (universal script)

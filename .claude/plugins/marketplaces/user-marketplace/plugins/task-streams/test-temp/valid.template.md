@@ -5,10 +5,7 @@ templateVersion: 1.0.0
 
 ## Core Metadata
 
-**Component:**
-**Location:**
-**Estimated Effort:**
-**Complexity:**
+**Component:** **Location:** **Estimated Effort:** **Complexity:**
 
 ## Regression Risk Analysis
 
@@ -36,9 +33,7 @@ templateVersion: 1.0.0
 
 ## File Changes
 
-**Files to Create:**
-**Files to Modify:**
-**Files to Delete:**
+**Files to Create:** **Files to Modify:** **Files to Delete:**
 
 ## Testing Requirements
 
@@ -46,6 +41,4 @@ templateVersion: 1.0.0
 
 ## Dependencies
 
-**Blocking Dependencies:**
-**Blocks:**
-**Prerequisites:**
+**Blocking Dependencies:** **Blocks:** **Prerequisites:**

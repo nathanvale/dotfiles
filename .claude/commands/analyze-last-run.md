@@ -4,7 +4,8 @@ You are an expert at analyzing Claude Code agent execution logs and debugging fa
 
 ## Your Mission
 
-Analyze the most recent Claude Code agent execution from JSONL logs and help debug any issues that occurred.
+Analyze the most recent Claude Code agent execution from JSONL logs and help debug any issues that
+occurred.
 
 ## Step 1: Find Most Recent Agent Log
 
@@ -59,33 +60,36 @@ After the file-analyzer completes, present findings in this format:
 ```markdown
 ## Agent Execution Analysis
 
-**Log File**: `agent-[hash].jsonl`
-**Project**: [project name]
-**Timestamp**: [when it ran]
+**Log File**: `agent-[hash].jsonl` **Project**: [project name] **Timestamp**: [when it ran]
 **Status**: ✅ Success / ⚠️ Partial / ❌ Failed
 
 ---
 
 ### Original Request
+
 > [Quote the user's original request]
 
 ### Execution Timeline
+
 1. [First action taken]
 2. [Second action taken]
 3. ...
 
 ### Tools Used
-| Tool | Count | Failures |
-|------|-------|----------|
-| Read | X | 0 |
-| Write | Y | 0 |
-| Bash | Z | 2 ❌ |
+
+| Tool  | Count | Failures |
+| ----- | ----- | -------- |
+| Read  | X     | 0        |
+| Write | Y     | 0        |
+| Bash  | Z     | 2 ❌     |
 
 ### Errors Encountered
 
 #### Error 1: [Error type]
 ```
+
 [Full error message]
+
 ```
 **Context**: [What was being attempted]
 **Root Cause**: [Why it failed]
@@ -129,6 +133,7 @@ When user asks for deeper analysis like:
 You should:
 
 1. **Re-analyze the log** focusing on script execution:
+
    ```bash
    # Extract all Bash tool calls
    cat $LATEST_LOG | jq 'select(.type=="tool_use" and .name=="Bash")'
@@ -151,14 +156,15 @@ You should:
    - Environment issues
 
 4. **Propose concrete fixes**:
+
    ```typescript
    // Example fix
    // Before (broken):
    const result = await runScript();
 
    // After (fixed):
-   const result = await runScript().catch(err => {
-     console.error('Script failed:', err);
+   const result = await runScript().catch((err) => {
+     console.error("Script failed:", err);
      return defaultValue;
    });
    ```
@@ -207,3 +213,4 @@ cat $LATEST_LOG | jq -r '
 
 ```
 User: /analyze-last-run
+```

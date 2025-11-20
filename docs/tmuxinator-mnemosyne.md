@@ -16,13 +16,13 @@ tmuxinator start mnemosyne
 
 When you run `tmuxinator start mnemosyne`, you get these windows with **base-index 1**:
 
-| Key | Window     | Command                                                                    |
-|-----|------------|----------------------------------------------------------------------------|
-| 1   | storybook  | `pnpm storybook`                                                          |
-| 2   | dev        | `pnpm dev 2>&1 \| tee -a .logs/dev.$(date +%s).log \| pino-pretty`       |
-| 3   | prisma     | `pnpm prisma studio`                                                      |
-| 4   | git        | `lazygit`                                                                 |
-| 5   | logs       | `lnav .logs`                                                              |
+| Key | Window    | Command                                                            |
+| --- | --------- | ------------------------------------------------------------------ |
+| 1   | storybook | `pnpm storybook`                                                   |
+| 2   | dev       | `pnpm dev 2>&1 \| tee -a .logs/dev.$(date +%s).log \| pino-pretty` |
+| 3   | prisma    | `pnpm prisma studio`                                               |
+| 4   | git       | `lazygit`                                                          |
+| 5   | logs      | `lnav .logs`                                                       |
 
 ## Features
 
@@ -59,7 +59,7 @@ When you run `tmuxinator start mnemosyne`, you get these windows with **base-ind
 Use standard tmux keybindings:
 
 - `Ctrl-b 1` → storybook window
-- `Ctrl-b 2` → dev server window  
+- `Ctrl-b 2` → dev server window
 - `Ctrl-b 3` → prisma studio window
 - `Ctrl-b 4` → git window
 - `Ctrl-b 5` → logs window

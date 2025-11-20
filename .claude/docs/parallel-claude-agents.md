@@ -1,12 +1,16 @@
 # Parallel Claude Agent System
 
-A dynamic parallel agent launcher that enables running multiple Claude Code instances simultaneously in tmux, each working on different tasks with automatic lock coordination to prevent conflicts.
+A dynamic parallel agent launcher that enables running multiple Claude Code instances simultaneously
+in tmux, each working on different tasks with automatic lock coordination to prevent conflicts.
 
 ## Overview
 
-This system addresses the "Scenario 3" vision: running multiple Claude agents in parallel on a widescreen monitor, watching them work on different tasks simultaneously while automatically preventing duplicate work through PID-based lock coordination.
+This system addresses the "Scenario 3" vision: running multiple Claude agents in parallel on a
+widescreen monitor, watching them work on different tasks simultaneously while automatically
+preventing duplicate work through PID-based lock coordination.
 
 **Key Features:**
+
 - 🔢 **Dynamic Agent Count**: Launch 2, 4, 10, or any number of agents
 - 🔒 **Automatic Lock Coordination**: Prevents agents from selecting the same task
 - ⏱️ **Staggered Execution**: Delays agent launches to avoid race conditions
@@ -37,15 +41,17 @@ Agent 4: Launch → (6s delay) → find-next-task.sh → Skip T0001-T0003 → Lo
 ```
 
 **Lock File Structure** (`.claude/state/task-locks/T0001.lock`):
+
 ```json
 {
-  "taskId": "T0001",
   "agentId": "nathanvale-agent-12345",
-  "pid": 67890
+  "pid": 67890,
+  "taskId": "T0001"
 }
 ```
 
 **Lock Validation**:
+
 - `find-next-task.sh` checks for active locks before selecting tasks
 - PID validation ensures stale locks (dead processes) are cleaned up
 - Each agent skips tasks with valid locks from running processes
@@ -56,12 +62,13 @@ Agent 4: Launch → (6s delay) → find-next-task.sh → Skip T0001-T0003 → Lo
 
 From within tmux:
 
-| Keybinding | Action |
-|------------|--------|
+| Keybinding | Action                                    |
+| ---------- | ----------------------------------------- |
 | `Ctrl-g P` | Launch parallel agents (interactive menu) |
-| `Ctrl-g M` | Open task monitor dashboard |
+| `Ctrl-g M` | Open task monitor dashboard               |
 
 **Interactive Menu Options:**
+
 - `2` - Launch 2 agents (side-by-side)
 - `4` - Launch 4 agents (2x2 grid)
 - `8` - Launch 8 agents (4x2 grid)
@@ -72,16 +79,19 @@ From within tmux:
 ### Command Line Usage
 
 **Launch in current session:**
+
 ```bash
 ~/code/dotfiles/bin/tmux/parallel-claude.sh 4
 ```
 
 **Launch in dedicated session:**
+
 ```bash
 ~/code/dotfiles/bin/tmux/parallel-claude.sh 10 new
 ```
 
 **Monitor tasks:**
+
 ```bash
 ~/code/dotfiles/bin/tmux/task-monitor.sh
 ```
@@ -103,18 +113,23 @@ windows:
   - tasks:
       layout: tiled
       panes:
-        - source ~/code/dotfiles/config/tmuxinator/scripts/common-setup.sh && setup_parallel_task_pane tasks 0 true
-        - source ~/code/dotfiles/config/tmuxinator/scripts/common-setup.sh && setup_parallel_task_pane tasks 1 true
-        - source ~/code/dotfiles/config/tmuxinator/scripts/common-setup.sh && setup_parallel_task_pane tasks 2 true
-        - source ~/code/dotfiles/config/tmuxinator/scripts/common-setup.sh && setup_parallel_task_pane tasks 3 true
+        - source ~/code/dotfiles/config/tmuxinator/scripts/common-setup.sh &&
+          setup_parallel_task_pane tasks 0 true
+        - source ~/code/dotfiles/config/tmuxinator/scripts/common-setup.sh &&
+          setup_parallel_task_pane tasks 1 true
+        - source ~/code/dotfiles/config/tmuxinator/scripts/common-setup.sh &&
+          setup_parallel_task_pane tasks 2 true
+        - source ~/code/dotfiles/config/tmuxinator/scripts/common-setup.sh &&
+          setup_parallel_task_pane tasks 3 true
 ```
 
 **Or use the helper function:**
 
 ```yaml
-  - tasks:
-      panes:
-        - source ~/code/dotfiles/config/tmuxinator/scripts/common-setup.sh && create_parallel_task_window 4 true
+- tasks:
+    panes:
+      - source ~/code/dotfiles/config/tmuxinator/scripts/common-setup.sh &&
+        create_parallel_task_window 4 true
 ```
 
 ## Task Monitor Dashboard
@@ -209,6 +224,7 @@ tmux send-keys -t pane.3 "sleep 6 && claude" C-m
 ```
 
 **Why stagger?**
+
 - Prevents race conditions in task selection
 - Ensures sequential lock creation
 - Gives `find-next-task.sh` time to create locks
@@ -256,7 +272,8 @@ for task_file in $TASK_DIR/T[0-9][0-9][0-9][0-9]-*.md; do
 done
 ```
 
-**Key Insight**: No changes needed to `/next` or task scripts. Lock system "just works" with parallel agents!
+**Key Insight**: No changes needed to `/next` or task scripts. Lock system "just works" with
+parallel agents!
 
 ## Production Validation
 
@@ -275,6 +292,7 @@ This pattern is validated by:
 **Cause**: Stagger delay too short for slow filesystems
 
 **Fix**: Increase `STAGGER_DELAY` in `parallel-claude.sh`:
+
 ```bash
 STAGGER_DELAY=3  # Default: 2
 ```
@@ -284,6 +302,7 @@ STAGGER_DELAY=3  # Default: 2
 **Cause**: All READY tasks have unmet dependencies
 
 **Fix**: Check task dependencies with monitor:
+
 ```bash
 ~/code/dotfiles/bin/tmux/task-monitor.sh
 ```
@@ -293,6 +312,7 @@ STAGGER_DELAY=3  # Default: 2
 **Cause**: Agent crashed without cleaning lock
 
 **Fix**: Locks auto-clean on next selection (PID validation), or manually:
+
 ```bash
 rm .claude/state/task-locks/*.lock
 ```
@@ -302,6 +322,7 @@ rm .claude/state/task-locks/*.lock
 **Cause**: Launched more agents than fits comfortably
 
 **Fix**:
+
 - Use `Ctrl-g z` to zoom individual panes
 - Launch fewer agents
 - Use external monitor for more space
@@ -310,13 +331,13 @@ rm .claude/state/task-locks/*.lock
 
 ### Agent Count Guidelines
 
-| Screen Size | Recommended Agents | Max Agents |
-|-------------|-------------------|------------|
-| 13" Laptop | 2-4 | 6 |
-| 15" Laptop | 4-6 | 8 |
-| 27" Monitor | 6-10 | 12 |
-| Ultra-wide | 8-12 | 16 |
-| Multi-monitor | 10-20 | 50 |
+| Screen Size   | Recommended Agents | Max Agents |
+| ------------- | ------------------ | ---------- |
+| 13" Laptop    | 2-4                | 6          |
+| 15" Laptop    | 4-6                | 8          |
+| 27" Monitor   | 6-10               | 12         |
+| Ultra-wide    | 8-12               | 16         |
+| Multi-monitor | 10-20              | 50         |
 
 ### Task Organization
 
@@ -339,12 +360,14 @@ rm .claude/state/task-locks/*.lock
 ## Integration with Existing Workflow
 
 ### Does NOT replace:
+
 - Single `/next` command for focused work
 - Manual task selection
 - PR review workflow
 - Git management with lazygit
 
 ### Enhances:
+
 - ✅ High-priority sprint completion
 - ✅ Batch processing of similar tasks
 - ✅ Parallel feature development
@@ -352,6 +375,7 @@ rm .claude/state/task-locks/*.lock
 - ✅ Large refactoring efforts
 
 ### Complements:
+
 - Works alongside regular tmuxinator sessions
 - Respects existing vault management (`Ctrl-g V`)
 - Uses same task directory structure
@@ -360,6 +384,7 @@ rm .claude/state/task-locks/*.lock
 ## Future Enhancements
 
 **Potential additions:**
+
 - [ ] GPU/CPU monitoring per agent
 - [ ] Task completion notifications
 - [ ] Auto-scaling based on available tasks
@@ -378,6 +403,7 @@ rm .claude/state/task-locks/*.lock
 ## Credits
 
 Inspired by:
+
 - **git-worktree-runner** (gtr) - Editor/AI integration patterns
 - **incident.io** - Production parallel agent validation
 - **Anthropic** - Official worktree recommendations

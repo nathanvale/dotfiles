@@ -13,7 +13,8 @@ github: https://github.com/example/repo/issues/101
 
 ## Description
 
-Users are unable to log in with email addresses containing special characters (e.g., `user+tag@example.com`). The authentication middleware is rejecting these valid email formats.
+Users are unable to log in with email addresses containing special characters (e.g.,
+`user+tag@example.com`). The authentication middleware is rejecting these valid email formats.
 
 ## Current Behavior
 
@@ -41,16 +42,19 @@ Users are unable to log in with email addresses containing special characters (e
 **Location:** `src/auth/middleware/validateEmail.ts`
 
 **Root Cause:** The regex pattern is too restrictive:
+
 ```typescript
 const emailRegex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/;
 ```
 
 **Proposed Fix:**
+
 ```typescript
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 ```
 
 **Test Cases:**
+
 - `user+tag@example.com` ✅
 - `first.last@company.co.uk` ✅
 - `user-name@domain.com` ✅

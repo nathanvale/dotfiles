@@ -1,18 +1,21 @@
 # Template System - Technical Specification
 
-**Version**: 1.0.0
-**Status**: Approved
-**Last Updated**: 2025-01-06
+**Version**: 1.0.0 **Status**: Approved **Last Updated**: 2025-01-06
 
 ---
 
 ## Executive Summary
 
-This specification defines a template system for the task-streams plugin that provides structure-only output templates for each document format type. Templates define the output contract that enriched tasks must conform to, enable external plugin discovery, and ensure all 10 universal enrichments are included.
+This specification defines a template system for the task-streams plugin that provides
+structure-only output templates for each document format type. Templates define the output contract
+that enriched tasks must conform to, enable external plugin discovery, and ensure all 10 universal
+enrichments are included.
 
-**Key Principle**: Templates show ONLY structure (headings, sections, field names) with NO placeholder content. The format skills are responsible for generating actual content.
+**Key Principle**: Templates show ONLY structure (headings, sections, field names) with NO
+placeholder content. The format skills are responsible for generating actual content.
 
-**🔴 CRITICAL**: See `templates/TEMPLATE-ENRICHMENT-MAPPING.md` for the EXACT mapping of how templates include all 10 enrichments from `SHARED_ENRICHMENTS.md`. This mapping document shows:
+**🔴 CRITICAL**: See `templates/TEMPLATE-ENRICHMENT-MAPPING.md` for the EXACT mapping of how
+templates include all 10 enrichments from `SHARED_ENRICHMENTS.md`. This mapping document shows:
 
 - Each of the 10 enrichments
 - What field/heading in the template it corresponds to
@@ -44,13 +47,18 @@ Quick reference - each template MUST include:
 1. **File Locations** → `**Location:**` field
 2. **Effort Estimation** → `**Estimated Effort:**` field
 3. **Complexity** → `**Complexity:**` field
-4. **Acceptance Criteria** → `## Acceptance Criteria` heading + `**Acceptance Criteria:**` field + checkboxes
-5. **Regression Risk (5 dimensions)** → `## Regression Risk Analysis` heading + 5 sub-fields (Impact, Blast Radius, Dependencies, Testing Gaps, Rollback Risk)
-6. **Implementation Steps** → `## Implementation Plan` heading + `**Implementation Steps:**` field + numbered list
+4. **Acceptance Criteria** → `## Acceptance Criteria` heading + `**Acceptance Criteria:**` field +
+   checkboxes
+5. **Regression Risk (5 dimensions)** → `## Regression Risk Analysis` heading + 5 sub-fields
+   (Impact, Blast Radius, Dependencies, Testing Gaps, Rollback Risk)
+6. **Implementation Steps** → `## Implementation Plan` heading + `**Implementation Steps:**` field +
+   numbered list
 7. **Code Examples** → `## Code Examples` heading + code blocks
-8. **File Changes (3 categories)** → `## File Changes` heading + 3 sub-fields (Files to Create, Files to Modify, Files to Delete)
+8. **File Changes (3 categories)** → `## File Changes` heading + 3 sub-fields (Files to Create,
+   Files to Modify, Files to Delete)
 9. **Testing Table** → `## Testing Requirements` heading + table structure
-10. **Dependencies** → `## Dependencies` heading + 3 sub-fields (Blocking Dependencies, Blocks, Prerequisites)
+10. **Dependencies** → `## Dependencies` heading + 3 sub-fields (Blocking Dependencies, Blocks,
+    Prerequisites)
 
 **Total validator checks**: ~25-30 individual fields/headings across the 10 enrichments.
 
@@ -75,13 +83,9 @@ formatSkill: format-bug-findings
 
 ## <!-- TASK OUTPUT FRONTMATTER STRUCTURE -->
 
-id: # T#### format (auto-generated)
-title: # Brief task description
-priority: # P0, P1, P2, or P3
-component: # C## code from component-manager
-status: # READY, IN_PROGRESS, BLOCKED, DONE
-created: # ISO 8601 timestamp
-source: # Original document path
+id: # T#### format (auto-generated) title: # Brief task description priority: # P0, P1, P2, or P3
+component: # C## code from component-manager status: # READY, IN_PROGRESS, BLOCKED, DONE created: #
+ISO 8601 timestamp source: # Original document path
 
 ---
 
@@ -89,11 +93,7 @@ source: # Original document path
 
 ## Core Metadata
 
-**Component:**
-**Location:**
-**Estimated Effort:**
-**Complexity:**
-**Regression Risk:**
+**Component:** **Location:** **Estimated Effort:** **Complexity:** **Regression Risk:**
 
 ## Description
 
@@ -150,10 +150,8 @@ source: # Original document path
 
 ## Testing Requirements
 
-**Required Testing:**
-| Test Type | Validates AC | Description | Location |
-|-----------|--------------|-------------|----------|
-| | | | |
+**Required Testing:** | Test Type | Validates AC | Description | Location |
+|-----------|--------------|-------------|----------| | | | | |
 
 ## Dependencies
 
@@ -199,9 +197,7 @@ Templates MUST NOT include:
 **✅ CORRECT - Pure structure:**
 
 ```markdown
-**Component:**
-**Location:**
-**Estimated Effort:**
+**Component:** **Location:** **Estimated Effort:**
 ```
 
 **❌ INCORRECT - Has example data:**
@@ -245,13 +241,9 @@ formatSkill: format-bug-findings
 ```markdown
 ## <!-- TASK OUTPUT FRONTMATTER STRUCTURE -->
 
-id: # T#### format (auto-generated)
-title: # Brief task description
-priority: # P0, P1, P2, or P3
-component: # C## code from component-manager
-status: # READY, IN_PROGRESS, BLOCKED, DONE
-created: # ISO 8601 timestamp
-source: # Original document path
+id: # T#### format (auto-generated) title: # Brief task description priority: # P0, P1, P2, or P3
+component: # C## code from component-manager status: # READY, IN_PROGRESS, BLOCKED, DONE created: #
+ISO 8601 timestamp source: # Original document path
 
 ---
 ```
@@ -268,12 +260,12 @@ This shows the contract without being actual output.
 // .claude-plugins/task-streams/scripts/template-registry.ts
 
 export interface TemplateMetadata {
-  templateName: string
-  templateVersion: string
-  description: string
-  requiredEnrichments: number
-  formatSkill: string
-  path: string
+  templateName: string;
+  templateVersion: string;
+  description: string;
+  requiredEnrichments: number;
+  formatSkill: string;
+  path: string;
 }
 
 export class TemplateRegistry {
@@ -281,50 +273,50 @@ export class TemplateRegistry {
    * List all available templates
    */
   static async listTemplates(): Promise<TemplateMetadata[]> {
-    const templatesDir = join(__dirname, "../templates")
-    const files = await readdir(templatesDir)
-    const templateFiles = files.filter((f) => f.endsWith(".template.md"))
+    const templatesDir = join(__dirname, "../templates");
+    const files = await readdir(templatesDir);
+    const templateFiles = files.filter((f) => f.endsWith(".template.md"));
 
-    const templates: TemplateMetadata[] = []
+    const templates: TemplateMetadata[] = [];
     for (const file of templateFiles) {
-      const content = await readFile(join(templatesDir, file), "utf-8")
-      const metadata = extractFrontmatter(content)
+      const content = await readFile(join(templatesDir, file), "utf-8");
+      const metadata = extractFrontmatter(content);
       templates.push({
         ...metadata,
         path: join(templatesDir, file),
-      })
+      });
     }
 
-    return templates
+    return templates;
   }
 
   /**
    * Get template content by name
    */
   static async getTemplate(name: string): Promise<string> {
-    const templatePath = join(__dirname, "../templates", `${name}.template.md`)
-    return readFile(templatePath, "utf-8")
+    const templatePath = join(__dirname, "../templates", `${name}.template.md`);
+    return readFile(templatePath, "utf-8");
   }
 
   /**
    * Get template metadata only
    */
   static async getTemplateMetadata(name: string): Promise<TemplateMetadata> {
-    const content = await this.getTemplate(name)
-    const metadata = extractFrontmatter(content)
+    const content = await this.getTemplate(name);
+    const metadata = extractFrontmatter(content);
     return {
       ...metadata,
       path: join(__dirname, "../templates", `${name}.template.md`),
-    }
+    };
   }
 
   /**
    * Validate template structure
    */
   static async validateTemplate(name: string): Promise<boolean> {
-    const content = await this.getTemplate(name)
-    const validation = validateTemplateHasAllEnrichments(content)
-    return validation.passed
+    const content = await this.getTemplate(name);
+    const validation = validateTemplateHasAllEnrichments(content);
+    return validation.passed;
   }
 }
 ```
@@ -413,8 +405,8 @@ Each format skill's SKILL.md should reference its template:
 
 **Output Template**: @../templates/bug-findings.template.md
 
-Use this template as the structural contract for all enriched bug findings.
-All sections and enrichments shown in the template MUST be included in output.
+Use this template as the structural contract for all enriched bug findings. All sections and
+enrichments shown in the template MUST be included in output.
 ```
 
 ### 4.2 Skill Validation Against Template
@@ -423,13 +415,13 @@ Format skills should validate their output matches template structure:
 
 ```typescript
 // Pseudo-code in skill implementation
-const template = await TemplateRegistry.getTemplate("bug-findings")
-const requiredSections = extractSections(template)
+const template = await TemplateRegistry.getTemplate("bug-findings");
+const requiredSections = extractSections(template);
 
 // Validate output has all sections
 for (const section of requiredSections) {
   if (!output.includes(section)) {
-    throw new Error(`Missing required section: ${section}`)
+    throw new Error(`Missing required section: ${section}`);
   }
 }
 ```
@@ -440,7 +432,8 @@ for (const section of requiredSections) {
 
 ### 5.1 The Problem
 
-All templates must include the 10 universal enrichments defined in `SHARED_ENRICHMENTS.md`. Without enforcement, templates can drift from this contract.
+All templates must include the 10 universal enrichments defined in `SHARED_ENRICHMENTS.md`. Without
+enforcement, templates can drift from this contract.
 
 ### 5.2 REQUIRED_ENRICHMENTS Array
 
@@ -506,11 +499,7 @@ export const REQUIRED_ENRICHMENTS = [
   {
     id: 9,
     name: "File Change Scope",
-    requiredFields: [
-      "**Files to Create:**",
-      "**Files to Modify:**",
-      "**Files to Delete:**",
-    ],
+    requiredFields: ["**Files to Create:**", "**Files to Modify:**", "**Files to Delete:**"],
     requiredHeadings: ["## File Changes"],
   },
   {
@@ -519,26 +508,26 @@ export const REQUIRED_ENRICHMENTS = [
     requiredFields: ["**Required Testing:**"],
     requiredHeadings: ["## Testing Requirements"],
   },
-] as const
+] as const;
 
 export function validateTemplateHasAllEnrichments(templateContent: string): {
-  passed: boolean
-  missing: string[]
+  passed: boolean;
+  missing: string[];
 } {
-  const missing: string[] = []
+  const missing: string[] = [];
 
   for (const enrichment of REQUIRED_ENRICHMENTS) {
     // Check headings
     for (const heading of enrichment.requiredHeadings || []) {
       if (!templateContent.includes(heading)) {
-        missing.push(`${enrichment.name}: Missing heading "${heading}"`)
+        missing.push(`${enrichment.name}: Missing heading "${heading}"`);
       }
     }
 
     // Check fields
     for (const field of enrichment.requiredFields || []) {
       if (!templateContent.includes(field)) {
-        missing.push(`${enrichment.name}: Missing field "${field}"`)
+        missing.push(`${enrichment.name}: Missing field "${field}"`);
       }
     }
   }
@@ -546,7 +535,7 @@ export function validateTemplateHasAllEnrichments(templateContent: string): {
   return {
     passed: missing.length === 0,
     missing,
-  }
+  };
 }
 ```
 
@@ -638,34 +627,31 @@ Exit code: 1
 ```typescript
 // tests/templates/structure.test.ts
 
-import { describe, it, expect } from "vitest"
-import { readFile, readdir } from "fs/promises"
-import { join } from "path"
+import { describe, it, expect } from "vitest";
+import { readFile, readdir } from "fs/promises";
+import { join } from "path";
 import {
   validateTemplateHasAllEnrichments,
   REQUIRED_ENRICHMENTS,
-} from "../../scripts/template-enrichment-validator"
+} from "../../scripts/template-enrichment-validator";
 
 describe("Template Structure Tests", () => {
-  const templatesDir = join(__dirname, "../../templates")
-  const templates = ["bug-findings", "spec", "tech-debt", "security", "generic"]
+  const templatesDir = join(__dirname, "../../templates");
+  const templates = ["bug-findings", "spec", "tech-debt", "security", "generic"];
 
   templates.forEach((templateName) => {
     describe(`${templateName}.template.md`, () => {
-      let content: string
+      let content: string;
 
       beforeAll(async () => {
-        content = await readFile(
-          join(templatesDir, `${templateName}.template.md`),
-          "utf-8"
-        )
-      })
+        content = await readFile(join(templatesDir, `${templateName}.template.md`), "utf-8");
+      });
 
       it("should include all 10 universal enrichments", () => {
-        const validation = validateTemplateHasAllEnrichments(content)
-        expect(validation.passed).toBe(true)
-        expect(validation.missing).toHaveLength(0)
-      })
+        const validation = validateTemplateHasAllEnrichments(content);
+        expect(validation.passed).toBe(true);
+        expect(validation.missing).toHaveLength(0);
+      });
 
       it("should include enrichment 5 with all 5 risk dimensions", () => {
         const riskDimensions = [
@@ -674,145 +660,139 @@ describe("Template Structure Tests", () => {
           "**Dependencies:**",
           "**Testing Gaps:**",
           "**Rollback Risk:**",
-        ]
+        ];
         riskDimensions.forEach((dimension) => {
-          expect(content).toContain(dimension)
-        })
-      })
+          expect(content).toContain(dimension);
+        });
+      });
 
       it("should have valid frontmatter metadata", () => {
-        const frontmatterMatch = content.match(/^---\n([\s\S]+?)\n---/)
-        expect(frontmatterMatch).toBeTruthy()
+        const frontmatterMatch = content.match(/^---\n([\s\S]+?)\n---/);
+        expect(frontmatterMatch).toBeTruthy();
 
-        const frontmatter = frontmatterMatch![1]
-        expect(frontmatter).toContain(`templateName: ${templateName}`)
-        expect(frontmatter).toContain("templateVersion:")
-        expect(frontmatter).toContain("description:")
-        expect(frontmatter).toContain("requiredEnrichments: 10")
-      })
+        const frontmatter = frontmatterMatch![1];
+        expect(frontmatter).toContain(`templateName: ${templateName}`);
+        expect(frontmatter).toContain("templateVersion:");
+        expect(frontmatter).toContain("description:");
+        expect(frontmatter).toContain("requiredEnrichments: 10");
+      });
 
       it("should NOT contain placeholder content", () => {
         // Remove frontmatter and comments
         const outputContent = content
           .replace(/^---[\s\S]+?---/, "")
-          .replace(/<!-- [\s\S]+? -->/g, "")
+          .replace(/<!-- [\s\S]+? -->/g, "");
 
         // No bracket placeholders
-        const bracketPlaceholders = outputContent.match(/\[[\w\s]+\]/g) || []
-        expect(bracketPlaceholders).toHaveLength(0)
+        const bracketPlaceholders = outputContent.match(/\[[\w\s]+\]/g) || [];
+        expect(bracketPlaceholders).toHaveLength(0);
 
         // No TODO markers
-        expect(outputContent).not.toContain("TODO")
+        expect(outputContent).not.toContain("TODO");
 
         // No example data in field values
-        const fieldValuePattern = /\*\*\w+:\*\* .+/g
-        const fieldValues = outputContent.match(fieldValuePattern) || []
-        expect(fieldValues).toHaveLength(0) // All fields should be empty
-      })
-    })
-  })
+        const fieldValuePattern = /\*\*\w+:\*\* .+/g;
+        const fieldValues = outputContent.match(fieldValuePattern) || [];
+        expect(fieldValues).toHaveLength(0); // All fields should be empty
+      });
+    });
+  });
 
   it("should have exactly 5 template files", async () => {
-    const files = await readdir(templatesDir)
-    const templateFiles = files.filter((f) => f.endsWith(".template.md"))
-    expect(templateFiles).toHaveLength(5)
-  })
-})
+    const files = await readdir(templatesDir);
+    const templateFiles = files.filter((f) => f.endsWith(".template.md"));
+    expect(templateFiles).toHaveLength(5);
+  });
+});
 ```
 
 ```typescript
 // tests/templates/discovery.test.ts
 
-import { describe, it, expect } from "vitest"
-import { TemplateRegistry } from "../../scripts/template-registry"
+import { describe, it, expect } from "vitest";
+import { TemplateRegistry } from "../../scripts/template-registry";
 
 describe("Template Discovery Tests", () => {
   it("should list all templates", async () => {
-    const templates = await TemplateRegistry.listTemplates()
+    const templates = await TemplateRegistry.listTemplates();
 
-    expect(templates).toHaveLength(5)
+    expect(templates).toHaveLength(5);
     expect(templates.map((t) => t.templateName)).toEqual(
-      expect.arrayContaining([
-        "bug-findings",
-        "spec",
-        "tech-debt",
-        "security",
-        "generic",
-      ])
-    )
-  })
+      expect.arrayContaining(["bug-findings", "spec", "tech-debt", "security", "generic"])
+    );
+  });
 
   it("should retrieve template content", async () => {
-    const content = await TemplateRegistry.getTemplate("bug-findings")
+    const content = await TemplateRegistry.getTemplate("bug-findings");
 
-    expect(content).toContain("templateName: bug-findings")
-    expect(content).toContain("## Core Metadata")
-    expect(content).toContain("**Component:**")
-  })
+    expect(content).toContain("templateName: bug-findings");
+    expect(content).toContain("## Core Metadata");
+    expect(content).toContain("**Component:**");
+  });
 
   it("should retrieve template metadata", async () => {
-    const metadata = await TemplateRegistry.getTemplateMetadata("spec")
+    const metadata = await TemplateRegistry.getTemplateMetadata("spec");
 
-    expect(metadata.templateName).toBe("spec")
-    expect(metadata.templateVersion).toMatch(/^\d+\.\d+\.\d+$/)
-    expect(metadata.requiredEnrichments).toBe(10)
-    expect(metadata.formatSkill).toBe("format-spec")
-  })
+    expect(metadata.templateName).toBe("spec");
+    expect(metadata.templateVersion).toMatch(/^\d+\.\d+\.\d+$/);
+    expect(metadata.requiredEnrichments).toBe(10);
+    expect(metadata.formatSkill).toBe("format-spec");
+  });
 
   it("should validate template structure", async () => {
-    const isValid = await TemplateRegistry.validateTemplate("security")
-    expect(isValid).toBe(true)
-  })
+    const isValid = await TemplateRegistry.validateTemplate("security");
+    expect(isValid).toBe(true);
+  });
 
   it("should throw error for non-existent template", async () => {
-    await expect(TemplateRegistry.getTemplate("non-existent")).rejects.toThrow()
-  })
-})
+    await expect(TemplateRegistry.getTemplate("non-existent")).rejects.toThrow();
+  });
+});
 ```
 
 ```typescript
 // tests/templates/alignment.test.ts
 
-import { describe, it, expect } from "vitest"
-import { TemplateRegistry } from "../../scripts/template-registry"
-import { FindingValidator } from "../../validators/validate-finding"
-import { SpecValidator } from "../../validators/validate-spec"
+import { describe, it, expect } from "vitest";
+import { TemplateRegistry } from "../../scripts/template-registry";
+import { FindingValidator } from "../../validators/validate-finding";
+import { SpecValidator } from "../../validators/validate-spec";
 // ... import other validators
 
 describe("Template-Validator Alignment Tests", () => {
   it("bug-findings template matches FindingValidator checks", async () => {
-    const template = await TemplateRegistry.getTemplate("bug-findings")
-    const validator = new FindingValidator(template)
+    const template = await TemplateRegistry.getTemplate("bug-findings");
+    const validator = new FindingValidator(template);
 
     // Validator should pass on minimal valid structure
-    const result = validator.validate()
+    const result = validator.validate();
 
     // All checks present (11 enrichment checks + 1 overall)
-    expect(result.results).toHaveLength(12)
-  })
+    expect(result.results).toHaveLength(12);
+  });
 
   it("spec template matches SpecValidator checks", async () => {
-    const template = await TemplateRegistry.getTemplate("spec")
-    const validator = new SpecValidator(template)
+    const template = await TemplateRegistry.getTemplate("spec");
+    const validator = new SpecValidator(template);
 
-    const result = validator.validate()
-    expect(result.results).toHaveLength(12)
-  })
+    const result = validator.validate();
+    expect(result.results).toHaveLength(12);
+  });
 
   it("validator checks are not stricter than template", async () => {
     // This tests that validators don't require fields not in template
-    const template = await TemplateRegistry.getTemplate("bug-findings")
-    const validator = new FindingValidator(template)
+    const template = await TemplateRegistry.getTemplate("bug-findings");
+    const validator = new FindingValidator(template);
 
     // Extract required fields from validator
-    const validatorRequirements = validator.getRequiredFields()
+    const validatorRequirements = validator.getRequiredFields();
 
     // All validator requirements should be in template
     for (const req of validatorRequirements) {
-      expect(template).toContain(req)
+      expect(template).toContain(req);
     }
-  })
-})
+  });
+});
 ```
 
 ---
@@ -1000,13 +980,13 @@ pnpm test tests/templates/alignment.test.ts
 ```json
 {
   "scripts": {
-    "templates:list": "tsx .claude-plugins/task-streams/scripts/list-templates.ts",
     "templates:get": "tsx .claude-plugins/task-streams/scripts/get-template.ts",
+    "templates:list": "tsx .claude-plugins/task-streams/scripts/list-templates.ts",
     "templates:validate": "tsx .claude-plugins/task-streams/scripts/validate-templates.ts",
     "test:templates": "vitest run tests/templates/",
-    "test:templates:structure": "vitest run tests/templates/structure.test.ts",
+    "test:templates:alignment": "vitest run tests/templates/alignment.test.ts",
     "test:templates:discovery": "vitest run tests/templates/discovery.test.ts",
-    "test:templates:alignment": "vitest run tests/templates/alignment.test.ts"
+    "test:templates:structure": "vitest run tests/templates/structure.test.ts"
   }
 }
 ```
@@ -1021,24 +1001,22 @@ External plugins can discover available templates:
 
 ```typescript
 // External plugin code
-import { exec } from "child_process"
+import { exec } from "child_process";
 
 // Discover available templates
-const { stdout } = await exec(
-  "pnpm tsx .claude-plugins/task-streams/scripts/list-templates.ts"
-)
-const templates = JSON.parse(stdout)
+const { stdout } = await exec("pnpm tsx .claude-plugins/task-streams/scripts/list-templates.ts");
+const templates = JSON.parse(stdout);
 
-console.log(`Found ${templates.length} templates:`)
+console.log(`Found ${templates.length} templates:`);
 templates.forEach((t) => {
-  console.log(`- ${t.templateName}: ${t.description}`)
-})
+  console.log(`- ${t.templateName}: ${t.description}`);
+});
 
 // Get specific template
 const { stdout: templateContent } = await exec(
   "pnpm tsx .claude-plugins/task-streams/scripts/get-template.ts bug-findings"
-)
-console.log("Template structure:", templateContent)
+);
+console.log("Template structure:", templateContent);
 ```
 
 ### 10.2 Plugin Manifest Integration
@@ -1048,14 +1026,14 @@ Future enhancement: Plugin manifest declares available templates
 ```json
 {
   "name": "task-streams",
-  "version": "1.0.0",
   "templates": [
     {
-      "name": "bug-findings",
+      "command": "pnpm tsx scripts/get-template.ts bug-findings",
       "description": "Structure for enriched bug findings and code review issues",
-      "command": "pnpm tsx scripts/get-template.ts bug-findings"
+      "name": "bug-findings"
     }
-  ]
+  ],
+  "version": "1.0.0"
 }
 ```
 
@@ -1131,8 +1109,11 @@ Future enhancement: Plugin manifest declares available templates
 
 ## 15. Conclusion
 
-This template system provides a clear, discoverable contract for task-streams output formats. By enforcing structure-only templates with all 10 universal enrichments, we ensure consistent, high-quality enriched tasks across all document types.
+This template system provides a clear, discoverable contract for task-streams output formats. By
+enforcing structure-only templates with all 10 universal enrichments, we ensure consistent,
+high-quality enriched tasks across all document types.
 
-The template discovery API enables external plugins to understand available formats and integrate seamlessly with the task-streams pipeline.
+The template discovery API enables external plugins to understand available formats and integrate
+seamlessly with the task-streams pipeline.
 
 **Next Steps**: Begin Phase 1 implementation (Template Creation).

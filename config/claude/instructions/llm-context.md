@@ -4,7 +4,8 @@
 - Editable context:
   - If `.llm/todo.md` exists, it is the task list we are working on.
   - As you complete tasks, mark the checkboxes as complete, like `- [x] The task`
-  - As we work on an implementation, plans will change. Feel free to edit the task list to keep it relevant and in sync with your plans.
+  - As we work on an implementation, plans will change. Feel free to edit the task list to keep it
+    relevant and in sync with your plans.
 - Read-only context:
   - Everything else in the `.llm/` directory is read-only context for the your reference
   - It contains entire git clones for tools we use

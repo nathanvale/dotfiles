@@ -1,13 +1,19 @@
 ---
 name: bash-history-assistant
-description: Searches and analyzes bash command history using Atuin CLI integration. Use when finding previously-run commands, analyzing command patterns, searching for cloud/deployment commands, or when mentioned 'bash history', 'atuin', 'command history', 'what command did I use', 'find command'.
+description:
+  Searches and analyzes bash command history using Atuin CLI integration. Use when finding
+  previously-run commands, analyzing command patterns, searching for cloud/deployment commands, or
+  when mentioned 'bash history', 'atuin', 'command history', 'what command did I use', 'find
+  command'.
 ---
 
 # Bash History Assistant
 
 ## Overview
 
-Provides access to Atuin command history without requiring MCP server environment variables. Uses Atuin CLI directly via Bash tool to search, analyze, and retrieve command history captured from Claude Code sessions and interactive shell usage.
+Provides access to Atuin command history without requiring MCP server environment variables. Uses
+Atuin CLI directly via Bash tool to search, analyze, and retrieve command history captured from
+Claude Code sessions and interactive shell usage.
 
 ## Core Capabilities
 
@@ -36,6 +42,7 @@ atuin search "migration" --reverse --cmd-only --limit 10
 ```
 
 **Common patterns:**
+
 - Cloud commands: `"aws\|gcloud\|kubectl\|docker\|terraform"`
 - Git workflows: `"git commit\|git push\|git rebase"`
 - Package management: `"npm\|yarn\|pnpm\|brew"`
@@ -89,6 +96,7 @@ atuin stats --ngram-size 3 --count 10
 ## When to Use This Skill
 
 Invoke this skill when the user asks about:
+
 - "What command did I use to..."
 - "Find the command for..."
 - "Show me my bash history"
@@ -101,12 +109,14 @@ Invoke this skill when the user asks about:
 ## Search Modes
 
 Atuin supports different search modes via `--search-mode`:
+
 - `prefix`: Match command prefix (default)
 - `full-text`: Match anywhere in command
 - `fuzzy`: Fuzzy matching
 - `skim`: Advanced fuzzy matching
 
 Example:
+
 ```bash
 atuin search "git push" --search-mode full-text --cmd-only --limit 10
 ```
@@ -126,11 +136,13 @@ atuin search "npm" --format "{directory} [{duration}] {command}" --limit 10
 atuin search "curl" --format "[exit:{exit}] {command}" --limit 10
 ```
 
-Available variables: `{command}`, `{directory}`, `{duration}`, `{user}`, `{host}`, `{time}`, `{exit}`, `{relativetime}`
+Available variables: `{command}`, `{directory}`, `{duration}`, `{user}`, `{host}`, `{time}`,
+`{exit}`, `{relativetime}`
 
 ## Integration with Claude Code
 
 Commands executed by Claude Code agents are automatically captured via the PostToolUse hook:
+
 - Hook script: `.claude/hooks/atuin-post-tool.sh`
 - Commands are added to `~/.zsh_history`
 - Atuin automatically imports from zsh history
@@ -139,6 +151,7 @@ Commands executed by Claude Code agents are automatically captured via the PostT
 ## Troubleshooting
 
 If searches return no results:
+
 1. Check zsh history exists: `ls -lh ~/.zsh_history`
 2. Verify Atuin is importing: `atuin import auto`
 3. Check Atuin database: `atuin stats`

@@ -9,6 +9,7 @@ Complete step-by-step workflows for common code analysis tasks.
 **Goal**: Identify npm packages that can be safely removed
 
 **Steps**:
+
 ```
 1. jq to list all dependencies
    → jq '.dependencies | keys' package.json
@@ -34,6 +35,7 @@ Complete step-by-step workflows for common code analysis tasks.
 **Goal**: Locate and prioritize 'any' types that need fixing
 
 **Steps**:
+
 ```
 1. ast-grep to find all 'any' types
    → ast-grep run -l TypeScript -p 'any'
@@ -59,6 +61,7 @@ Complete step-by-step workflows for common code analysis tasks.
 **Goal**: Safely migrate from old API to new API
 
 **Steps**:
+
 ```
 1. rg to find candidate files with old API
    → rg -l 'oldApiCall' -t ts
@@ -84,6 +87,7 @@ Complete step-by-step workflows for common code analysis tasks.
 **Goal**: Find and understand performance hotspots
 
 **Steps**:
+
 ```
 1. jq to analyze error logs for slow endpoints
    → jq '.logs[] | select(.duration > 1000) | group_by(.endpoint)' performance.json
@@ -109,6 +113,7 @@ Complete step-by-step workflows for common code analysis tasks.
 **Goal**: Find and break circular import cycles
 
 **Steps**:
+
 ```
 1. Python script to analyze import graph
    → python3 scripts/dependency-graph.py --detect-cycles src/
@@ -134,6 +139,7 @@ Complete step-by-step workflows for common code analysis tasks.
 **Goal**: Find potentially unsafe code patterns
 
 **Steps**:
+
 ```
 1. ast-grep to find dangerous patterns
    → ast-grep run -p 'eval($CODE)'
@@ -171,6 +177,7 @@ Impact Analysis (Python scripts)
 ```
 
 **Key Principles**:
+
 - Always start with fastest tools
 - Use multiple verification steps for high-stakes changes
 - Combine graph data (jq) with code inspection (Read)

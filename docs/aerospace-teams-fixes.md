@@ -4,8 +4,9 @@
 
 Microsoft Teams has several known issues with tiling window managers:
 
-1. **Multiple Windows**: When joining meetings, Teams creates separate windows that interfere with tiling
-2. **Fullscreen Issues**: Meeting windows don't handle fullscreen properly in tiled layouts  
+1. **Multiple Windows**: When joining meetings, Teams creates separate windows that interfere with
+   tiling
+2. **Fullscreen Issues**: Meeting windows don't handle fullscreen properly in tiled layouts
 3. **Dialog Windows**: Settings and join dialogs get tiled when they should float
 4. **Resize Problems**: Teams ignores resize events from window managers
 5. **Focus Issues**: Switching between chat and meeting windows causes focus problems
@@ -40,12 +41,14 @@ run = ['layout floating']
 **Problem**: Hard to quickly access and fullscreen Teams meetings
 
 **Solutions**:
+
 - `Ctrl + Cmd + 5`: Jump to Teams workspace and fullscreen
 - Service mode `m`: Same as above (Ctrl+Cmd+; then m)
 
 ### 3. **Window Management for Meetings**
 
 When in a Teams meeting:
+
 1. Meeting window automatically floats (no tiling interference)
 2. Use `Ctrl + Cmd + Shift + F` for AeroSpace fullscreen
 3. Use `Ctrl + Cmd + 5` to quickly jump and fullscreen
@@ -53,15 +56,18 @@ When in a Teams meeting:
 ## Recommended Teams Workflow
 
 ### Before Meeting
+
 1. Teams main window is on workspace 5
 2. Join meeting normally - window will auto-float
 
 ### During Meeting
+
 1. **Quick fullscreen**: `Ctrl + Cmd + 5`
 2. **Toggle fullscreen**: `Ctrl + Cmd + Shift + F`
 3. **Exit fullscreen**: `Ctrl + Cmd + Shift + F` again
 
 ### Multiple Participants
+
 - Meeting window floats independently
 - Chat stays on workspace 5 in tiles
 - Use `Alt + Tab` to switch between them
@@ -69,23 +75,31 @@ When in a Teams meeting:
 ## Common Teams Issues & Fixes
 
 ### Issue: Meeting window gets tiled and becomes tiny
+
 **Fix**: Meeting windows now auto-float. If not working:
+
 1. `Ctrl + Cmd + ;` then `f` to toggle floating
 2. Or `Ctrl + Cmd + ;` then `r` to reset
 
 ### Issue: Can't see screen shares properly
-**Fix**: 
+
+**Fix**:
+
 1. Use `Ctrl + Cmd + 5` for instant fullscreen
 2. Meeting windows are set to auto-float for better screen share viewing
 
 ### Issue: Multiple Teams windows mess up workspace
-**Fix**: 
+
+**Fix**:
+
 - Main chat window goes to workspace 5
 - Meeting/call windows auto-float (don't affect tiling)
 - Settings dialogs auto-float
 
 ### Issue: Teams doesn't respond to window manager
+
 **Fix**: This is a known Teams bug on all platforms. Our config works around it by:
+
 - Floating meeting windows (avoids resize conflicts)
 - Using AeroSpace fullscreen instead of native
 - Keeping main window tiled but meetings floating
@@ -95,6 +109,7 @@ When in a Teams meeting:
 If you still have issues:
 
 ### 1. **Float All Teams Windows**
+
 ```toml
 [[on-window-detected]]
 if.app-id = 'com.microsoft.teams2'
@@ -102,11 +117,13 @@ run = ['layout floating']
 ```
 
 ### 2. **Dedicated Teams Workspace**
+
 - Keep workspace 5 just for Teams
 - Use tiles for main window
 - Let meetings auto-float over it
 
 ### 3. **Manual Control**
+
 - Use service mode `f` to toggle any Teams window
 - Use `Ctrl + Cmd + 5` when joining meetings
 
@@ -127,18 +144,23 @@ run = ['layout floating']
 ## Troubleshooting
 
 ### Teams windows still getting tiled
+
 1. Check the app ID: `aerospace list-windows --all | grep -i teams`
 2. Might be `com.microsoft.teams` instead of `com.microsoft.teams2`
 3. Update config accordingly
 
 ### Meeting quality issues
+
 This is often due to Teams + tiling WM interactions:
+
 - Use the auto-float for meetings (already configured)
 - Consider using Teams in browser instead of app
 - Browser Teams works better with tiling managers
 
 ### Multiple meeting windows
+
 Teams sometimes creates multiple windows:
+
 - They should all auto-float with current config
 - Use `Ctrl + 0` to check workspace 0 for lost windows
 
@@ -152,6 +174,7 @@ Teams sometimes creates multiple windows:
 ## Alternative: Teams in Browser
 
 Consider using Teams in Arc/Chrome:
+
 - Better window manager compatibility
 - No app-specific window issues
 - Still has meeting functionality
@@ -161,4 +184,4 @@ Browser Teams works at: https://teams.microsoft.com
 
 ---
 
-*Teams configuration optimized for AeroSpace on 2025-01-20*
+_Teams configuration optimized for AeroSpace on 2025-01-20_

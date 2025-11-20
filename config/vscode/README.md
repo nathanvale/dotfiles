@@ -1,10 +1,12 @@
 # VS Code Configuration
 
-Complete VS Code setup integrated with dotfiles architecture, including Copilot prompts, settings, and task management workflow.
+Complete VS Code setup integrated with dotfiles architecture, including Copilot prompts, settings,
+and task management workflow.
 
 ## Architecture Overview
 
-All VS Code configuration is symlinked from dotfiles, mirroring the standard `.vscode` folder structure from Git repositories:
+All VS Code configuration is symlinked from dotfiles, mirroring the standard `.vscode` folder
+structure from Git repositories:
 
 ```
 ~/code/dotfiles/config/vscode/
@@ -21,6 +23,7 @@ All VS Code configuration is symlinked from dotfiles, mirroring the standard `.v
 This structure matches the standard `.vscode` folder layout used in Git repositories.
 
 **Benefits:**
+
 - ✅ Version controlled in git
 - ✅ Easy restoration on new machines
 - ✅ Single source of truth
@@ -39,6 +42,7 @@ cd ~/code/dotfiles/bin/dotfiles/symlinks
 ```
 
 This creates symlinks for:
+
 - ✅ `settings.json` (includes Copilot auto-approval)
 - ✅ `tasks.json` (VS Code tasks)
 - ✅ `prompts/` (Copilot prompt files)
@@ -62,6 +66,7 @@ ln -sf ~/code/dotfiles/config/vscode/prompts ~/Library/Application\ Support/Code
 ### Enable Prompt Files
 
 After symlinks are created:
+
 1. Open VS Code Settings (Cmd+,)
 2. Search for `chat.promptFiles`
 3. Enable the setting
@@ -73,33 +78,36 @@ The symlinked `settings.json` includes all required configuration:
 
 ```json
 {
-  // Copilot Auto-Approval (Required for /merge and /next prompts)
-  "chat.tools.global.autoApprove": true,
   "chat.agent.maxRequests": 300,
   "chat.promptFiles": true,
 
-  // Editor
-  "editor.formatOnSave": true,
+  // Copilot Auto-Approval (Required for /merge and /next prompts)
+  "chat.tools.global.autoApprove": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit"
-  }
+  },
+  // Editor
+  "editor.formatOnSave": true
 }
 ```
 
 ### What These Settings Do
 
 **`chat.tools.global.autoApprove: true`**
+
 - Enables "YOLO mode" - auto-approves all tool operations
 - Eliminates confirmation dialogs for terminal commands
 - **Required** for `/merge` and `/next` prompts to work
 - Security warning: Not recommended for untrusted workspaces
 
 **`chat.agent.maxRequests: 300`**
+
 - Maximum requests an agent can make before asking to continue
 - Default: 25
 - Prevents "continue iteration" interruptions during complex tasks
 
 **`chat.promptFiles: true`**
+
 - Enables the prompt files feature
 - Required to use `/merge` and `/next` commands
 
@@ -109,18 +117,18 @@ For more control, enable auto-approval only for specific commands:
 
 ```json
 {
-  "chat.tools.terminal.enableAutoApprove": true,
   "chat.tools.terminal.autoApprove": {
+    "chmod": false,
+    "chown": false,
+    "curl": false,
+    "del": false,
+    "eval": false,
+    "kill": false,
     "rm": false,
     "rmdir": false,
-    "del": false,
-    "kill": false,
-    "curl": false,
-    "wget": false,
-    "eval": false,
-    "chmod": false,
-    "chown": false
-  }
+    "wget": false
+  },
+  "chat.tools.terminal.enableAutoApprove": true
 }
 ```
 
@@ -133,11 +141,13 @@ For more control, enable auto-approval only for specific commands:
 Atomically selects, locks, and starts the next highest-priority task.
 
 **Usage:**
+
 ```
 /next
 ```
 
 **Workflow:**
+
 1. Finds READY tasks sorted by priority
 2. Atomically locks task (prevents race conditions)
 3. Reads task requirements
@@ -153,6 +163,7 @@ Atomically selects, locks, and starts the next highest-priority task.
 Merges a completed PR and performs complete cleanup.
 
 **Usage:**
+
 ```
 /merge              # Merge PR from current worktree
 /merge 123          # Merge PR #123
@@ -161,6 +172,7 @@ Merges a completed PR and performs complete cleanup.
 ```
 
 **What it does:**
+
 - Executes `~/.claude/scripts/merge-pr.sh`
 - Detects git provider (GitHub/Azure DevOps)
 - Verifies PR status
@@ -171,6 +183,7 @@ Merges a completed PR and performs complete cleanup.
 - Updates local main branch
 
 **Performance:**
+
 - Optimized with batched API calls (2 instead of 4-5)
 - 40-50% faster than manual workflow
 
@@ -188,6 +201,7 @@ Task       Changes       Process     Everything
 ### Prompt Design Philosophy
 
 Both prompts follow the **delegation pattern**:
+
 - Minimal prompt files that reference command files
 - Single source of truth in `~/.claude/commands/`
 - No duplication of workflow logic
@@ -204,6 +218,7 @@ After installation:
 4. Commands should execute without confirmation dialogs
 
 If you still see permission prompts, verify:
+
 - `settings.json` symlink points to dotfiles
 - `chat.tools.global.autoApprove` is `true` in settings
 - VS Code was reloaded after changing settings
@@ -218,7 +233,8 @@ To sync prompt files across multiple devices:
 
 Your prompt files will now sync across all VS Code installations.
 
-**Note:** Settings Sync also syncs `settings.json`, but the symlink approach ensures you have a local backup in your dotfiles.
+**Note:** Settings Sync also syncs `settings.json`, but the symlink approach ensures you have a
+local backup in your dotfiles.
 
 ## Directory Structure
 

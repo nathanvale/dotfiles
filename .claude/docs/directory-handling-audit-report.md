@@ -1,7 +1,6 @@
 # Directory Handling Audit Report
 
-Generated: 2025-11-17
-Audited: 106 bash scripts in /Users/nathanvale/code/dotfiles
+Generated: 2025-11-17 Audited: 106 bash scripts in /Users/nathanvale/code/dotfiles
 
 ---
 
@@ -11,15 +10,15 @@ Audited: 106 bash scripts in /Users/nathanvale/code/dotfiles
 
 ### Severity Breakdown:
 
-| Severity | Violation Type | Count | Impact |
-|----------|---------------|-------|--------|
-| 🔴 **CRITICAL** | Unhandled `cd` | 11 | Commands run in wrong directory |
-| 🔴 **CRITICAL** | `cd` without error handling | 11 | Same as above |
-| 🟠 **HIGH** | Missing `set -e` | 72 | Scripts continue after errors |
-| 🟡 **MEDIUM** | Hardcoded paths | 37 | Not portable |
-| 🟡 **MEDIUM** | Multiple `cd` calls | 33 | Complex to track |
-| 🟢 **LOW** | Uses `$0` | 58 | Breaks when sourcing |
-| ✅ **GOOD** | Git ops without root | 0 | All scripts properly anchor to git root |
+| Severity        | Violation Type              | Count | Impact                                  |
+| --------------- | --------------------------- | ----- | --------------------------------------- |
+| 🔴 **CRITICAL** | Unhandled `cd`              | 11    | Commands run in wrong directory         |
+| 🔴 **CRITICAL** | `cd` without error handling | 11    | Same as above                           |
+| 🟠 **HIGH**     | Missing `set -e`            | 72    | Scripts continue after errors           |
+| 🟡 **MEDIUM**   | Hardcoded paths             | 37    | Not portable                            |
+| 🟡 **MEDIUM**   | Multiple `cd` calls         | 33    | Complex to track                        |
+| 🟢 **LOW**      | Uses `$0`                   | 58    | Breaks when sourcing                    |
+| ✅ **GOOD**     | Git ops without root        | 0     | All scripts properly anchor to git root |
 
 ---
 
@@ -28,11 +27,13 @@ Audited: 106 bash scripts in /Users/nathanvale/code/dotfiles
 ### 1. Unhandled `cd` Calls (11 scripts)
 
 **Impact**: Script continues in wrong directory if `cd` fails, leading to:
+
 - Data loss (operating on wrong files)
 - Security issues (running commands in unintended locations)
 - Silent failures
 
 **Scripts Affected (Core Only)**:
+
 ```
 bin/dotfiles/symlinks/symlinks_install.sh
 bin/dotfiles/symlinks/symlinks_uninstall.sh
@@ -54,6 +55,7 @@ bin/system/nerd_fonts/nerd_fonts_uninstall.sh
 **Impact**: Scripts continue after errors instead of failing fast.
 
 **Core Scripts Needing Fix**:
+
 ```
 bin/dotfiles/preferences/preferences_backup.sh
 bin/dotfiles/preferences/preferences_restore.sh
@@ -71,7 +73,8 @@ bin/utils/obsidian-restart.sh
 
 **Fix**: Add `set -e` immediately after shebang line.
 
-**Exception**: Library files like `colour_log.sh` should NOT use `set -e` as they're sourced into other scripts.
+**Exception**: Library files like `colour_log.sh` should NOT use `set -e` as they're sourced into
+other scripts.
 
 ---
 
@@ -94,6 +97,7 @@ bin/utils/obsidian-restart.sh
 **Impact**: Breaks when script is sourced instead of executed.
 
 **Core Scripts Affected**:
+
 ```
 bin/dotfiles/symlinks/symlinks_manage.sh
 bin/dotfiles/symlinks/symlinks_install.sh
@@ -192,11 +196,13 @@ set -e  # Exit on error
 ### Template for Replacing `$0`:
 
 **Before**:
+
 ```bash
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ```
 
 **After**:
+
 ```bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ```
@@ -206,6 +212,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ## Exclusions
 
 **Ignored Directories**:
+
 - `.claude/shell-snapshots/` - Auto-generated snapshots (not user-maintained)
 - `.claude/plugins/` - Third-party code
 - `node_modules/` - Dependencies
@@ -245,12 +252,14 @@ To audit specific directory:
 ## Metrics
 
 **Before Fixes**:
+
 - Total Scripts: 106
 - Total Violations: 222
 - Scripts with Violations: ~80 (75%)
 - Average Violations per Script: 2.8
 
 **Target After Fixes**:
+
 - Critical Violations: 0
 - High Priority Violations: < 5
 - Scripts Following Best Practices: > 90%

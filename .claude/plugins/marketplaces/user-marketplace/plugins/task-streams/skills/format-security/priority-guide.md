@@ -1,6 +1,7 @@
 # Priority Classification Guide for Security Findings
 
-Maps security vulnerabilities to P0-P3 priorities using industry-standard severity frameworks (CVSS, OWASP).
+Maps security vulnerabilities to P0-P3 priorities using industry-standard severity frameworks (CVSS,
+OWASP).
 
 ## Priority Classification Rules
 
@@ -22,9 +23,7 @@ Maps security vulnerabilities to P0-P3 priorities using industry-standard severi
 - User passwords stored in plaintext
 - Deserialization vulnerability allowing RCE
 
-**CVSS Score:** 9.0-10.0 (Critical)
-**OWASP Risk:** Critical
-**Timeline:** Patch within 24-48 hours
+**CVSS Score:** 9.0-10.0 (Critical) **OWASP Risk:** Critical **Timeline:** Patch within 24-48 hours
 
 ---
 
@@ -46,9 +45,7 @@ Maps security vulnerabilities to P0-P3 priorities using industry-standard severi
 - Missing Content-Security-Policy header
 - API allows unlimited requests (DoS risk)
 
-**CVSS Score:** 7.0-8.9 (High)
-**OWASP Risk:** High
-**Timeline:** Patch within 1 week
+**CVSS Score:** 7.0-8.9 (High) **OWASP Risk:** High **Timeline:** Patch within 1 week
 
 ---
 
@@ -70,9 +67,7 @@ Maps security vulnerabilities to P0-P3 priorities using industry-standard severi
 - Dependency with CVE-2023-XXXX (CVSS 5.0)
 - Missing input length validation
 
-**CVSS Score:** 4.0-6.9 (Medium)
-**OWASP Risk:** Medium
-**Timeline:** Patch within 30 days
+**CVSS Score:** 4.0-6.9 (Medium) **OWASP Risk:** Medium **Timeline:** Patch within 30 days
 
 ---
 
@@ -94,9 +89,7 @@ Maps security vulnerabilities to P0-P3 priorities using industry-standard severi
 - Missing security incident response plan
 - Overly permissive file permissions
 
-**CVSS Score:** 0.1-3.9 (Low)
-**OWASP Risk:** Low
-**Timeline:** Patch within next quarter
+**CVSS Score:** 0.1-3.9 (Low) **OWASP Risk:** Low **Timeline:** Patch within next quarter
 
 ---
 

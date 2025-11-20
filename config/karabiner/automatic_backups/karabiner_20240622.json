@@ -454,8 +454,8 @@
               {
                 "conditions": [
                   {
-                    "type": "variable_if",
                     "name": "ctrl_command_pressed",
+                    "type": "variable_if",
                     "value": 1
                   }
                 ],

@@ -30,7 +30,6 @@ Each HyperFlow shortcut uses this manipulator structure:
 
 ```json
 {
-  "type": "basic",
   "from": {
     "key_code": "KEY_HERE",
     "modifiers": {
@@ -41,23 +40,31 @@ Each HyperFlow shortcut uses this manipulator structure:
     {
       "shell_command": "/Users/USERNAME/bin/hyperflow ARGUMENT"
     }
-  ]
+  ],
+  "type": "basic"
 }
 ```
 
 ## Key Components
 
 ### from.key_code
-Valid values: `a-z`, `0-9`, `spacebar`, `return_or_enter`, `escape`, `left_arrow`, `right_arrow`, `up_arrow`, `down_arrow`, `grave_accent_and_tilde`, `backslash`, `open_bracket`, `close_bracket`, etc.
+
+Valid values: `a-z`, `0-9`, `spacebar`, `return_or_enter`, `escape`, `left_arrow`, `right_arrow`,
+`up_arrow`, `down_arrow`, `grave_accent_and_tilde`, `backslash`, `open_bracket`, `close_bracket`,
+etc.
 
 ### from.modifiers.mandatory
+
 For Hyper key bindings, always use:
+
 ```json
 ["left_control", "left_option", "left_command", "left_shift"]
 ```
 
 ### to.shell_command
+
 The command to execute. Must be absolute path:
+
 ```bash
 "/Users/USERNAME/bin/hyperflow <argument>"
 ```
@@ -69,7 +76,6 @@ The command to execute. Must be absolute path:
   "description": "Hyper+G → Launch Messages",
   "manipulators": [
     {
-      "type": "basic",
       "from": {
         "key_code": "g",
         "modifiers": {
@@ -80,7 +86,8 @@ The command to execute. Must be absolute path:
         {
           "shell_command": "/Users/nathanvale/bin/hyperflow m"
         }
-      ]
+      ],
+      "type": "basic"
     }
   ]
 }
@@ -95,7 +102,6 @@ These use `key_code` in the `to` field instead of `shell_command`:
   "description": "Hyper+H → Left Arrow",
   "manipulators": [
     {
-      "type": "basic",
       "from": {
         "key_code": "h",
         "modifiers": {
@@ -106,7 +112,8 @@ These use `key_code` in the `to` field instead of `shell_command`:
         {
           "key_code": "left_arrow"
         }
-      ]
+      ],
+      "type": "basic"
     }
   ]
 }

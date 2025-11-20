@@ -41,6 +41,7 @@ ISSUES_FOUND="false"       # From file-analyzer
 ### WORKFLOW
 
 **Step 1: Discover Latest Manifests**
+
 ```bash
 LATEST_PHASE_A=$(ls -t "$MIGRATIONS_DIR"/*.json 2>/dev/null | head -1)
 LATEST_PHASE_B=$(ls -t "$ATTACHMENTS_DIR"/*.json 2>/dev/null | \
@@ -60,6 +61,7 @@ echo "  Phase B: $(basename "$LATEST_PHASE_B")"
 ```
 
 **Step 2: Build CLI Command**
+
 ```bash
 # Build flags
 LIMIT_FLAG=""
@@ -79,6 +81,7 @@ echo "✅ Command built: $CLI_CMD"
 ```
 
 **Step 3: Execute Migration**
+
 ```bash
 echo "🚀 Running migration..."
 eval "$CLI_CMD" 2>&1 | tee "$OUTPUT_FILE"
@@ -95,6 +98,7 @@ echo "✅ Migration completed (exit code: $EXIT_CODE)"
 ```
 
 **Step 4: Extract Correlation ID**
+
 ```bash
 CORRELATION_ID=$(grep -o 'Correlation ID: [a-f0-9-]*' "$OUTPUT_FILE" | head -1 | cut -d' ' -f3)
 
@@ -206,6 +210,7 @@ Consolidate findings:
 ### FINAL VALIDATION
 
 Checklist:
+
 - ✅ Both manifests found
 - ✅ Migration executed
 - ✅ Correlation ID extracted

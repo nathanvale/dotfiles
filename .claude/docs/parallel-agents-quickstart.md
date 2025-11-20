@@ -1,6 +1,7 @@
 # Parallel Claude Agents - Quick Start
 
-**TL;DR**: Press `Ctrl-g P` in tmux to launch multiple Claude agents in parallel. Your "Scenario 3" dream is now real! 🚀
+**TL;DR**: Press `Ctrl-g P` in tmux to launch multiple Claude agents in parallel. Your "Scenario 3"
+dream is now real! 🚀
 
 ## The 30-Second Version
 
@@ -12,12 +13,12 @@
 
 ### Tmux Keybindings
 
-| Key | Action |
-|-----|--------|
+| Key        | Action                              |
+| ---------- | ----------------------------------- |
 | `Ctrl-g P` | Launch parallel agents (popup menu) |
-| `Ctrl-g M` | Task monitor dashboard |
-| `Ctrl-g o` | Cycle through agent panes |
-| `Ctrl-g z` | Zoom into single pane |
+| `Ctrl-g M` | Task monitor dashboard              |
+| `Ctrl-g o` | Cycle through agent panes           |
+| `Ctrl-g z` | Zoom into single pane               |
 
 ### Command Line
 
@@ -34,14 +35,15 @@
 
 ## How Many Agents Should I Run?
 
-| Goal | Agents | Use Case |
-|------|--------|----------|
-| Quick burst | 2-4 | Process a few high-priority tasks |
-| Sprint work | 4-6 | Complete a feature across multiple tasks |
-| Batch processing | 8-12 | Large refactoring or cleanup |
-| Max throughput | 10-20 | You have many READY tasks and want speed |
+| Goal             | Agents | Use Case                                 |
+| ---------------- | ------ | ---------------------------------------- |
+| Quick burst      | 2-4    | Process a few high-priority tasks        |
+| Sprint work      | 4-6    | Complete a feature across multiple tasks |
+| Batch processing | 8-12   | Large refactoring or cleanup             |
+| Max throughput   | 10-20  | You have many READY tasks and want speed |
 
 **Screen size matters:**
+
 - 13" laptop: 2-4 agents
 - 15" laptop: 4-6 agents
 - 27" monitor: 6-10 agents
@@ -74,6 +76,7 @@
 ```
 
 Your tmux window will have 4 panes in a 2x2 grid:
+
 ```
 ┌──────────┬──────────┐
 │ Agent 1  │ Agent 2  │
@@ -148,6 +151,7 @@ Your tmux window will have 4 panes in a 2x2 grid:
 ### Why the Stagger Delay?
 
 **Without stagger** (all launch at once):
+
 ```
 Agent 1 → find-next-task → T0033 ❌ (race condition)
 Agent 2 → find-next-task → T0033 ❌ (same task!)
@@ -156,6 +160,7 @@ Agent 4 → find-next-task → T0033 ❌ (disaster!)
 ```
 
 **With 2-second stagger**:
+
 ```
 Agent 1 → find-next-task → T0033 → Lock created ✅
 (2s delay)
@@ -217,52 +222,60 @@ windows:
   - tasks:
       layout: tiled
       panes:
-        - source ~/code/dotfiles/config/tmuxinator/scripts/common-setup.sh && setup_parallel_task_pane tasks 0 true
-        - source ~/code/dotfiles/config/tmuxinator/scripts/common-setup.sh && setup_parallel_task_pane tasks 1 true
-        - source ~/code/dotfiles/config/tmuxinator/scripts/common-setup.sh && setup_parallel_task_pane tasks 2 true
-        - source ~/code/dotfiles/config/tmuxinator/scripts/common-setup.sh && setup_parallel_task_pane tasks 3 true
+        - source ~/code/dotfiles/config/tmuxinator/scripts/common-setup.sh &&
+          setup_parallel_task_pane tasks 0 true
+        - source ~/code/dotfiles/config/tmuxinator/scripts/common-setup.sh &&
+          setup_parallel_task_pane tasks 1 true
+        - source ~/code/dotfiles/config/tmuxinator/scripts/common-setup.sh &&
+          setup_parallel_task_pane tasks 2 true
+        - source ~/code/dotfiles/config/tmuxinator/scripts/common-setup.sh &&
+          setup_parallel_task_pane tasks 3 true
 ```
 
 ## Troubleshooting
 
 ### "No tasks available"
+
 → All READY tasks have unmet dependencies. Check `Ctrl-g M` for task stats.
 
 ### Agents selecting same task
+
 → Increase stagger delay in `bin/tmux/parallel-claude.sh`:
+
 ```bash
 STAGGER_DELAY=3  # Default: 2
 ```
 
 ### Stale locks blocking tasks
+
 → Auto-cleaned by PID validation, or manually:
+
 ```bash
 rm .claude/state/task-locks/*.lock
 ```
 
 ### Too many agents for screen
+
 → Use `Ctrl-g z` to zoom individual panes, or launch fewer agents
 
 ## What NOT to Do
 
-❌ **Don't** manually run `/next` in each pane (it's automatic with `auto_launch=true`)
-❌ **Don't** launch more agents than you have READY tasks
-❌ **Don't** launch agents if tasks have complex interdependencies
-❌ **Don't** forget to monitor first few runs with `Ctrl-g M`
+❌ **Don't** manually run `/next` in each pane (it's automatic with `auto_launch=true`) ❌ **Don't**
+launch more agents than you have READY tasks ❌ **Don't** launch agents if tasks have complex
+interdependencies ❌ **Don't** forget to monitor first few runs with `Ctrl-g M`
 
 ## What to Do Instead
 
-✅ **Do** use parallel agents for independent tasks
-✅ **Do** monitor first run to verify coordination
-✅ **Do** start with 2-4 agents before scaling to 10
-✅ **Do** use task monitor dashboard to track progress
-✅ **Do** set proper task dependencies in frontmatter
+✅ **Do** use parallel agents for independent tasks ✅ **Do** monitor first run to verify
+coordination ✅ **Do** start with 2-4 agents before scaling to 10 ✅ **Do** use task monitor
+dashboard to track progress ✅ **Do** set proper task dependencies in frontmatter
 
 ## Your "Scenario 3" is Real! 🎉
 
 Remember when you said:
 
-> "I'd have four running at once, and I could see four cloud agents in four different Tmux terminals working away, stopping starting, and handling conflicts"
+> "I'd have four running at once, and I could see four cloud agents in four different Tmux terminals
+> working away, stopping starting, and handling conflicts"
 
 **That's exactly what this does!** Press `Ctrl-g P`, select `4`, and watch your vision come to life.
 
@@ -272,11 +285,11 @@ Want 10 agents instead? No problem. Just press `Ctrl-g P` → `10`.
 
 ## Full Documentation
 
-For detailed architecture, integration patterns, and advanced usage:
-→ `.claude/docs/parallel-claude-agents.md`
+For detailed architecture, integration patterns, and advanced usage: →
+`.claude/docs/parallel-claude-agents.md`
 
-For the research that validates this approach:
-→ `.claude/docs/research/parallel-claude-agents-tmux-worktrees.md`
+For the research that validates this approach: →
+`.claude/docs/research/parallel-claude-agents-tmux-worktrees.md`
 
 ---
 

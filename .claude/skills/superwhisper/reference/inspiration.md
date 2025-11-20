@@ -5,11 +5,13 @@
 ## Featured Community Projects
 
 ### 🏆 Alfred-SuperWhisper Workflow
+
 **Most Popular Integration** (112 GitHub stars)
 
 **Repository**: https://github.com/ognistik/alfred-superwhisper
 
 **What it does**:
+
 - Control SuperWhisper entirely from Alfred
 - Switch modes with fuzzy search
 - Set up 6+ custom hotkeys for instant mode+record
@@ -20,6 +22,7 @@
 - Auto-copy selected text before recording
 
 **Power user features**:
+
 - External trigger support for complex automations
 - Keyboard shortcuts color-coded by function
 - Integration with copySelect CLI tool
@@ -32,11 +35,14 @@
 ---
 
 ### 💻 Voice-Driven Coding (Cursor AI)
+
 **Hands-Free Development**
 
-**Tutorial**: https://rolloutit.net/code-without-typing-integration-between-cursor-ai-and-superwhisper/
+**Tutorial**:
+https://rolloutit.net/code-without-typing-integration-between-cursor-ai-and-superwhisper/
 
 **What it demonstrates**:
+
 - Creating custom "Python Coding" mode
 - Auto-activation when Cursor is focused
 - Voice commands for code generation: "Write code to input a CSV file"
@@ -44,6 +50,7 @@
 - Complex function dictation: "Define a function named get_state_code that extracts..."
 
 **Real workflow example**:
+
 ```
 1. Open Cursor AI
 2. Custom mode auto-activates
@@ -58,6 +65,7 @@
 **Key insight**: Voice works for structured technical content with proper mode configuration
 
 **Use cases**:
+
 - Accessibility for developers with physical limitations
 - Reducing RSI from excessive typing
 - Pair programming dictation
@@ -68,9 +76,11 @@
 ### 🎬 Video Tutorials
 
 #### "The True Value of Superwhisper: Unlimited AI & Powerful Possibilities"
+
 **URL**: https://www.youtube.com/watch?v=V5a4pmNLEKE
 
 **Covers**:
+
 - Going beyond basic dictation
 - Understanding JSON mode files
 - Practical workflow tips
@@ -80,15 +90,18 @@
 ---
 
 #### "Pro AI Dictation Tips: Mastering Context Awareness"
+
 **URL**: https://www.youtube.com/watch?v=py3szwKAZYU
 
 **Topics**:
+
 - Context awareness deep dive
 - Selected text vs clipboard
 - Application context usage
 - Prompting tips for custom modes
 
 **Resources mentioned**:
+
 - Workflow: https://github.com/ognistik/alfred-superwhisper
 - Reprocessing script: https://pastebin.com/DAkbTHgC
 - Prompting tips guide
@@ -96,9 +109,11 @@
 ---
 
 #### "Voice Automation with Context: ChatGPT, Superwhisper, & Alter"
+
 **URL**: https://www.youtube.com/watch?v=283-z29TXeM
 
 **Demonstrates**:
+
 - Macrowhisper context features
 - Routing dictation based on context
 - Advanced automation patterns
@@ -106,9 +121,11 @@
 ---
 
 #### "Macrowhisper: Voice Automation for Superwhisper"
+
 **URL**: https://www.youtube.com/watch?v=R4yQoMnEjOk
 
 **About Macrowhisper**:
+
 - Voice automation helper tool
 - Menu bar mode indicators
 - Action modes
@@ -119,9 +136,11 @@
 ---
 
 #### "Automate Superwhisper Dictation with Keyboard Maestro"
+
 **URL**: https://www.youtube.com/watch?v=AFzWd_MAa4o
 
 **Shows**:
+
 - Keyboard Maestro macro collection
 - Automating mode switching
 - Custom workflow triggers
@@ -131,15 +150,18 @@
 ## Official Documentation
 
 ### Custom Mode Deep Dive
+
 **URL**: https://superwhisper.com/docs/modes/custom
 
 **Key concepts**:
+
 - AI instruction customization
 - Context awareness (app, clipboard, selected text)
 - XML-structured prompts for complex instructions
 - Example-based AI training
 
 **Context naming conventions**:
+
 - `User Message` - Your dictated text
 - `Application Context` - Active app data
 - `Selected Text` - Highlighted text
@@ -148,15 +170,18 @@
 ---
 
 ### Mode Switching Methods
+
 **URL**: https://superwhisper.com/docs/modes/switching-modes
 
 **Four ways to switch**:
+
 1. Keyboard shortcut (cycle through modes)
 2. Menu bar selection
 3. Auto-activation rules (per app/website)
 4. Deep links for automation
 
 **Deep link patterns**:
+
 ```bash
 # Switch mode
 superwhisper://mode?key=YOUR_MODE_KEY
@@ -173,9 +198,11 @@ superwhisper://mode?key=email-mode&record=true
 ---
 
 ### Settings & Shortcuts
+
 **URL**: https://superwhisper.com/docs/get-started/settings
 
 **Deep links reference**:
+
 - Quick access to features
 - Automation integration
 - Workflow enhancement
@@ -183,9 +210,11 @@ superwhisper://mode?key=email-mode&record=true
 ---
 
 ### Customizing Built-In Modes
+
 **URL**: https://superwhisper.com/docs/modes/customizing-modes
 
 **Learn**:
+
 - Accessing AI instructions
 - Making adjustments to existing modes
 - Creating customized versions
@@ -195,9 +224,11 @@ superwhisper://mode?key=email-mode&record=true
 ## Third-Party Integrations
 
 ### Raycast Extension
+
 **URL**: https://www.raycast.com/nchudleigh/superwhisper
 
 **Features**:
+
 - Quick mode switching
 - Recording triggers
 - Mode management
@@ -205,9 +236,11 @@ superwhisper://mode?key=email-mode&record=true
 ---
 
 ### Alfred Workflow (Detailed)
+
 **URL**: https://github.com/ognistik/alfred-superwhisper
 
 **Documentation highlights**:
+
 - Custom hotkey setup
 - External trigger usage
 - copySelect CLI integration
@@ -215,6 +248,7 @@ superwhisper://mode?key=email-mode&record=true
 - JSON file management
 
 **Advanced patterns**:
+
 ```
 # External trigger: sw
 Arguments:
@@ -232,9 +266,11 @@ Arguments:
 ## Community Discussions
 
 ### Reddit: Voice Automation Helper
+
 **URL**: https://www.reddit.com/r/macapps/comments/1lsct7i/voice_automation_helper_for_superwhisper/
 
 **Topics**:
+
 - Macrowhisper announcement
 - Real-time API integration
 - Cost considerations
@@ -242,9 +278,12 @@ Arguments:
 ---
 
 ### Reddit: SuperWhisper vs BetterDictation
-**URL**: https://www.reddit.com/r/ProductivityApps/comments/18oatu3/whats_better_superwhisper_or_betterdictation/
+
+**URL**:
+https://www.reddit.com/r/ProductivityApps/comments/18oatu3/whats_better_superwhisper_or_betterdictation/
 
 **Insights**:
+
 - AI-powered writing styles
 - Different modes for different occasions
 - Productivity comparisons
@@ -254,9 +293,11 @@ Arguments:
 ## Blog Posts & Articles
 
 ### "Choosing the Right AI Dictation App for Mac"
+
 **URL**: https://afadingthought.substack.com/p/best-ai-dictation-tools-for-mac
 
 **Covers**:
+
 - Data handling comparison
 - Deep links implementation
 - Alfred workflow creation
@@ -265,9 +306,12 @@ Arguments:
 ---
 
 ### "How I use Superwhisper to send emails and messages"
-**URL**: https://www.linkedin.com/posts/sampcrockett_ever-wish-your-thoughts-could-just-become-activity-7333945242552881152-C5w_
+
+**URL**:
+https://www.linkedin.com/posts/sampcrockett_ever-wish-your-thoughts-could-just-become-activity-7333945242552881152-C5w_
 
 **Real-world usage**:
+
 - Email composition
 - Slack messages
 - Meeting notes
@@ -278,9 +322,11 @@ Arguments:
 ## Technical References
 
 ### Deep Links Documentation
+
 **Official**: https://superwhisper.com/docs/modes/switching-modes#deep-links
 
 **Patterns**:
+
 ```bash
 # Mode switching
 superwhisper://mode?key=MODE_KEY
@@ -293,6 +339,7 @@ superwhisper://mode?key=custom-email&record=true
 ```
 
 **Finding mode keys**:
+
 - Location: `~/Documents/superwhisper/modes/`
 - Quick Look JSON files
 - Check "key" field in JSON
@@ -300,19 +347,21 @@ superwhisper://mode?key=custom-email&record=true
 ---
 
 ### Mode Files Location
+
 **Path**: `~/Documents/superwhisper/modes/*.json`
 
 **Structure**:
+
 ```json
 {
-  "name": "Custom Mode Name",
-  "key": "custom-mode-key",
-  "instructions": "AI processing instructions...",
   "context": {
+    "activeApp": true,
     "clipboard": true,
-    "selection": true,
-    "activeApp": true
-  }
+    "selection": true
+  },
+  "instructions": "AI processing instructions...",
+  "key": "custom-mode-key",
+  "name": "Custom Mode Name"
 }
 ```
 
@@ -321,33 +370,42 @@ superwhisper://mode?key=custom-email&record=true
 ## Automation Tool Compatibility
 
 ### Keyboard Maestro
+
 - Macro triggers for mode switching
 - Integration with voice commands
 - Workflow automation
 
 ### Karabiner-Elements
+
 **URL**: https://karabiner-elements.pqrs.org/
 
 **Uses**:
+
 - Custom keyboard shortcuts
 - Complex key combinations
 - Key layer creation
 - F+G for recording example
 
 ### Hammerspoon
+
 **Use case**: Window automation + mode switching
+
 - Auto-detect apps
 - Trigger mode changes
 - Meeting detection (Zoom/Teams)
 
 ### Alfred
+
 **Most mature integration**
+
 - Complete mode control
 - History management
 - External trigger support
 
 ### Raycast
+
 **Official extension available**
+
 - Quick mode access
 - Simple integration
 
@@ -356,9 +414,11 @@ superwhisper://mode?key=custom-email&record=true
 ## Advanced Workflow Patterns
 
 ### 1. Context-Stacking Pattern
+
 **Sources**: Alfred workflow, Custom mode docs
 
 **Technique**:
+
 - Combine clipboard + selected text + active app
 - Rich context for AI processing
 - Intelligent output formatting
@@ -368,9 +428,11 @@ superwhisper://mode?key=custom-email&record=true
 ---
 
 ### 2. Voice as Trigger Pattern
+
 **Sources**: Macrowhisper, Keyboard Maestro videos
 
 **Technique**:
+
 - Voice commands launch workflows
 - Multi-step automation
 - External API calls
@@ -380,9 +442,11 @@ superwhisper://mode?key=custom-email&record=true
 ---
 
 ### 3. Auto-Activation Pattern
+
 **Sources**: Official docs, Video tutorials
 
 **Technique**:
+
 - Per-app mode switching
 - Website-specific modes
 - Time-based rules
@@ -392,9 +456,11 @@ superwhisper://mode?key=custom-email&record=true
 ---
 
 ### 4. Reprocessing Pattern
+
 **Sources**: Alfred workflow, Reprocessing script
 
 **Technique**:
+
 - Take one recording
 - Apply multiple modes
 - Generate different outputs
@@ -406,6 +472,7 @@ superwhisper://mode?key=custom-email&record=true
 ## Power User Keyboard Setups
 
 ### Common Patterns (from Alfred workflow docs)
+
 - **F+G**: Start recording (ergonomic combo)
 - **Keyboard layers**: Press 'A' for mode layer
   - A+E = Email mode
@@ -415,6 +482,7 @@ superwhisper://mode?key=custom-email&record=true
 - **Modifier cycling**: Hold modifier, tap to cycle modes
 
 ### Karabiner Integration
+
 - No loss of common shortcuts
 - Complex combinations without conflicts
 - Press-and-hold for quick dictation
@@ -425,9 +493,11 @@ superwhisper://mode?key=custom-email&record=true
 ## Real-World Use Cases
 
 ### Accessibility
+
 **Source**: Cursor AI integration article
 
 **Applications**:
+
 - RSI/carpal tunnel relief
 - Physical limitation accommodation
 - Fatigue reduction
@@ -436,9 +506,11 @@ superwhisper://mode?key=custom-email&record=true
 ---
 
 ### Knowledge Work
+
 **Sources**: Video tutorials, Blog posts
 
 **Applications**:
+
 - Research compilation
 - Note-taking
 - Documentation
@@ -447,9 +519,11 @@ superwhisper://mode?key=custom-email&record=true
 ---
 
 ### Communication
+
 **Sources**: LinkedIn post, Custom mode docs
 
 **Applications**:
+
 - Email drafting
 - Slack messages
 - Meeting notes
@@ -458,9 +532,11 @@ superwhisper://mode?key=custom-email&record=true
 ---
 
 ### Development
+
 **Sources**: Cursor AI tutorial, GitHub discussions
 
 **Applications**:
+
 - Code documentation
 - Function generation
 - Pair programming
@@ -483,15 +559,18 @@ superwhisper://mode?key=custom-email&record=true
 ### Essential Resources
 
 **Must-read**:
+
 - Custom mode documentation
 - Mode switching guide
 - Alfred workflow README
 
 **Must-watch**:
+
 - "True Value of Superwhisper" overview
 - "Pro AI Dictation Tips" for context mastery
 
 **Must-try**:
+
 - Alfred workflow for instant productivity boost
 - Custom mode with context awareness
 - Deep link automation example
@@ -501,10 +580,12 @@ superwhisper://mode?key=custom-email&record=true
 ## Community & Support
 
 ### Official Channels
+
 - **Discord**: https://discord.gg/gSmWdAkdwd (mentioned in videos)
 - **Documentation**: https://superwhisper.com/docs
 
 ### Community Projects
+
 - **Alfred Workflow**: GitHub issues and discussions
 - **Macrowhisper**: https://by.afadingthought.com/macrowhisper
 - **Video tutorials**: YouTube comments for Q&A
@@ -524,5 +605,5 @@ From analyzing community usage:
 
 ---
 
-**Last Updated**: Based on 2025 community research using Firecrawl
-**Sources Checked**: GitHub, YouTube, SuperWhisper docs, Reddit, LinkedIn, blogs
+**Last Updated**: Based on 2025 community research using Firecrawl **Sources Checked**: GitHub,
+YouTube, SuperWhisper docs, Reddit, LinkedIn, blogs

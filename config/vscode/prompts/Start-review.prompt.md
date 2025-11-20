@@ -5,9 +5,11 @@ argument-hint: "Optional: review name or leave empty to be prompted"
 agent: "agent"
 ---
 
-Follow the exact instructions defined in `~/.claude/commands/start-review.md` to execute the review decomposition workflow.
+Follow the exact instructions defined in `~/.claude/commands/start-review.md` to execute the review
+decomposition workflow.
 
-If `~/.claude/commands/start-review.md` doesn't exist in this workspace, inform the user that this workspace doesn't have the Claude Code task management system configured.
+If `~/.claude/commands/start-review.md` doesn't exist in this workspace, inform the user that this
+workspace doesn't have the Claude Code task management system configured.
 
 ## Input
 

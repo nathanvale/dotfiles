@@ -1,11 +1,17 @@
 ---
 name: component-manager
-description: Manage component registry for task categorization. List, find, and add components. State stored in .claude/state/task-streams/component-manager.json (gitignored). Auto-initializes with C00 "General / Cross-Cutting" on first use. Returns component codes like C01, C02. Use when user says 'list components', 'add component', 'find component', 'categorize tasks by component', or when organizing tasks by system module. (project, gitignored)
+description:
+  Manage component registry for task categorization. List, find, and add components. State stored in
+  .claude/state/task-streams/component-manager.json (gitignored). Auto-initializes with C00 "General
+  / Cross-Cutting" on first use. Returns component codes like C01, C02. Use when user says 'list
+  components', 'add component', 'find component', 'categorize tasks by component', or when
+  organizing tasks by system module. (project, gitignored)
 ---
 
 # Component Manager Skill
 
-Deterministic TypeScript script for managing component registry (C00-C99) to categorize tasks by system module.
+Deterministic TypeScript script for managing component registry (C00-C99) to categorize tasks by
+system module.
 
 ## Purpose
 
@@ -22,7 +28,8 @@ Maintains consistent component classification system for:
 
 - `manage.ts` - Bun/TypeScript script with operations: `--list`, `--find`, `--add`
 - **State file:** `.claude/state/task-streams/component-manager.json` (project-specific, gitignored)
-- **State location:** Uses `process.cwd()` when called from Claude Code Task agents (always the project directory)
+- **State location:** Uses `process.cwd()` when called from Claude Code Task agents (always the
+  project directory)
 - **Auto-initialization:** Creates state file with C00 on first use
 - **Exit codes:** 0 (success), 1 (error/not found)
 - **Output:** Returns just component codes (e.g., "C02") for automation
@@ -111,17 +118,17 @@ bun manage.ts --add="Service Factory"
 // In format-spec, format-bug-findings, etc.
 
 // 1. Extract component name from finding
-const componentName = extractComponentName(finding)
+const componentName = extractComponentName(finding);
 // Example: "Authentication service" → "Authentication"
 
 // 2. Find or create component
-const componentCode = await execBun("manage.ts", ["--find=" + componentName])
+const componentCode = await execBun("manage.ts", ["--find=" + componentName]);
 // If exit code 1 (not found):
-const newCode = await execBun("manage.ts", ["--add=" + componentName])
+const newCode = await execBun("manage.ts", ["--add=" + componentName]);
 
 // 3. Include in task metadata
-task.component = componentCode
-task.componentName = componentName
+task.component = componentCode;
+task.componentName = componentName;
 ```
 
 ### With id-generator
@@ -293,7 +300,8 @@ bun manage.ts                  # Exit 1 (no operation specified)
 
 ## Notes
 
-For detailed state file architecture, component naming conventions, querying patterns, and integration examples, see @reference.md.
+For detailed state file architecture, component naming conventions, querying patterns, and
+integration examples, see @reference.md.
 
 - **Deterministic:** Script-based, not LLM-generated responses
 - **Idempotent:** Same input always produces same output

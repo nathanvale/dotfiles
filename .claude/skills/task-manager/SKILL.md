@@ -1,16 +1,35 @@
 ---
 name: task-manager
-description: Automated task lifecycle orchestrator for docs/tasks/ directory - identifies next ready tasks by priority, loads full context from markdown files, guides TDD implementation with Wallaby MCP, runs quality checks, and tracks completion. Use when user says "start next task", "what should I work on", "show ready tasks", or mentions specific task IDs like "start T0001".
-allowed-tools: [Read, Edit, Bash, Glob, Grep, TodoWrite, Task, mcp__wallaby__wallaby_allTestsForFile, mcp__wallaby__wallaby_coveredLinesForFile, mcp__wallaby__wallaby_failingTests, mcp__wallaby__wallaby_testById]
+description:
+  Automated task lifecycle orchestrator for docs/tasks/ directory - identifies next ready tasks by
+  priority, loads full context from markdown files, guides TDD implementation with Wallaby MCP, runs
+  quality checks, and tracks completion. Use when user says "start next task", "what should I work
+  on", "show ready tasks", or mentions specific task IDs like "start T0001".
+allowed-tools:
+  [
+    Read,
+    Edit,
+    Bash,
+    Glob,
+    Grep,
+    TodoWrite,
+    Task,
+    mcp__wallaby__wallaby_allTestsForFile,
+    mcp__wallaby__wallaby_coveredLinesForFile,
+    mcp__wallaby__wallaby_failingTests,
+    mcp__wallaby__wallaby_testById,
+  ]
 ---
 
 # Task Manager Skill v2.0.0
 
-Automates the complete task lifecycle for migration CLI development: selection, context loading, implementation guidance, quality validation, and completion tracking.
+Automates the complete task lifecycle for migration CLI development: selection, context loading,
+implementation guidance, quality validation, and completion tracking.
 
 ## Version History
 
-- **v2.0.0** (2025-11-07): Script-based selection (95% token savings), multi-file task support, corrected task format parsing
+- **v2.0.0** (2025-11-07): Script-based selection (95% token savings), multi-file task support,
+  corrected task format parsing
 - **v1.0.0** (2025-10-01): Initial release with TASKS.md-based selection
 
 ## When to Use This Skill
@@ -122,21 +141,21 @@ bun ~/.claude/skills/task-manager/select-task.ts --show-ready
 
 ```json
 {
+  "readyTasks": [
+    { "id": "T0001", "priority": "P0", "title": "..." },
+    { "id": "T0003", "priority": "P1", "title": "..." }
+  ],
   "success": true,
   "task": {
-    "id": "T0001",
-    "title": "Fix query execution error in ContactRepository.findByName()",
-    "priority": "P0",
-    "status": "READY",
     "component": "C01",
-    "filePath": "docs/tasks/T0001-fix-query-execution-error-findbyname.md",
     "created": "2025-11-07T00:00:00Z",
-    "source": "docs/bugs/2025-11-07-migration-contact-creation-failure-100-percent.md"
-  },
-  "readyTasks": [
-    {"id": "T0001", "priority": "P0", "title": "..."},
-    {"id": "T0003", "priority": "P1", "title": "..."}
-  ]
+    "filePath": "docs/tasks/T0001-fix-query-execution-error-findbyname.md",
+    "id": "T0001",
+    "priority": "P0",
+    "source": "docs/bugs/2025-11-07-migration-contact-creation-failure-100-percent.md",
+    "status": "READY",
+    "title": "Fix query execution error in ContactRepository.findByName()"
+  }
 }
 ```
 
@@ -165,6 +184,7 @@ cat docs/tasks/T0001-fix-query-execution-error-findbyname.md
    - Root cause analysis
 
 3. **Acceptance Criteria** (as checklist):
+
    ```
    - [ ] Mock query() returns empty array [] when no contacts match filter
    - [ ] findByName() returns null when no contacts found
@@ -222,6 +242,7 @@ cat docs/tasks/T0001-fix-query-execution-error-findbyname.md
 2. **Enforce TDD workflow** by STRICTLY following the test matrix:
    - Parse Testing Requirements table from task file
    - **Write tests FIRST** (never code before tests):
+
      ```bash
      # Check current test status
      bun ~/.claude/skills/task-manager/check-tests.ts T0001
@@ -229,10 +250,12 @@ cat docs/tasks/T0001-fix-query-execution-error-findbyname.md
      # Verify tests are failing (RED state)
      # Use Wallaby MCP: mcp__wallaby__wallaby_failingTests
      ```
+
    - Write unit tests first, then integration tests, then E2E
    - Verify each test fails before implementing (RED)
    - Implement code to make tests pass (GREEN)
    - Refactor while keeping tests green (REFACTOR)
+
 3. **Extract code examples** from task file's Code Examples section
 4. **Apply TypeScript quality patterns** from `.claude/rules/typescript-patterns-condensed.md`
 5. **Use Wallaby MCP tools** throughout:
@@ -253,6 +276,7 @@ cat docs/tasks/T0001-fix-query-execution-error-findbyname.md
 2. **Wait for user confirmation** ("yes", "proceed", "go ahead")
 
 3. **CRITICAL - Update task status**:
+
    ```bash
    # Update status: READY → IN_PROGRESS
    # Edit docs/tasks/T####-*.md frontmatter
@@ -282,6 +306,7 @@ cat docs/tasks/T0001-fix-query-execution-error-findbyname.md
    - Track progress visually for user
 
 4. **Monitor test status** with Wallaby MCP:
+
    ```bash
    # Check failing tests
    mcp__wallaby__wallaby_failingTests

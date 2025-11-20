@@ -1,24 +1,16 @@
 {
-  "name": "task-streams",
-  "version": "1.0.0",
-  "description": "Pure document-to-tasks converter with intelligent type detection. Transforms specs, reviews, ADRs, tech debt, and security audits into standardized task files. Platform design with discovery API for plugin ecosystem integration.",
   "author": {
     "name": "Nathan Vale"
   },
-  "keywords": [
-    "tasks",
-    "conversion",
-    "platform",
-    "integration",
-    "validation",
-    "discovery"
-  ],
   "commands": [
     "./commands/task-streams:convert.md",
     "./commands/task-streams:status.md",
     "./commands/task-streams:capabilities.md",
     "./commands/task-streams:validate.md"
   ],
+  "description": "Pure document-to-tasks converter with intelligent type detection. Transforms specs, reviews, ADRs, tech debt, and security audits into standardized task files. Platform design with discovery API for plugin ecosystem integration.",
+  "keywords": ["tasks", "conversion", "platform", "integration", "validation", "discovery"],
+  "name": "task-streams",
   "skills": [
     "./skills/id-generator/SKILL.md",
     "./skills/component-manager/SKILL.md",
@@ -28,5 +20,6 @@
     "./skills/format-generic/SKILL.md",
     "./skills/format-security/SKILL.md",
     "./skills/format-tech-debt/SKILL.md"
-  ]
+  ],
+  "version": "1.0.0"
 }

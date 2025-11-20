@@ -7,6 +7,7 @@
 **Symptoms:** Pressing Hyper+Key does nothing
 
 **Debug steps:**
+
 1. Check if Karabiner is running
 2. Verify JSON syntax in `karabiner.json`
 3. Check Console.app for Karabiner errors
@@ -28,6 +29,7 @@ log show --predicate 'process CONTAINS "karabiner"' --last 5m
 **Symptoms:** App launches but SuperWhisper mode doesn't switch, or wrong app gets focus
 
 **Debug steps:**
+
 1. Check timing in `superwhisper-mode-switch.sh`
 2. Increase `sleep` duration if needed
 3. Review Console.app logs for timing
@@ -43,6 +45,7 @@ log show --predicate 'eventMessage CONTAINS "hyperflow"' --last 5m --style compa
 ```
 
 **Fix:** Adjust sleep timing in `bin/hyperflow/superwhisper-mode-switch.sh`:
+
 ```bash
 sleep 0.5  # Increase to 0.7 or 1.0 if race conditions persist
 ```
@@ -52,6 +55,7 @@ sleep 0.5  # Increase to 0.7 or 1.0 if race conditions persist
 **Symptoms:** App launches in background but doesn't come to foreground
 
 **Debug steps:**
+
 1. Check if app name in `hyperflow.sh` matches actual app name
 2. Verify app is installed and accessible
 
@@ -68,6 +72,7 @@ osascript -e 'tell application "App Name" to activate'
 **Symptoms:** App launches but mode doesn't match expected
 
 **Debug steps:**
+
 1. Check app-to-mode mapping in `superwhisper-mode-switch.sh`
 2. Verify app bundle name matches case statement
 3. Ensure mode JSON file exists
@@ -85,6 +90,7 @@ ls -1 config/superwhisper/modes/
 ### Console.app (macOS System Logs)
 
 **Filter patterns:**
+
 - `process == "karabiner"`
 - `eventMessage CONTAINS "hyperflow"`
 - `eventMessage CONTAINS "superwhisper"`
@@ -143,11 +149,13 @@ open "superwhisper://mode?name=default"
 **Symptoms:** Noticeable delay between keypress and app appearing
 
 **Causes:**
+
 - App not already running (first launch is always slower)
 - System resource constraints
 - Excessive sleep delays
 
 **Fix:**
+
 ```bash
 # Reduce unnecessary sleeps in hyperflow.sh
 # Keep apps in Dock for faster activation
@@ -159,6 +167,7 @@ open "superwhisper://mode?name=default"
 **Symptoms:** App launches but mode switch happens seconds later
 
 **Debug:**
+
 ```bash
 # Add timing debug to superwhisper-mode-switch.sh
 echo "$(date): Starting mode switch" >> /tmp/hyperflow-debug.log

@@ -1,8 +1,13 @@
 ---
 name: migrate-rollback
-description: Generates a rollback command for referrals created in a migration run by extracting their IDs from migration logs. Use when rolling back a failed migration, recovering from data issues, or when mentioned 'rollback migration', 'undo migration', 'rollback referrals'.
+description:
+  Generates a rollback command for referrals created in a migration run by extracting their IDs from
+  migration logs. Use when rolling back a failed migration, recovering from data issues, or when
+  mentioned 'rollback migration', 'undo migration', 'rollback referrals'.
 argument-hint: [migration-correlation-id-optional]
-allowed-tools: Read, Bash(grep:*), Bash(command:*), Bash(date:*), Bash(cut:*), Bash(paste:*), Bash(tail:*), Bash(jq:*)
+allowed-tools:
+  Read, Bash(grep:*), Bash(command:*), Bash(date:*), Bash(cut:*), Bash(paste:*), Bash(tail:*),
+  Bash(jq:*)
 ---
 
 # Migrate Rollback
@@ -13,16 +18,21 @@ Generates a CLI command to rollback all referrals created during a specific migr
 
 **Pattern 2**: Script Orchestration
 
-This command uses deterministic log parsing to extract successful referral creations and generates a structured rollback command for the user to execute.
+This command uses deterministic log parsing to extract successful referral creations and generates a
+structured rollback command for the user to execute.
 
 ## How It Works
 
-1. **Extract Correlation ID**: Uses provided correlation ID or auto-detects the latest from today's migration log
+1. **Extract Correlation ID**: Uses provided correlation ID or auto-detects the latest from today's
+   migration log
 2. **Show Confirmation**: Displays correlation ID and completion date, asks user to confirm
-3. **Parse Logs**: Searches migration logs for all successful referral creation entries (using JSON parsing for robustness)
-4. **Extract IDs**: Collects referral record IDs from the logs, handling malformed entries gracefully
+3. **Parse Logs**: Searches migration logs for all successful referral creation entries (using JSON
+   parsing for robustness)
+4. **Extract IDs**: Collects referral record IDs from the logs, handling malformed entries
+   gracefully
 5. **Generate Command**: Creates CLI command with comma-separated IDs
-6. **Output & Copy**: Prints command to screen and copies to clipboard using platform-aware clipboard tool
+6. **Output & Copy**: Prints command to screen and copies to clipboard using platform-aware
+   clipboard tool
 
 ## Implementation
 
@@ -133,6 +143,7 @@ echo "Ready to paste into terminal!"
 ### Platform Compatibility
 
 The clipboard handling automatically detects the platform:
+
 - **macOS**: Uses `pbcopy`
 - **Linux**: Uses `xclip`
 - **Windows**: Uses `clip.exe` (Git Bash)
@@ -141,11 +152,13 @@ The clipboard handling automatically detects the platform:
 ## Log File Location
 
 Migration logs are stored at:
+
 ```
 apps/migration-cli/logs/migration-{YYYY-MM-DD}.jsonl
 ```
 
 Each log entry contains:
+
 - `correlationId`: Migration run identifier (UUID)
 - `level`: Log level (20=info, 30=warn, 40=error, 50=critical, 60=fatal)
 - `msg`: Human-readable message with operation details
@@ -166,6 +179,7 @@ Each log entry contains:
 ## Output Format
 
 If referrals found:
+
 ```
 Detected migration run:
 - Correlation ID: be8ce52a-cc8a-45da-9b7c-ef895b1c5c58
@@ -179,6 +193,7 @@ LOG_LEVEL=trace USE_FIXTURES=true npx tsx src/cli.ts rollback referral --id=<id1
 ```
 
 If no referrals found:
+
 ```
 No successful referral creations found for correlation ID: be8ce52a-cc8a-45da-9b7c-ef895b1c5c58
 ```
@@ -188,8 +203,10 @@ No successful referral creations found for correlation ID: be8ce52a-cc8a-45da-9b
 ### JSON Parsing Strategy
 
 The command uses **optimized single-pass parsing** for robustness:
+
 1. **Primary**: Uses `jq` for native JSON parsing when available
-   - Filters for entries with `entity == "exco_referral"` and `msg == "Dataverse create success"` (actual referral creations)
+   - Filters for entries with `entity == "exco_referral"` and `msg == "Dataverse create success"`
+     (actual referral creations)
    - Excludes referral roles (`exco_referralrole`) and other operations
    - Extracts `recordId` field for matching entries
    - Single pass through log file (more efficient)
@@ -211,7 +228,8 @@ The command uses **optimized single-pass parsing** for robustness:
 
 ### Extraction Behavior
 
-- Extracts **only `exco_referral` entities with "Dataverse create success" message** (excludes referral roles and other operations)
+- Extracts **only `exco_referral` entities with "Dataverse create success" message** (excludes
+  referral roles and other operations)
 - Auto-detects **latest migration** from log file tail if no correlation ID provided
 - Deduplicates referral IDs (handles duplicate entries in logs)
 - Counts referrals accurately and displays summary **before confirmation prompt**

@@ -1,10 +1,12 @@
 # TaskDock Concurrency Safety
 
-TaskDock implements comprehensive concurrency safety mechanisms to prevent race conditions and data corruption when multiple agents or processes access shared resources simultaneously.
+TaskDock implements comprehensive concurrency safety mechanisms to prevent race conditions and data
+corruption when multiple agents or processes access shared resources simultaneously.
 
 ## Overview
 
 TaskDock uses file-based locking (flock) to protect critical sections across:
+
 - Task lock creation and updates
 - Configuration file writes
 - Log file appends
@@ -21,6 +23,7 @@ TaskDock uses a unified locking strategy rooted in the repository's git director
 - **Mechanism**: `flock` (or atomic `mkdir` fallback)
 
 This ensures that:
+
 1. Locks are respected across all worktrees (which share the same `.git` dir).
 2. Locks are isolated per repository (no cross-repo interference).
 3. No global user-level locks are required, reducing permission issues.
@@ -28,6 +31,7 @@ This ensures that:
 ### Why This Matters
 
 In multi-agent workflows, several operations can conflict:
+
 - **Task selection**: Two agents selecting the same task simultaneously
 - **Lock updates**: Concurrent heartbeat updates corrupting lock files
 - **Config changes**: Multiple agents modifying configuration
@@ -58,6 +62,7 @@ delete_lock() {
 ```
 
 **Guarantees**:
+
 - ✅ Atomic task selection (no duplicate assignments)
 - ✅ Safe heartbeat updates (no data corruption)
 - ✅ Race-free lock cleanup
@@ -74,6 +79,7 @@ cmd_set() {
 ```
 
 **Guarantees**:
+
 - ✅ Serialized config updates (no lost writes)
 - ✅ Consistent config state across agents
 
@@ -93,6 +99,7 @@ log_entry() {
 ```
 
 **Guarantees**:
+
 - ✅ Complete log entries (no partial writes)
 - ✅ Correct chronological ordering within same resource
 
@@ -101,6 +108,7 @@ log_entry() {
 ### Core Functions
 
 #### `with_flock <resource> <command> [args...]`
+
 Acquire exclusive lock on user-level resource, execute command, release lock.
 
 ```bash
@@ -112,6 +120,7 @@ with_flock "my-resource" ./my-script.sh arg1 arg2
 - **Returns**: Command exit code or EXIT_LOCK_TIMEOUT (70)
 
 #### `with_repo_flock <resource> <command> [args...]`
+
 Acquire exclusive lock on repo-level resource (shared across worktrees).
 
 ```bash
@@ -123,6 +132,7 @@ with_repo_flock "task-selection" ./select-task.sh
 - **Returns**: Command exit code or EXIT_LOCK_TIMEOUT (70)
 
 #### `with_flock_timeout <timeout> <resource> <command> [args...]`
+
 Same as `with_flock` but with custom timeout in seconds.
 
 ```bash
@@ -130,6 +140,7 @@ with_flock_timeout 60 "long-operation" ./slow-task.sh
 ```
 
 #### `try_flock <resource> <command> [args...]`
+
 Try to acquire lock without blocking. Returns immediately if locked.
 
 ```bash
@@ -145,6 +156,7 @@ fi
 ### Helper Functions
 
 #### `cleanup_stale_flocks`
+
 Remove flock files older than 1 hour (handles crashed processes).
 
 ```bash
@@ -155,20 +167,22 @@ Called automatically by `taskdock doctor`.
 
 ## Exit Codes
 
-| Code | Constant | Meaning |
-|------|----------|---------|
-| 20 | EXIT_LOCK_BUSY | Lock is held by another process |
-| 70 | EXIT_LOCK_TIMEOUT | Timeout waiting for lock |
-| 80 | EXIT_NOT_IN_REPO | Not in a git repository (for repo locks) |
+| Code | Constant          | Meaning                                  |
+| ---- | ----------------- | ---------------------------------------- |
+| 20   | EXIT_LOCK_BUSY    | Lock is held by another process          |
+| 70   | EXIT_LOCK_TIMEOUT | Timeout waiting for lock                 |
+| 80   | EXIT_NOT_IN_REPO  | Not in a git repository (for repo locks) |
 
 ## Performance Characteristics
 
 ### Lock Acquisition Time
+
 - **Uncontended**: < 1ms
 - **Contended**: Up to timeout (default 30s)
 - **Overhead**: ~2-5ms per lock operation
 
 ### Scalability
+
 - **Concurrent agents**: Tested up to 10 agents
 - **Lock contention**: Minimal for typical workflows
 - **Worktree isolation**: Excellent (separate working directories)
@@ -249,16 +263,19 @@ The following operations do **not** have flock protection:
 ### For Script Authors
 
 1. **Use repo locks for shared resources**:
+
    ```bash
    with_repo_flock "my-resource" ./my-command.sh
    ```
 
 2. **Use user locks for local resources**:
+
    ```bash
    with_flock "my-cache" ./update-cache.sh
    ```
 
 3. **Keep critical sections short**:
+
    ```bash
    # Good: Lock only the write operation
    with_flock "data" echo "$result" >> data.txt
@@ -278,11 +295,13 @@ The following operations do **not** have flock protection:
 ### For Users
 
 1. **Check for stale locks**:
+
    ```bash
    taskdock doctor  # Includes lock health check
    ```
 
 2. **Monitor lock contention**:
+
    ```bash
    taskdock locks list  # Shows all active locks
    ```
@@ -337,21 +356,23 @@ taskdock locks list
 
 ### flock vs Other Locking Mechanisms
 
-| Mechanism | Pros | Cons | Used In TaskDock? |
-|-----------|------|------|-------------------|
-| **flock** | Fast, kernel-level, automatic cleanup on crash | Not portable to all filesystems | ✅ Yes (primary) |
-| **lockfile** | Portable | Manual cleanup, race conditions | ❌ No |
-| **mkdir** | Atomic | Requires manual cleanup | ❌ No (used for task locks) |
-| **ln** | Atomic | Manual cleanup, less portable | ✅ Yes (task locks only) |
+| Mechanism    | Pros                                           | Cons                            | Used In TaskDock?           |
+| ------------ | ---------------------------------------------- | ------------------------------- | --------------------------- |
+| **flock**    | Fast, kernel-level, automatic cleanup on crash | Not portable to all filesystems | ✅ Yes (primary)            |
+| **lockfile** | Portable                                       | Manual cleanup, race conditions | ❌ No                       |
+| **mkdir**    | Atomic                                         | Requires manual cleanup         | ❌ No (used for task locks) |
+| **ln**       | Atomic                                         | Manual cleanup, less portable   | ✅ Yes (task locks only)    |
 
 ### Why Two Lock Types?
 
 **Task locks** (`.git/task-locks/*.lock`):
+
 - Business logic: "This task is assigned to agent X"
 - Persisted: Survives process crashes (intentional)
 - Manually managed: Requires explicit cleanup
 
 **Flock locks** (`.git/taskdock-locks/*.flock`):
+
 - Concurrency primitive: "Only one process can modify this file"
 - Ephemeral: Automatically released on process exit
 - Kernel-managed: No manual cleanup needed
@@ -387,9 +408,9 @@ All operations follow this order, preventing circular dependencies.
 
 - **flock(1)** man page: `man flock`
 - **flock(2)** system call: `man 2 flock`
-- **Advisory vs Mandatory locking**: https://www.kernel.org/doc/Documentation/filesystems/mandatory-locking.txt
+- **Advisory vs Mandatory locking**:
+  https://www.kernel.org/doc/Documentation/filesystems/mandatory-locking.txt
 
 ---
 
-**Last Updated**: 2025-11-19
-**TaskDock Version**: 0.1.0+concurrency
+**Last Updated**: 2025-11-19 **TaskDock Version**: 0.1.0+concurrency

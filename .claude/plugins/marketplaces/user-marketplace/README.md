@@ -29,16 +29,19 @@ Run this command in Claude Code:
 ## Managing Plugins
 
 ### Install a plugin from this marketplace
+
 ```shell
 /plugin install task-streams@user-marketplace
 ```
 
 ### Uninstall a plugin
+
 ```shell
 /plugin uninstall task-streams@user-marketplace
 ```
 
 ### Update after making changes
+
 ```shell
 /plugin uninstall task-streams@user-marketplace
 /plugin install task-streams@user-marketplace
@@ -47,17 +50,20 @@ Run this command in Claude Code:
 ## Creating a New Plugin
 
 1. Create a new plugin directory:
+
 ```bash
 mkdir -p ~/.claude/plugins/user-marketplace/plugins/my-new-plugin
 cd ~/.claude/plugins/user-marketplace/plugins/my-new-plugin
 ```
 
 2. Create the plugin structure:
+
 ```bash
 mkdir -p .claude-plugin commands skills agents hooks
 ```
 
 3. Create the plugin manifest:
+
 ```bash
 cat > .claude-plugin/plugin.json << 'EOF'
 {
@@ -74,12 +80,14 @@ EOF
 4. Add your components (commands, skills, agents, hooks)
 
 5. Update the marketplace manifest:
+
 ```bash
 # Edit ~/.claude/plugins/user-marketplace/.claude-plugin/marketplace.json
 # Add your new plugin to the "plugins" array
 ```
 
 6. Install and test:
+
 ```shell
 /plugin install my-new-plugin@user-marketplace
 ```
@@ -87,15 +95,19 @@ EOF
 ## Plugin Components
 
 ### Commands (`commands/`)
+
 Markdown files that define slash commands.
 
 ### Skills (`skills/`)
+
 Agent capabilities that Claude can invoke autonomously.
 
 ### Agents (`agents/`)
+
 Specialized sub-agents for specific tasks.
 
 ### Hooks (`hooks/`)
+
 Event handlers that respond to Claude Code events.
 
 ## Quick Reference

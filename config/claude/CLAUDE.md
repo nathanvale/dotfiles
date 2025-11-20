@@ -40,4 +40,5 @@ Just before stopping and giving control back to the user, write:
 
 PROMPT: <prompt>
 
-Where the promt is a concise one-line summary of the user's original prompt, NOT anything more recent.
+Where the promt is a concise one-line summary of the user's original prompt, NOT anything more
+recent.

@@ -1,245 +1,263 @@
 {
-    "global": { "show_in_menu_bar": false },
-    "profiles": [
-        { "name": "Default profile" },
+  "global": { "show_in_menu_bar": false },
+  "profiles": [
+    { "name": "Default profile" },
+    {
+      "complex_modifications": {
+        "rules": [
+          {
+            "description": "Change right_command+hjkl to arrow keys",
+            "manipulators": [
+              {
+                "from": {
+                  "key_code": "h",
+                  "modifiers": { "mandatory": ["right_command"] }
+                },
+                "to": [{ "key_code": "left_arrow" }],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "j",
+                  "modifiers": { "mandatory": ["right_command"] }
+                },
+                "to": [{ "key_code": "down_arrow" }],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "k",
+                  "modifiers": { "mandatory": ["right_command"] }
+                },
+                "to": [{ "key_code": "up_arrow" }],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "l",
+                  "modifiers": { "mandatory": ["right_command"] }
+                },
+                "to": [{ "key_code": "right_arrow" }],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "Launch and focus System Settings, Finder with home folder, Karabiner-Elements, Activity Monitor, and start QuickTime screen recording with right shift+letters.",
+            "manipulators": [
+              {
+                "from": {
+                  "key_code": "c",
+                  "modifiers": { "mandatory": ["right_shift"] }
+                },
+                "to": [{ "shell_command": "/opt/homebrew/bin/fish -c open_chatgpt" }],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "s",
+                  "modifiers": { "mandatory": ["right_shift"] }
+                },
+                "to": [
+                  {
+                    "shell_command": "open '/System/Applications/System Settings.app' && osascript -e 'tell application \"System Settings\" to activate' -e 'tell application \"System Events\" to set frontmost of process \"System Settings\" to true'"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "f",
+                  "modifiers": { "mandatory": ["right_shift"] }
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e 'tell application \"Finder\" to make new Finder window to home' -e 'tell application \"Finder\" to activate' -e 'tell application \"System Events\" to set frontmost of process \"Finder\" to true'"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "k",
+                  "modifiers": { "mandatory": ["right_shift"] }
+                },
+                "to": [
+                  {
+                    "shell_command": "open '/Applications/Karabiner-Elements.app' && osascript -e 'tell application \"Karabiner-Elements\" to activate' -e 'tell application \"System Events\" to set frontmost of process \"Karabiner-Elements\" to true'"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "q",
+                  "modifiers": { "mandatory": ["right_shift"] }
+                },
+                "to": [
+                  { "shell_command": "osascript ~/Scripts/start_quicktime_recording.applescript" }
+                ],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "a",
+                  "modifiers": { "mandatory": ["right_shift"] }
+                },
+                "to": [
+                  {
+                    "shell_command": "open '/System/Applications/Utilities/Activity Monitor.app' && osascript -e 'tell application \"Activity Monitor\" to activate' -e 'tell application \"System Events\" to set frontmost of process \"Activity Monitor\" to true'"
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "Map ctrl + [ to escape",
+            "manipulators": [
+              {
+                "from": {
+                  "key_code": "open_bracket",
+                  "modifiers": { "mandatory": ["control"] }
+                },
+                "to": [{ "key_code": "escape" }],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "Change Control + h/j/k/l to Arrows",
+            "manipulators": [
+              {
+                "from": {
+                  "key_code": "h",
+                  "modifiers": { "mandatory": ["control"] }
+                },
+                "to": [{ "key_code": "left_arrow" }],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "j",
+                  "modifiers": { "mandatory": ["control"] }
+                },
+                "to": [{ "key_code": "down_arrow" }],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "k",
+                  "modifiers": { "mandatory": ["control"] }
+                },
+                "to": [{ "key_code": "up_arrow" }],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "l",
+                  "modifiers": { "mandatory": ["control"] }
+                },
+                "to": [{ "key_code": "right_arrow" }],
+                "type": "basic"
+              }
+            ]
+          }
+        ]
+      },
+      "devices": [
         {
-            "complex_modifications": {
-                "rules": [
-                    {
-                        "description": "Change right_command+hjkl to arrow keys",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "h",
-                                    "modifiers": { "mandatory": ["right_command"] }
-                                },
-                                "to": [{ "key_code": "left_arrow" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "j",
-                                    "modifiers": { "mandatory": ["right_command"] }
-                                },
-                                "to": [{ "key_code": "down_arrow" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "k",
-                                    "modifiers": { "mandatory": ["right_command"] }
-                                },
-                                "to": [{ "key_code": "up_arrow" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "l",
-                                    "modifiers": { "mandatory": ["right_command"] }
-                                },
-                                "to": [{ "key_code": "right_arrow" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Launch and focus System Settings, Finder with home folder, Karabiner-Elements, Activity Monitor, and start QuickTime screen recording with right shift+letters.",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "c",
-                                    "modifiers": { "mandatory": ["right_shift"] }
-                                },
-                                "to": [{ "shell_command": "/opt/homebrew/bin/fish -c open_chatgpt" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "s",
-                                    "modifiers": { "mandatory": ["right_shift"] }
-                                },
-                                "to": [{ "shell_command": "open '/System/Applications/System Settings.app' && osascript -e 'tell application \"System Settings\" to activate' -e 'tell application \"System Events\" to set frontmost of process \"System Settings\" to true'" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "f",
-                                    "modifiers": { "mandatory": ["right_shift"] }
-                                },
-                                "to": [{ "shell_command": "osascript -e 'tell application \"Finder\" to make new Finder window to home' -e 'tell application \"Finder\" to activate' -e 'tell application \"System Events\" to set frontmost of process \"Finder\" to true'" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "k",
-                                    "modifiers": { "mandatory": ["right_shift"] }
-                                },
-                                "to": [{ "shell_command": "open '/Applications/Karabiner-Elements.app' && osascript -e 'tell application \"Karabiner-Elements\" to activate' -e 'tell application \"System Events\" to set frontmost of process \"Karabiner-Elements\" to true'" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "q",
-                                    "modifiers": { "mandatory": ["right_shift"] }
-                                },
-                                "to": [{ "shell_command": "osascript ~/Scripts/start_quicktime_recording.applescript" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "a",
-                                    "modifiers": { "mandatory": ["right_shift"] }
-                                },
-                                "to": [{ "shell_command": "open '/System/Applications/Utilities/Activity Monitor.app' && osascript -e 'tell application \"Activity Monitor\" to activate' -e 'tell application \"System Events\" to set frontmost of process \"Activity Monitor\" to true'" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Map ctrl + [ to escape",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "open_bracket",
-                                    "modifiers": { "mandatory": ["control"] }
-                                },
-                                "to": [{ "key_code": "escape" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Change Control + h/j/k/l to Arrows",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "h",
-                                    "modifiers": { "mandatory": ["control"] }
-                                },
-                                "to": [{ "key_code": "left_arrow" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "j",
-                                    "modifiers": { "mandatory": ["control"] }
-                                },
-                                "to": [{ "key_code": "down_arrow" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "k",
-                                    "modifiers": { "mandatory": ["control"] }
-                                },
-                                "to": [{ "key_code": "up_arrow" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "l",
-                                    "modifiers": { "mandatory": ["control"] }
-                                },
-                                "to": [{ "key_code": "right_arrow" }],
-                                "type": "basic"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "devices": [
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 835,
-                        "vendor_id": 1452
-                    },
-                    "simple_modifications": [
-                        {
-                            "from": { "key_code": "caps_lock" },
-                            "to": [{ "key_code": "left_control" }]
-                        }
-                    ]
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 591,
-                        "vendor_id": 1452
-                    },
-                    "simple_modifications": [
-                        {
-                            "from": { "key_code": "caps_lock" },
-                            "to": [{ "key_code": "left_control" }]
-                        }
-                    ]
-                },
-                {
-                    "identifiers": { "is_keyboard": true },
-                    "manipulate_caps_lock_led": false,
-                    "simple_modifications": [
-                        {
-                            "from": { "key_code": "caps_lock" },
-                            "to": [{ "key_code": "left_control" }]
-                        }
-                    ]
-                },
-                {
-                    "identifiers": {
-                        "device_address": "ce-f3-a8-6c-93-a9",
-                        "is_keyboard": true,
-                        "is_pointing_device": true
-                    },
-                    "ignore": false,
-                    "manipulate_caps_lock_led": false,
-                    "treat_as_built_in_keyboard": true
-                },
-                {
-                    "identifiers": {
-                        "device_address": "ce-f3-a8-6c-93-af",
-                        "is_keyboard": true,
-                        "is_pointing_device": true
-                    },
-                    "ignore": false,
-                    "manipulate_caps_lock_led": false
-                },
-                {
-                    "identifiers": {
-                        "device_address": "ce-f3-a8-6c-93-ae",
-                        "is_keyboard": true,
-                        "is_pointing_device": true
-                    },
-                    "ignore": false,
-                    "manipulate_caps_lock_led": false
-                },
-                {
-                    "identifiers": {
-                        "device_address": "ce-f3-a8-6c-93-ad",
-                        "is_keyboard": true,
-                        "is_pointing_device": true
-                    },
-                    "ignore": false,
-                    "manipulate_caps_lock_led": false
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "is_pointing_device": true,
-                        "product_id": 12885,
-                        "vendor_id": 6645
-                    },
-                    "ignore": false
-                }
-            ],
-            "name": "Nathan",
-            "selected": true,
-            "simple_modifications": [
-                {
-                    "from": { "key_code": "caps_lock" },
-                    "to": [{ "key_code": "left_control" }]
-                }
-            ],
-            "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
+          "identifiers": {
+            "is_keyboard": true,
+            "product_id": 835,
+            "vendor_id": 1452
+          },
+          "simple_modifications": [
+            {
+              "from": { "key_code": "caps_lock" },
+              "to": [{ "key_code": "left_control" }]
+            }
+          ]
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "product_id": 591,
+            "vendor_id": 1452
+          },
+          "simple_modifications": [
+            {
+              "from": { "key_code": "caps_lock" },
+              "to": [{ "key_code": "left_control" }]
+            }
+          ]
+        },
+        {
+          "identifiers": { "is_keyboard": true },
+          "manipulate_caps_lock_led": false,
+          "simple_modifications": [
+            {
+              "from": { "key_code": "caps_lock" },
+              "to": [{ "key_code": "left_control" }]
+            }
+          ]
+        },
+        {
+          "identifiers": {
+            "device_address": "ce-f3-a8-6c-93-a9",
+            "is_keyboard": true,
+            "is_pointing_device": true
+          },
+          "ignore": false,
+          "manipulate_caps_lock_led": false,
+          "treat_as_built_in_keyboard": true
+        },
+        {
+          "identifiers": {
+            "device_address": "ce-f3-a8-6c-93-af",
+            "is_keyboard": true,
+            "is_pointing_device": true
+          },
+          "ignore": false,
+          "manipulate_caps_lock_led": false
+        },
+        {
+          "identifiers": {
+            "device_address": "ce-f3-a8-6c-93-ae",
+            "is_keyboard": true,
+            "is_pointing_device": true
+          },
+          "ignore": false,
+          "manipulate_caps_lock_led": false
+        },
+        {
+          "identifiers": {
+            "device_address": "ce-f3-a8-6c-93-ad",
+            "is_keyboard": true,
+            "is_pointing_device": true
+          },
+          "ignore": false,
+          "manipulate_caps_lock_led": false
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "is_pointing_device": true,
+            "product_id": 12885,
+            "vendor_id": 6645
+          },
+          "ignore": false
         }
-    ]
+      ],
+      "name": "Nathan",
+      "selected": true,
+      "simple_modifications": [
+        {
+          "from": { "key_code": "caps_lock" },
+          "to": [{ "key_code": "left_control" }]
+        }
+      ],
+      "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
+    }
+  ]
 }

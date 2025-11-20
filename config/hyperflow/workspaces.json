@@ -2,68 +2,68 @@
   "workspaces": {
     "1": {
       "apps": ["Ghostty"],
-      "mode": "default",
-      "description": "Terminal"
+      "description": "Terminal",
+      "mode": "default"
     },
     "2": {
       "apps": ["Visual Studio Code"],
-      "mode": "default",
-      "description": "Code Editor"
+      "description": "Code Editor",
+      "mode": "default"
     },
     "3": {
       "apps": ["Arc"],
-      "mode": "default",
-      "description": "Browser"
+      "description": "Browser",
+      "mode": "default"
     },
     "4": {
       "apps": ["Obsidian"],
-      "mode": "default",
-      "description": "Notes"
+      "description": "Notes",
+      "mode": "default"
     },
     "5": {
       "apps": ["Microsoft Teams"],
-      "mode": "professional-engineer",
-      "description": "Teams"
-    },
-    "H1": {
-      "apps": ["Messages"],
-      "mode": "casual-text",
-      "description": "Messages"
-    },
-    "H2": {
-      "apps": ["ChatGPT"],
-      "mode": "default",
-      "description": "ChatGPT"
-    },
-    "H3": {
-      "apps": ["Claude"],
-      "mode": "default",
-      "description": "Claude Desktop"
-    },
-    "H4": {
-      "apps": ["Calendar"],
-      "mode": "default",
-      "description": "Calendar"
-    },
-    "H5": {
-      "apps": ["Microsoft Outlook"],
-      "mode": "email",
-      "description": "Email"
-    },
-    "S": {
-      "apps": ["System Settings"],
-      "mode": "default",
-      "description": "System Settings"
-    },
-    "F": {
-      "apps": ["Finder"],
-      "mode": "default",
-      "description": "Finder"
+      "description": "Teams",
+      "mode": "professional-engineer"
     },
     "C": {
       "apps": ["ChatGPT", "Claude"],
-      "mode": "default",
-      "description": "AI Assistants"
+      "description": "AI Assistants",
+      "mode": "default"
+    },
+    "F": {
+      "apps": ["Finder"],
+      "description": "Finder",
+      "mode": "default"
+    },
+    "H1": {
+      "apps": ["Messages"],
+      "description": "Messages",
+      "mode": "casual-text"
+    },
+    "H2": {
+      "apps": ["ChatGPT"],
+      "description": "ChatGPT",
+      "mode": "default"
+    },
+    "H3": {
+      "apps": ["Claude"],
+      "description": "Claude Desktop",
+      "mode": "default"
+    },
+    "H4": {
+      "apps": ["Calendar"],
+      "description": "Calendar",
+      "mode": "default"
+    },
+    "H5": {
+      "apps": ["Microsoft Outlook"],
+      "description": "Email",
+      "mode": "email"
+    },
+    "S": {
+      "apps": ["System Settings"],
+      "description": "System Settings",
+      "mode": "default"
     }
   }
 }

@@ -15,23 +15,24 @@ Running selection script...
 ```
 
 **Script Output:**
+
 ```json
 {
+  "readyTasks": [
+    { "id": "T0001", "priority": "P0", "title": "Fix query execution error" },
+    { "id": "T0003", "priority": "P1", "title": "Add migration mode bidirectional" }
+  ],
   "success": true,
   "task": {
-    "id": "T0001",
-    "title": "Fix query execution error in ContactRepository.findByName()",
-    "priority": "P0",
-    "status": "READY",
     "component": "C01",
-    "filePath": "docs/tasks/T0001-fix-query-execution-error-findbyname.md",
     "created": "2025-11-07T00:00:00Z",
-    "source": "docs/bugs/2025-11-07-migration-contact-creation-failure.md"
-  },
-  "readyTasks": [
-    {"id": "T0001", "priority": "P0", "title": "Fix query execution error"},
-    {"id": "T0003", "priority": "P1", "title": "Add migration mode bidirectional"}
-  ]
+    "filePath": "docs/tasks/T0001-fix-query-execution-error-findbyname.md",
+    "id": "T0001",
+    "priority": "P0",
+    "source": "docs/bugs/2025-11-07-migration-contact-creation-failure.md",
+    "status": "READY",
+    "title": "Fix query execution error in ContactRepository.findByName()"
+  }
 }
 ```
 
@@ -157,17 +158,18 @@ Running selection script with --task-id=T0003...
 ```
 
 **Script Output:**
+
 ```json
 {
   "success": true,
   "task": {
+    "component": "C02",
+    "created": "2025-11-07T01:00:00Z",
+    "filePath": "docs/tasks/T0003-add-migration-mode-bidirectional-operations.md",
     "id": "T0003",
-    "title": "Add migration mode bidirectional operations",
     "priority": "P1",
     "status": "READY",
-    "component": "C02",
-    "filePath": "docs/tasks/T0003-add-migration-mode-bidirectional-operations.md",
-    "created": "2025-11-07T01:00:00Z"
+    "title": "Add migration mode bidirectional operations"
   }
 }
 ```
@@ -198,30 +200,31 @@ Running selection script with --show-ready...
 ```
 
 **Script Output:**
+
 ```json
 {
-  "success": true,
+  "message": "Found 3 ready tasks",
   "readyTasks": [
     {
+      "component": "C01",
       "id": "T0001",
-      "title": "Fix query execution error in ContactRepository.findByName()",
       "priority": "P0",
-      "component": "C01"
+      "title": "Fix query execution error in ContactRepository.findByName()"
     },
     {
+      "component": "C02",
       "id": "T0003",
-      "title": "Add migration mode bidirectional operations",
       "priority": "P1",
-      "component": "C02"
+      "title": "Add migration mode bidirectional operations"
     },
     {
+      "component": "C03",
       "id": "T0008",
-      "title": "Refactor CSV parser error handling",
       "priority": "P2",
-      "component": "C03"
+      "title": "Refactor CSV parser error handling"
     }
   ],
-  "message": "Found 3 ready tasks"
+  "success": true
 }
 ```
 
@@ -262,11 +265,12 @@ Running selection script...
 ```
 
 **Script Output:**
+
 ```json
 {
-  "success": false,
   "error": "No READY tasks found",
-  "message": "All tasks are either TODO, IN_PROGRESS, or DONE"
+  "message": "All tasks are either TODO, IN_PROGRESS, or DONE",
+  "success": false
 }
 ```
 
@@ -302,11 +306,12 @@ Would you like to continue working on T0001?
 **User:** "Start T0001"
 
 **Script Output:**
+
 ```json
 {
-  "success": false,
   "error": "Task T0001 is not READY (current status: IN_PROGRESS)",
   "message": "Only READY tasks can be started",
+  "success": false,
   "task": {
     "id": "T0001",
     "status": "IN_PROGRESS",

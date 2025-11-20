@@ -12,5 +12,6 @@
   - Prefer frameworks that record/replay network traffic over mocking
   - Don't mock our own code
 - Don't overuse the word "mock"
-  - Mocking means replacing behavior, by replacing method or function bodies, using a mocking framework
+  - Mocking means replacing behavior, by replacing method or function bodies, using a mocking
+    framework
   - In other cases use the words "fake" or "example"

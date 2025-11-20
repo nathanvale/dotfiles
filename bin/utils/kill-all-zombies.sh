@@ -20,9 +20,9 @@ echo ""
 echo "Killing all node/vitest processes..."
 
 # Kill all node processes related to vitest
-ps aux | grep -E 'node.*vitest|vitest' | grep -v grep | awk '{print $2}' | while read pid; do
+ps aux | grep -E 'node.*vitest|vitest' | grep -v grep | awk '{print $2}' | while read -r pid; do
     echo "  Killing PID $pid..."
-    kill -9 $pid 2>/dev/null
+    kill -9 "$pid" 2>/dev/null
 done
 
 echo ""

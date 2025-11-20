@@ -199,14 +199,17 @@ detect_vaults() {
 
     # Check if this is a monorepo
     if command -v detect_monorepo_type &> /dev/null; then
-        local monorepo_type=$(detect_monorepo_type "$PROJECT_PATH" 2>/dev/null)
+        local monorepo_type
+        monorepo_type=$(detect_monorepo_type "$PROJECT_PATH" 2>/dev/null)
         if [ -n "$monorepo_type" ]; then
             echo -e "${CYAN}📦 Monorepo detected: ${monorepo_type}${NC}" >&2
 
             # Get packages
             if command -v get_monorepo_packages &> /dev/null; then
-                local packages=$(get_monorepo_packages "$PROJECT_PATH" "$monorepo_type")
-                local package_count=$(echo "$packages" | wc -l | tr -d ' ')
+                local packages
+                packages=$(get_monorepo_packages "$PROJECT_PATH" "$monorepo_type")
+                local package_count
+                package_count=$(echo "$packages" | wc -l | tr -d ' ')
 
                 echo -e "${GREEN}  → Found ${package_count} package(s)${NC}" >&2
 
@@ -228,7 +231,8 @@ detect_vaults() {
                         # Check if package has vaultable content
                         if command -v package_has_vault_content &> /dev/null; then
                             if package_has_vault_content "$package_path"; then
-                                local package_name=$(basename "$package_path")
+                                local package_name
+                                package_name=$(basename "$package_path")
                                 echo -e "${GREEN}  → Registering: ${package_name}${NC}" >&2
                                 if [ -x "$VAULT_SHIM" ]; then
                                     "$VAULT_SHIM" register "$package_path" >/dev/null 2>&1 || true

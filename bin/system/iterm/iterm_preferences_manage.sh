@@ -35,10 +35,10 @@ export_settings() {
     mkdir -p "$SETTINGS_DIR"
     defaults export com.googlecode.iterm2 "$FILE_PATH"
     if [ $? -eq 0 ]; then
-        log $INFO "iTerm2 settings exported successfully to $FILE_PATH."
+        "log $INFO ""iTerm2 settings exported successfully to $FILE_PATH."
         exit 0
     else
-        log $ERROR "Failed to export iTerm2 settings."
+        "log $ERROR ""Failed to export iTerm2 settings."
         exit 1
     fi
 }
@@ -47,11 +47,11 @@ export_settings() {
 import_settings() {
     defaults import com.googlecode.iterm2 "$FILE_PATH"
     if [ $? -eq 0 ]; then
-        log $INFO "iTerm2 settings imported successfully from $FILE_PATH."
+        "log $INFO ""iTerm2 settings imported successfully from $FILE_PATH."
         echo "Please restart iTerm2 to apply changes."
         exit 0
     else
-        log $ERROR "Failed to import iTerm2 settings."
+        "log $ERROR ""Failed to import iTerm2 settings."
         exit 1
     fi
 }
@@ -59,10 +59,10 @@ import_settings() {
 # Function to delete iTerm2 settings from defaults
 delete_settings() {
     if ! defaults delete com.googlecode.iterm2 >/dev/null 2>&1; then
-        log $ERROR "Failed to delete iTerm2 settings from defaults."
+        "log $ERROR ""Failed to delete iTerm2 settings from defaults."
         exit 0
     else
-        log $INFO "iTerm2 settings deleted from defaults successfully."
+        "log $INFO ""iTerm2 settings deleted from defaults successfully."
     fi
 }
 

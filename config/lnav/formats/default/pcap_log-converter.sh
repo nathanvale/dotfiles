@@ -10,4 +10,4 @@ fi
 export TZ=UTC
 
 # Use tshark to convert the pcap file into a JSON-lines log file
-exec tshark -T ek -P -V -t ad -r $2
+exec tshark -T ek -P -V -t ad -r "$2"

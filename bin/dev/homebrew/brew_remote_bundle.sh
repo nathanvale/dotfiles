@@ -92,7 +92,7 @@ INSTALLING_BREW_PACKAGES=true
 # Run brew bundle with the downloaded Brewfile
 "log $INFO ""Installing Homebrew packages..."
 
-if ! brew bundle --file=$TEMP_BREWFILE; then
+if ! brew bundle --file="$TEMP_BREWFILE"; then
   "log $ERROR ""Failed to install Homebrew packages."
   ignore_sigint
 fi

@@ -102,6 +102,12 @@
   "github.copilot.editor.enableAutoCompletions": true,
   "gitlens.ai.model": "vscode",
   "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+  // ============================================================================
+  // GIT COMMIT MESSAGE VALIDATION — Match commitlint rules
+  // ============================================================================
+  "git.inputValidation": true,
+  "git.inputValidationLength": 100,
+  "git.inputValidationSubjectLength": 100,
   "multiCommand.commands": [
     {
       // 14" Laptop Mode: editor-focused, only primary sidebar visible

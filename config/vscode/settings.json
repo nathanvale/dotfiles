@@ -69,7 +69,6 @@
   // ESLINT — Flat Config-Friendly, Zero Surprises
   // ============================================================================
   "eslint.enable": true,
-  "eslint.packageManager": "pnpm",
   "eslint.useFlatConfig": true,
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
   "eslint.workingDirectories": [
@@ -167,5 +166,16 @@
   "workbench.startupEditor": "none",
   "workbench.statusBar.visible": true,
   // Calm animations
-  "workbench.useExperimentalGridLayout": false
+  "workbench.useExperimentalGridLayout": false,
+  "zenMode.centerLayout": true,
+  "zenMode.fullScreen": false,
+  "zenMode.hideActivityBar": true,
+  "zenMode.hideLineNumbers": false,
+  "zenMode.hideStatusBar": true,
+  "zenMode.restore": true,
+  "zenMode.showTabs": "single",
+  "zenMode.silentNotifications": true,
+  "workbench.navigationControl.enabled": false,
+  "chat.commandCenter.enabled": false,
+  "window.commandCenter": false
 }

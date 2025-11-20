@@ -95,7 +95,7 @@ pane_setup() {
 
 # Vault management functions
 vault_check() {
-    local project="${1:-$(basename $PWD)}"
+    local project="${1:-$(basename "$PWD")}"
 
     # Check if vault manager is available
     if ! command -v "$HOME/code/dotfiles/bin/vault/vault" >/dev/null 2>&1; then
@@ -117,7 +117,7 @@ vault_check() {
 }
 
 open_project_vault() {
-    local project="${1:-$(tmux display-message -p '#S' 2>/dev/null || basename $PWD)}"
+    local project="${1:-$(tmux display-message -p '#S' 2>/dev/null || basename "$PWD")}"
 
     if command -v "$HOME/code/dotfiles/bin/vault/vault" >/dev/null 2>&1; then
         "$HOME/code/dotfiles/bin/vault/vault" open
@@ -128,7 +128,7 @@ open_project_vault() {
 
 # Auto-register vaults for current directory
 auto_register_vaults() {
-    local project_name="$(basename $PWD)"
+    local project_name="$(basename "$PWD")"
 
     if ! command -v "$HOME/code/dotfiles/bin/vault/vault" >/dev/null 2>&1; then
         return 0

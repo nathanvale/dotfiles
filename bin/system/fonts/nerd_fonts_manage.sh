@@ -26,10 +26,10 @@ add_fonts() {
     mkdir -p "$DEST_DIR"
     cp "$FONT_DIR"/*.ttf "$DEST_DIR"
     if [ $? -eq 0 ]; then
-        log $INFO "Nerd fonts added successfully."
+        "log $INFO ""Nerd fonts added successfully."
         exit 0
     else
-        log $ERROR "Failed to add nerd fonts."
+        "log $ERROR ""Failed to add nerd fonts."
         exit 1
     fi
 }
@@ -38,10 +38,10 @@ add_fonts() {
 remove_fonts() {
     rm -f "$DEST_DIR"/mesloLGS_NF_*.ttf
     if [ $? -eq 0 ]; then
-        log $INFO "Nerd fonts removed successfully."
+        "log $INFO ""Nerd fonts removed successfully."
         exit 0
     else
-        log $ERROR "Failed to remove nerd fonts."
+        "log $ERROR ""Failed to remove nerd fonts."
         exit 1
     fi
 }

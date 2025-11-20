@@ -43,12 +43,12 @@ ssh_config_remove() {
                 delete_block = (parts[2] == host) ? 1 : 0
             }
             !delete_block' "$ssh_config_file" >tmpfile && mv tmpfile "$ssh_config_file"
-        log $INFO "Removed host configuration for '$host_to_remove' from '$ssh_config_file'."
+        "log $INFO ""Removed host configuration for '$host_to_remove' from '$ssh_config_file'."
 
         normalize_ssh_file "$ssh_config_file"
         format_ssh_file "$ssh_config_file"
-        log $INFO "Removed host configuration for '$host_to_remove' from '$ssh_config_file'."
+        "log $INFO ""Removed host configuration for '$host_to_remove' from '$ssh_config_file'."
     else
-        log $WARNING "SSH configuration file '$ssh_config_file' not found."
+        "log $WARNING ""SSH configuration file '$ssh_config_file' not found."
     fi
 }

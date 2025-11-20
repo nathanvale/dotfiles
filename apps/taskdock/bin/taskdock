@@ -1,0 +1,150 @@
+#!/usr/bin/env bash
+# TaskDock CLI - Front Door Dispatcher
+# Routes commands and provides unified help
+
+set -euo pipefail
+
+# Get TaskDock root directory
+TASKDOCK_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null && pwd)"
+
+# Source libraries
+source "$TASKDOCK_ROOT/lib/common.sh"
+source "$TASKDOCK_ROOT/lib/ui.sh"
+source "$TASKDOCK_ROOT/lib/logging.sh"
+source "$TASKDOCK_ROOT/lib/config.sh"
+source "$TASKDOCK_ROOT/lib/guards.sh"
+
+# Ensure correlation ID
+ensure_correlation_id
+
+# Check critical dependencies
+if ! command_exists jq; then
+  error "TaskDock requires 'jq' for JSON processing."
+  exit "$EXIT_DEPENDENCY_MISSING"
+fi
+
+if ! command_exists yq; then
+  error "TaskDock requires 'yq' for configuration management."
+  exit "$EXIT_DEPENDENCY_MISSING"
+fi
+
+# Parse global flags
+OUTPUT_MODE="human"
+SHOW_VERSION=false
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --json)
+      OUTPUT_MODE="json"
+      shift
+      ;;
+    --version|-v)
+      SHOW_VERSION=true
+      shift
+      ;;
+    --help|-h)
+      # Will be handled by show_help if no subcommand
+      shift
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+# Set output mode
+set_output_mode "$OUTPUT_MODE"
+export TASKDOCK_OUTPUT="$OUTPUT_MODE"
+
+# Show version if requested
+if [[ "$SHOW_VERSION" == "true" ]]; then
+  print_version
+  exit 0
+fi
+
+# Show help function
+show_help() {
+  print_help_header "TaskDock" "Agentic task orchestration and worktree management"
+
+  print_usage "taskdock [--json] <command> [options]"
+
+  cat << EOF
+Commands:
+  init              Initialize TaskDock in current repository
+  next              Get and lock the next available task
+  worktree          Manage worktrees (create, list, status, cleanup)
+  heartbeat         Update task lock heartbeat timestamp
+  validate          Validate code in worktree
+  merge             Merge completed work and cleanup
+  locks             Manage task locks (list, unlock, cleanup)
+  config            View and manage configuration
+  doctor            Check system dependencies and health
+  logs              View TaskDock telemetry logs
+  version           Show TaskDock version
+
+Global Options:
+  --json            Output in JSON format (agent-friendly)
+  --version, -v     Show version information
+  --help, -h        Show this help message
+
+Examples:
+  taskdock init                     # Initialize repo for first use
+  taskdock next --json              # Get next task (JSON output)
+  taskdock worktree create T0001    # Create worktree for task
+  taskdock worktree list            # List all worktrees
+  taskdock heartbeat T0001          # Keep task lock alive
+  taskdock validate                 # Run validation checks
+  taskdock merge --current          # Merge current worktree
+  taskdock locks cleanup --quiet    # Clean up stale locks
+  taskdock doctor                   # Check system health
+
+Correlation ID: ${TASKDOCK_CORRELATION_ID}
+
+For detailed help on a command: taskdock <command> --help
+EOF
+}
+
+# Get command
+COMMAND="${1:-}"
+
+if [[ -z "$COMMAND" ]] || [[ "$COMMAND" == "--help" ]] || [[ "$COMMAND" == "-h" ]]; then
+  show_help
+  exit 0
+fi
+
+shift || true
+
+# Log command start
+START_TIME=$(date +%s)
+log_command_start "$COMMAND" ""
+
+# Check if command exists
+COMMAND_SCRIPT="$TASKDOCK_ROOT/commands/${COMMAND}.sh"
+
+if [[ ! -f "$COMMAND_SCRIPT" ]]; then
+  error "Unknown command: $COMMAND"
+  echo ""
+  tip "Run 'taskdock --help' to see available commands"
+  echo ""
+
+  if [[ "$OUTPUT_MODE" == "json" ]]; then
+    json_response "$(json_error "Unknown command: $COMMAND" "$EXIT_INVALID_ARGS" '["taskdock --help"]')"
+  fi
+
+  log_command_end "$COMMAND" "$EXIT_INVALID_ARGS" "" "0"
+  exit "$EXIT_INVALID_ARGS"
+fi
+
+# Guard: ensure repo is primed for commands that require it
+guard_repo_primed "$COMMAND"
+
+# Execute command
+EXIT_CODE=0
+"$COMMAND_SCRIPT" "$@" || EXIT_CODE=$?
+
+# Log command end
+END_TIME=$(date +%s)
+DURATION=$((END_TIME - START_TIME))
+log_command_end "$COMMAND" "$EXIT_CODE" "" "$((DURATION * 1000))"
+
+exit "$EXIT_CODE"

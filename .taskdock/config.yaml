@@ -1,0 +1,20 @@
+# TaskDock Repository Configuration
+# Generated on: 2025-11-19T09:41:29Z
+
+# Required: Ticket prefix for this repository
+ticket_prefix: "MPCU"
+# Task management
+task_directory: "docs/tasks"
+lock_max_age_minutes: "45"
+# Worktree settings
+worktree_root: ".worktrees"
+branch_prefix: "feat"
+# Git settings
+default_branch: "main"
+# Validation (customize per repo)
+run_format: true
+run_typecheck: true
+run_lint: true
+run_tests: true
+# Telemetry
+telemetry_enabled: true

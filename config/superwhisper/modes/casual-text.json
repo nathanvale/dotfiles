@@ -1,0 +1,35 @@
+{
+  "activationApps" : [
+
+  ],
+  "activationSites" : [
+
+  ],
+  "adjustOutputVolume" : false,
+  "contextFromActiveApplication" : false,
+  "contextFromClipboard" : false,
+  "contextFromSelection" : false,
+  "contextTemplate" : "Use the copied text as context to complete this task.\n\nCopied text: ",
+  "description" : "Clean up filler words while maintaining casual tone",
+  "diarize" : false,
+  "iconName" : "",
+  "key" : "casual-text",
+  "language" : "en",
+  "languageModelEnabled" : true,
+  "languageModelID" : "sw-gpt-4o-mini",
+  "literalPunctuation" : false,
+  "name" : "Casual Text",
+  "pauseMediaPlayback" : false,
+  "prompt" : "Transform the User Message into clean, casual text. Remove filler words (um, uh, like, you know, sort of, kind of), repeated words, and false starts. Fix basic grammar and punctuation. Maintain the casual, conversational tone - don't make it formal or overly polished. Just clean it up while keeping the natural voice. Output only the cleaned text with no explanations.",
+  "promptExamples" : [
+
+  ],
+  "realtimeOutput" : false,
+  "script" : "",
+  "scriptEnabled" : false,
+  "translateToEnglish" : false,
+  "type" : "custom",
+  "useSystemAudio" : false,
+  "version" : 1,
+  "voiceModelID" : "sw-ultra-cloud-v1-east"
+}

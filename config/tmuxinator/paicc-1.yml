@@ -1,0 +1,49 @@
+# ~/.config/tmuxinator/paicc-1.yml
+
+name: paicc-1
+root: /Users/nathanvale/code/paicc-1
+
+# Project hooks - runs on project start
+on_project_start: |
+  source ~/.config/tmuxinator/scripts/common-setup.sh
+  setup_logs "paicc-1"
+  setup_vscode_marker "paicc-1"
+
+# Run on project stop - cleanup
+on_project_stop: |
+  source ~/.config/tmuxinator/scripts/common-setup.sh
+  cleanup_vscode_marker "paicc-1"
+
+# Runs before each window starts
+pre_window: |
+  source ~/.config/tmuxinator/scripts/common-setup.sh
+  open_vscode_once "paicc-1"
+
+# Set window base-index to 1 and load tmux config
+tmux_options: -f ~/.tmux.conf
+
+# Start with the first window (claude)
+startup_window: claude
+startup_pane: 1
+windows:
+  - claude:
+      root: /Users/nathanvale/code/paicc-1
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "claude"
+          claude
+  - git:
+      root: /Users/nathanvale/code/paicc-1
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "git"
+          lazygit
+  - shell:
+      root: /Users/nathanvale/code/paicc-1
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "shell"
+          clear

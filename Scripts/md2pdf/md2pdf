@@ -1,0 +1,45 @@
+#!/bin/bash
+# Convert markdown to beautiful PDF using Eisvogel template
+# Usage: md2pdf <file.md> [output.pdf]
+
+if [ $# -eq 0 ]; then
+    echo "Usage: md2pdf <file.md> [output.pdf]"
+    exit 1
+fi
+
+INPUT="$1"
+
+if [ ! -f "$INPUT" ]; then
+    echo "Error: File '$INPUT' not found"
+    exit 1
+fi
+
+# Determine output filename
+if [ $# -eq 2 ]; then
+    OUTPUT="$2"
+else
+    # Replace .md extension with .pdf
+    OUTPUT="${INPUT%.md}.pdf"
+fi
+
+echo "Converting $INPUT to $OUTPUT..."
+
+# Remove horizontal rules (---) and convert with beautiful defaults
+# Note: Using default fonts since custom fonts require xelatex
+sed 's/^---$//' "$INPUT" | \
+pandoc \
+    -o "$OUTPUT" \
+    --from markdown+hard_line_breaks \
+    --template eisvogel \
+    --syntax-highlighting=idiomatic \
+    -V linkcolor=blue \
+    -V geometry:a4paper \
+    -V geometry:margin=2.5cm \
+    -V block-headings
+
+if [ $? -eq 0 ]; then
+    echo "✅ PDF created: $OUTPUT"
+else
+    echo "❌ Error creating PDF"
+    exit 1
+fi

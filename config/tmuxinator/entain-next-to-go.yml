@@ -1,0 +1,66 @@
+# ~/.config/tmuxinator/entain-next-to-go.yml
+
+name: entain-next-to-go
+root: /Users/nathanvale/code/entain-next-to-go
+
+# Project hooks - runs on project start
+on_project_start: |
+  source ~/.config/tmuxinator/scripts/common-setup.sh
+  setup_logs "entain-next-to-go"
+  setup_vscode_marker "entain-next-to-go"
+
+# Run on project stop - cleanup
+on_project_stop: |
+  source ~/.config/tmuxinator/scripts/common-setup.sh
+  cleanup_vscode_marker "entain-next-to-go"
+
+# Runs before each window starts
+pre_window: |
+  source ~/.config/tmuxinator/scripts/common-setup.sh
+  open_vscode_once "entain-next-to-go"
+
+# Set window base-index to 1 and load tmux config
+tmux_options: -f ~/.tmux.conf
+
+# Start with the first window (claude)
+startup_window: claude
+startup_pane: 1
+windows:
+  - claude:
+      root: /Users/nathanvale/code/entain-next-to-go
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "claude"
+          claude
+  - git:
+      root: /Users/nathanvale/code/entain-next-to-go
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "git"
+          lazygit
+  - dev:
+      root: /Users/nathanvale/code/entain-next-to-go
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "dev" "dev"
+          npm run dev 2>&1 | tee -a .logs/dev/dev.$(date +%s).log
+  - vault:
+      root: /Users/nathanvale/code/entain-next-to-go
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "vault"
+          # Show vault status for this project
+          if command -v "$HOME/code/dotfiles/bin/vault/vault" >/dev/null 2>&1; then
+            "$HOME/code/dotfiles/bin/vault/vault" status
+          else
+            echo "Vault manager not available"
+          fi
+          echo
+          echo "Vault shortcuts:"
+          echo "  Ctrl-g V - Browse all vaults"
+          echo "  Ctrl-g v - Open current project vault"
+          echo "  Ctrl-g D - Browse docs vaults"

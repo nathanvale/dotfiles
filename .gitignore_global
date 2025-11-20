@@ -27,3 +27,12 @@ Session.vim
 
 # eslint
 .eslintcache
+
+# Project metadata
+PROJECT_INDEX.json
+
+# Obsidian
+.obsidian/
+.claude/settings.local.json
+
+.worktrees/**

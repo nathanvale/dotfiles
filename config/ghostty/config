@@ -27,6 +27,61 @@ macos-icon-screen-color = 000000,00E000
 macos-non-native-fullscreen = true
 macos-titlebar-style = tabs
 
-background-opacity = .4
-background-blur = true
 keybind = shift+enter=text:\n
+
+# Pass Command+number through to tmux for window switching
+# Using W3C key codes format (Ghostty 1.2.0+ breaking change)
+keybind = cmd+digit1=text:\x1b1
+keybind = cmd+digit2=text:\x1b2
+keybind = cmd+digit3=text:\x1b3
+keybind = cmd+digit4=text:\x1b4
+keybind = cmd+digit5=text:\x1b5
+keybind = cmd+digit6=text:\x1b6
+keybind = cmd+digit7=text:\x1b7
+keybind = cmd+digit8=text:\x1b8
+keybind = cmd+digit9=text:\x1b9
+
+working-directory = /Users/nathanvale/code
+
+# Enable clickable URLs (default behavior)
+# File path clicking is not yet implemented in Ghostty
+link-url = true
+
+# ADHD-Friendly Features (v1.2.0+)
+# =================================
+
+# Command Palette - Quick access to ALL actions without memorization!
+# Use default binding cmd+shift+p (custom actions not supported yet)
+
+# Quick terminal for instant access (reduces context switching)
+quick-terminal-size = 85%
+quick-terminal-animation-duration = 0.15
+quick-terminal-autohide = true
+quick-terminal-position = top
+
+# Quick terminal can be accessed via system shortcuts
+
+# Progress bar support enabled by default in 1.2.0
+# Apps that support it will show visual progress
+
+# Background image for visual anchoring (helps with focus)
+# Set a calming/focusing image with low opacity
+# background-image = /Users/nathanvale/Pictures/calm-background.png
+# background-image-opacity = 0.03
+# background-image-mode = stretch
+
+# Improved cursor visibility for tracking
+cursor-style = block
+cursor-invert-fg-bg = true
+
+# Cursor trail shader - helps track cursor movement (ADHD game-changer!)
+# Creates a subtle trail effect so you never lose the cursor
+# custom-shader = /Users/nathanvale/code/dotfiles/config/ghostty/cursor-trail.glsl
+
+# Font configuration is already set above
+
+# Reduce distractions with minimal window chrome
+window-decoration = client
+window-save-state = always
+
+# Split navigation handled by tmux instead

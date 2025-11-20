@@ -1,0 +1,73 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(~/code/dotfiles/.env.secrets)",
+      "Read(./.env*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude-code-docs/claude-docs-helper.sh hook-check"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/nathanvale/.claude-code-project-index/scripts/run_python.sh /Users/nathanvale/.claude-code-project-index/scripts/i_flag_hook.py",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/nathanvale/.claude-code-project-index/scripts/run_python.sh /Users/nathanvale/.claude-code-project-index/scripts/stop_hook.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/log-agent-start.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/atuin-post-tool.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "task-streams": true,
+    "code-documentation@claude-code-workflows": true,
+    "skill-creator@awesome-claude-skills": true
+  },
+  "alwaysThinkingEnabled": true
+}

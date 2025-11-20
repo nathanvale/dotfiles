@@ -1,4 +1,14 @@
+# Bat Configuration
+# Only show numbers/headers for file viewing, not for piped input
+
+# Default style (used when viewing files)
 --style="numbers,changes,header"
---paging=always
+
+# Theme
 --theme="Night Owl"
---italic-text always
+
+# Italic text
+--italic-text=always
+
+# Paging
+--paging=always

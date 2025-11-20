@@ -1,0 +1,891 @@
+     STDIN
+   1 {
+   2   "report_id": "R0001",
+   3   "report_path": "docs/reports/R0001-vault-tmux-code-analysis.json",
+   4   "category": "Code Quality",
+   5   "scope": "bin/vault/vault (573 lines), bin/tmux/startup.sh (84 lines), bin/tmux/new-project.sh (434 lines)",
+   6   "findings": [
+   7     {
+   8       "title": "Shell injection vulnerability in find commands with unquoted $SEARCH_PATHS",
+   9       "priority": "P0",
+  10       "severity": "P0",
+  11       "stink_index": 9,
+  12       "component": "C09: Dotfiles & Shell Scripts",
+  13       "location": "bin/vault/vault:195, bin/vault/vault:371",
+  14       "estimated_effort": "0.5h",
+  15       "complexity": "LOW",
+  16       "regression_risk": "LOW",
+  17       "description": "The variable $SEARCH_PATHS is used unquoted in two find commands. If VAULT_SEARCH_PATHS environment variable contains spaces, special characters, or command substitution syntax, it could lead to arbitrary command execution or unintended directory traversal.",
+  18       "regression_risk_details": {
+  19         "impact": "Security vulnerability - potential command injection",
+  20         "blast_radius": "Functions: find_repo_by_id, interactive_manage",
+  21         "dependencies": "All vault operations that search for repositories",
+  22         "testing_gaps": "No validation of VAULT_SEARCH_PATHS input",
+  23         "rollback_risk": "None - fix is quoting variables (safe change)"
+  24       },
+  25       "acceptance_criteria": [
+  26         "Quote $SEARCH_PATHS in both find commands",
+  27         "Add input validation for VAULT_SEARCH_PATHS",
+  28         "Test with paths containing spaces and special characters",
+  29         "Verify find commands work with colon-separated paths if supported"
+  30       ],
+  31       "implementation_steps": [
+  32         "Change line 195: find \"$SEARCH_PATHS\" -name \".vault-id\" -type f",
+  33         "Change line 371: find \"$SEARCH_PATHS\" -type d \\( -name \".agent-os\" -o -name \"docs\" \\)",
+  34         "Add validation at line 19 to check VAULT_SEARCH_PATHS format",
+  35         "Add comment documenting expected format (colon-separated or single path)",
+  36         "Test with: VAULT_SEARCH_PATHS='/tmp/test path' vault manage"
+  37       ],
+  38       "code_examples": {
+  39         "current": "find $SEARCH_PATHS -name \".vault-id\" -type f 2>/dev/null",
+  40         "proposed": "# Quote to prevent word splitting and command injection\nfind \"$SEARCH_PATHS\" -name \".vault-id\" -type f 2>/dev/null"
+  41       },
+  42       "file_changes": {
+  43         "to_create": [],
+  44         "to_modify": [
+  45           "bin/vault/vault:195 - Quote $SEARCH_PATHS in find command",
+  46           "bin/vault/vault:371 - Quote $SEARCH_PATHS in find command",
+  47           "bin/vault/vault:19 - Add input validation for VAULT_SEARCH_PATHS"
+  48         ],
+  49         "to_delete": []
+  50       },
+  51       "testing_requirements": [
+  52         {
+  53           "test_type": "Security",
+  54           "validates_ac": ["AC1", "AC2", "AC3"],
+  55           "description": "Test with malicious VAULT_SEARCH_PATHS values",
+  56           "location": "Manual testing with various input patterns"
+  57         }
+  58       ],
+  59       "dependencies": {
+  60         "blocking": [],
+  61         "blocks": [],
+  62         "prerequisites": []
+  63       },
+  64       "root_cause": {
+  65         "bug_type": "Shell Injection Vulnerability",
+  66         "root_cause_5_whys": "1. Why unquoted? Developer assumed single path. 2. Why assumed? No documentation of format. 3. Why no docs? Variable added without spec. 4. Why no review? No security review process. 5. Why no process? Small personal project without formal security checks.",
+  67         "contributing_factors": [
+  68           "No shell script linting (shellcheck)",
+  69           "No security review for user-controlled environment variables",
+  70           "Insufficient quoting discipline"
+  71         ],
+  72         "first_introduced": "Unknown - present in current version"
+  73       },
+  74       "impact_analysis": {
+  75         "users_affected": "All users who set VAULT_SEARCH_PATHS environment variable",
+  76         "financial_impact": "$0",
+  77         "data_corruption": "Potential - attacker could delete files via rm injection",
+  78         "sla_breach": "None"
+  79       },
+  80       "reproduction_steps": "VAULT_SEARCH_PATHS='/tmp/evil; echo PWNED' vault manage\n# Expected: Command injection executes echo\n# After fix: find treats as literal path",
+  81       "hotfix_decision": {
+  82         "decision": "REGULAR_SPRINT",
+  83         "timeline": "0.5h",
+  84         "approach": "Add quotes around variable expansions",
+  85         "risk": "LOW"
+  86       },
+  87       "pattern_detection": "rg 'find \\$[A-Za-z_]+' --type sh\n# Find all unquoted variables in find commands"
+  88     },
+  89     {
+  90       "title": "Race condition in registry updates - no file locking mechanism",
+  91       "priority": "P1",
+  92       "severity": "P1",
+  93       "stink_index": 7,
+  94       "component": "C09: Dotfiles & Shell Scripts",
+  95       "location": "bin/vault/vault:114-118 (save_registry), bin/vault/vault:208-356 (health_check)",
+  96       "estimated_effort": "2h",
+  97       "complexity": "MEDIUM",
+  98       "regression_risk": "MEDIUM",
+  99       "description": "Multiple concurrent vault operations can corrupt the registry JSON. The save_registry function writes directly without atomic operations or file locks. If health_check runs while register_repo executes, registry updates can be lost or corrupted.",
+ 100       "regression_risk_details": {
+ 101         "impact": "Data corruption of vault registry",
+ 102         "blast_radius": "All functions that modify registry: register_repo, unregister_repo, health_check",
+ 103         "dependencies": "Any concurrent vault operations",
+ 104         "testing_gaps": "No concurrency tests",
+ 105         "rollback_risk": "Medium - requires testing atomic write implementation"
+ 106       },
+ 107       "acceptance_criteria": [
+ 108         "Implement file locking using flock",
+ 109         "Use atomic writes (write to temp file, then mv)",
+ 110         "Test concurrent register_repo calls",
+ 111         "Verify registry integrity after race condition scenarios"
+ 112       ],
+ 113       "implementation_steps": [
+ 114         "Add flock wrapper function for exclusive registry access",
+ 115         "Modify save_registry to write to $REGISTRY_FILE.tmp first",
+ 116         "Use mv to atomically replace registry file",
+ 117         "Wrap all registry modifications in flock critical sections",
+ 118         "Add timeout for lock acquisition (30 seconds)",
+ 119         "Test with: (vault register /tmp/a & vault health & vault register /tmp/b &)"
+ 120       ],
+ 121       "code_examples": {
+ 122         "current": "save_registry() {\n    local registry=\"$1\"\n    echo \"$registry\" | jq ... > \"$REGISTRY_FILE\"\n}",
+ 123         "proposed": "save_registry() {\n    local registry=\"$1\"\n    local temp_file=\"$REGISTRY_FILE.tmp.$$\"\n    (\n        flock -x -w 30 200 || { log_error \"Failed to acquire registry lock\"; return 1; }\n        echo \"$registry\" | jq ... > \"$temp_file\"\n        mv \"$temp_file\" \"$REGISTRY_FILE\"\n    ) 200>\"$REGISTRY_FILE.lock\"\n}"
+ 124       },
+ 125       "file_changes": {
+ 126         "to_create": [],
+ 127         "to_modify": [
+ 128           "bin/vault/vault:114-118 - Add atomic write to save_registry",
+ 129           "bin/vault/vault:90-112 - Add flock to load_registry for consistency",
+ 130           "bin/vault/vault:125-175 - Wrap register_repo in flock",
+ 131           "bin/vault/vault:208-356 - Wrap health_check modifications in flock"
+ 132         ],
+ 133         "to_delete": []
+ 134       },
+ 135       "testing_requirements": [
+ 136         {
+ 137           "test_type": "Concurrency",
+ 138           "validates_ac": ["AC1", "AC2", "AC3", "AC4"],
+ 139           "description": "Run multiple vault operations concurrently",
+ 140           "location": "Manual concurrency test script"
+ 141         }
+ 142       ],
+ 143       "dependencies": {
+ 144         "blocking": [],
+ 145         "blocks": [],
+ 146         "prerequisites": ["Requires flock utility (standard on Linux/macOS)"]
+ 147       },
+ 148       "root_cause": {
+ 149         "bug_type": "Race Condition",
+ 150         "root_cause_5_whys": "1. Why no locking? Developer didn't anticipate concurrent use. 2. Why not anticipated? Designed for single-user interactive use. 3. Why assume single-user? No tmux automation documented initially. 4. Why no concurrency test? No test suite. 5. Why no tests? Personal dotfiles project, iterative development.",
+ 151         "contributing_factors": [
+ 152           "No atomic file operations",
+ 153           "Direct write to registry without temp file",
+ 154           "health_check can run concurrently with register operations"
+ 155         ],
+ 156         "first_introduced": "Unknown - architectural issue from initial design"
+ 157       },
+ 158       "impact_analysis": {
+ 159         "users_affected": "Users running concurrent vault operations (health + register)",
+ 160         "financial_impact": "$0",
+ 161         "data_corruption": "High - registry JSON can be corrupted, vault state lost",
+ 162         "sla_breach": "None"
+ 163       },
+ 164       "reproduction_steps": "# Terminal 1\nvault health &\n# Terminal 2 (immediately)\nvault register /tmp/repo1 &\nvault register /tmp/repo2 &\n# Check registry for corruption\ncat ~/.config/vault-manager/registry.json | jq .",
+ 165       "hotfix_decision": {
+ 166         "decision": "REGULAR_SPRINT",
+ 167         "timeline": "2h",
+ 168         "approach": "Add flock and atomic writes",
+ 169         "risk": "MEDIUM"
+ 170       },
+ 171       "pattern_detection": "rg '> \\$[A-Z_]+FILE' --type sh\n# Find all direct writes to files (should use atomic writes)"
+ 172     },
+ 173     {
+ 174       "title": "Performance: find commands scan entire directory trees without pruning",
+ 175       "priority": "P1",
+ 176       "severity": "P1",
+ 177       "stink_index": 8,
+ 178       "component": "C09: Dotfiles & Shell Scripts",
+ 179       "location": "bin/vault/vault:195-201, bin/vault/vault:371-382",
+ 180       "estimated_effort": "1h",
+ 181       "complexity": "LOW",
+ 182       "regression_risk": "LOW",
+ 183       "description": "The find commands in find_repo_by_id and interactive_manage traverse into node_modules, .git, and other large directories unnecessarily. On large codebases this can take 30+ seconds instead of 1-2 seconds. The node_modules check exists but only AFTER find has already descended.",
+ 184       "regression_risk_details": {
+ 185         "impact": "Severe performance degradation on large codebases",
+ 186         "blast_radius": "Functions: find_repo_by_id, interactive_manage",
+ 187         "dependencies": "All operations that search for repositories",
+ 188         "testing_gaps": "No performance tests with large directory trees",
+ 189         "rollback_risk": "None - adding -prune is safe"
+ 190       },
+ 191       "acceptance_criteria": [
+ 192         "Add -prune flags to skip node_modules, .git, vendor, target directories",
+ 193         "Verify find completes in <2 seconds on large codebase",
+ 194         "Test that valid repos are still found after pruning",
+ 195         "Document pruned directories in comments"
+ 196       ],
+ 197       "implementation_steps": [
+ 198         "Line 195: Add -prune: find \"$SEARCH_PATHS\" -type d \\( -name node_modules -o -name .git -o -name vendor -o -name target \\) -prune -o -name \".vault-id\" -type f -print",
+ 199         "Line 371: Add same -prune pattern before searching for .agent-os/docs",
+ 200         "Remove redundant node_modules check at line 375 (now handled by -prune)",
+ 201         "Add comment explaining pruned directories",
+ 202         "Benchmark with: time vault manage (on large codebase)"
+ 203       ],
+ 204       "code_examples": {
+ 205         "current": "find $SEARCH_PATHS -name \".vault-id\" -type f 2>/dev/null | while read id_file; do",
+ 206         "proposed": "# Skip common large directories to improve performance\nfind \"$SEARCH_PATHS\" -type d \\( -name node_modules -o -name .git -o -name vendor -o -name target -o -name .next -o -name dist -o -name build \\) -prune -o -name \".vault-id\" -type f -print 2>/dev/null | while IFS= read -r id_file; do"
+ 207       },
+ 208       "file_changes": {
+ 209         "to_create": [],
+ 210         "to_modify": [
+ 211           "bin/vault/vault:195 - Add -prune flags to find_repo_by_id",
+ 212           "bin/vault/vault:371 - Add -prune flags to interactive_manage",
+ 213           "bin/vault/vault:375 - Remove redundant node_modules check"
+ 214         ],
+ 215         "to_delete": []
+ 216       },
+ 217       "testing_requirements": [
+ 218         {
+ 219           "test_type": "Performance",
+ 220           "validates_ac": ["AC1", "AC2", "AC3"],
+ 221           "description": "Benchmark find speed on codebase with large node_modules",
+ 222           "location": "Manual timing test with time command"
+ 223         }
+ 224       ],
+ 225       "dependencies": {
+ 226         "blocking": [],
+ 227         "blocks": [],
+ 228         "prerequisites": []
+ 229       },
+ 230       "root_cause": {
+ 231         "bug_type": "Performance Issue",
+ 232         "root_cause_5_whys": "1. Why no pruning? Developer didn't consider large node_modules. 2. Why not considered? Tested on small repos. 3. Why small repos? Initial development on simple projects. 4. Why not tested large? No performance requirements. 5. Why no requirements? Personal dotfiles, evolved organically.",
+ 233         "contributing_factors": [
+ 234           "No performance benchmarking",
+ 235           "Node_modules check happens AFTER traversal (too late)",
+ 236           "Find depth not limited"
+ 237         ],
+ 238         "first_introduced": "vault:371 (interactive_manage function)"
+ 239       },
+ 240       "impact_analysis": {
+ 241         "users_affected": "All users with large codebases (especially Node.js projects)",
+ 242         "financial_impact": "$0",
+ 243         "data_corruption": "None",
+ 244         "sla_breach": "None (UX degradation only)"
+ 245       },
+ 246       "reproduction_steps": "# Create large test structure\nmkdir -p /tmp/test-repo/node_modules/huge-lib\ntouch /tmp/test-repo/.agent-os/README.md\n# Create 10,000 files in node_modules\nfor i in {1..10000}; do touch /tmp/test-repo/node_modules/huge-lib/file$i.js; done\n# Time the find\ntime VAULT_SEARCH_PATHS=/tmp/test-repo vault manage\n# Expect: 15-30s without prune, <1s with prune",
+ 247       "hotfix_decision": {
+ 248         "decision": "REGULAR_SPRINT",
+ 249         "timeline": "1h",
+ 250         "approach": "Add -prune flags to exclude common large directories",
+ 251         "risk": "LOW"
+ 252       },
+ 253       "pattern_detection": "rg 'find .* -type [df]' --type sh | grep -v prune\n# Find all find commands without -prune optimization"
+ 254     },
+ 255     {
+ 256       "title": "Silent failure in repository path resolution - cd failure returns wrong directory",
+ 257       "priority": "P0",
+ 258       "severity": "P0",
+ 259       "stink_index": 9,
+ 260       "component": "C09: Dotfiles & Shell Scripts",
+ 261       "location": "bin/vault/vault:127, bin/tmux/new-project.sh:127",
+ 262       "estimated_effort": "0.5h",
+ 263       "complexity": "LOW",
+ 264       "regression_risk": "LOW",
+ 265       "description": "The command 'repo_path=$(cd \"$repo_path\" && pwd)' silently uses current directory if cd fails. This could register/create configs for the WRONG directory without any error message. Example: user runs 'vault register /nonexistent' and vault registers the current directory instead.",
+ 266       "regression_risk_details": {
+ 267         "impact": "Wrong directory registered in vault or used for tmuxinator config",
+ 268         "blast_radius": "Functions: register_repo (vault:127), detect_project_type (new-project.sh:127)",
+ 269         "dependencies": "All operations that resolve repository paths",
+ 270         "testing_gaps": "No validation that cd succeeded",
+ 271         "rollback_risk": "None - adding error check is safe"
+ 272       },
+ 273       "acceptance_criteria": [
+ 274         "Detect cd failure and exit with error",
+ 275         "Display clear error message showing invalid path",
+ 276         "Test with nonexistent paths",
+ 277         "Verify correct directory is used after fix"
+ 278       ],
+ 279       "implementation_steps": [
+ 280         "vault:127 - Change to: repo_path=$(cd \"$repo_path\" 2>/dev/null && pwd) || { log_error \"Invalid path: $repo_path\"; return 1; }",
+ 281         "new-project.sh:127 - Add same check (currently not handling failure)",
+ 282         "Add test case: vault register /nonexistent/path",
+ 283         "Verify error message displayed and no registration occurs"
+ 284       ],
+ 285       "code_examples": {
+ 286         "current": "repo_path=$(cd \"$repo_path\" && pwd)",
+ 287         "proposed": "# Validate directory exists and is accessible\nrepo_path=$(cd \"$repo_path\" 2>/dev/null && pwd) || {\n    log_error \"Invalid repository path: $repo_path\"\n    log_error \"Directory does not exist or is not accessible\"\n    return 1\n}"
+ 288       },
+ 289       "file_changes": {
+ 290         "to_create": [],
+ 291         "to_modify": [
+ 292           "bin/vault/vault:127 - Add error handling for cd failure",
+ 293           "bin/tmux/new-project.sh:127 - Add error handling for cd failure (currently duplicates bug)"
+ 294         ],
+ 295         "to_delete": []
+ 296       },
+ 297       "testing_requirements": [
+ 298         {
+ 299           "test_type": "Unit",
+ 300           "validates_ac": ["AC1", "AC2", "AC3", "AC4"],
+ 301           "description": "Test vault register with invalid paths",
+ 302           "location": "Manual test with nonexistent paths"
+ 303         }
+ 304       ],
+ 305       "dependencies": {
+ 306         "blocking": [],
+ 307         "blocks": [],
+ 308         "prerequisites": []
+ 309       },
+ 310       "root_cause": {
+ 311         "bug_type": "Error Handling Gap",
+ 312         "root_cause_5_whys": "1. Why no error check? Developer assumed paths always exist. 2. Why assumed? No input validation documented. 3. Why no validation? Evolved from interactive-only script. 4. Why now automated? Added tmux integration later. 5. Why not refactored? No systematic error handling review.",
+ 313         "contributing_factors": [
+ 314           "Bash subshell behavior (cd in subshell doesn't affect parent)",
+ 315           "No explicit error checking on cd command",
+ 316           "set -e doesn't catch errors in $() subshells"
+ 317         ],
+ 318         "first_introduced": "vault:127 (register_repo function)"
+ 319       },
+ 320       "impact_analysis": {
+ 321         "users_affected": "Users providing invalid paths to vault register or tmuxinator-new-project",
+ 322         "financial_impact": "$0",
+ 323         "data_corruption": "Medium - wrong directory registered in vault",
+ 324         "sla_breach": "None"
+ 325       },
+ 326       "reproduction_steps": "cd /tmp\nvault register /nonexistent/path\n# BUG: Registers /tmp instead of failing\n# After fix: Error message displayed, no registration",
+ 327       "hotfix_decision": {
+ 328         "decision": "HOTFIX",
+ 329         "timeline": "0.5h",
+ 330         "approach": "Add || { error; return 1; } to catch cd failure",
+ 331         "risk": "LOW"
+ 332       },
+ 333       "pattern_detection": "rg 'cd \\\".*\\\" && pwd' --type sh\n# Find all cd && pwd patterns without error handling"
+ 334     },
+ 335     {
+ 336       "title": "Code duplication: symlink creation pattern repeated 3 times",
+ 337       "priority": "P2",
+ 338       "severity": "P2",
+ 339       "stink_index": 6,
+ 340       "component": "C09: Dotfiles & Shell Scripts",
+ 341       "location": "bin/vault/vault:152-153, bin/vault/vault:242-243, bin/vault/vault:275-276",
+ 342       "estimated_effort": "1h",
+ 343       "complexity": "LOW",
+ 344       "regression_risk": "LOW",
+ 345       "description": "The exact pattern for creating vault symlinks is duplicated in register_repo, health_check auto-repair, and health_check moved repo handling. This violates DRY principle and makes maintenance harder. Changes must be applied to 3 locations.",
+ 346       "regression_risk_details": {
+ 347         "impact": "Maintenance burden - changes need 3 updates",
+ 348         "blast_radius": "Functions: register_repo, health_check",
+ 349         "dependencies": "All vault registration operations",
+ 350         "testing_gaps": "No test ensuring all 3 locations stay in sync",
+ 351         "rollback_risk": "Low - extracting to function is safe refactor"
+ 352       },
+ 353       "acceptance_criteria": [
+ 354         "Extract symlink creation to create_vault_symlinks() function",
+ 355         "Replace all 3 duplicated blocks with function call",
+ 356         "Verify all vault operations still work correctly",
+ 357         "Add comments documenting function parameters"
+ 358       ],
+ 359       "implementation_steps": [
+ 360         "Create function after line 87: create_vault_symlinks() { local repo_path=$1; local repo_name=$2; ... }",
+ 361         "Replace lines 152-153 with: create_vault_symlinks \"$repo_path\" \"$repo_name\"",
+ 362         "Replace lines 242-243 with same function call",
+ 363         "Replace lines 275-276 with same function call",
+ 364         "Test register, health check auto-repair, and moved repo scenarios"
+ 365       ],
+ 366       "code_examples": {
+ 367         "current": "# Duplicated 3 times:\n[ -d \"$repo_path/.agent-os\" ] && ln -sf \"$repo_path/.agent-os\" \"$REPOS_VAULT/$repo_name/.agent-os\"\n[ -d \"$repo_path/docs\" ] && ln -sf \"$repo_path/docs\" \"$REPOS_VAULT/$repo_name/docs\"",
+ 368         "proposed": "# New function:\ncreate_vault_symlinks() {\n    local repo_path=\"$1\"\n    local repo_name=\"$2\"\n    mkdir -p \"$REPOS_VAULT/$repo_name\"\n    [ -d \"$repo_path/.agent-os\" ] && ln -sf \"$repo_path/.agent-os\" \"$REPOS_VAULT/$repo_name/.agent-os\"\n    [ -d \"$repo_path/docs\" ] && ln -sf \"$repo_path/docs\" \"$REPOS_VAULT/$repo_name/docs\"\n}\n\n# Usage (replaces 3 duplicates):\ncreate_vault_symlinks \"$repo_path\" \"$repo_name\""
+ 369       },
+ 370       "file_changes": {
+ 371         "to_create": [],
+ 372         "to_modify": [
+ 373           "bin/vault/vault:88 - Add create_vault_symlinks function",
+ 374           "bin/vault/vault:152-153 - Replace with function call",
+ 375           "bin/vault/vault:241-243 - Replace with function call",
+ 376           "bin/vault/vault:274-276 - Replace with function call"
+ 377         ],
+ 378         "to_delete": []
+ 379       },
+ 380       "testing_requirements": [
+ 381         {
+ 382           "test_type": "Regression",
+ 383           "validates_ac": ["AC1", "AC2", "AC3"],
+ 384           "description": "Verify register, health auto-repair, and moved repo all work",
+ 385           "location": "Manual test all 3 scenarios"
+ 386         }
+ 387       ],
+ 388       "dependencies": {
+ 389         "blocking": [],
+ 390         "blocks": [],
+ 391         "prerequisites": []
+ 392       },
+ 393       "root_cause": {
+ 394         "bug_type": "Code Duplication",
+ 395         "root_cause_5_whys": "1. Why duplicated? Health check added after register_repo. 2. Why copy-paste? Quick fix for auto-repair feature. 3. Why not refactored? Time pressure to ship feature. 4. Why time pressure? Personal project, iterative development. 5. Why not cleaned up? No code review process.",
+ 396         "contributing_factors": [
+ 397           "No DRY enforcement",
+ 398           "Incremental feature additions",
+ 399           "No refactoring discipline"
+ 400         ],
+ 401         "first_introduced": "vault:242 (when health_check auto-repair added)"
+ 402       },
+ 403       "impact_analysis": {
+ 404         "users_affected": "0 (internal code quality issue)",
+ 405         "financial_impact": "$0",
+ 406         "data_corruption": "None",
+ 407         "sla_breach": "None"
+ 408       },
+ 409       "reproduction_steps": "# No user-facing reproduction\n# Code inspection: search for ln -sf pattern\nrg 'ln -sf.*REPOS_VAULT' bin/vault/vault",
+ 410       "hotfix_decision": {
+ 411         "decision": "REGULAR_SPRINT",
+ 412         "timeline": "1h",
+ 413         "approach": "Extract to function during next refactoring sprint",
+ 414         "risk": "LOW"
+ 415       },
+ 416       "pattern_detection": "rg -A 1 'ln -sf.*REPOS_VAULT' --type sh\n# Find all symlink patterns that might be duplicated"
+ 417     },
+ 418     {
+ 419       "title": "Broken vault integration - new-project.sh calls nonexistent vault-manager.sh commands",
+ 420       "priority": "P1",
+ 421       "severity": "P1",
+ 422       "stink_index": 7,
+ 423       "component": "C09: Dotfiles & Shell Scripts",
+ 424       "location": "bin/tmux/new-project.sh:192-196, bin/tmux/new-project.sh:204-207",
+ 425       "estimated_effort": "1h",
+ 426       "complexity": "LOW",
+ 427       "regression_risk": "LOW",
+ 428       "description": "new-project.sh calls vault-manager.sh with register-aos and register-docs commands, but vault-manager.sh is a DIFFERENT script than the new unified 'vault' command. This causes confusion and potential integration failures. The code should use the new vault register command instead.",
+ 429       "regression_risk_details": {
+ 430         "impact": "Vault registration may fail or use wrong script",
+ 431         "blast_radius": "Functions: detect_vaults in new-project.sh",
+ 432         "dependencies": "Vault integration during tmuxinator project creation",
+ 433         "testing_gaps": "No integration test for vault registration from new-project.sh",
+ 434         "rollback_risk": "Low - updating to correct vault command"
+ 435       },
+ 436       "acceptance_criteria": [
+ 437         "Update new-project.sh to use unified 'vault register' command",
+ 438         "Remove vault-manager.sh specific command calls",
+ 439         "Test vault registration during project creation",
+ 440         "Verify vault symlinks created correctly"
+ 441       ],
+ 442       "implementation_steps": [
+ 443         "Replace lines 192-196: if command -v vault >/dev/null 2>&1; then vault register \"$PROJECT_PATH\" >/dev/null 2>&1 || true; fi",
+ 444         "Remove separate .agent-os and docs registration logic (vault handles both)",
+ 445         "Simplify detect_vaults function to just check and call vault register once",
+ 446         "Test: tmuxinator-new-project /tmp/test-project",
+ 447         "Verify: ls ~/.Documents/ObsidianVaults/Repos/repos/test-project"
+ 448       ],
+ 449       "code_examples": {
+ 450         "current": "if command -v \"$HOME/code/dotfiles/bin/vault/vault-manager.sh\" >/dev/null 2>&1; then\n    \"$HOME/code/dotfiles/bin/vault/vault-manager.sh\" register-aos \"$PROJECT_PATH/.agent-os\" \"$SAFE_PROJECT_NAME\" >/dev/null 2>&1 || true\nfi",
+ 451         "proposed": "# Use unified vault command\nif [ -d \"$PROJECT_PATH/.agent-os\" ] || [ -d \"$PROJECT_PATH/docs\" ]; then\n    if command -v vault >/dev/null 2>&1; then\n        vault register \"$PROJECT_PATH\" >/dev/null 2>&1 || true\n        echo -e \"${GREEN}  → Registered with vault system${NC}\" >&2\n    fi\nfi"
+ 452       },
+ 453       "file_changes": {
+ 454         "to_create": [],
+ 455         "to_modify": [
+ 456           "bin/tmux/new-project.sh:185-216 - Simplify detect_vaults to use unified vault command",
+ 457           "bin/tmux/new-project.sh:192-196 - Remove vault-manager.sh register-aos call",
+ 458           "bin/tmux/new-project.sh:204-207 - Remove vault-manager.sh register-docs call"
+ 459         ],
+ 460         "to_delete": []
+ 461       },
+ 462       "testing_requirements": [
+ 463         {
+ 464           "test_type": "Integration",
+ 465           "validates_ac": ["AC1", "AC2", "AC3", "AC4"],
+ 466           "description": "Test project creation with vault registration",
+ 467           "location": "Manual test: tmuxinator-new-project with .agent-os"
+ 468         }
+ 469       ],
+ 470       "dependencies": {
+ 471         "blocking": [],
+ 472         "blocks": [],
+ 473         "prerequisites": ["Unified vault command must be in PATH"]
+ 474       },
+ 475       "root_cause": {
+ 476         "bug_type": "Integration Mismatch",
+ 477         "root_cause_5_whys": "1. Why wrong command? vault script refactored but new-project.sh not updated. 2. Why not updated? Scripts developed independently. 3. Why independent? No integration tests. 4. Why no tests? Personal dotfiles, manual testing only. 5. Why manual? No CI/CD for dotfiles.",
+ 478         "contributing_factors": [
+ 479           "Two vault scripts (vault vs vault-manager.sh) causing confusion",
+ 480           "No integration tests between tmux and vault systems",
+ 481           "Hardcoded paths to specific script files"
+ 482         ],
+ 483         "first_introduced": "new-project.sh:192 (when vault integration added)"
+ 484       },
+ 485       "impact_analysis": {
+ 486         "users_affected": "Users creating new tmuxinator projects with .agent-os or docs folders",
+ 487         "financial_impact": "$0",
+ 488         "data_corruption": "None (vault-manager.sh still works, just inconsistent)",
+ 489         "sla_breach": "None"
+ 490       },
+ 491       "reproduction_steps": "# Create project with .agent-os\nmkdir -p /tmp/test-vault-proj/.agent-os\ncd /tmp/test-vault-proj\ntmuxinator-new-project\n# Check what vault commands were called\nps aux | grep vault\n# Verify registration\nvault status",
+ 492       "hotfix_decision": {
+ 493         "decision": "REGULAR_SPRINT",
+ 494         "timeline": "1h",
+ 495         "approach": "Update to use unified vault command",
+ 496         "risk": "LOW"
+ 497       },
+ 498       "pattern_detection": "rg 'vault-manager\\.sh' --type sh\n# Find all references to old vault-manager.sh script"
+ 499     },
+ 500     {
+ 501       "title": "Bug: changed flag in subshell doesn't propagate - success message never shown",
+ 502       "priority": "P2",
+ 503       "severity": "P2",
+ 504       "stink_index": 5,
+ 505       "component": "C09: Dotfiles & Shell Scripts",
+ 506       "location": "bin/vault/vault:448-467",
+ 507       "estimated_effort": "0.5h",
+ 508       "complexity": "LOW",
+ 509       "regression_risk": "LOW",
+ 510       "description": "The interactive_manage function sets changed=true inside a while loop that runs in a subshell (due to pipe). The variable modification doesn't affect the parent shell, so line 467 '[ \"$changed\" = true ]' always evaluates to false and users never see the 'Vault changes applied' message.",
+ 511       "regression_risk_details": {
+ 512         "impact": "User feedback missing - no confirmation of vault changes",
+ 513         "blast_radius": "Function: interactive_manage",
+ 514         "dependencies": "User experience only - operations still succeed",
+ 515         "testing_gaps": "No test validating success message appears",
+ 516         "rollback_risk": "None - fixing message display"
+ 517       },
+ 518       "acceptance_criteria": [
+ 519         "Success message displays after vault changes",
+ 520         "Test with vault manage and select/deselect repos",
+ 521         "Verify message appears when changes are made",
+ 522         "Verify message does NOT appear when no changes made"
+ 523       ],
+ 524       "implementation_steps": [
+ 525         "Replace while loop pipe pattern with process substitution or file-based approach",
+ 526         "Option 1: Use while read < <(echo -e ...) instead of pipe",
+ 527         "Option 2: Count changes by checking if to_register/to_unregister are non-empty",
+ 528         "Test: vault manage, select repos, verify message appears",
+ 529         "Test: vault manage, cancel, verify message does NOT appear"
+ 530       ],
+ 531       "code_examples": {
+ 532         "current": "local changed=false\nif [ -n \"$to_register\" ]; then\n    echo -e \"$to_register\" | while IFS= read -r repo; do\n        register_repo \"$repo\"\n        changed=true  # This doesn't affect parent shell!\n    done\nfi\n[ \"$changed\" = true ] && log_tmux \"Vault changes applied\"",
+ 533         "proposed": "# Count changes instead of flag\nlocal changes_made=0\nif [ -n \"$to_register\" ]; then\n    while IFS= read -r repo; do\n        [ -n \"$repo\" ] && { register_repo \"$repo\"; changes_made=$((changes_made + 1)); }\n    done < <(echo -e \"$to_register\")\nfi\n[ $changes_made -gt 0 ] && log_tmux \"${GREEN}✅ Vault changes applied ($changes_made changes)${NC}\""
+ 534       },
+ 535       "file_changes": {
+ 536         "to_create": [],
+ 537         "to_modify": [
+ 538           "bin/vault/vault:448-467 - Fix subshell variable propagation issue"
+ 539         ],
+ 540         "to_delete": []
+ 541       },
+ 542       "testing_requirements": [
+ 543         {
+ 544           "test_type": "Unit",
+ 545           "validates_ac": ["AC1", "AC2", "AC3", "AC4"],
+ 546           "description": "Test success message appears after vault manage changes",
+ 547           "location": "Manual test with interactive vault manage"
+ 548         }
+ 549       ],
+ 550       "dependencies": {
+ 551         "blocking": [],
+ 552         "blocks": [],
+ 553         "prerequisites": []
+ 554       },
+ 555       "root_cause": {
+ 556         "bug_type": "Bash Subshell Variable Scope",
+ 557         "root_cause_5_whys": "1. Why subshell? Pipe creates subshell in bash. 2. Why not noticed? Developer tested operations, not success messages. 3. Why not tested messages? Focused on functionality over UX. 4. Why functionality-focused? Iterative development, UX polished later. 5. Why not polished? Bug went unnoticed in personal use.",
+ 558         "contributing_factors": [
+ 559           "Bash pipe behavior (creates subshell)",
+ 560           "No UX testing of success messages",
+ 561           "Variable modification in wrong scope"
+ 562         ],
+ 563         "first_introduced": "vault:448 (interactive_manage function)"
+ 564       },
+ 565       "impact_analysis": {
+ 566         "users_affected": "All users of vault manage interactive interface",
+ 567         "financial_impact": "$0",
+ 568         "data_corruption": "None (operations work, just missing confirmation)",
+ 569         "sla_breach": "None"
+ 570       },
+ 571       "reproduction_steps": "vault manage\n# Select some repos, press Enter\n# BUG: No \"Vault changes applied\" message appears\n# After fix: Message appears with change count",
+ 572       "hotfix_decision": {
+ 573         "decision": "REGULAR_SPRINT",
+ 574         "timeline": "0.5h",
+ 575         "approach": "Use process substitution or count-based approach",
+ 576         "risk": "LOW"
+ 577       },
+ 578       "pattern_detection": "rg 'echo.*\\| while.*read' --type sh\n# Find all pipe-to-while patterns that might have variable scope issues"
+ 579     },
+ 580     {
+ 581       "title": "Hardcoded user-specific path breaks portability",
+ 582       "priority": "P2",
+ 583       "severity": "P2",
+ 584       "stink_index": 6,
+ 585       "component": "C09: Dotfiles & Shell Scripts",
+ 586       "location": "bin/vault/vault:18, bin/tmux/startup.sh:53, bin/tmux/startup.sh:82, bin/tmux/new-project.sh:192",
+ 587       "estimated_effort": "1h",
+ 588       "complexity": "LOW",
+ 589       "regression_risk": "LOW",
+ 590       "description": "Multiple hardcoded paths to /Users/nathanvale make scripts non-portable. REPOS_VAULT is hardcoded, and startup.sh/new-project.sh reference ~/code/dotfiles/bin directly. These scripts will fail for other users or different installation paths.",
+ 591       "regression_risk_details": {
+ 592         "impact": "Scripts fail when used by other users or different install paths",
+ 593         "blast_radius": "All three scripts have portability issues",
+ 594         "dependencies": "Installation path, user home directory",
+ 595         "testing_gaps": "No testing with different users or install locations",
+ 596         "rollback_risk": "Low - making paths configurable"
+ 597       },
+ 598       "acceptance_criteria": [
+ 599         "Replace hardcoded /Users/nathanvale with $HOME or environment variables",
+ 600         "Use relative paths from script location where possible",
+ 601         "Add configuration file support for custom paths",
+ 602         "Test scripts work from different installation locations"
+ 603       ],
+ 604       "implementation_steps": [
+ 605         "vault:18 - Change REPOS_VAULT to use $HOME instead of /Users/nathanvale",
+ 606         "Add VAULT_REPOS_PATH environment variable support with default",
+ 607         "startup.sh:53,82 - Use $SCRIPT_DIR or find dotfiles path dynamically",
+ 608         "new-project.sh:192 - Use $(dirname \"${BASH_SOURCE[0]}\")/../../vault/vault",
+ 609         "Document environment variables in help text"
+ 610       ],
+ 611       "code_examples": {
+ 612         "current": "REPOS_VAULT=\"/Users/nathanvale/Documents/ObsidianVaults/Repos/repos\"",
+ 613         "proposed": "# Allow override via environment variable\nREPOS_VAULT=\"${VAULT_REPOS_PATH:-$HOME/Documents/ObsidianVaults/Repos/repos}\"\n# Expand tilde if present\nREPOS_VAULT=\"${REPOS_VAULT/#\\~/$HOME}\""
+ 614       },
+ 615       "file_changes": {
+ 616         "to_create": [],
+ 617         "to_modify": [
+ 618           "bin/vault/vault:18 - Use $HOME and add VAULT_REPOS_PATH env var support",
+ 619           "bin/tmux/startup.sh:53,82 - Use relative path from SCRIPT_DIR",
+ 620           "bin/tmux/new-project.sh:192 - Use relative path to vault script"
+ 621         ],
+ 622         "to_delete": []
+ 623       },
+ 624       "testing_requirements": [
+ 625         {
+ 626           "test_type": "Portability",
+ 627           "validates_ac": ["AC1", "AC2", "AC3", "AC4"],
+ 628           "description": "Test scripts with different users and install paths",
+ 629           "location": "Manual test with different user account"
+ 630         }
+ 631       ],
+ 632       "dependencies": {
+ 633         "blocking": [],
+ 634         "blocks": [],
+ 635         "prerequisites": []
+ 636       },
+ 637       "root_cause": {
+ 638         "bug_type": "Hardcoded Configuration",
+ 639         "root_cause_5_whys": "1. Why hardcoded? Personal dotfiles for single user. 2. Why not configurable? Not intended for distribution. 3. Why distribute? Scripts shared for others to learn from. 4. Why not refactored? Didn't anticipate others using them. 5. Why now issue? Community adoption of dotfiles.",
+ 640         "contributing_factors": [
+ 641           "Personal dotfiles evolved into shared resource",
+ 642           "No abstraction of user-specific paths",
+ 643           "Lack of installation guide"
+ 644         ],
+ 645         "first_introduced": "vault:18 (initial implementation)"
+ 646       },
+ 647       "impact_analysis": {
+ 648         "users_affected": "Anyone using these scripts who isn't nathanvale",
+ 649         "financial_impact": "$0",
+ 650         "data_corruption": "None (scripts just fail to run)",
+ 651         "sla_breach": "None"
+ 652       },
+ 653       "reproduction_steps": "# As different user\nsu - testuser\nvault manage\n# ERROR: Cannot access /Users/nathanvale/Documents/...",
+ 654       "hotfix_decision": {
+ 655         "decision": "REGULAR_SPRINT",
+ 656         "timeline": "1h",
+ 657         "approach": "Use $HOME and environment variables for configurability",
+ 658         "risk": "LOW"
+ 659       },
+ 660       "pattern_detection": "rg '/Users/nathanvale' --type sh\n# Find all hardcoded user paths"
+ 661     },
+ 662     {
+ 663       "title": "No input validation for write operations - potential file corruption",
+ 664       "priority": "P1",
+ 665       "severity": "P1",
+ 666       "stink_index": 7,
+ 667       "component": "C09: Dotfiles & Shell Scripts",
+ 668       "location": "bin/vault/vault:47-54, bin/vault/vault:117",
+ 669       "estimated_effort": "1.5h",
+ 670       "complexity": "MEDIUM",
+ 671       "regression_risk": "LOW",
+ 672       "description": "Multiple write operations have no error handling. Line 47 writes .vault-id, lines 51-54 modify .gitignore, line 117 writes registry - all without checking success. If writes fail due to permissions, disk full, or read-only filesystem, operations silently fail leaving corrupted state.",
+ 673       "regression_risk_details": {
+ 674         "impact": "Silent failures, corrupted vault state",
+ 675         "blast_radius": "Functions: generate_vault_id, save_registry",
+ 676         "dependencies": "All vault write operations",
+ 677         "testing_gaps": "No error handling tests for write failures",
+ 678         "rollback_risk": "Low - adding error checks is safe"
+ 679       },
+ 680       "acceptance_criteria": [
+ 681         "Check write success for all file operations",
+ 682         "Display clear error messages on write failures",
+ 683         "Test with read-only filesystem",
+ 684         "Verify graceful degradation when writes fail"
+ 685       ],
+ 686       "implementation_steps": [
+ 687         "Line 47: echo \"$vault_id\" > \"$repo_path/.vault-id\" || { log_error \"Failed to write .vault-id\"; return 1; }",
+ 688         "Lines 51-54: Add error checking for .gitignore writes",
+ 689         "Line 117: Check jq exit code and temp file write success",
+ 690         "Add disk space check before critical writes",
+ 691         "Test: chmod -w .vault-id; vault register ."
+ 692       ],
+ 693       "code_examples": {
+ 694         "current": "echo \"$vault_id\" > \"$repo_path/.vault-id\"\n# No error checking!",
+ 695         "proposed": "# Validate write success\nif ! echo \"$vault_id\" > \"$repo_path/.vault-id\" 2>/dev/null; then\n    log_error \"Failed to create .vault-id in $repo_path\"\n    log_error \"Check directory permissions and disk space\"\n    return 1\nfi"
+ 696       },
+ 697       "file_changes": {
+ 698         "to_create": [],
+ 699         "to_modify": [
+ 700           "bin/vault/vault:47 - Add error handling for .vault-id write",
+ 701           "bin/vault/vault:51-54 - Add error handling for .gitignore writes",
+ 702           "bin/vault/vault:117 - Add error handling for registry write"
+ 703         ],
+ 704         "to_delete": []
+ 705       },
+ 706       "testing_requirements": [
+ 707         {
+ 708           "test_type": "Error Handling",
+ 709           "validates_ac": ["AC1", "AC2", "AC3", "AC4"],
+ 710           "description": "Test write failures with read-only filesystem",
+ 711           "location": "Manual test: chmod -w, disk full simulation"
+ 712         }
+ 713       ],
+ 714       "dependencies": {
+ 715         "blocking": [],
+ 716         "blocks": [],
+ 717         "prerequisites": []
+ 718       },
+ 719       "root_cause": {
+ 720         "bug_type": "Error Handling Gap",
+ 721         "root_cause_5_whys": "1. Why no checks? Assumed writes always succeed. 2. Why assumed? Tested in ideal conditions only. 3. Why ideal? Local development environment. 4. Why not edge cases? No systematic error testing. 5. Why no testing? Personal scripts, evolved organically.",
+ 722         "contributing_factors": [
+ 723           "set -e doesn't catch failures in command substitutions or after ||",
+ 724           "No disk space validation",
+ 725           "No permission checks before writes"
+ 726         ],
+ 727         "first_introduced": "vault:47 (generate_vault_id function)"
+ 728       },
+ 729       "impact_analysis": {
+ 730         "users_affected": "Users with permission issues, full disks, or read-only filesystems",
+ 731         "financial_impact": "$0",
+ 732         "data_corruption": "High - vault ID or registry corruption",
+ 733         "sla_breach": "None"
+ 734       },
+ 735       "reproduction_steps": "# Make directory read-only\nchmod -w /tmp/test-repo\nvault register /tmp/test-repo\n# BUG: No error, but .vault-id not created\n# After fix: Clear error message",
+ 736       "hotfix_decision": {
+ 737         "decision": "REGULAR_SPRINT",
+ 738         "timeline": "1.5h",
+ 739         "approach": "Add error checks to all write operations",
+ 740         "risk": "LOW"
+ 741       },
+ 742       "pattern_detection": "rg 'echo .* >' --type sh | grep -v '||'\n# Find all writes without error handling"
+ 743     },
+ 744     {
+ 745       "title": "Inefficient subshell spawning in file iteration loops",
+ 746       "priority": "P3",
+ 747       "severity": "P3",
+ 748       "stink_index": 4,
+ 749       "component": "C09: Dotfiles & Shell Scripts",
+ 750       "location": "bin/vault/vault:195-201, bin/vault/vault:372-382",
+ 751       "estimated_effort": "0.5h",
+ 752       "complexity": "LOW",
+ 753       "regression_risk": "LOW",
+ 754       "description": "The while read loops spawn subprocesses for dirname, cat, basename on every iteration. For 100 repos, this creates 300+ processes. Using process substitution and bash built-ins would be faster.",
+ 755       "regression_risk_details": {
+ 756         "impact": "Performance degradation with many repositories",
+ 757         "blast_radius": "Functions: find_repo_by_id, interactive_manage",
+ 758         "dependencies": "All operations that iterate over multiple repos",
+ 759         "testing_gaps": "No performance benchmarks",
+ 760         "rollback_risk": "Low - optimization without behavior change"
+ 761       },
+ 762       "acceptance_criteria": [
+ 763         "Replace external commands with bash built-ins where possible",
+ 764         "Use IFS= read -r for safer iteration",
+ 765         "Benchmark performance improvement",
+ 766         "Verify no behavior changes"
+ 767       ],
+ 768       "implementation_steps": [
+ 769         "Line 196: Use ${id_file%/*} instead of dirname \"$id_file\"",
+ 770         "Line 372: Use while IFS= read -r dir instead of while read -r dir",
+ 771         "Benchmark: time vault manage (before/after)",
+ 772         "Verify correctness with test repos"
+ 773       ],
+ 774       "code_examples": {
+ 775         "current": "while read id_file; do\n    if [ \"$(cat \"$id_file\" 2>/dev/null)\" = \"$vault_id\" ]; then\n        dirname \"$id_file\"",
+ 776         "proposed": "while IFS= read -r id_file; do\n    local id_content\n    id_content=$(< \"$id_file\") 2>/dev/null || continue\n    if [ \"$id_content\" = \"$vault_id\" ]; then\n        echo \"${id_file%/*}\"  # Bash built-in, no subprocess"
+ 777       },
+ 778       "file_changes": {
+ 779         "to_create": [],
+ 780         "to_modify": [
+ 781           "bin/vault/vault:195-201 - Use bash built-ins instead of dirname/cat",
+ 782           "bin/vault/vault:372-382 - Add IFS= to read commands"
+ 783         ],
+ 784         "to_delete": []
+ 785       },
+ 786       "testing_requirements": [
+ 787         {
+ 788           "test_type": "Performance",
+ 789           "validates_ac": ["AC1", "AC2", "AC3"],
+ 790           "description": "Benchmark with 100+ repositories",
+ 791           "location": "Manual benchmark with time command"
+ 792         }
+ 793       ],
+ 794       "dependencies": {
+ 795         "blocking": [],
+ 796         "blocks": [],
+ 797         "prerequisites": []
+ 798       },
+ 799       "root_cause": {
+ 800         "bug_type": "Performance Issue",
+ 801         "root_cause_5_whys": "1. Why external commands? Easier to write. 2. Why not optimized? Small repo count in testing. 3. Why small? Personal use case. 4. Why now issue? Scaling to more repos. 5. Why scaling? Adoption by power users.",
+ 802         "contributing_factors": [
+ 803           "External commands in tight loops",
+ 804           "No awareness of bash built-in alternatives",
+ 805           "No performance profiling"
+ 806         ],
+ 807         "first_introduced": "vault:196 (find_repo_by_id function)"
+ 808       },
+ 809       "impact_analysis": {
+ 810         "users_affected": "Users with many repositories (50+)",
+ 811         "financial_impact": "$0",
+ 812         "data_corruption": "None",
+ 813         "sla_breach": "None (UX only)"
+ 814       },
+ 815       "reproduction_steps": "# Create 100 test repos with .vault-id\nfor i in {1..100}; do mkdir -p /tmp/testrepo$i; uuidgen > /tmp/testrepo$i/.vault-id; done\n# Benchmark\ntime VAULT_SEARCH_PATHS=/tmp vault manage\n# Expect: 5-10% speedup with bash built-ins",
+ 816       "hotfix_decision": {
+ 817         "decision": "REGULAR_SPRINT",
+ 818         "timeline": "0.5h",
+ 819         "approach": "Use bash built-ins for common operations",
+ 820         "risk": "LOW"
+ 821       },
+ 822       "pattern_detection": "rg 'dirname|basename' --type sh\n# Find potential candidates for bash built-in replacement"
+ 823     }
+ 824   ],
+ 825   "stats": {
+ 826     "files_analyzed": 3,
+ 827     "issues_found": 10,
+ 828     "p0_count": 2,
+ 829     "p1_count": 4,
+ 830     "p2_count": 3,
+ 831     "p3_count": 1
+ 832   },
+ 833   "observability": {
+ 834     "execution_context": {
+ 835       "cwd": "/Users/nathanvale/code/dotfiles",
+ 836       "project_root": "/Users/nathanvale/code/dotfiles",
+ 837       "git_root": "/Users/nathanvale/code/dotfiles",
+ 838       "project_index_path": "/Users/nathanvale/code/dotfiles/PROJECT_INDEX.json",
+ 839       "project_index_exists": true,
+ 840       "reports_dir": "/Users/nathanvale/code/dotfiles/docs/reports",
+ 841       "working_directory_at_start": "/Users/nathanvale/code/dotfiles"
+ 842     },
+ 843     "tool_usage": [
+ 844       {
+ 845         "tool": "Read",
+ 846         "calls": 3,
+ 847         "files": [
+ 848           "bin/vault/vault (573 lines, ~2.8K tokens)",
+ 849           "bin/tmux/startup.sh (84 lines, ~0.4K tokens)",
+ 850           "bin/tmux/new-project.sh (434 lines, ~2.1K tokens)"
+ 851         ],
+ 852         "tokens_estimated": 5300,
+ 853         "notes": "Read all three target scripts to analyze code quality"
+ 854       },
+ 855       {
+ 856         "tool": "Bash/rg",
+ 857         "calls": 6,
+ 858         "purpose": "Pattern searches: command injection risks, unquoted variables, destructive ops, unsafe iteration, tech debt",
+ 859         "tokens_estimated": 2400,
+ 860         "notes": "Found security issues, performance problems, and dead code patterns"
+ 861       },
+ 862       {
+ 863         "tool": "Bash (general)",
+ 864         "calls": 5,
+ 865         "purpose": "Verify vault-manager.sh exists, check file structure, get line counts, collect execution context",
+ 866         "tokens_estimated": 800,
+ 867         "notes": "Confirmed vault-manager.sh exists separately from vault script"
+ 868       },
+ 869       {
+ 870         "tool": "Sequential Thinking",
+ 871         "calls": 1,
+ 872         "thoughts": 9,
+ 873         "tokens_estimated": 18000,
+ 874         "notes": "Used to trace through complex security vulnerabilities, race conditions, and architectural issues",
+ 875         "was_necessary": true,
+ 876         "reason_necessary": "Complex root cause analysis required for shell injection vulnerability, race conditions in registry updates, performance issues in find commands, and architectural coupling between scripts. Sequential thinking helped trace through subshell behavior, error propagation, and integration mismatches that would be difficult to spot without systematic analysis."
+ 877       }
+ 878     ],
+ 879     "token_breakdown": {
+ 880       "graph_queries": 0,
+ 881       "pattern_searches": 2400,
+ 882       "file_reads": 5300,
+ 883       "sequential_thinking": 18000,
+ 884       "report_generation": 3000,
+ 885       "total": 28700
+ 886     },
+ 887     "timing_ms": 8500,
+ 888     "workflow_notes": "Followed analysis workflow: Read all scripts first, then pattern searches for security/quality issues, used sequential thinking to analyze complex interactions. No graph queries (bash scripts, not indexed codebase). Sequential thinking was essential for understanding subshell variable scope, race conditions, and integration patterns. Found 10 issues across security (P0), performance (P1), and code quality (P2-P3)."
+ 889   }
+ 890 }

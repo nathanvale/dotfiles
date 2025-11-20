@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Vault CLI Entry Point
+# This script allows vault to be called from anywhere
+
+# Find Vault root
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VAULT_BIN="$SCRIPT_DIR/../apps/vault/vault"
+
+# Execute Vault
+exec "$VAULT_BIN" "$@"

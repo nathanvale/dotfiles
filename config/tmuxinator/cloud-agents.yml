@@ -1,0 +1,111 @@
+# ~/.config/tmuxinator/cloud-agents.yml
+# Multi-Agent Claude Code Workflow Session
+
+name: cloud-agents
+root: <%= ENV["PWD"] %>
+
+# Project hooks
+on_project_start: |
+  source ~/.config/tmuxinator/scripts/common-setup.sh
+  setup_logs "cloud-agents"
+  # Ensure lock directory exists
+  mkdir -p .git/taskdock-locks
+  # Run initial cleanup of stale locks
+  taskdock locks cleanup --quiet || true
+
+on_project_stop: |
+  # Cleanup any stale locks one last time
+  taskdock locks cleanup --quiet || true
+
+pre_window: |
+  source ~/.config/tmuxinator/scripts/common-setup.sh
+
+tmux_options: -f ~/.tmux.conf
+
+startup_window: monitor
+startup_pane: 1
+
+windows:
+  # ========================================================================
+  # WINDOW 1: MONITORING DASHBOARD
+  # ========================================================================
+  - monitor:
+      layout: main-horizontal
+      panes:
+        # Pane 1: Real-time lock status with auto-refresh
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "monitor" ""
+          clear
+          echo "🔍 Task Lock Monitor - Starting in 2 seconds..."
+          sleep 2
+          ~/code/dotfiles/apps/taskdock/ux/tmux/monitor-locks.sh
+
+        # Pane 2: Detailed task monitor dashboard
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "monitor" ""
+          clear
+          echo "📊 Task Statistics Dashboard - Starting in 3 seconds..."
+          sleep 3
+          ~/code/dotfiles/apps/taskdock/ux/tmux/task-monitor.sh 5
+
+  # ========================================================================
+  # WINDOW 2: WORKER AGENTS (4 concurrent agents)
+  # ========================================================================
+  - workers:
+      layout: tiled
+      panes:
+        # Agent 1 - Launches immediately
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "workers" ""
+          echo "🤖 Worker Agent 1 ready"
+          echo "💡 Run 'claude' to start, or use: ~/code/dotfiles/apps/taskdock/ux/tmux/next-worker.sh"
+
+        # Agent 2 - Manual start
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "workers" ""
+          echo "🤖 Worker Agent 2 ready"
+          echo "💡 Run 'claude' to start, or use: ~/code/dotfiles/apps/taskdock/ux/tmux/next-worker.sh"
+
+        # Agent 3 - Manual start
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "workers" ""
+          echo "🤖 Worker Agent 3 ready"
+          echo "💡 Run 'claude' to start, or use: ~/code/dotfiles/apps/taskdock/ux/tmux/next-worker.sh"
+
+        # Agent 4 - Manual start
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "workers" ""
+          echo "🤖 Worker Agent 4 ready"
+          echo "💡 Run 'claude' to start, or use: ~/code/dotfiles/apps/taskdock/ux/tmux/next-worker.sh"
+
+  # ========================================================================
+  # WINDOW 3: LOGS & DIAGNOSTICS
+  # ========================================================================
+  - logs:
+      layout: even-vertical
+      panes:
+        # Pane 1: Lock history log tail
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "logs" ""
+          clear
+          echo "📜 TaskDock Logs (Repo Level)"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          taskdock logs --follow --repo
+
+        # Pane 2: Git worktree status
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "logs" ""
+          clear
+          echo "🌳 Git Worktree Status Monitor"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          watch -n 5 -c 'git worktree list --porcelain | grep -E "^worktree|^branch" | sed "s|worktree |📁 |" | sed "s|branch |🌿 |"'

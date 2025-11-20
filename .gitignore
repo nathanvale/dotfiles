@@ -3,3 +3,25 @@ config/fish/fish_variables
 config/iterm2/
 config/raycast/
 settings.local.json
+config/claude/shell-snapshots.vault-id
+config/claude/mcp.json
+config/gcloud/
+config/google-chrome-devtools
+.vault-id
+.env.secrets
+
+# Claude Code - ignore ephemeral/cache files
+.claude/debug/
+.claude/file-history/
+.claude/history.jsonl
+.claude/quality-check.log
+.claude/session-env/
+.claude/shell-snapshots/
+.claude/todos/
+.claude/ide/
+.claude/local/
+.claude/state/
+
+node_modules/
+dist/
+

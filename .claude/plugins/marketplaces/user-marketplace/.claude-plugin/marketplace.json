@@ -1,0 +1,14 @@
+{
+  "name": "user-marketplace",
+  "description": "Personal plugin marketplace for user-domain plugins",
+  "owner": {
+    "name": "Nathan Vale"
+  },
+  "plugins": [
+    {
+      "name": "task-streams",
+      "source": "./plugins/task-streams",
+      "description": "Pure document-to-tasks converter with intelligent type detection"
+    }
+  ]
+}

@@ -37,27 +37,27 @@ create_symlink() {
 
 	if [ -L "$link_name" ]; then
 		if [ "$(readlink "$link_name")" == "$target" ]; then
-			log $INFO "Symlink $link_name already exists and points to the correct target."
+			log "$INFO" "Symlink $link_name already exists and points to the correct target."
 		else
-			log $WARNING "Symlink $link_name exists but points to the wrong target. Updating..."
+			log "$WARNING" "Symlink $link_name exists but points to the wrong target. Updating..."
 			ln -sf "$target" "$link_name"
-			log $INFO "Symlink updated: $link_name -> $target"
+			log "$INFO" "Symlink updated: $link_name -> $target"
 		fi
 	elif [ -e "$link_name" ]; then
-		log $WARNING "File or directory $link_name already exists and is not a symlink."
+		log "$WARNING" "File or directory $link_name already exists and is not a symlink."
 		read -p "Would you like to remove it? [y/N] " -n 1 -r
 		echo
 		if [[ $REPLY =~ ^[Yy]$ ]]; then
 			rm -rf "$link_name"
-			log $INFO "Removing $link_name..."
+			log "$INFO" "Removing $link_name..."
 			ln -s "$target" "$link_name"
-			log $INFO "Symlink created: $link_name -> $target"
+			log "$INFO" "Symlink created: $link_name -> $target"
 		else
-			log $INFO "Skipping $link_name"
+			log "$INFO" "Skipping $link_name"
 		fi
 	else
 		ln -s "$target" "$link_name"
-		log $INFO "Symlink created: $link_name -> $target"
+		log "$INFO" "Symlink created: $link_name -> $target"
 	fi
 }
 
@@ -66,11 +66,11 @@ remove_symlink() {
 	local link_name=$1
 	if [ -L "$link_name" ]; then
 		rm "$link_name"
-		log $INFO "Symlink removed: $link_name"
+		log "$INFO" "Symlink removed: $link_name"
 	elif [ -e "$link_name" ]; then
-		log $INFO "File or directory $link_name exists and is not a symlink."
+		log "$INFO" "File or directory $link_name exists and is not a symlink."
 	else
-		log $INFO "Symlink $link_name does not exist."
+		log "$INFO" "Symlink $link_name does not exist."
 	fi
 }
 
@@ -81,7 +81,7 @@ run_symlink_creation() {
 		target="${entry##*|}"
 		create_symlink "$target" "$link_name"
 	done
-	log $INFO "Symlink creation process completed."
+	log "$INFO" "Symlink creation process completed."
 }
 
 # Function to run the script
@@ -90,7 +90,7 @@ run_symlink_removal() {
 		link_name="${entry%%|*}"
 		remove_symlink "$link_name"
 	done
-	log $INFO "Symlink removal process completed."
+	log "$INFO" "Symlink removal process completed."
 }
 
 # Main execution

@@ -37,7 +37,7 @@ domains=$(defaults domains)
 IFS=', ' read -r -a domainArray <<<"$domains"
 
 # Confirmation prompt
-read -p "Are you sure you want to backup all the preferences? (yes/no): " confirm
+read -r -p "Are you sure you want to backup all the preferences? (yes/no): " confirm
 if [ "$confirm" != "yes" ]; then
 	log_message "Operation cancelled by user."
 	exit 1
@@ -48,7 +48,7 @@ for domain in "${domainArray[@]}"; do
 	plist_file="$HOME/Library/Preferences/$domain.plist"
 	if [ -f "$plist_file" ]; then
 		log_message "Backing up preferences for domain: $domain"
-		cp "$plist_file" "$current_backup_dir/$(basename $plist_file)"
+		cp "$plist_file" "$current_backup_dir/$(basename "$plist_file")"
 	else
 		log_message "No preferences file found for domain: $domain, skipping backup and reset."
 	fi

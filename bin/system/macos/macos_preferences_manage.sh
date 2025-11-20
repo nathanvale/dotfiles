@@ -37,9 +37,9 @@ apply_preference() {
     local quoted_params
     quoted_params=$(quote_params "$@")
     if $dry_run; then
-        log $INFO "Would set $quoted_params"
+        "log $INFO ""Would set $quoted_params"
     else
-        log $INFO "Setting $quoted_params"
+        "log $INFO ""Setting $quoted_params"
         sudo defaults write "$@"
     fi
 }
@@ -47,9 +47,9 @@ apply_preference() {
 set_preferences() {
 
     if $dry_run; then
-        log $WARNING "Dry run is enabled. Skipping setting preferences."
+        "log $WARNING ""Dry run is enabled. Skipping setting preferences."
     else
-        log $INFO "Setting macOS preferences..."
+        "log $INFO ""Setting macOS preferences..."
     fi
 
     # Activity Monitor
@@ -170,16 +170,16 @@ set_preferences() {
         killall Dock
         killall Finder
         killall SystemUIServer
-        log $INFO "macOS preferences set."
+        "log $INFO ""macOS preferences set."
     fi
 
 }
 
 reset_preferences() {
     if $dry_run; then
-        log $WARNING "Dry run is enabled. Skipping resetting preferences."
+        "log $WARNING ""Dry run is enabled. Skipping resetting preferences."
     else
-        log $INFO "Resetting macOS preferences to default..."
+        "log $INFO ""Resetting macOS preferences to default..."
     fi
 
     while IFS= read -r line; do
@@ -190,13 +190,13 @@ reset_preferences() {
         key_and_value=$(echo "$line" | awk 'match($0, /apply_preference [^ ]* /){print substr($0, RSTART + RLENGTH)}' | sed -E 's/("[^"]*"|[^ ]*).*/\1/')
         if [[ -n "$domain" && -n "$key_and_value" ]]; then
             if $dry_run; then
-                log $INFO "Would reset $domain $key_and_value"
+                "log $INFO ""Would reset $domain $key_and_value"
             else
                 if eval "defaults read $domain $key_and_value" &>/dev/null; then
-                    log $INFO "Resetting $domain $key_and_value."
+                    "log $INFO ""Resetting $domain $key_and_value."
                     eval "defaults delete $domain $key_and_value"
                 else
-                    log $WARNING "$domain $key_and_value already reset"
+                    "log $WARNING ""$domain $key_and_value already reset"
                 fi
             fi
         fi
@@ -207,7 +207,7 @@ reset_preferences() {
         killall Dock
         killall Finder
         killall SystemUIServer
-        log $INFO "macOS preferences reset to default"
+        "log $INFO ""macOS preferences reset to default"
     fi
 
 }
@@ -239,7 +239,7 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 if [[ "$dry_run" == true && -z "$action" ]]; then
-    log $ERROR "--dry must be used with --set or --reset"
+    "log $ERROR ""--dry must be used with --set or --reset"
     usage
     exit 1
 fi

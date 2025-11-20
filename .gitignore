@@ -22,6 +22,10 @@ config/google-chrome-devtools
 .claude/local/
 .claude/state/
 
+# Claude Code - ignore external plugin marketplaces (maintain their own git)
+.claude/plugins/marketplaces/awesome-claude-skills/
+.claude/plugins/marketplaces/claude-code-workflows/
+
 node_modules/
 dist/
 

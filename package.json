@@ -21,10 +21,11 @@
   "private": true,
   "scripts": {
     "format": "prettier --ignore-path .gitignore --write .",
-    "lint": "prettier --ignore-path .gitignore --check .",
+    "format:check": "prettier --ignore-path .gitignore --check .",
     "lint:shell": "find . -type f \\( -name '*.sh' -o -name '*.bash' -o -name '*.zsh' \\) ! -path './node_modules/*' -exec shellcheck {} +",
     "lint:workflows": "actionlint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "validate": "pnpm format:check && pnpm lint:shell && pnpm lint:workflows"
   },
   "version": "1.0.0"
 }

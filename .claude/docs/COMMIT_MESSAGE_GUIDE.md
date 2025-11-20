@@ -2,7 +2,8 @@
 
 ## Overview
 
-This project uses **Conventional Commits** with **commitlint** to enforce consistent, standardized commit messages. This ensures:
+This project uses **Conventional Commits** with **commitlint** to enforce consistent, standardized
+commit messages. This ensures:
 
 - Clear project history
 - Automated changelog generation
@@ -23,18 +24,18 @@ This project uses **Conventional Commits** with **commitlint** to enforce consis
 
 Use one of these types:
 
-| Type | Description | Example |
-| ---- | ----------- | ------- |
-| `feat` | New feature | `feat(vault): add auto-registration` |
-| `fix` | Bug fix | `fix(tmux): resolve window naming conflicts` |
-| `chore` | Maintenance, dependencies, build | `chore(deps): update pnpm lock file` |
-| `docs` | Documentation changes | `docs: update README with setup guide` |
+| Type       | Description                                | Example                                      |
+| ---------- | ------------------------------------------ | -------------------------------------------- |
+| `feat`     | New feature                                | `feat(vault): add auto-registration`         |
+| `fix`      | Bug fix                                    | `fix(tmux): resolve window naming conflicts` |
+| `chore`    | Maintenance, dependencies, build           | `chore(deps): update pnpm lock file`         |
+| `docs`     | Documentation changes                      | `docs: update README with setup guide`       |
 | `refactor` | Code restructuring (no feature/bug change) | `refactor(scripts): simplify error handling` |
-| `perf` | Performance improvements | `perf(startup): reduce shell init time` |
-| `test` | Test additions/updates | `test: add unit tests for config validator` |
-| `style` | Code formatting, semicolons, etc. | `style: format bash scripts with shfmt` |
-| `ci` | CI/CD configuration changes | `ci: add GitHub Actions workflow` |
-| `build` | Build system changes | `build: update Brewfile dependencies` |
+| `perf`     | Performance improvements                   | `perf(startup): reduce shell init time`      |
+| `test`     | Test additions/updates                     | `test: add unit tests for config validator`  |
+| `style`    | Code formatting, semicolons, etc.          | `style: format bash scripts with shfmt`      |
+| `ci`       | CI/CD configuration changes                | `ci: add GitHub Actions workflow`            |
+| `build`    | Build system changes                       | `build: update Brewfile dependencies`        |
 
 ## Scope (Optional)
 
@@ -52,6 +53,7 @@ The scope specifies **what area of the code** is affected. In this project, comm
 ## Subject (Required)
 
 Guidelines:
+
 - ✅ **Start with lowercase** (except proper nouns)
 - ✅ **Imperative mood**: "add feature" not "added feature"
 - ✅ **No period** at the end
@@ -59,6 +61,7 @@ Guidelines:
 - ✅ **Specific and descriptive**
 
 ### ✅ Good Examples
+
 ```
 feat(vault): add auto-registration for project vaults
 fix(tmux): resolve window naming conflicts in parallel sessions
@@ -69,6 +72,7 @@ perf(startup): reduce dotfiles initialization time by 40%
 ```
 
 ### ❌ Bad Examples
+
 ```
 feat(vault): Added auto-registration for project vaults  ← past tense
 feat(vault): Add auto registration for project vaults in the system → too long
@@ -82,6 +86,7 @@ update files  ← vague, no type
 Use the body to explain **why** the change was made, not **what** was changed (the diff shows that).
 
 Guidelines:
+
 - **Blank line** before body (always)
 - **Line wrap at 100 characters**
 - **Explain motivation and context**
@@ -106,6 +111,7 @@ Closes #125
 ## Footer (Optional)
 
 Use footers for:
+
 - References to issues: `Closes #123`
 - Breaking changes: `BREAKING CHANGE: ...`
 - Co-authored commits: `Co-Authored-By: Name <email>`
@@ -129,19 +135,19 @@ Closes #201
 
 Commitlint automatically checks these rules (file: `commitlint.config.js`):
 
-| Rule | Level | Check | Limit |
-| ---- | ----- | ----- | ----- |
-| `type-enum` | Error | Type must be in allowed list | See Type section |
-| `type-case` | Error | Type must be lowercase | - |
-| `type-empty` | Error | Type is required | - |
-| `scope-case` | Error | Scope must be lowercase | - |
-| `subject-case` | Error | Subject cannot be PascalCase or UPPERCASE | - |
-| `subject-empty` | Error | Subject is required | - |
-| `subject-full-stop` | Error | Subject cannot end with period | - |
-| `header-max-length` | Error | Header line too long | 100 chars |
-| `body-max-line-length` | Error | Body lines too long | 100 chars |
-| `body-leading-blank` | Error | Missing blank line before body | - |
-| `footer-leading-blank` | Error | Missing blank line before footer | - |
+| Rule                   | Level | Check                                     | Limit            |
+| ---------------------- | ----- | ----------------------------------------- | ---------------- |
+| `type-enum`            | Error | Type must be in allowed list              | See Type section |
+| `type-case`            | Error | Type must be lowercase                    | -                |
+| `type-empty`           | Error | Type is required                          | -                |
+| `scope-case`           | Error | Scope must be lowercase                   | -                |
+| `subject-case`         | Error | Subject cannot be PascalCase or UPPERCASE | -                |
+| `subject-empty`        | Error | Subject is required                       | -                |
+| `subject-full-stop`    | Error | Subject cannot end with period            | -                |
+| `header-max-length`    | Error | Header line too long                      | 100 chars        |
+| `body-max-line-length` | Error | Body lines too long                       | 100 chars        |
+| `body-leading-blank`   | Error | Missing blank line before body            | -                |
+| `footer-leading-blank` | Error | Missing blank line before footer          | -                |
 
 ## How It Works
 
@@ -208,15 +214,15 @@ BREAKING CHANGE: ZSHRC_CUSTOM env var renamed to CUSTOM_SHELL_CONFIG"
 
 ## Common Mistakes
 
-| Mistake | Problem | Fix |
-| ------- | ------- | --- |
-| `Feat: new feature` | Capitalized + space | `feat: new feature` |
-| `feat new feature` | Missing scope and colon | `feat(scope): new feature` |
-| `feat(SCOPE): feature` | Scope capitalized | `feat(scope): feature` |
-| `feat: add feature here.` | Has period, use descriptive scope | `feat(vault): add feature here` |
-| `feat: update everything` | Too vague | `feat(vault): add auto-registration` |
-| Long subject over 100 chars | Too long | Break into subject + body |
-| `feat: add feature` + body with no blank line | Missing blank line | Add blank line between subject and body |
+| Mistake                                       | Problem                           | Fix                                     |
+| --------------------------------------------- | --------------------------------- | --------------------------------------- |
+| `Feat: new feature`                           | Capitalized + space               | `feat: new feature`                     |
+| `feat new feature`                            | Missing scope and colon           | `feat(scope): new feature`              |
+| `feat(SCOPE): feature`                        | Scope capitalized                 | `feat(scope): feature`                  |
+| `feat: add feature here.`                     | Has period, use descriptive scope | `feat(vault): add feature here`         |
+| `feat: update everything`                     | Too vague                         | `feat(vault): add auto-registration`    |
+| Long subject over 100 chars                   | Too long                          | Break into subject + body               |
+| `feat: add feature` + body with no blank line | Missing blank line                | Add blank line between subject and body |
 
 ## Linting Manually
 
@@ -235,7 +241,8 @@ pnpm commitlint --from main..HEAD
 
 ## Configuration
 
-The validation rules are defined in `commitlint.config.js`. To modify allowed types or limits, edit that file and restart your git hooks:
+The validation rules are defined in `commitlint.config.js`. To modify allowed types or limits, edit
+that file and restart your git hooks:
 
 ```bash
 pnpm husky install

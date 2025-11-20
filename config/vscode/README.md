@@ -247,6 +247,7 @@ config/vscode/               # Mirrors standard .vscode folder from Git
 │   ├── Merge.prompt.md      # /merge command
 │   ├── SETTINGS.md          # Detailed settings guide
 │   └── README.md            # Prompts documentation
+├── CODE_SHOTGUNS.md         # Shotgun CLI + Shotgun Surgery concepts
 └── README.md                # This file - complete documentation
 ```
 
@@ -282,6 +283,11 @@ cat ~/code/dotfiles/config/Code/User/settings.json | grep autoApprove
 2. Reload VS Code: Cmd+Shift+P → `Developer: Reload Window`
 3. Check for syntax errors in settings.json
 
+## Related Documentation
+
+**Local Documentation:**
+- [CODE_SHOTGUNS.md](./CODE_SHOTGUNS.md) - Comprehensive guide to Shotgun CLI (spec-driven development tool) and Shotgun Surgery (anti-pattern to avoid). Essential reading for AI-powered development workflows.
+
 ## References
 
 - [VS Code Prompt Files Documentation](https://code.visualstudio.com/docs/copilot/customization/prompt-files)
@@ -289,3 +295,8 @@ cat ~/code/dotfiles/config/Code/User/settings.json | grep autoApprove
 - [GitHub Copilot Custom Instructions](https://docs.github.com/en/copilot/concepts/prompting/response-customization)
 - [Community Prompt Examples](https://github.com/github/awesome-copilot/tree/main)
 - [Stack Overflow: Auto-approve Copilot Commands](https://stackoverflow.com/questions/79720577/)
+
+**External Resources:**
+- [Shotgun CLI Official Site](https://shotgun.sh/)
+- [Shotgun CLI GitHub](https://github.com/shotgun-sh/shotgun)
+- [Shotgun Surgery - Wikipedia](https://en.wikipedia.org/wiki/Shotgun_surgery)

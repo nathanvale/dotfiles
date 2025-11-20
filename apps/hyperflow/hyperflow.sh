@@ -30,7 +30,8 @@ set_current_mode() {
 # Function to switch mode only if it's different from current
 switch_mode_if_needed() {
     local new_mode="$1"
-    local current_mode=$(get_current_mode)
+    local current_mode
+    current_mode=$(get_current_mode)
 
     if [[ "$current_mode" != "$new_mode" ]]; then
         # Mode is different, switch it
@@ -58,12 +59,14 @@ set_current_workspace() {
 # Function to wait for app to be frontmost
 wait_for_app_focus() {
     local app_name="$1"
-    local process_name=$(get_process_name "$app_name")
+    local process_name
+    process_name=$(get_process_name "$app_name")
     local max_attempts=10
     local attempt=0
 
     while [ $attempt -lt $max_attempts ]; do
-        local frontmost=$(osascript -e 'tell application "System Events" to name of first process whose frontmost is true' 2>/dev/null || echo "")
+        local frontmost
+        frontmost=$(osascript -e 'tell application "System Events" to name of first process whose frontmost is true' 2>/dev/null || echo "")
         if [[ "$frontmost" == "$process_name" ]]; then
             return 0
         fi
@@ -119,7 +122,8 @@ open_and_activate() {
     local app_name="$1"
 
     # Check if app is already running
-    local is_running=$(is_app_running "$app_name")
+    local is_running
+    is_running=$(is_app_running "$app_name")
 
     if [[ "$is_running" == "false" ]]; then
         # App not running - open it
@@ -136,7 +140,8 @@ handle_workspace() {
     local app_name="$2"
     local mode="$3"
 
-    local current_workspace=$(get_current_workspace)
+    local current_workspace
+    current_workspace=$(get_current_workspace)
 
     if [[ "$current_workspace" == "$workspace_id" ]]; then
         # Same workspace - cycle windows
@@ -167,20 +172,24 @@ handle_multi_workspace() {
     shift 2
     local apps=("$@")
 
-    local current_workspace=$(get_current_workspace)
+    local current_workspace
+    current_workspace=$(get_current_workspace)
 
     if [[ "$current_workspace" == "$workspace_id" ]]; then
         # Same workspace - toggle between apps
         # Check which app is currently frontmost
-        local frontmost=$(osascript -e 'tell application "System Events" to name of first process whose frontmost is true' 2>/dev/null || echo "")
+        local frontmost
+        frontmost=$(osascript -e 'tell application "System Events" to name of first process whose frontmost is true' 2>/dev/null || echo "")
 
         # Find which app is currently active and switch to the next one
         local next_app=""
         for i in "${!apps[@]}"; do
-            local process_name=$(get_process_name "${apps[$i]}")
+            local process_name
+            process_name=$(get_process_name "${apps[$i]}")
             if [[ "$frontmost" == "$process_name" ]]; then
                 # Found current app, switch to next (or wrap around)
-                local next_index=$(( (i + 1) % ${#apps[@]} ))
+                local next_index
+                next_index=$(( (i + 1) % ${#apps[@]} ))
                 next_app="${apps[$next_index]}"
                 break
             fi

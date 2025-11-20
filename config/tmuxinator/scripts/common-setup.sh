@@ -13,7 +13,8 @@ setup_logs() {
     find .logs -name "*.log" -mtime +7 -delete 2>/dev/null || true
     # Keep only last 10 log files per service
     for dir in .logs/*/; do
-        ls -t "$dir"*.log 2>/dev/null | tail -n +11 | xargs rm -f 2>/dev/null || true
+        find "$dir" -maxdepth 1 -name "*.log" -type f -printf '%T@ %p\n' 2>/dev/null | \
+            sort -rn | tail -n +11 | cut -d' ' -f2- | xargs -r rm -f 2>/dev/null || true
     done
 }
 
@@ -44,7 +45,8 @@ get_branch_name() {
 
 cleanup_logs() {
     local service="$1"
-    ls -t .logs/${service}/*.log 2>/dev/null | tail -n +6 | xargs rm -f 2>/dev/null || true
+    find .logs/"${service}" -maxdepth 1 -name "*.log" -type f -printf '%T@ %p\n' 2>/dev/null | \
+        sort -rn | tail -n +6 | cut -d' ' -f2- | xargs -r rm -f 2>/dev/null || true
 }
 
 pane_setup() {
@@ -103,7 +105,8 @@ vault_check() {
     fi
 
     # Check if current project is registered
-    local registry=$("$HOME/code/dotfiles/bin/vault/vault" status 2>/dev/null)
+    local registry
+    registry=$("$HOME/code/dotfiles/bin/vault/vault" status 2>/dev/null)
     if echo "$registry" | grep -q "$(pwd)"; then
         echo "📚 Vault registered for $project"
     else
@@ -136,7 +139,8 @@ auto_register_vaults() {
 
     # Register if has vaultable content and not already registered
     if [ -d ".agent-os" ] || [ -d "docs" ]; then
-        local registry=$("$HOME/code/dotfiles/bin/vault/vault" status 2>/dev/null)
+        local registry
+        registry=$("$HOME/code/dotfiles/bin/vault/vault" status 2>/dev/null)
         if ! echo "$registry" | grep -q "$(pwd)"; then
             "$HOME/code/dotfiles/bin/vault/vault" register "$(pwd)" >/dev/null 2>&1 && {
                 echo "✅ Auto-registered vault for $project_name"
@@ -171,10 +175,12 @@ setup_parallel_task_pane() {
     local window_name="$1"
     local pane_index="${2:-0}"
     local auto_launch="${3:-false}"
-    local stagger_delay=$((pane_index * 2))  # 2 seconds per pane
+    local stagger_delay
+    stagger_delay=$((pane_index * 2))  # 2 seconds per pane
 
     # Get session name
-    local session_name=$(tmux display-message -p '#S')
+    local session_name
+    session_name=$(tmux display-message -p '#S')
 
     # Set pane title
     tmux select-pane -t "${session_name}:${window_name}.${pane_index}" -T "Agent $((pane_index + 1))"
@@ -208,7 +214,8 @@ create_parallel_task_window() {
     local auto_launch="${2:-false}"
     local window_name="tasks"
 
-    local session_name=$(tmux display-message -p '#S')
+    local session_name
+    session_name=$(tmux display-message -p '#S')
 
     # Create window if it doesn't exist
     if ! tmux list-windows -t "$session_name" | grep -q "^[0-9]*: ${window_name}"; then

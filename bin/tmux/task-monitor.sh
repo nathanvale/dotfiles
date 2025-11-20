@@ -46,7 +46,8 @@ RESET='\033[0m'
 
 # Detect git repository root (worktree-safe)
 get_git_root() {
-    local git_root=$(git rev-parse --show-superproject-working-tree 2>/dev/null)
+    local git_root
+    git_root=$(git rev-parse --show-superproject-working-tree 2>/dev/null)
     if [ -z "$git_root" ]; then
         git_root=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
     fi
@@ -72,9 +73,12 @@ get_lock_info() {
     fi
 
     # Extract fields from JSON lock file
-    local task_id=$(grep '"taskId"' "$lock_file" | sed 's/.*: "\([^"]*\)".*/\1/' 2>/dev/null || echo "unknown")
-    local pid=$(grep '"pid"' "$lock_file" | sed 's/.*: \([0-9]*\).*/\1/' 2>/dev/null || echo "")
-    local agent_id=$(grep '"agentId"' "$lock_file" | sed 's/.*: "\([^"]*\)".*/\1/' 2>/dev/null || echo "unknown")
+    local task_id
+    task_id=$(grep '"taskId"' "$lock_file" | sed 's/.*: "\([^"]*\)".*/\1/' 2>/dev/null || echo "unknown")
+    local pid
+    pid=$(grep '"pid"' "$lock_file" | sed 's/.*: \([0-9]*\).*/\1/' 2>/dev/null || echo "")
+    local agent_id
+    agent_id=$(grep '"agentId"' "$lock_file" | sed 's/.*: "\([^"]*\)".*/\1/' 2>/dev/null || echo "unknown")
 
     echo "$task_id|$pid|$agent_id"
 }
@@ -160,7 +164,8 @@ show_worktrees() {
     echo -e "${BOLD}${BLUE}🌳 Git Worktrees:${RESET}"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-    local worktrees=$(get_worktree_info)
+    local worktrees
+    worktrees=$(get_worktree_info)
 
     if [ -z "$worktrees" ]; then
         echo -e "${YELLOW}  No worktrees found${RESET}"
@@ -212,10 +217,14 @@ show_task_stats() {
     fi
 
     # Count tasks by status
-    local ready=$(find "$task_dir" -name "T[0-9][0-9][0-9][0-9]-*.md" -type f -exec grep -l "^status: READY" {} \; | wc -l | xargs)
-    local in_progress=$(find "$task_dir" -name "T[0-9][0-9][0-9][0-9]-*.md" -type f -exec grep -l "^status: IN_PROGRESS" {} \; | wc -l | xargs)
-    local completed=$(find "$task_dir" -name "T[0-9][0-9][0-9][0-9]-*.md" -type f -exec grep -l "^status: COMPLETED" {} \; | wc -l | xargs)
-    local blocked=$(find "$task_dir" -name "T[0-9][0-9][0-9][0-9]-*.md" -type f -exec grep -l "^status: BLOCKED" {} \; | wc -l | xargs)
+    local ready
+    ready=$(find "$task_dir" -name "T[0-9][0-9][0-9][0-9]-*.md" -type f -exec grep -l "^status: READY" {} \; | wc -l | xargs)
+    local in_progress
+    in_progress=$(find "$task_dir" -name "T[0-9][0-9][0-9][0-9]-*.md" -type f -exec grep -l "^status: IN_PROGRESS" {} \; | wc -l | xargs)
+    local completed
+    completed=$(find "$task_dir" -name "T[0-9][0-9][0-9][0-9]-*.md" -type f -exec grep -l "^status: COMPLETED" {} \; | wc -l | xargs)
+    local blocked
+    blocked=$(find "$task_dir" -name "T[0-9][0-9][0-9][0-9]-*.md" -type f -exec grep -l "^status: BLOCKED" {} \; | wc -l | xargs)
 
     printf "  %-20s ${GREEN}%s${RESET}\n" "Ready:" "$ready"
     printf "  %-20s ${YELLOW}%s${RESET}\n" "In Progress:" "$in_progress"
@@ -227,7 +236,8 @@ show_task_stats() {
 
 # Main monitoring loop
 monitor_loop() {
-    local git_root=$(get_git_root)
+    local git_root
+    git_root=$(get_git_root)
 
     while true; do
         show_header

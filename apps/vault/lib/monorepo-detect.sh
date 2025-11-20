@@ -41,7 +41,8 @@ get_monorepo_packages() {
                             find "$project_path/$pattern" -maxdepth 1 -mindepth 1 -type d 2>/dev/null
                         else
                             # Try to match as a glob pattern
-                            local parent_dir=$(dirname "$project_path/$pattern")
+                            local parent_dir
+                            parent_dir=$(dirname "$project_path/$pattern")
                             if [ -d "$parent_dir" ]; then
                                 find "$parent_dir" -maxdepth 1 -mindepth 1 -type d 2>/dev/null
                             fi
@@ -149,7 +150,8 @@ get_package_name() {
         "pnpm"|"yarn"|"lerna"|"nx")
             # Try to read package.json name
             if [ -f "$package_path/package.json" ]; then
-                local pkg_name=$(jq -r '.name // empty' "$package_path/package.json" 2>/dev/null)
+                local pkg_name
+                pkg_name=$(jq -r '.name // empty' "$package_path/package.json" 2>/dev/null)
                 if [ -n "$pkg_name" ]; then
                     echo "$pkg_name"
                     return 0
@@ -159,7 +161,8 @@ get_package_name() {
         "cargo")
             # Try to read Cargo.toml name
             if [ -f "$package_path/Cargo.toml" ]; then
-                local pkg_name=$(grep -E '^\[package\]' -A 10 "$package_path/Cargo.toml" | grep '^name\s*=' | sed 's/.*=\s*"\(.*\)".*/\1/' | head -1)
+                local pkg_name
+                pkg_name=$(grep -E '^\[package\]' -A 10 "$package_path/Cargo.toml" | grep '^name\s*=' | sed 's/.*=\s*"\(.*\)".*/\1/' | head -1)
                 if [ -n "$pkg_name" ]; then
                     echo "$pkg_name"
                     return 0
@@ -169,7 +172,8 @@ get_package_name() {
         "go")
             # Try to read go.mod module name
             if [ -f "$package_path/go.mod" ]; then
-                local pkg_name=$(grep '^module ' "$package_path/go.mod" | awk '{print $2}' | head -1)
+                local pkg_name
+                pkg_name=$(grep '^module ' "$package_path/go.mod" | awk '{print $2}' | head -1)
                 if [ -n "$pkg_name" ]; then
                     echo "$pkg_name"
                     return 0

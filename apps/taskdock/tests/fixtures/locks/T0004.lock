@@ -1,0 +1,12 @@
+{
+  "taskId": "T0004",
+  "agentId": "agent-1-12345",
+  "hostname": "macbook-pro.local",
+  "lockedAt": "2025-11-19T09:00:00Z",
+  "lastHeartbeat": "2025-11-19T09:45:00Z",
+  "status": "IN_PROGRESS",
+  "pid": 98765,
+  "branch": "feat/T0004-refactor-profile-component",
+  "worktree": "/Users/nathanvale/code/example-repo/.worktrees/T0004",
+  "taskFile": "/Users/nathanvale/code/example-repo/docs/tasks/T0004-refactor-profile-component.md"
+}

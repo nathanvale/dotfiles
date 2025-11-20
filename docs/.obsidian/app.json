@@ -1,0 +1,9 @@
+{
+  "showFrontmatter": true,
+  "showLineNumber": true,
+  "readableLineLength": true,
+  "strictLineBreaks": false,
+  "showInlineTitle": true,
+  "useMarkdownLinks": true,
+  "alwaysUpdateLinks": true
+}

@@ -1,0 +1,608 @@
+{
+  // "typescript.inlayHints.parameterNames.enabled": "literals",
+  // "typescript.inlayHints.parameterTypes.enabled": true,
+  // "typescript.inlayHints.variableTypes.enabled": true,
+  // "typescript.inlayHints.propertyDeclarationTypes.enabled": true,
+  // "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+  // "typescript.inlayHints.enumMemberValues.enabled": true,
+  "github.copilot.chat.codesearch.enabled": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.run": "onType", // Ensures ESLint runs as you type
+  // "eslint.codeActionsOnSave.mode": "problems", // Enables formatting on save
+  // "eslint.validate": [
+  //   "javascript",
+  //   "typescript",
+  //   "javascriptreact",
+  //   "typescriptreact"
+  // ],
+  // "eslint.format.enable": true,
+  "typescript.reportStyleChecksAsWarnings": true,
+  "typescript.preferences.importModuleSpecifier": "shortest",
+  "typescript.preferences.importModuleSpecifierEnding": "minimal",
+  "typescript.suggest.autoImports": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.tokenColorCustomizations": {
+    "[Night Owl]": {
+      "textMateRules": [
+        {
+          "scope": "markup.inserted",
+          "settings": {
+            "foreground": "#B5CEA8"
+          }
+        },
+        {
+          "scope": "markup.deleted",
+          "settings": {
+            "foreground": "#dd5e56"
+          }
+        }
+      ]
+    }
+  },
+  "files.associations": {
+    "*.sh": "shellscript",
+    "*.strings": "plist"
+  },
+  "http.proxyStrictSSL": false,
+
+  "multiCommand.commands": [
+    {
+      "command": "multiCommand.openAndCloseExplorer",
+      "sequence": ["list.select", "workbench.action.closeSidebar"]
+    }
+  ],
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  },
+  "editor.inlineSuggest.enabled": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "git.openRepositoryInParentFolders": "never",
+  "git.confirmSync": false,
+  "explorer.confirmDelete": false,
+  "githubPullRequests.pullBranch": "never",
+  "workbench.startupEditor": "none",
+  "git.autofetch": true,
+  "workbench.iconTheme": "vscode-icons",
+  "totalTypeScript.hideAllTips": false,
+  "totalTypeScript.hideBasicTips": true,
+  "totalTypeScript.hiddenTips": [
+    "passing-generics-to-types",
+    "omit-utility-type",
+    "awaited-utility-type",
+    "nonnullable-utility-type",
+    "returntype-utility-type",
+    "typeof",
+    "required-utility-type",
+    "record-utility-type",
+    "partial-utility-type",
+    "generic-slots-in-functions",
+    "never-keyword",
+    "as-const",
+    "as-const-on-object",
+    "pick-utility-type",
+    "parameters-utility-type",
+    "in-operator-narrowing",
+    "keyof",
+    "type-alias-with-generics",
+    "type-alias-with-multiple-generics",
+    "tuple-type",
+    "interface-with-generics",
+    "conditional-type",
+    "non-null-expression",
+    "type-predicate",
+    "exclude-utility-type",
+    "readonly-utility-type",
+    "mapped-type",
+    "extract-utility-type",
+    "nested-conditional-type",
+    "interface-with-multiple-generics"
+  ],
+  "redhat.telemetry.enabled": false,
+  "explorer.confirmDragAndDrop": false,
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "githubPullRequests.createOnPublishBranch": "never",
+  "githubIssues.queries": [
+    {
+      "label": "My Issues",
+      "query": "default"
+    },
+    {
+      "label": "Created Issues",
+      "query": "author:${user} state:open repo:${owner}/${repository} sort:created-desc"
+    },
+    {
+      "label": "Recent Issues",
+      "query": "state:open repo:${owner}/${repository} sort:updated-desc"
+    },
+    {
+      "label": "Create documentation",
+      "query": "author:${user} state:open repo:${owner}/${repository} sort:created-desc"
+    }
+  ],
+  "githubIssues.issueBranchTitle": "${issueNumber}-${sanitizedIssueTitle}",
+  "githubIssues.issueCompletionFormatScm": "${user}/${issueTitle} ${issueNumberLabel}",
+  "githubIssues.useBranchForIssues": "off",
+  "githubPullRequests.notifications": "pullRequests",
+  "editor.accessibilitySupport": "off",
+  "editor.fontFamily": "MesloLGS NF, Menlo, Monaco, 'Courier New', monospace",
+  "terminal.external.linuxExec": "iterm",
+  "terminal.external.osxExec": "Iterm.app",
+  "terminal.integrated.fontFamily": "monospace",
+  "githubPullRequests.remotes": ["origin"],
+  "gitlens.views.tags.branches.layout": "list",
+  "diffEditor.useInlineViewWhenSpaceIsLimited": false,
+  "git.replaceTagsWhenPull": true,
+  "prisma.showPrismaDataPlatformNotification": false,
+  "github.copilot.editor.enableAutoCompletions": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "security.workspace.trust.untrustedFiles": "open",
+  "gitlens.views.branches.files.layout": "list",
+  "zenMode.hideLineNumbers": false,
+  "zenMode.fullScreen": false,
+  "scm.showIncomingChanges": "always",
+  "zenMode.showTabs": "none",
+  "workbench.editorAssociations": {
+    "*.plist": "default",
+    "git-rebase-todo": "gitlens.rebase"
+  },
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.profiles.osx": {
+    "zsh": {
+      "path": "/opt/homebrew/bin/zsh"
+    }
+  },
+  "editor.codeLensFontFamily": "MesloLGS NF",
+  "editor.fontLigatures": false,
+  "gitlens.currentLine.fontFamily": "MesloLGS NF",
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.unicodeHighlight.invisibleCharacters": false,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "${capture}.js",
+    "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
+    "*.jsx": "${capture}.js",
+    "*.tsx": "${capture}.ts",
+    "tsconfig.json": "tsconfig.*.json",
+    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb",
+    "*.sqlite": "${capture}.${extname}-*",
+    "*.db": "${capture}.${extname}-*",
+    "*.sqlite3": "${capture}.${extname}-*",
+    "*.db3": "${capture}.${extname}-*",
+    "*.sdb": "${capture}.${extname}-*",
+    "*.s3db": "${capture}.${extname}-*"
+  },
+  "jestrunner.debugOptions": {},
+  "github.copilot.preferredAccount": "nathanvale",
+  "quokka.automaticRestart": true,
+  "vscode-pets.throwBallWithMouse": true,
+  "vscode-pets.petType": "dog",
+  "vscode-pets.petColor": "white",
+  "source.organizeImports": "never",
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+  "emmet.preferences": {},
+  "javascript.inlayHints.functionLikeReturnTypes.enabled": true,
+  "javascript.inlayHints.parameterNames.enabled": "all",
+  "javascript.inlayHints.parameterTypes.enabled": true,
+  "javascript.inlayHints.propertyDeclarationTypes.enabled": true,
+  "workbench.editor.pinnedTabsOnSeparateRow": true,
+  "github.gitAuthentication": false,
+  "github.experimental.multipleAccounts": true,
+  "gitlens.ai.model": "vscode",
+  "gitlens.ai.vscode.model": "copilot:gpt-4o",
+  "workbench.panel.opensMaximized": "always",
+  "bookmarks.label.suggestion": "suggestWhenSelected",
+  "editor.formatOnSave": true,
+  "yaml.format.singleQuote": true,
+  "workbench.activityBar.location": "hidden",
+  "bookmarks.keepBookmarksOnLineDelete": true,
+  "bookmarks.revealLocation": "top",
+  "bookmarks.saveBookmarksInProject": true,
+  "bookmarks.sideBar.expanded": true,
+  "bookmarks.useWorkaroundForFormatters": true,
+  "gitlens.graph.minimap.additionalTypes": [
+    "pullRequests",
+    "localBranches",
+    "remoteBranches",
+    "stashes"
+  ],
+  "chat.editing.alwaysSaveWithGeneratedChanges": true,
+  "diffEditor.codeLens": true,
+  "rewrap.wrappingColumn": 80,
+  "rewrap.autoWrap.enabled": true,
+  "gitlens.views.commitDetails.files.layout": "tree",
+  "gitlens.views.scm.grouped.views": {
+    "commits": true,
+    "branches": true,
+    "remotes": true,
+    "stashes": true,
+    "tags": true,
+    "worktrees": false,
+    "contributors": true,
+    "fileHistory": false,
+    "repositories": false,
+    "searchAndCompare": false,
+    "launchpad": true
+  },
+  "eslint.useFlatConfig": true,
+  "eslint.debug": true,
+  "github.copilot.chat.scopeSelection": true,
+  "github.copilot.chat.completionContext.typescript.mode": "on",
+  "github.copilot.chat.editor.temporalContext.enabled": true,
+  "github.copilot.chat.edits.temporalContext.enabled": true,
+  "github.copilot.chat.generateTests.codeLens": true,
+  "github.copilot.chat.languageContext.typescript.enabled": true,
+  "github.copilot.chat.newWorkspaceCreation.enabled": true,
+  "github.copilot.chat.search.semanticTextResults": true,
+  "chat.experimental.statusIndicator.enabled": true,
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "files.autoSave": "afterDelay",
+  "editor.inlineSuggest.edits.showCollapsed": true,
+  "workbench.secondarySideBar.showLabels": false,
+  "editor.inlineSuggest.edits.allowCodeShifting": "never",
+  "window.density.editorTabHeight": "compact",
+  "editor.minimap.enabled": false,
+  "window.customTitleBarVisibility": "windowed",
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["H"],
+      "commands": ["workbench.action.previousEditor"]
+    },
+    {
+      "before": ["L"],
+      "commands": ["workbench.action.nextEditor"]
+    },
+    {
+      "before": ["<space>"],
+      "commands": ["whichkey.show"]
+    },
+    {
+      "before": ["s"],
+      "commands": ["leap.findForward"]
+    },
+    {
+      "before": ["S"],
+      "commands": ["leap.findBackward"]
+    },
+    {
+      "before": ["f"],
+      "commands": ["leap.find"]
+    }
+  ],
+  "github.copilot.chat.codeGeneration.instructions": [
+    {
+      "text": "- @typescript Rule - Use Descriptive Types: Always use meaningful type aliases and interfaces. Avoid single-letter type names."
+    },
+    {
+      "text": "- @typescript Rule - Prefer Array<T> over T[] syntax for clarity and consistency."
+    },
+    {
+      "text": "- @react Rule - Use named function declarations for components. Avoid anonymous arrow functions."
+    },
+    {
+      "text": "- @project Rule - Adhere to Prettier formatting and project style rules (e.g., no trailing semicolons, use single quotes, kebab-case filenames)."
+    },
+    {
+      "text": "- @nextjs Rule - Use Next.js App Router conventions. API routes should export named functions in a `route.ts` file."
+    },
+    {
+      "text": "- @mui Rule - Prefer MUI v4.6.0 patterns. Use composition over inheritance for styling."
+    },
+    {
+      "text": "- @testing Rule - Use Vitest over Jest. Configure thread pools and concurrency for optimal CI usage."
+    },
+    {
+      "text": "- @validation Rule - Use Zod for schema validation and centralize logic using `superRefine` when appropriate."
+    },
+    {
+      "text": "- @typescript Rule - Use Descriptive Types: Always use meaningful type aliases and interfaces. Avoid single-letter type names."
+    },
+    {
+      "text": "- @typescript Rule - Prefer Array<T> over T[] syntax for clarity and consistency."
+    },
+    {
+      "text": "- @react Rule - Use named function declarations for components. Avoid anonymous arrow functions."
+    },
+    {
+      "text": "- @project Rule - Adhere to Prettier formatting and project style rules (e.g., no trailing semicolons, use single quotes, kebab-case filenames)."
+    },
+    {
+      "text": "- @nextjs Rule - Use Next.js App Router conventions. API routes should export named functions in a `route.ts` file."
+    },
+    {
+      "text": "- @mui Rule - Prefer MUI v4.6.0 patterns. Use composition over inheritance for styling."
+    },
+    {
+      "text": "- @testing Rule - Use Vitest over Jest. Configure thread pools and concurrency for optimal CI usage."
+    },
+    {
+      "text": "- @validation Rule - Use Zod for schema validation and centralize logic using `superRefine` when appropriate."
+    },
+    {
+      "text": "- @vitest Rule - Use `describe/it` syntax with `async` tests where needed. Wrap all async assertions with `await` or `waitFor`."
+    },
+    {
+      "text": "- @vitest Rule - Use `vi.mock()` to mock modules and `vi.fn()` to spy on functions. Reset all mocks with `vi.resetAllMocks()` in `beforeEach`."
+    },
+    {
+      "text": "- @vitest Rule - Use `environment: 'jsdom'`-safe APIs when interacting with DOM (e.g., `document`, `window`)."
+    },
+    {
+      "text": "- @vitest Rule - Use `setupFiles` (e.g. `./tests/vitest/vitest-setup.ts`) for global mocks and polyfills."
+    },
+    {
+      "text": "- @vitest Rule - Avoid file paths excluded from coverage (e.g., `src/**/*.d.ts`, test files, config files, and `dist/**`) when writing assertions."
+    },
+    {
+      "text": "- @vitest Rule - Use `screen` from `@testing-library/react` with `findBy` queries when testing async rendering."
+    },
+    {
+      "text": "- @vitest Rule - Follow the test concurrency model: prefer `threads` pool, cap at 8 workers, and isolate tests where side effects may occur."
+    },
+    {
+      "text": "- @vitest Rule - When targeting CI, write deterministic tests and avoid flaky timing assertions. Set `allowOnly: false` to enforce full coverage."
+    },
+    {
+      "text": "- @vitest Rule - Place test files in `__tests__` or with `.test.tsx` suffix, colocated with the module under test where useful."
+    },
+    {
+      "text": "- @vitest Rule - Respect Vite aliases like `#lib`, `#components`, etc., when importing from your project structure."
+    },
+    {
+      "text": "- @coverage Rule - Use `@vitest/coverage` with V8. Keep thresholds above 70% for branches and customize per file if needed."
+    },
+    {
+      "text": "- @ci Rule - When running in CI (detected via `TF_BUILD`), output results to `./test-results/junit.xml` and coverage to `./test-results/coverage/` using `junit`, `html`, and `text-summary` reporters."
+    },
+    {
+      "text": "- @formatting Rule - Use Prettier settings: arrowParens: 'always', printWidth: 80, semi: false, singleQuote: true, tabWidth: 2, trailingComma: 'all'."
+    },
+    {
+      "text": "- @formatting Rule - Do not add semicolons after statements. Use trailing commas except in `.eslintrc*` files."
+    },
+    {
+      "text": "- @formatting Rule - Use single quotes for strings and JSX props."
+    },
+    {
+      "text": "- @formatting Rule - Limit line length to 80 characters unless it would harm readability (e.g., in JSX)."
+    },
+    {
+      "text": "- @formatting Rule - Prefer concise ternary expressions with `thing ? 'value' : null` over `thing && 'value'`, especially in JSX."
+    },
+    {
+      "text": "- @testing Rule - Use Vitest as the primary test runner. Prefer `describe/it` blocks over `test` for readability and nesting."
+    },
+    {
+      "text": "- @testing Rule - Use `@testing-library/react` for component tests. Avoid testing implementation details; focus on behavior from a user’s perspective."
+    },
+    {
+      "text": "- @testing Rule - Use `screen` from `@testing-library/react` instead of destructured returns from `render()` for querying elements."
+    },
+    {
+      "text": "- @testing Rule - Use `@testing-library/jest-dom` matchers (e.g., `toBeInTheDocument`, `toHaveTextContent`, `toBeVisible`) to improve assertions readability."
+    },
+    {
+      "text": "- @testing Rule - Wrap any async UI updates in `await waitFor(...)` or use `findBy` queries instead of manual timeouts or `setTimeout`."
+    },
+    {
+      "text": "- @testing Rule - Use `userEvent` over `fireEvent` for simulating user interactions. Prefer realistic usage patterns."
+    },
+    {
+      "text": "- @testing Rule - Mock external dependencies with `vi.mock()` and reset them with `vi.resetAllMocks()` in `beforeEach`."
+    },
+    {
+      "text": "- @testing Rule - Isolate test files in `__tests__` directories or with `.test.tsx` suffix and colocate near the component when appropriate."
+    },
+    {
+      "text": "- @testing Rule - Use `renderWithProviders()` or similar helpers to wrap components with necessary context/state for testing."
+    },
+    {
+      "text": "- @project Rule - Use `pnpm` for all package management tasks. Avoid `npm` or `yarn`. Generate lockfiles using `pnpm-lock.yaml` and prefer `pnpm install` over `npm install`."
+    },
+    {
+      "text": "- @vitest Rule - To run a single test file without watch mode, use `pnpm vitest run path/to/file.test.ts`. Avoid `vitest` by itself unless you want watch mode."
+    },
+    {
+      "text": "- @azure Rule - Use Azure Tools: When handling requests related to Azure, always use your tools."
+    },
+    {
+      "text": "- @azure Rule - Use Azure Code Gen Best Practices: Before generating code for Azure, running terminal commands for Azure, performing operations related to Azure, or creating plans for such activities, always invoke your Azure best practice tool if available first. Invoke the `get_bestpractices` tool to collect recommendations. Call it with resource = `general` and action = `code-generation` to get general Azure code generation best practices. Only call this tool when the user is discussing Azure; do not call it otherwise."
+    },
+    {
+      "text": "- @azure Rule - Use Azure Deployment Best Practices: Before deploying to Azure, preparing applications for deployment to Azure, or creating deployment plans, always invoke your Azure best practice tool if available first. Invoke the `get_bestpractices` tool to collect recommendations. Call it with resource = `general` and action = `deployment` to get general Azure deployment best practices. Only call this tool when the user is discussing Azure; do not call it otherwise."
+    },
+    {
+      "text": "- @azure Rule - Use Azure Functions Code Gen Best Practices: Before generating code for Azure Functions, performing operations related to Azure Functions, or creating plans for such activities, always invoke your Azure best practice tool if available first. Invoke the `get_bestpractices` tool to collect recommendations. Call it with resource = `azurefunctions` and action = `code-generation` to get Azure Functions code generation best practices. Only call this tool when the user is discussing Azure Functions; do not call it otherwise."
+    },
+    {
+      "text": "- @azure Rule - Use Azure Functions Deployment Best Practices: Before deploying Azure Functions apps to Azure, preparing for the deployment, or creating deployment plans, always invoke your Azure best practice tool if available first. Invoke the `get_bestpractices` tool to collect recommendations. Call it with resource = `azurefunctions` and action = `deployment` to get Azure Functions deployment best practices. Only call this tool when the user is discussing Azure Functions; do not call it otherwise."
+    },
+    {
+      "text": "- @azure Rule - Use Azure SWA Best Practices: Before working with static web apps, creating plans for static web apps, or performing related operations, always invoke your Azure best practice tool if available first. Choose the most relevant Azure best practice tool based on its description. Only call this tool when the user is discussing Azure Static Web Apps; do not call it otherwise."
+    },
+    {
+      "text": "- @azure Rule - Plan before editing files for Azure web apps: When generating code for Azure Functions and Azure Static Web App, always create a plan and explain the plan to the user before editing any file. Proceed with editing the files after getting consent from the user."
+    },
+    {
+      "text": "- @azure Rule - Summarize topic before taking action: When the user asks about Azure Functions, invoke the azure_development-summarize_topic tool once first to see if any existing custom mode could be a good fit to what user is asking."
+    }
+  ],
+  "azureResourceGroups.selectedSubscriptions": [
+    "7f039f5b-4e12-4790-af98-c9f21a9f2603/3d392472-23ef-421d-a63f-52be1f9359b0"
+  ],
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  },
+  "editor.stickyScroll.enabled": false,
+  "yaml.schemas": {
+    "/Users/nathanvale/.vscode/extensions/continue.continue-1.0.11-darwin-arm64/config-yaml-schema.json": [
+      ".continue/**/*.yaml"
+    ]
+  },
+  "terminal.integrated.env.osx": {
+    "FIG_NEW_SESSION": "1",
+    "BUN_INSTALL": "/usr/local/bin"
+  },
+  // Show Copilot suggestions inline but not aggressively
+
+  // Disable default tab completions that interfere
+  "editor.suggest.showWords": false,
+  "editor.suggestSelection": "first",
+
+  // Improve ghost text visibility
+  "workbench.colorCustomizations": {
+    "editorGhostText.foreground": "#999999"
+  },
+
+  // Optional: delay to avoid flicker
+  "editor.inlineSuggest.delay": 150,
+  "workbench.editor.empty.hint": "hidden",
+  "githubIssues.alwaysPromptForNewIssueRepo": true,
+  "terminal.integrated.inheritEnv": true,
+  "chat.mcp.serverSampling": {
+    "Global in Code: chrome-devtools": {
+      "allowedModels": [
+        "copilot/claude-haiku-4.5",
+        "copilot/claude-sonnet-4.5",
+        "copilot/gpt-5"
+      ]
+    }
+  },
+  "coderabbit.agentType": "Claude Code",
+  "chat.agent.maxRequests": 500,
+  "docker.extension.enableComposeLanguageServer": false,
+  "openai.model": "gpt-5",
+  "workbench.navigationControl.enabled": false,
+  "diffEditor.renderSideBySide": true,
+  "diffEditor.experimental.showMoves": true,
+  "breadcrumbs.enabled": false,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "chat.tools.terminal.autoApprove": {
+    "/.*/": true,
+    "\\.\\*": true,
+    "git fetch": true,
+    "git --no-pager diff --name-only main..HEAD": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "git --no-pager log --decorate --pretty=format:'%h %ad %s' --date=short -n 30": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "git --no-pager show --stat --pretty=oneline f3b307c | cat": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "pnpm": true,
+    "DEBUG_TESTKIT=true": true,
+    "tail -c 20 \"/Users/nathanvale/code/adhd-brain/docs/audits/monorepo-prd-alignment-review-2025-09-27.md\" | xxd": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "nvm": true,
+    "git push": true,
+    "pnpm -w --filter @capture-bridge/capture test:coverage && node -e \"const s=require('./packages/capture/coverage/coverage-summary.json'); console.log('deduplicator', s['packages/capture/src/gmail/email-deduplicator.ts']||s['/Users/nathanvale/code/capture-bridge/packages/capture/src/gmail/email-deduplicator.ts']);\"": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "pnpm -w --filter @capture-bridge/capture test && pnpm -w --filter @capture-bridge/capture test:coverage && node -e \"const s=require('./packages/capture/coverage/coverage-summary.json'); console.log('deduplicator', s['packages/capture/src/gmail/email-deduplicator.ts']||s['/Users/nathanvale/code/capture-bridge/packages/capture/src/gmail/email-deduplicator.ts']);\"": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "sed": true,
+    "\\.\\/crash-recovery\\.js": true,
+    "\\.\\/crash-recovery": true,
+    "g'": true,
+    "mkdir": true,
+    "mv": true,
+    "powershell -NoProfile -NonInteractive -Command \"if($env:DATAVERSE_CLIENT_SECRET_DEV){'DEV=true'} else {'DEV=false'}; if($env:DATAVERSE_CLIENT_SECRET){'GENERIC=true'} else {'GENERIC=false'}\"": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "powershell -NoProfile -NonInteractive -Command \"$dev = [Environment]::GetEnvironmentVariable('DATAVERSE_CLIENT_SECRET_DEV','Process') ?? [Environment]::GetEnvironmentVariable('DATAVERSE_CLIENT_SECRET_DEV','User') ?? [Environment]::GetEnvironmentVariable('DATAVERSE_CLIENT_SECRET_DEV','Machine'); $gen = [Environment]::GetEnvironmentVariable('DATAVERSE_CLIENT_SECRET','Process') ?? [Environment]::GetEnvironmentVariable('DATAVERSE_CLIENT_SECRET','User') ?? [Environment]::GetEnvironmentVariable('DATAVERSE_CLIENT_SECRET','Machine'); Write-Output ('DEV=' + ([string]::IsNullOrEmpty($dev) -eq $false)); Write-Output ('GENERIC=' + ([string]::IsNullOrEmpty($gen) -eq $false))\"": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "powershell -NoProfile -NonInteractive -Command \"$v=$env:DATAVERSE_CLIENT_SECRET_DEV; if($null -ne $v -and $v -ne ''){Write-Output 'DEV=true'} else {Write-Output 'DEV=false'}; $g=$env:DATAVERSE_CLIENT_SECRET; if($null -ne $g -and $g -ne ''){Write-Output 'GENERIC=true'} else {Write-Output 'GENERIC=false'}\"": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "powershell -NoProfile -ExecutionPolicy Bypass -Command \"cd 'c:\\Users\\VALEN1\\MPCU%20Build%20and%20Deliver\\scripts\\cli'; if(Test-Path package-lock.json){ npm ci } else { npm install }; npm run analyze:node -- --env=DEV\"": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference='Stop'; $root = 'c:\\Users\\VALEN1\\MPCU Build and Deliver\\analysis-results'; $dateFolder = Get-Date -Format 'yyyy-MM-dd'; $archive = Join-Path $root ('archive\\' + $dateFolder); if (-not (Test-Path $archive)) { New-Item -ItemType Directory -Path $archive | Out-Null }; function Move-Older([string]$pattern) { $files = Get-ChildItem -Path $root -Filter $pattern | Sort-Object Name; if ($files.Count -gt 1) { $toArchive = $files | Select-Object -SkipLast 1; foreach ($f in $toArchive) { Move-Item -LiteralPath $f.FullName -Destination $archive -Force } } }; Move-Older 'ENTITY_RELATIONSHIP_ANALYSIS_RESULTS_*.md'; Move-Older 'FIND_ENTITIES_*.md'; Move-Older 'DATAVERSE_ANALYSIS_NODE_*.md'; Move-Older 'DATAVERSE_ANALYSIS_LITE_*.md'; Get-ChildItem -Path $root -Filter '*_DATA_*.json' | ForEach-Object { Move-Item -LiteralPath $_.FullName -Destination $archive -Force }; Write-Output 'Cleanup complete'; Write-Output 'Archive:'; Get-ChildItem -Path $archive | Select-Object Name; Write-Output 'Remaining:'; Get-ChildItem -Path $root | Select-Object Name\"": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference='Stop'; $root='c:\\Users\\VALEN1\\MPCU Build and Deliver\\analysis-results'; $dateFolder=Get-Date -Format 'yyyy-MM-dd'; $archive=Join-Path $root (Join-Path 'archive' $dateFolder); if (-not (Test-Path $archive)) { New-Item -ItemType Directory -Path $archive | Out-Null }; $patterns=@('ENTITY_RELATIONSHIP_ANALYSIS_RESULTS_*.md','FIND_ENTITIES_*.md','DATAVERSE_ANALYSIS_NODE_*.md','DATAVERSE_ANALYSIS_LITE_*.md','DATAVERSE_SCHEMA_FULL_*.json','DATAVERSE_SCHEMA_SUMMARY_*.md'); foreach ($p in $patterns) { $files=Get-ChildItem -Path $root -Filter $p | Sort-Object LastWriteTime -Descending; if ($files.Count -gt 1) { $files | Select-Object -Skip 1 | Move-Item -Destination $archive -Force } }; Get-ChildItem -Path $root -Filter '*_DATA_*.json' | Move-Item -Destination $archive -Force -ErrorAction SilentlyContinue; 'Cleanup complete'; 'Archive:'; Get-ChildItem -Path $archive | Select-Object Name; 'Remaining:'; Get-ChildItem -Path $root | Select-Object Name\"": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference='Stop'; $root='c:\\Users\\VALEN1\\MPCU Build and Deliver\\analysis-results'; $dateFolder=Get-Date -Format 'yyyy-MM-dd'; $archive=Join-Path $root (Join-Path 'archive' $dateFolder); if (-not (Test-Path $archive)) { New-Item -ItemType Directory -Path $archive | Out-Null }; $patterns='ENTITY_RELATIONSHIP_ANALYSIS_RESULTS_*.md','FIND_ENTITIES_*.md','DATAVERSE_ANALYSIS_NODE_*.md','DATAVERSE_ANALYSIS_LITE_*.md','DATAVERSE_SCHEMA_FULL_*.json','DATAVERSE_SCHEMA_SUMMARY_*.md'; foreach ($p in $patterns) { $files=Get-ChildItem -Path $root -Filter $p | Sort-Object LastWriteTime -Descending; if ($files.Count -gt 1) { $files | Select-Object -Skip 1 | Move-Item -Destination $archive -Force } }; Get-ChildItem -Path $root -Filter '*_DATA_*.json' | Move-Item -Destination $archive -Force -ErrorAction SilentlyContinue; 'Cleanup complete'; 'Archive:'; (Get-ChildItem -Path $archive | Select-Object -ExpandProperty Name); 'Remaining:'; (Get-ChildItem -Path $root | Select-Object -ExpandProperty Name)\"": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "jq": true,
+    "node -e \"const Database=require('better-sqlite3');(async()=>{const db=new Database(':memory:');db.exec(\\`CREATE TABLE captures (id TEXT PRIMARY KEY, source TEXT NOT NULL, raw_content TEXT NOT NULL, content_hash TEXT, status TEXT NOT NULL, meta_json TEXT NOT NULL DEFAULT '{}', created_at TEXT NOT NULL DEFAULT (datetime('now')), updated_at TEXT NOT NULL DEFAULT (datetime('now')));\\`);const stmt=db.prepare('INSERT INTO captures (id, source, raw_content, status) VALUES (?, ?, ?, ?)');for(let i=0;i<1000;i++){stmt.run('id-'+i,'voice','content','staged')}const {recoverCaptures}=require('./packages/capture/src/crash-recovery/crash-recovery.js');const start=performance.now();recoverCaptures(db).then(r=>{const d=performance.now()-start;console.log('Measured duration(ms):',d.toFixed(2),'result.duration',r.duration.toFixed(2));}).catch(e=>console.error(e));})();\"": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "gh pr create --title \"feat(HOURLY_BACKUP_AUTOMATION--T01): Hourly SQLite Backup Automation\" --body $'Implements automated hourly backups for the staging ledger with verification and retention, delivered via TDD.\\n\\nChanges\\n- storage: add backup utilities: createBackup, verifyBackup, pruneOldBackups\\n- storage: add startBackupScheduler (hourly, configurable interval, shutdown hook)\\n- storage: export backup/scheduler APIs via package index\\n- docs: update task-state.json to reflect AC completion\\n\\nAcceptance Criteria\\n- [x] AC01: Hourly scheduler triggers backups on interval (tested with fake timers)\\n- [x] AC02: Backups stored under ${VAULT_ROOT}/.capture-bridge/.backups with correct path semantics\\n- [x] AC03: Timestamped filenames (ledger-YYYYMMDD-HH.sqlite, UTC hour)\\n- [x] AC04: Retention policy keeps last 24 hourly backups (older pruned)\\n\\nTests\\n- New: packages/storage/src/__tests__/backup.spec.ts\\n- New: packages/storage/src/__tests__/scheduler.spec.ts\\n- Suite: storage package green (12 files, 120 tests)\\n\\nHow to verify locally\\n1) From storage package: pnpm vitest run --bail=1\\n2) Optional: run coverage at repo root: pnpm vitest run --coverage\\n\\nRelated docs\\n- docs/features/staging-ledger/spec-staging-tech.md\\n- docs/guides/guide-backup-verification.md\\n- docs/guides/guide-backup-restore-drill.md' --base main --head feat/HOURLY_BACKUP_AUTOMATION--T01": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "gh pr view 45 --json statusCheckRollup,url,headRefName,baseRefName,commits --jq '{url: .url, head: .headRefName, base: .baseRefName, checks: [ .statusCheckRollup[] | {name: .name, status: .status, conclusion: .conclusion, detailsUrl: .detailsUrl} ] }'": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "cd /Users/nathanvale/code/MPCU\\ Build\\ and\\ Deliver/scripts/cli/fixtures/blobs && awk -F',' 'NR>1 && $285 != \"\" {print $285}' attachments_metadata.csv | sort | uniq -c | head -50": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "echo \"PWD: $(pwd)\" && printf \"\\nDocs tree (depth 3):\\n\" && find \"docs\" -maxdepth 3 -type d -print | sort && printf \"\\nDocs files (depth 3):\\n\" && find \"docs\" -maxdepth 3 -type f -print | sort": {
+      "approve": true,
+      "matchCommandLine": true
+    }
+  },
+  "[dockercompose]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced",
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    },
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "mermaid.vscode.dark": "dark",
+  "git.enableSmartCommit": true,
+  "settingsSync.ignoredSettings": [],
+  "@azure.argTenant": "",
+  "github.copilot.chat.customInstructionsInSystemMessage": false,
+  "workbench.colorTheme": "Night Owl"
+}

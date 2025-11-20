@@ -12,6 +12,8 @@
     undo = reset --soft HEAD^
     uncommit = reset --soft HEAD^
     unstage = reset HEAD
+	pr = "!f() { exec az repos pr \"$@\"; }; f"
+	repo = "!f() { exec az repos \"$@\"; }; f"
 
 [branch]
     autosetuprebase = never

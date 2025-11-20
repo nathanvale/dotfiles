@@ -1,0 +1,22 @@
+# TaskDock Shellcheck Configuration
+# Place in project root or ~/.shellcheckrc
+
+# Target shell
+shell=bash
+
+# Disable warnings for sourcing files with non-constant paths
+# We use dynamic sourcing extensively in our library system
+disable=SC1090
+disable=SC1091
+
+# Disable unused variable warnings
+# Many variables are exported for use in other scripts or subshells
+disable=SC2034
+
+# Allow arrays and other bash-specific features
+# (shellcheck detects this from shebang, but being explicit)
+external-sources=false
+
+# Severity level: error, warning, info, style
+# We check down to style level for best practices
+severity=style

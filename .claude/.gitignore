@@ -1,0 +1,35 @@
+# Claude Code .claude directory - selective commit strategy
+# This allows us to version control important config while ignoring volatile/personal data
+
+# Volatile data - changes every session
+file-history/
+projects/
+session-env/
+shell-snapshots/
+debug/
+*.jsonl
+
+# Personal/local settings - not meant for team sharing
+settings.local.json
+local/
+ide/
+
+# Tool/plugin state - regenerated automatically
+state/
+statsig/
+
+# Backups and temporary files
+*.backup
+*.bak
+*~
+
+# IDE/Editor temporary files
+.vscode/*
+!.vscode/settings.json
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Keep everything else (commands/, plugins/, skills/, agents/, .mcp.json, settings.json, etc.)
+# Add specific ignores above instead of using blanket ignores

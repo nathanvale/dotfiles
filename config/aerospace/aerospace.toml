@@ -16,7 +16,7 @@ after-login-command = []
 # after-startup-command = ["exec-and-forget open_all_my_apps.sh"]
 
 # Notify Sketchybar about workspace change
-exec-on-workspace-change = ['/bin/bash', '-c', 'aerospace_app_launcher.sh']
+exec-on-workspace-change = ['/bin/bash', '-c', 'app-launcher.sh']
 
 # Start AeroSpace at login
 start-at-login = true
@@ -57,18 +57,15 @@ on-focus-changed = "move-mouse window-lazy-center"
 #                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
 #                 See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 [gaps]
-# Outer gaps configuration
+# Outer gaps configuration - space between windows and screen edges
 outer.top = [{ monitor."^built-in" = 0 }, 0]
-
 outer.bottom = [{ monitor."^built-in" = 0 }, 0]
-
 outer.left = [{ monitor."^built-in" = 0 }, 0]
-
 outer.right = [{ monitor."^built-in" = 0 }, 0]
 
-# Inner gaps configuration (optional)
-inner.horizontal = [{ monitor."^built-in" = 1 }, 8]
-inner.vertical = [{ monitor."^built-in" = 1 }, 8]
+# Inner gaps configuration - space between windows
+inner.horizontal = [{ monitor."^built-in" = 5 }, 10]
+inner.vertical = [{ monitor."^built-in" = 5 }, 10]
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -90,35 +87,68 @@ inner.vertical = [{ monitor."^built-in" = 1 }, 8]
 
 # All possible commands: https://nikitabobko.github.io/AeroSpace/commands
 
-# You can uncomment this line to open up terminal with alt + enter shortcut
+# Quick app launchers
 # See: https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget
 ctrl-alt-cmd-space = 'exec-and-forget open_all_my_apps.sh'
 
+# Individual app launchers for quick access
+ctrl-cmd-enter = 'exec-and-forget open -a "Ghostty"'  # Quick terminal
+ctrl-alt-cmd-c = 'exec-and-forget open -a "Visual Studio Code"'  # Quick code editor
+ctrl-alt-cmd-b = 'exec-and-forget open -a "Arc"'  # Quick browser
+ctrl-alt-cmd-n = 'exec-and-forget open -a "Notion"'  # Quick notes
+
+# SuperWhisper mode switchers (manual override)
+ctrl-alt-cmd-d = 'exec-and-forget ~/code/dotfiles/bin/aerospace/superwhisper-mode-switch.sh default'  # Default mode (no AI)
+ctrl-alt-cmd-t = 'exec-and-forget ~/code/dotfiles/bin/aerospace/superwhisper-mode-switch.sh casual-text'  # Casual text cleanup
+ctrl-alt-cmd-e = 'exec-and-forget ~/code/dotfiles/bin/aerospace/superwhisper-mode-switch.sh email'  # Email mode
+ctrl-alt-cmd-m = 'exec-and-forget ~/code/dotfiles/bin/aerospace/superwhisper-mode-switch.sh melanie'  # Melanie mode
+
 # See: https://nikitabobko.github.io/AeroSpace/commands#layout
-ctrl-cmd-slash = 'layout tiles accordion'
+ctrl-cmd-backslash = 'layout tiles accordion'  # Moved from slash to backslash
+
+# Layout switching
+ctrl-cmd-t = 'layout tiles'  # Force tiles layout
+ctrl-cmd-a = 'layout accordion'  # Force accordion layout
+ctrl-cmd-h = 'layout h_accordion'  # Horizontal accordion
+ctrl-cmd-v = 'layout v_accordion'  # Vertical accordion
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus
 ctrl-cmd-minus = 'focus left'
 ctrl-cmd-equal = 'focus right'
+ctrl-cmd-leftSquareBracket = 'focus up'  # Add vertical navigation
+ctrl-cmd-rightSquareBracket = 'focus down'  # Add vertical navigation
+
+# DFS (sequential) navigation for predictable focus order
+ctrl-cmd-comma = 'focus dfs-prev'  # Previous window in order
+ctrl-cmd-period = 'focus dfs-next'  # Next window in order
+
+# Window swapping
+ctrl-cmd-shift-minus = 'move left'
+ctrl-cmd-shift-equal = 'move right'
+ctrl-cmd-shift-leftSquareBracket = 'move up'
+ctrl-cmd-shift-rightSquareBracket = 'move down'
 
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
-ctrl-1 = 'workspace 1'
-ctrl-2 = 'workspace 2'
-ctrl-3 = 'workspace 3'
-ctrl-4 = 'workspace 4'
-ctrl-5 = 'workspace 5'
-ctrl-6 = 'workspace 6'
-ctrl-0 = 'workspace 0'
+# Smart workspace switching with toggle and window cycling
+ctrl-1 = 'exec-and-forget workspace-smart.sh 1'
+ctrl-2 = 'exec-and-forget workspace-smart.sh 2'
+ctrl-3 = 'exec-and-forget workspace-smart.sh 3'
+ctrl-4 = 'exec-and-forget workspace-smart.sh 4'
+ctrl-5 = 'exec-and-forget workspace-smart.sh 5'
+ctrl-6 = 'exec-and-forget workspace-smart.sh 6'
+ctrl-7 = 'exec-and-forget workspace-smart.sh 7'
+ctrl-0 = 'exec-and-forget workspace-smart.sh 0'
 ctrl-cmd-c = 'workspace C'
 ctrl-cmd-s = 'workspace S'
-ctrl-cmd-m = 'workspace M'
 ctrl-cmd-f = 'workspace F'
 ctrl-cmd-o = 'workspace O'
 ctrl-cmd-p = 'workspace P'
 ctrl-cmd-n = 'workspace N'
 ctrl-cmd-r = 'workspace R'
 ctrl-cmd-i = 'workspace I'
+ctrl-cmd-m = 'workspace M'
+
 
 
 # move node to workspace
@@ -128,13 +158,24 @@ ctrl-shift-3 = ['move-node-to-workspace 3', 'workspace 3']
 ctrl-shift-4 = ['move-node-to-workspace 4', 'workspace 4']
 ctrl-shift-5 = ['move-node-to-workspace 5', 'workspace 5']
 ctrl-shift-6 = ['move-node-to-workspace 6', 'workspace 6']
+ctrl-shift-7 = ['move-node-to-workspace 7', 'workspace 7']
 ctrl-shift-0 = ['move-node-to-workspace 0', 'workspace 0']
 
 
-ctrl-cmd-period = 'fullscreen'
+# Fullscreen controls
+ctrl-cmd-shift-f = 'fullscreen'
+ctrl-cmd-shift-period = 'macos-native-fullscreen'
+
+# Teams meeting shortcut - go to workspace M, close other windows, and fullscreen
+ctrl-cmd-shift-f12 = ['workspace 6', 'close-all-windows-but-current', 'fullscreen']
+
+# Quick Teams meeting join - switch to M workspace, close other windows, and auto-fullscreen
+ctrl-alt-f12 = ['workspace 6', 'close-all-windows-but-current', 'fullscreen']
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
+ctrl-tab = 'workspace next'  # Cycle through workspaces
+ctrl-shift-tab = 'workspace prev'  # Cycle backwards
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
 # ctrl-cmd-backslash = 'move-workspace-to-monitor --wrap-around next'
 
@@ -143,16 +184,28 @@ ctrl-alt-shift-right = ['move-node-to-monitor next', 'focus-monitor next']
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#modeLLLhH
 ctrl-cmd-semicolon = 'mode service'
-
 ctrl-cmd-quote = 'mode resize'
+
+# Help and reference
+ctrl-cmd-slash = 'exec-and-forget hud.sh --notify'  # Quick help notification
+ctrl-cmd-shift-slash = 'exec-and-forget open -a Terminal help.sh'  # Full interactive help
 
 [mode.resize.binding]
 b = 'balance-sizes'
 
-
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
 minus = 'resize smart -150'
 equal = 'resize smart +150'
+
+# More granular resize options
+shift-minus = 'resize smart -50'  # Smaller adjustments
+shift-equal = 'resize smart +50'  # Smaller adjustments
+
+# Directional resizing
+h = 'resize width -50'
+l = 'resize width +50'
+j = 'resize height +50'
+k = 'resize height -50'
 
 enter = 'mode main'
 esc = 'mode main'
@@ -168,6 +221,33 @@ f = [
 ] # Toggle between floating and tiling layout
 backspace = ['close-all-windows-but-current', 'mode main']
 
+# Additional recovery commands
+t = ['layout tiling', 'mode main'] # Force tiling layout
+l = ['layout floating', 'mode main'] # Force floating layout
+0 = ['workspace 0', 'mode main'] # Go to workspace 0 to recover hidden windows
+
+# Layout management
+a = ['layout accordion', 'mode main'] # Switch to accordion
+h = ['layout h_accordion', 'mode main'] # Horizontal accordion
+v = ['layout v_accordion', 'mode main'] # Vertical accordion
+s = ['layout tiles', 'mode main'] # Switch to tiles
+
+# Window management
+b = ['balance-sizes', 'mode main'] # Balance all window sizes
+n = ['workspace next', 'mode main'] # Next workspace
+p = ['workspace prev', 'mode main'] # Previous workspace
+
+# Focus management
+1 = ['focus --dfs-index 0', 'mode main'] # Focus first window
+2 = ['focus --dfs-index 1', 'mode main'] # Focus second window
+3 = ['focus --dfs-index 2', 'mode main'] # Focus third window
+
+# Teams-specific commands
+f12 = ['workspace M', 'close-all-windows-but-current', 'fullscreen', 'mode main'] # Quick Teams meeting fullscreen
+
+# Fix Messages layout
+m = ['workspace M', 'layout tiling', 'mode main'] # Force workspace M to tiling (fixes Messages)
+
 [[on-window-detected]]
 if.app-id = 'com.mitchellh.ghostty'
 run = "move-node-to-workspace 1"
@@ -180,15 +260,62 @@ run = "move-node-to-workspace 2"
 if.app-id = 'company.thebrowser.Browser'
 run = "move-node-to-workspace 3"
 
-# leave space 4 for a second browser window
+[[on-window-detected]]
+if.app-id = 'md.obsidian'
+run = "move-node-to-workspace 4"
+
+# Microsoft Teams: Navigation tabs go to workspace 5 (specific rules first)
+[[on-window-detected]]
+if.app-id = 'com.microsoft.teams2'
+if.window-title-regex-substring = '^Connections'
+run = 'move-node-to-workspace 5'
 
 [[on-window-detected]]
 if.app-id = 'com.microsoft.teams2'
-run = "move-node-to-workspace 5"
+if.window-title-regex-substring = '^Activity'
+run = 'move-node-to-workspace 5'
 
 [[on-window-detected]]
-if.app-id = 'com.microsoft.Outlook'
-run = "move-node-to-workspace 6"
+if.app-id = 'com.microsoft.teams2'
+if.window-title-regex-substring = '^Chat'
+run = 'move-node-to-workspace 5'
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.teams2'
+if.window-title-regex-substring = '^Calls'
+run = 'move-node-to-workspace 5'
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.teams2'
+if.window-title-regex-substring = '^OneDrive'
+run = 'move-node-to-workspace 5'
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.teams2'
+if.window-title-regex-substring = '^Calendar'
+run = 'move-node-to-workspace 5'
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.teams2'
+if.window-title-regex-substring = '^Copilot'
+run = 'move-node-to-workspace 5'
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.teams2'
+if.window-title-regex-substring = '^Apps'
+run = 'move-node-to-workspace 5'
+
+# Microsoft Teams: All other Teams windows (meetings, etc.) go to workspace 6
+[[on-window-detected]]
+if.app-id = 'com.microsoft.teams2'
+run = 'move-node-to-workspace 6'
+
+# Teams pop-ups and dialogs should float
+[[on-window-detected]]
+if.app-id = 'com.microsoft.teams2'
+if.window-title-regex-substring = '(Settings|Options|Preferences|Join|Audio|Video)'
+run = ['layout floating']
+
 
 [[on-window-detected]]
 if.app-id = 'com.leomehlig.today'
@@ -219,6 +346,10 @@ if.app-id = 'com.openai.chat'
 run = ['move-node-to-workspace C']
 
 [[on-window-detected]]
+if.app-id = 'com.anthropic.claudefordesktop'
+run = ['move-node-to-workspace C']
+
+[[on-window-detected]]
 if.app-id = 'com.apple.finder'
 run = ['move-node-to-workspace F']
 
@@ -234,12 +365,69 @@ run = ['layout floating']
 if.window-title-regex-substring = '^Settings'
 run = ['layout floating', 'move-node-to-workspace 0']
 
-[[on-window-detected]]
-run = ['layout floating', 'move-node-to-workspace 0']
+# TODO: Incomplete config - uncomment and complete when ready
+# [[on-window-detected]]
+# if.app-id =
 
+# System utilities that should float
+[[on-window-detected]]
+if.app-id = 'com.apple.ActivityMonitor'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.systempreferences'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.SystemProfiler'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.systemuiserver'
+run = ['layout floating']
+
+# Dialog windows and popups
+[[on-window-detected]]
+if.window-title-regex-substring = '^Open|^Save|^Export|^Import'
+run = ['layout floating']
+
+# Small utility windows
+[[on-window-detected]]
+if.app-id = 'com.apple.calculator'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.ColorSyncUtility'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.DigitalColorMeter'
+run = ['layout floating']
+
+# Citrix Viewer - move to workspace 0 (utility/hidden workspace)
+[[on-window-detected]]
+if.app-id = 'com.citrix.receiver.icaviewer.mac'
+run = ['move-node-to-workspace 0']
+
+[[on-window-detected]]
+if.app-id = 'com.citrix.receiver.nomas'
+run = ['move-node-to-workspace 0']
+
+[[on-window-detected]]
+if.app-id = 'com.citrix.workspace'
+run = ['move-node-to-workspace 0']
+
+[[on-window-detected]]
+if.app-id = 'com.citrix.receiver.icaviewer.mac'
+run = ['move-node-to-workspace 0']
+
+# SuperWhisper - float on current workspace, don't move it around
+[[on-window-detected]]
+if.app-id = 'com.superduper.superwhisper'
+run = 'layout floating'
 
 [exec]
 inherit-env-vars = true
 
 [exec.env-vars]
-PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:${HOME}/code/dotfiles/bin:${PATH}'
+PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:${HOME}/code/dotfiles/bin/aerospace:${HOME}/code/dotfiles/bin/tmux:${HOME}/code/dotfiles/bin/vault:${HOME}/code/dotfiles/bin/utils:${PATH}'

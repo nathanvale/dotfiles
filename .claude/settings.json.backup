@@ -1,0 +1,53 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude-code-docs/claude-docs-helper.sh hook-check"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/nathanvale/.claude-code-project-index/scripts/run_python.sh /Users/nathanvale/.claude-code-project-index/scripts/i_flag_hook.py",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/nathanvale/.claude-code-project-index/scripts/run_python.sh /Users/nathanvale/.claude-code-project-index/scripts/stop_hook.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "code-documentation@claude-code-workflows": true,
+    "developer-essentials@claude-code-workflows": true,
+    "debugging-toolkit@claude-code-workflows": true,
+    "git-pr-workflows@claude-code-workflows": true,
+    "frontend-mobile-development@claude-code-workflows": true,
+    "unit-testing@claude-code-workflows": true,
+    "tdd-workflows@claude-code-workflows": true,
+    "code-refactoring@claude-code-workflows": true,
+    "comprehensive-review@claude-code-workflows": true,
+    "codebase-cleanup@claude-code-workflows": true,
+    "documentation-generation@claude-code-workflows": true,
+    "task-streams": true
+  },
+  "alwaysThinkingEnabled": true
+}

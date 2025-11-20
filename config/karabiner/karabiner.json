@@ -6,13 +6,38 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Change right_command+hjkl to arrow keys",
-                        "enabled": false,
+                        "description": "Caps Lock → Control (Escape if alone)",
+                        "manipulators": [
+                            {
+                                "from": { "key_code": "caps_lock" },
+                                "to": [{ "key_code": "left_control" }],
+                                "to_if_alone": [{ "key_code": "escape" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Right Command → Hyper Key (⌃⌥⇧⌘)",
+                        "manipulators": [
+                            {
+                                "from": { "key_code": "right_command" },
+                                "to": [
+                                    {
+                                        "key_code": "left_shift",
+                                        "modifiers": ["left_command", "left_control", "left_option"]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Change Hyper + h/j/k/l to Arrows and Hyper + [ to Escape",
                         "manipulators": [
                             {
                                 "from": {
                                     "key_code": "h",
-                                    "modifiers": { "mandatory": ["right_command"] }
+                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
                                 },
                                 "to": [{ "key_code": "left_arrow" }],
                                 "type": "basic"
@@ -20,7 +45,7 @@
                             {
                                 "from": {
                                     "key_code": "j",
-                                    "modifiers": { "mandatory": ["right_command"] }
+                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
                                 },
                                 "to": [{ "key_code": "down_arrow" }],
                                 "type": "basic"
@@ -28,7 +53,7 @@
                             {
                                 "from": {
                                     "key_code": "k",
-                                    "modifiers": { "mandatory": ["right_command"] }
+                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
                                 },
                                 "to": [{ "key_code": "up_arrow" }],
                                 "type": "basic"
@@ -36,77 +61,30 @@
                             {
                                 "from": {
                                     "key_code": "l",
-                                    "modifiers": { "mandatory": ["right_command"] }
+                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
                                 },
                                 "to": [{ "key_code": "right_arrow" }],
                                 "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Launch and focus System Settings, Finder with home folder, Karabiner-Elements, Activity Monitor, and start QuickTime screen recording with right shift+letters.",
-                        "enabled": false,
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "c",
-                                    "modifiers": { "mandatory": ["right_shift"] }
-                                },
-                                "to": [{ "shell_command": "/opt/homebrew/bin/fish -c open_chatgpt" }],
-                                "type": "basic"
                             },
-                            {
-                                "from": {
-                                    "key_code": "s",
-                                    "modifiers": { "mandatory": ["right_shift"] }
-                                },
-                                "to": [{ "shell_command": "open '/System/Applications/System Settings.app' && osascript -e 'tell application \"System Settings\" to activate' -e 'tell application \"System Events\" to set frontmost of process \"System Settings\" to true'" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "f",
-                                    "modifiers": { "mandatory": ["right_shift"] }
-                                },
-                                "to": [{ "shell_command": "osascript -e 'tell application \"Finder\" to make new Finder window to home' -e 'tell application \"Finder\" to activate' -e 'tell application \"System Events\" to set frontmost of process \"Finder\" to true'" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "k",
-                                    "modifiers": { "mandatory": ["right_shift"] }
-                                },
-                                "to": [{ "shell_command": "open '/Applications/Karabiner-Elements.app' && osascript -e 'tell application \"Karabiner-Elements\" to activate' -e 'tell application \"System Events\" to set frontmost of process \"Karabiner-Elements\" to true'" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "q",
-                                    "modifiers": { "mandatory": ["right_shift"] }
-                                },
-                                "to": [{ "shell_command": "osascript ~/Scripts/start_quicktime_recording.applescript" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "a",
-                                    "modifiers": { "mandatory": ["right_shift"] }
-                                },
-                                "to": [{ "shell_command": "open '/System/Applications/Utilities/Activity Monitor.app' && osascript -e 'tell application \"Activity Monitor\" to activate' -e 'tell application \"System Events\" to set frontmost of process \"Activity Monitor\" to true'" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Map ctrl + [ to escape",
-                        "enabled": false,
-                        "manipulators": [
                             {
                                 "from": {
                                     "key_code": "open_bracket",
-                                    "modifiers": { "mandatory": ["control"] }
+                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
                                 },
                                 "to": [{ "key_code": "escape" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "backslash",
+                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "backslash",
+                                        "modifiers": ["control"]
+                                    }
+                                ],
                                 "type": "basic"
                             }
                         ]
@@ -147,6 +125,128 @@
                                 "type": "basic"
                             }
                         ]
+                    },
+                    {
+                        "description": "HyperFlow - Control+1-5 (primary apps) and Hyper+1-5,S,F (secondary apps)",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "1",
+                                    "modifiers": { "mandatory": ["control"] }
+                                },
+                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow 1" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "2",
+                                    "modifiers": { "mandatory": ["control"] }
+                                },
+                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow 2" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "3",
+                                    "modifiers": { "mandatory": ["control"] }
+                                },
+                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow 3" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "4",
+                                    "modifiers": { "mandatory": ["control"] }
+                                },
+                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow 4" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "5",
+                                    "modifiers": { "mandatory": ["control"] }
+                                },
+                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow 5" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "1",
+                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
+                                },
+                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow H1" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "2",
+                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
+                                },
+                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow H2" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "3",
+                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
+                                },
+                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow H3" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "4",
+                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
+                                },
+                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow H4" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "5",
+                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
+                                },
+                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow H5" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "s",
+                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
+                                },
+                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow S" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "f",
+                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
+                                },
+                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow F" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Additional shortcuts: Ctrl+Command+M for Messages, Ctrl+Command+C for Claude Code Desktop",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "m",
+                                    "modifiers": { "mandatory": ["control", "command"] }
+                                },
+                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow H1" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "c",
+                                    "modifiers": { "mandatory": ["control", "command"] }
+                                },
+                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow C" }],
+                                "type": "basic"
+                            }
+                        ]
                     }
                 ]
             },
@@ -179,13 +279,7 @@
                 },
                 {
                     "identifiers": { "is_keyboard": true },
-                    "manipulate_caps_lock_led": false,
-                    "simple_modifications": [
-                        {
-                            "from": { "key_code": "caps_lock" },
-                            "to": [{ "key_code": "left_control" }]
-                        }
-                    ]
+                    "manipulate_caps_lock_led": false
                 },
                 {
                     "identifiers": {
@@ -245,10 +339,40 @@
                         "is_pointing_device": true
                     },
                     "ignore": false
+                },
+                {
+                    "identifiers": {
+                        "is_keyboard": true,
+                        "is_pointing_device": true,
+                        "product_id": 591,
+                        "vendor_id": 1452
+                    },
+                    "ignore": false,
+                    "simple_modifications": [
+                        {
+                            "from": { "key_code": "caps_lock" },
+                            "to": [{ "key_code": "left_control" }]
+                        }
+                    ]
+                },
+                {
+                    "identifiers": {
+                        "is_keyboard": true,
+                        "is_pointing_device": true,
+                        "product_id": 3616,
+                        "vendor_id": 13364
+                    },
+                    "ignore": false
                 }
             ],
             "name": "Nathan",
             "selected": true,
+            "simple_modifications": [
+                {
+                    "from": { "key_code": "caps_lock" },
+                    "to": [{ "key_code": "left_control" }]
+                }
+            ],
             "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
         }
     ]

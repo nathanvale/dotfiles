@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# TaskDock VS Code Integration Shim
+# Thin wrapper that executes the real vscode-next.sh
+
+set -euo pipefail
+
+# Find dotfiles root
+DOTFILES_ROOT=""
+if [ -f "$HOME/code/dotfiles/apps/taskdock/ux/vscode-next.sh" ]; then
+    DOTFILES_ROOT="$HOME/code/dotfiles"
+elif [ -f "$(dirname "${BASH_SOURCE[0]}")/../apps/taskdock/ux/vscode-next.sh" ]; then
+    DOTFILES_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+fi
+
+if [ -z "$DOTFILES_ROOT" ] || [ ! -f "$DOTFILES_ROOT/apps/taskdock/ux/vscode-next.sh" ]; then
+    echo "Error: Cannot find TaskDock installation" >&2
+    exit 1
+fi
+
+# Execute the real script
+exec "$DOTFILES_ROOT/apps/taskdock/ux/vscode-next.sh" "$@"

@@ -1,0 +1,42 @@
+# Sample TaskDock Repository Configuration
+# This file demonstrates all available configuration options
+
+# Task Management
+ticket_prefix: "PROJ"              # Required: Task ID prefix (e.g., PROJ-0001)
+task_directory: "docs/tasks"       # Where task markdown files are located
+lock_max_age_minutes: 30           # Consider locks stale after this duration
+
+# Worktree Settings
+worktree_root: ".worktrees"        # Directory for git worktrees
+branch_prefix: "feat"              # Prefix for feature branches (feat/PROJ-0001)
+
+# Git Settings
+default_branch: "main"             # Main branch name
+git_provider: "auto"               # "auto", "github", or "azure"
+
+# Validation Settings
+validation:
+  run_format: true                 # Run code formatters
+  run_typecheck: true              # Run type checking (TypeScript, Flow, etc.)
+  run_lint: true                   # Run linting (ESLint, etc.)
+  run_tests: true                  # Run test suite
+
+# Telemetry Settings
+telemetry:
+  enabled: true                    # Enable structured logging
+  log_retention_days: 7            # How long to keep logs
+  include_git_metadata: true       # Log git branch/commit info
+  include_system_info: true        # Log hostname, user, etc.
+
+# Output Settings
+output:
+  default_format: "human"          # "human" or "json"
+  color_enabled: true              # Use colored output in terminal
+  verbose: false                   # Show additional debug information
+
+# Advanced Settings
+advanced:
+  heartbeat_interval_seconds: 60   # How often to update lock heartbeats
+  task_selection_algorithm: "priority"  # "priority" or "random"
+  allow_parallel_tasks: false      # Allow multiple tasks per agent
+  auto_cleanup_merged: true        # Auto cleanup merged worktrees

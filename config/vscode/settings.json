@@ -183,5 +183,6 @@
   "zenMode.silentNotifications": true,
   "workbench.navigationControl.enabled": false,
   "chat.commandCenter.enabled": false,
-  "window.commandCenter": false
+  "window.commandCenter": false,
+  "git.confirmSync": false
 }

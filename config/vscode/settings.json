@@ -184,5 +184,6 @@
   "workbench.navigationControl.enabled": false,
   "chat.commandCenter.enabled": false,
   "window.commandCenter": false,
-  "git.confirmSync": false
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true
 }

@@ -2,7 +2,7 @@
 # Generated on: 2025-11-19T09:41:29Z
 
 # Required: Ticket prefix for this repository
-ticket_prefix: "MPCU"
+ticket_prefix: "DOT"
 # Task management
 task_directory: "docs/tasks"
 lock_max_age_minutes: "45"

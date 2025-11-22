@@ -1,6 +1,0 @@
-{
-  "defaultComponent": "",
-  "defaultPriority": "P2",
-  "projectPrefix": "MPCU",
-  "taskTemplate": "~/.claude/templates/adhoc-task.template.md"
-}

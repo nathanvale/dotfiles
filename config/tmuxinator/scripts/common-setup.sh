@@ -2,21 +2,7 @@
 # ~/.config/tmuxinator/scripts/common-setup.sh
 # Shared setup functions for tmuxinator projects
 
-setup_logs() {
-    local project_name="$1"
-    # Create logs directory structure if it doesn't exist
-    mkdir -p .logs/nextjs
-    mkdir -p .logs/dev
-    mkdir -p .logs/prisma
-    mkdir -p .logs/storybook
-    # Clean up logs older than 7 days
-    find .logs -name "*.log" -mtime +7 -delete 2>/dev/null || true
-    # Keep only last 10 log files per service
-    for dir in .logs/*/; do
-        find "$dir" -maxdepth 1 -name "*.log" -type f -printf '%T@ %p\n' 2>/dev/null | \
-            sort -rn | tail -n +11 | cut -d' ' -f2- | xargs -r rm -f 2>/dev/null || true
-    done
-}
+# Logging functions removed - no longer using .logs directory
 
 setup_vscode_marker() {
     local project_name="$1"
@@ -41,12 +27,6 @@ open_vscode_once() {
 
 get_branch_name() {
     git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "main"
-}
-
-cleanup_logs() {
-    local service="$1"
-    find .logs/"${service}" -maxdepth 1 -name "*.log" -type f -printf '%T@ %p\n' 2>/dev/null | \
-        sort -rn | tail -n +6 | cut -d' ' -f2- | xargs -r rm -f 2>/dev/null || true
 }
 
 pane_setup() {
@@ -89,10 +69,6 @@ pane_setup() {
     
     # Disable automatic rename for all windows to keep our custom names
     tmux set-window-option -t "${session_name}:${window_name}" automatic-rename off 2>/dev/null
-    
-    if [ -n "$service" ]; then
-        cleanup_logs "$service"
-    fi
 }
 
 # Vault management functions

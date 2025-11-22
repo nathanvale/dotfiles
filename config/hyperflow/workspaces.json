@@ -26,8 +26,8 @@
       "mode": "professional-engineer"
     },
     "C": {
-      "apps": ["ChatGPT", "Claude"],
-      "description": "AI Assistants",
+      "apps": ["Claude"],
+      "description": "Claude Desktop",
       "mode": "default"
     },
     "F": {
@@ -39,16 +39,6 @@
       "apps": ["Messages"],
       "description": "Messages",
       "mode": "casual-text"
-    },
-    "H2": {
-      "apps": ["ChatGPT"],
-      "description": "ChatGPT",
-      "mode": "default"
-    },
-    "H3": {
-      "apps": ["Claude"],
-      "description": "Claude Desktop",
-      "mode": "default"
     },
     "H4": {
       "apps": ["Calendar"],

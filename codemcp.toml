@@ -1,0 +1,2 @@
+# codemcp configuration file
+format = ["pnpm format"]

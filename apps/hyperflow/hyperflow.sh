@@ -144,10 +144,21 @@ handle_workspace() {
     current_workspace=$(get_current_workspace)
 
     if [[ "$current_workspace" == "$workspace_id" ]]; then
-        # Same workspace - cycle windows
-        # First ensure app is focused, then cycle
-        if wait_for_app_focus "$app_name"; then
+        # Same workspace pressed - check if app is actually focused
+        local process_name
+        process_name=$(get_process_name "$app_name")
+        local frontmost
+        frontmost=$(osascript -e 'tell application "System Events" to name of first process whose frontmost is true' 2>/dev/null || echo "")
+
+        if [[ "$frontmost" == "$process_name" ]]; then
+            # App IS focused - cycle through its windows
             cycle_windows
+        else
+            # App lost focus (user clicked elsewhere) - re-activate it
+            open_and_activate "$app_name"
+            wait_for_app_focus "$app_name"
+            # Also restore the correct mode (may have changed if user switched apps manually)
+            switch_mode_if_needed "$mode"
         fi
     else
         # Different workspace - full switch
@@ -195,12 +206,16 @@ handle_multi_workspace() {
             fi
         done
 
-        # If no match found, just activate first app
+        # If no match found (focus was lost to non-workspace app), activate first app
         if [[ -z "$next_app" ]]; then
             next_app="${apps[0]}"
+            # Focus was lost - also restore the mode
+            open_and_activate "$next_app"
+            switch_mode_if_needed "$mode"
+        else
+            # Toggling between workspace apps - just switch, mode stays same
+            open_and_activate "$next_app"
         fi
-
-        open_and_activate "$next_app"
     else
         # Different workspace - full switch
         # 1. Mark workspace FIRST (prevents race on rapid presses)

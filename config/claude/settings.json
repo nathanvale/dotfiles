@@ -35,11 +35,8 @@
       "type": "stdio"
     },
     "mcp-server-firecrawl": {
-      "args": ["-y", "firecrawl-mcp"],
-      "command": "npx",
-      "env": {
-        "FIRECRAWL_API_KEY": "fc-82f608b6be8b4e0aab9ec1b423382de3"
-      }
+      "command": "/bin/zsh",
+      "args": ["-c", "source ~/code/dotfiles/.env && exec npx -y firecrawl-mcp"]
     },
     "playwright": {
       "args": ["@playwright/mcp@latest"],
@@ -59,11 +56,8 @@
       "type": "stdio"
     },
     "tavily-mcp": {
-      "args": ["-y", "tavily-mcp@0.1.2"],
-      "command": "npx",
-      "env": {
-        "TAVILY_API_KEY": "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"
-      },
+      "command": "/bin/zsh",
+      "args": ["-c", "source ~/code/dotfiles/.env && exec npx -y tavily-mcp@0.1.2"],
       "type": "stdio"
     },
     "wallaby": {

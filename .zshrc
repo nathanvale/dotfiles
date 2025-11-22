@@ -11,6 +11,7 @@ export PATH="$HOME/code/dotfiles/bin/aerospace:$PATH"
 export PATH="$HOME/code/dotfiles/bin/tmux:$PATH"
 export PATH="$HOME/code/dotfiles/bin/vault:$PATH"
 export PATH="$HOME/code/dotfiles/bin/utils:$PATH"
+export PATH="$HOME/code/dotfiles/bin/env:$PATH"
 
 # ----------------------------------------------------------------------------
 # Environment Variables
@@ -35,9 +36,15 @@ export CDPATH=".:~:$HOME/code"
 # ----------------------------------------------------------------------------
 # Load Secrets (MCP API keys, Azure credentials, etc.)
 # ----------------------------------------------------------------------------
-if [ -f "$HOME/code/dotfiles/.env.secrets" ]; then
-  source "$HOME/code/dotfiles/.env.secrets"
+if [ -f "$HOME/code/dotfiles/.env" ]; then
+  source "$HOME/code/dotfiles/.env"
 fi
+
+# Environment variable management (1Password-backed)
+# Commands available via bin/env/:
+#   addenv KEY "value"  - Add key to 1Password + regenerate .env
+#   syncenv             - Pull from 1Password → regenerate .env + sync launchctl
+#   lsenv               - List all keys stored in 1Password
 
 # ----------------------------------------------------------------------------
 # NVM (Node Version Manager)
@@ -195,6 +202,10 @@ alias pg="echo 'Pinging Google' && ping www.google.com"
 
 # Claude Code
 alias cc="claude --dangerously-skip-permissions"
+alias cct="npx @mariozechner/claude-trace"
+alias ccu="npx ccusage@latest"
+alias ccs="npx @mariozechner/snap-happy to local"
+alias ccd="c ~/Library/Application\ Support/Claude/claude_desktop_config.json"
 alias ccr="claude --dangerously-skip-permissions -r"
 
 # Aerospace (window manager)
@@ -284,8 +295,8 @@ source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # Autosuggestions - suggests commands from history (use → to accept)
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-# Atuin - magical shell history sync and search
-eval "$(atuin init zsh)"
+# Atuin - magical shell history sync and search (Ctrl+R only, up arrow uses traditional behavior)
+eval "$(atuin init zsh --disable-up-arrow)"
 
 # Python alias - Homebrew installs as python3, alias for convenience
 alias python='python3'

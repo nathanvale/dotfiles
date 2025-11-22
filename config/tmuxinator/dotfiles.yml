@@ -3,36 +3,35 @@
 name: dotfiles
 root: ~/code/dotfiles
 
-# Project hooks - runs on project start
+# Project hooks
 on_project_start: |
   source ~/.config/tmuxinator/scripts/common-setup.sh
-  setup_logs "dotfiles"
+  setup_vscode_marker "dotfiles"
 
-# Run on project stop - cleanup
 on_project_stop: |
   source ~/.config/tmuxinator/scripts/common-setup.sh
+  cleanup_vscode_marker "dotfiles"
 
-# Runs before each window starts
 pre_window: |
   source ~/.config/tmuxinator/scripts/common-setup.sh
+  open_vscode_once "dotfiles"
 
-# Set window base-index to 1 and load tmux config
+# Tmux configuration
 tmux_options: -f ~/.tmux.conf
-
-# Start with the first window (claude)
 startup_window: claude
 startup_pane: 1
+
+# Windows with inline anchor definitions
 windows:
-  - claude:
-      root: ~/code/dotfiles
-      panes:
+  - claude: &claude_window
+      panes: &claude_pane
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh
           pane_setup "claude"
           claude
-  - git:
-      root: ~/code/dotfiles
-      panes:
+
+  - git: &git_window
+      panes: &git_pane
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh
           pane_setup "git"

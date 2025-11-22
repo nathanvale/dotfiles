@@ -1,43 +1,47 @@
-# ~/.config/tmuxinator/paicc-1.yml
+# ~/.config/tmuxinator/dot-claude.yml
 
-name: paicc-1
-root: /Users/nathanvale/code/paicc-1
+name: dot-claude
+root: /Users/nathanvale/.claude
 
-# Project hooks
+# Project hooks - runs on project start
 on_project_start: |
   source ~/.config/tmuxinator/scripts/common-setup.sh
-  setup_vscode_marker "paicc-1"
+  setup_logs "dot-claude"
+  setup_vscode_marker "dot-claude"
 
+# Run on project stop - cleanup
 on_project_stop: |
   source ~/.config/tmuxinator/scripts/common-setup.sh
-  cleanup_vscode_marker "paicc-1"
+  cleanup_vscode_marker "dot-claude"
 
+# Runs before each window starts
 pre_window: |
   source ~/.config/tmuxinator/scripts/common-setup.sh
-  open_vscode_once "paicc-1"
+  open_vscode_once "dot-claude"
 
-# Tmux configuration
+# Set window base-index to 1 and load tmux config
 tmux_options: -f ~/.tmux.conf
+
+# Start with the first window (claude)
 startup_window: claude
 startup_pane: 1
-
-# Windows
 windows:
   - claude:
+      root: /Users/nathanvale/.claude
       panes:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh
           pane_setup "claude"
           claude
-
   - git:
+      root: /Users/nathanvale/.claude
       panes:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh
           pane_setup "git"
           lazygit
-
   - shell:
+      root: /Users/nathanvale/.claude
       panes:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh

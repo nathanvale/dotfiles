@@ -1,0 +1,315 @@
+#!/bin/bash
+# lsenv - List all environment variables in your dotfiles
+# Usage: lsenv [--verbose] [--provider <name>] [--providers]
+#
+# Two modes:
+#   1Password Mode: Lists keys from 1Password vault (source of truth)
+#   Manual Mode:    Lists keys from .env file
+
+set -e
+
+VAULT="Dotfiles"
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/code/dotfiles}"
+ENV_FILE="$DOTFILES_DIR/.env"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+DIM='\033[0;90m'
+NC='\033[0m' # No Color
+
+log_info() { echo -e "${BLUE}→${NC} $1"; }
+log_warn() { echo -e "${YELLOW}⚠${NC} $1"; }
+log_dim() { echo -e "${DIM}$1${NC}"; }
+
+# Parse arguments
+VERBOSE=false
+FILTER_PROVIDER=""
+LIST_PROVIDERS=false
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -v|--verbose)
+            VERBOSE=true
+            shift
+            ;;
+        -p|--provider)
+            if [[ -z "$2" || "$2" == -* ]]; then
+                echo "Error: --provider requires a provider name"
+                exit 1
+            fi
+            FILTER_PROVIDER=$(echo "$2" | tr '[:upper:]' '[:lower:]')
+            shift 2
+            ;;
+        --providers)
+            LIST_PROVIDERS=true
+            shift
+            ;;
+        -h|--help)
+            echo "Usage: lsenv [--verbose] [--provider <name>] [--providers]"
+            echo ""
+            echo "List all environment variables stored in your dotfiles."
+            echo ""
+            echo -e "${CYAN}Two modes available:${NC}"
+            echo ""
+            echo -e "  ${GREEN}1Password Mode${NC} (if 'op' CLI is installed & authenticated)"
+            echo "    - Lists keys from 1Password 'Dotfiles' vault"
+            echo "    - Shows provider, expiry, and last modified with --verbose"
+            echo "    - Filter by provider with --provider <name>"
+            echo ""
+            echo -e "  ${YELLOW}Manual Mode${NC} (fallback if no 1Password)"
+            echo "    - Lists keys from .env file"
+            echo "    - Provider filtering reads from comments"
+            echo ""
+            echo "Options:"
+            echo "  -v, --verbose         Show additional details (provider, expiry, dates)"
+            echo "  -p, --provider <name> Filter keys by provider (e.g., openai, stripe)"
+            echo "  --providers           List all unique providers"
+            echo "  -h, --help            Show this help message"
+            echo ""
+            echo "Examples:"
+            echo "  lsenv                    # List all keys"
+            echo "  lsenv -v                 # Verbose output with all details"
+            echo "  lsenv --provider openai  # Show only OpenAI keys"
+            echo "  lsenv --providers        # List all providers"
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Use --help for usage information"
+            exit 1
+            ;;
+    esac
+done
+
+# Check if 1Password CLI is available and authenticated
+if command -v op &> /dev/null && op vault list &> /dev/null; then
+    MODE="1password"
+else
+    MODE="manual"
+fi
+
+if [[ "$MODE" == "1password" ]]; then
+    # =========================================================================
+    # 1PASSWORD MODE - List from 1Password vault
+    # =========================================================================
+    echo ""
+    log_dim "Mode: 1Password (synced)"
+    echo ""
+
+    # Get all items from the Dotfiles vault
+    if [[ -n "$FILTER_PROVIDER" ]]; then
+        # Filter by tag (provider)
+        ITEMS=$(op item list --vault "$VAULT" --tags "$FILTER_PROVIDER" --format json 2>/dev/null || echo "[]")
+    else
+        ITEMS=$(op item list --vault "$VAULT" --format json 2>/dev/null || echo "[]")
+    fi
+    ITEM_COUNT=$(echo "$ITEMS" | jq -r 'length')
+
+    # Handle --providers flag
+    if [[ "$LIST_PROVIDERS" == true ]]; then
+        echo -e "${CYAN}Providers in 1Password ($VAULT):${NC}"
+        echo ""
+
+        # Get all items and extract unique tags
+        ALL_ITEMS=$(op item list --vault "$VAULT" --format json 2>/dev/null || echo "[]")
+        PROVIDERS=$(echo "$ALL_ITEMS" | jq -r '.[].tags[]?' 2>/dev/null | sort -u)
+
+        if [[ -z "$PROVIDERS" ]]; then
+            echo "  (no providers found)"
+            echo ""
+            echo "Tip: Add keys with provider tags: addenv KEY \"value\" \"provider\""
+        else
+            PROVIDER_COUNT=0
+            while IFS= read -r provider; do
+                if [[ -n "$provider" ]]; then
+                    # Count keys for this provider
+                    COUNT=$(echo "$ALL_ITEMS" | jq -r --arg p "$provider" '[.[] | select(.tags[]? == $p)] | length')
+                    printf "  ${GREEN}%-20s${NC} (%d keys)\n" "$provider" "$COUNT"
+                    ((PROVIDER_COUNT++))
+                fi
+            done <<< "$PROVIDERS"
+            echo ""
+            echo -e "${DIM}Total: $PROVIDER_COUNT providers${NC}"
+        fi
+        exit 0
+    fi
+
+    if [[ "$ITEM_COUNT" -eq 0 ]]; then
+        if [[ -n "$FILTER_PROVIDER" ]]; then
+            echo "No environment variables found for provider: $FILTER_PROVIDER"
+        else
+            echo "No environment variables found in vault: $VAULT"
+        fi
+        echo "Use 'addenv KEY_NAME value provider' to add variables"
+        exit 0
+    fi
+
+    if [[ -n "$FILTER_PROVIDER" ]]; then
+        echo -e "${CYAN}Environment variables for provider '$FILTER_PROVIDER':${NC}"
+    else
+        echo -e "${CYAN}Environment variables in 1Password ($VAULT):${NC}"
+    fi
+    echo ""
+
+    if [[ "$VERBOSE" == true ]]; then
+        # Verbose output with provider, timestamps and expiry
+        printf "  ${DIM}%-25s %-15s %-12s %s${NC}\n" "KEY" "PROVIDER" "EXPIRES" "LAST MODIFIED"
+        printf "  ${DIM}%-25s %-15s %-12s %s${NC}\n" "---" "--------" "-------" "-------------"
+
+        echo "$ITEMS" | jq -r '.[].title' | sort | while read -r TITLE; do
+            # Get item details
+            ITEM_JSON=$(op item get "$TITLE" --vault "$VAULT" --format json 2>/dev/null || echo "{}")
+
+            # Get provider from tags
+            PROVIDER=$(echo "$ITEM_JSON" | jq -r '.tags[0] // "-"' 2>/dev/null || echo "-")
+
+            # Get last modified
+            TIMESTAMP=$(echo "$ITEM_JSON" | jq -r '.updated_at // .created_at // empty')
+            if [[ -n "$TIMESTAMP" ]]; then
+                FORMATTED_DATE=$(date -j -f "%Y-%m-%dT%H:%M:%S" "${TIMESTAMP%.*}" "+%Y-%m-%d" 2>/dev/null || echo "-")
+            else
+                FORMATTED_DATE="-"
+            fi
+
+            # Get expiry date from custom field (stored as Unix timestamp)
+            EXPIRY_RAW=$(echo "$ITEM_JSON" | jq -r '.fields[]? | select(.label == "Expiry Date") | .value // empty' 2>/dev/null || echo "")
+            if [[ -z "$EXPIRY_RAW" ]]; then
+                EXPIRY="-"
+            else
+                # Convert Unix timestamp to date string
+                if [[ "$(uname)" == "Darwin" ]]; then
+                    EXPIRY=$(date -r "$EXPIRY_RAW" "+%Y-%m-%d" 2>/dev/null || echo "$EXPIRY_RAW")
+                else
+                    EXPIRY=$(date -d "@$EXPIRY_RAW" "+%Y-%m-%d" 2>/dev/null || echo "$EXPIRY_RAW")
+                fi
+
+                # Check if expired or expiring soon
+                TODAY=$(date "+%Y-%m-%d")
+                SOON=$(date -v+30d "+%Y-%m-%d" 2>/dev/null || date -d "+30 days" "+%Y-%m-%d")
+                if [[ "$EXPIRY" < "$TODAY" ]]; then
+                    EXPIRY="${RED}${EXPIRY}${NC} ⚠️"
+                elif [[ "$EXPIRY" < "$SOON" ]]; then
+                    EXPIRY="${YELLOW}${EXPIRY}${NC}"
+                fi
+            fi
+
+            printf "  ${GREEN}%-25s${NC} %-15s %-12b %s\n" "$TITLE" "$PROVIDER" "$EXPIRY" "$FORMATTED_DATE"
+        done
+    else
+        # Simple list with provider
+        echo "$ITEMS" | jq -r '.[].title' | sort | while read -r TITLE; do
+            echo -e "  ${GREEN}$TITLE${NC}"
+        done
+    fi
+
+    echo ""
+    if [[ -n "$FILTER_PROVIDER" ]]; then
+        echo -e "${DIM}Total: $ITEM_COUNT keys for provider '$FILTER_PROVIDER'${NC}"
+    else
+        echo -e "${DIM}Total: $ITEM_COUNT keys (source: 1Password)${NC}"
+    fi
+
+else
+    # =========================================================================
+    # MANUAL MODE - List from .env file
+    # =========================================================================
+    echo ""
+    log_dim "Mode: Manual (no 1Password)"
+    echo ""
+
+    if [[ ! -f "$ENV_FILE" ]]; then
+        echo "No .env file found at $ENV_FILE"
+        echo "Use 'addenv KEY_NAME value provider' to add variables"
+        exit 0
+    fi
+
+    # Handle --providers flag in manual mode
+    if [[ "$LIST_PROVIDERS" == true ]]; then
+        echo -e "${CYAN}Providers in .env file:${NC}"
+        echo ""
+
+        # Extract providers from comments: # KEY [provider: xxx]
+        PROVIDERS=$(grep -oE '\[provider: [a-z0-9-]+\]' "$ENV_FILE" 2>/dev/null | sed 's/\[provider: //;s/\]//' | sort -u)
+
+        if [[ -z "$PROVIDERS" ]]; then
+            echo "  (no providers found)"
+            echo ""
+            echo "Tip: Add keys with provider tags: addenv KEY \"value\" \"provider\""
+        else
+            PROVIDER_COUNT=0
+            while IFS= read -r provider; do
+                if [[ -n "$provider" ]]; then
+                    # Count keys for this provider
+                    COUNT=$(grep -c "\[provider: $provider\]" "$ENV_FILE" 2>/dev/null || echo "0")
+                    printf "  ${GREEN}%-20s${NC} (%d keys)\n" "$provider" "$COUNT"
+                    ((PROVIDER_COUNT++))
+                fi
+            done <<< "$PROVIDERS"
+            echo ""
+            echo -e "${DIM}Total: $PROVIDER_COUNT providers${NC}"
+        fi
+        exit 0
+    fi
+
+    if [[ -n "$FILTER_PROVIDER" ]]; then
+        echo -e "${CYAN}Environment variables for provider '$FILTER_PROVIDER':${NC}"
+    else
+        echo -e "${CYAN}Environment variables in .env:${NC}"
+    fi
+    echo ""
+
+    # Count and list keys
+    KEY_COUNT=0
+    PREV_LINE=""
+    while IFS= read -r line; do
+        if [[ "$line" =~ ^export[[:space:]]+([A-Z][A-Z0-9_]*)= ]]; then
+            KEY_NAME="${BASH_REMATCH[1]}"
+
+            # Extract provider from previous comment line if present
+            KEY_PROVIDER=""
+            if [[ "$PREV_LINE" =~ \[provider:[[:space:]]*([a-z0-9-]+)\] ]]; then
+                KEY_PROVIDER="${BASH_REMATCH[1]}"
+            fi
+
+            # Filter by provider if specified
+            if [[ -n "$FILTER_PROVIDER" ]]; then
+                if [[ "$KEY_PROVIDER" != "$FILTER_PROVIDER" ]]; then
+                    PREV_LINE="$line"
+                    continue
+                fi
+            fi
+
+            if [[ "$VERBOSE" == true && -n "$KEY_PROVIDER" ]]; then
+                printf "  ${GREEN}%-25s${NC} (provider: %s)\n" "$KEY_NAME" "$KEY_PROVIDER"
+            else
+                echo -e "  ${GREEN}$KEY_NAME${NC}"
+            fi
+            ((KEY_COUNT++))
+        fi
+        PREV_LINE="$line"
+    done < "$ENV_FILE"
+
+    if [[ "$KEY_COUNT" -eq 0 ]]; then
+        if [[ -n "$FILTER_PROVIDER" ]]; then
+            echo "  (no keys found for provider: $FILTER_PROVIDER)"
+        else
+            echo "  (no keys found)"
+        fi
+        echo ""
+        echo "Use 'addenv KEY_NAME value provider' to add variables"
+        exit 0
+    fi
+
+    echo ""
+    if [[ -n "$FILTER_PROVIDER" ]]; then
+        echo -e "${DIM}Total: $KEY_COUNT keys for provider '$FILTER_PROVIDER'${NC}"
+    else
+        echo -e "${DIM}Total: $KEY_COUNT keys (source: .env file)${NC}"
+    fi
+    echo ""
+    log_dim "Note: To enable 1Password sync: brew install 1password-cli"
+fi

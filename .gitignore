@@ -8,6 +8,7 @@ config/claude/mcp.json
 config/gcloud/
 config/google-chrome-devtools
 .vault-id
+.env
 .env.secrets
 
 # Claude Code - ignore ephemeral/cache files
@@ -21,10 +22,13 @@ config/google-chrome-devtools
 .claude/ide/
 .claude/local/
 .claude/state/
+.claude/plugins/cache/
 
 # Claude Code - ignore external plugin marketplaces (maintain their own git)
 .claude/plugins/marketplaces/awesome-claude-skills/
 .claude/plugins/marketplaces/claude-code-workflows/
+.claude/plugins/marketplaces/superpowers-marketplace/
+.claude/plugins/marketplaces/context-engineering-kit/
 
 node_modules/
 dist/

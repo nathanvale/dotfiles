@@ -1,0 +1,23 @@
+# <emoji> <type>(<scope>): <subject>
+#
+# Example: ✨ feat(auth): add OAuth2 login support
+#
+# Emoji + Type combinations:
+#   🎉 init     - Begin a project
+#   ✨ feat     - A new feature
+#   🐞 fix      - A bug fix
+#   📃 docs     - Documentation changes
+#   🌈 style    - Code style changes (formatting, etc)
+#   🦄 refactor - Code refactoring
+#   🎈 perf     - Performance improvements
+#   🧪 test     - Adding or updating tests
+#   🔧 build    - Build system changes
+#   🐎 ci       - CI/CD configuration changes
+#   🐳 chore    - Maintenance tasks
+#   ↩ revert    - Revert changes
+#
+# Rules:
+#   - Subject line max 100 characters
+#   - Use lowercase for type and scope
+#   - No period at end of subject
+#   - Blank line between subject and body

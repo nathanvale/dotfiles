@@ -4,6 +4,7 @@
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
+    "commitlint-config-git-commit-emoji": "^1.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "prettier": "^3.6.2",
@@ -12,9 +13,15 @@
   "keywords": [],
   "license": "ISC",
   "lint-staged": {
-    "*.{json,md,yml,yaml,toml}": ["prettier --write"],
-    "*.{sh,bash,zsh}": ["shellcheck"],
-    ".github/workflows/*.{yml,yaml}": ["actionlint"]
+    "*.{json,md,yml,yaml,toml}": [
+      "prettier --write"
+    ],
+    "*.{sh,bash,zsh}": [
+      "shellcheck"
+    ],
+    ".github/workflows/*.{yml,yaml}": [
+      "actionlint"
+    ]
   },
   "name": "dotfiles",
   "packageManager": "pnpm@10.22.0",

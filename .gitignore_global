@@ -1,22 +1,79 @@
 # Mac
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Linux
+*~
 
 # VSCode
 .vscode/
 
-# npm
-npm-debug.log
-
-# yarn
-yarn-error.log
+# JetBrains
+.idea/
+*.iml
 
 # VIM
 *.un~
 Session.vim
 .netrwhist
-*~
 *.swp
 .lvimrc
+
+# Node
+**/node_modules/
+npm-debug.log
+yarn-error.log
+yarn.lock
+pnpm-lock.yaml
+package-lock.json
+.npm/
+.pnpm-store/
+
+# Monorepo
+.turbo/
+.nx/
+lerna-debug.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.egg-info/
+.eggs/
+venv/
+.venv/
+.env/
+
+# Environment files (secrets)
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+**/dist/
+**/build/
+**/out/
+
+# Logs
+*.log
+**/logs/
+
+# Coverage
+**/coverage/
+**/.nyc_output/
+
+# Testing
+.pytest_cache/
+
+# eslint
+.eslintcache
 
 # localhistory
 .history
@@ -25,14 +82,14 @@ Session.vim
 *.ignored/
 *.ignored.*
 
-# eslint
-.eslintcache
-
 # Project metadata
 PROJECT_INDEX.json
 
 # Obsidian
 .obsidian/
+
+# Claude Code
 .claude/settings.local.json
 
+# Git worktrees
 .worktrees/**

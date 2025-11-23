@@ -37,6 +37,9 @@
     changed = green
     untracked = cyan
 
+[commit]
+    template = ~/.gitmessage
+
 [core]
     editor = code --wait
     excludesfile = /Users/nathanvale/.gitignore_global
@@ -60,15 +63,13 @@
     pretty = format:%C(auto)%h %d %s %C(black)%C(bold)%cr
 
 [help]
-    autocorrect = 1
-
-[http]
+    autocorrect = prompt
 
 [https]
-    sslVerify = false
+    sslVerify = true
 
 [init]
-    defaultBranch = master
+    defaultBranch = main
 
 [interactive]
     diffFilter = delta --color-only
@@ -93,7 +94,10 @@
   blame = delta
 
 [pull]
-    rebase = false
+    rebase = true
+
+[rerere]
+    enabled = true
 
 [push]
     default = current

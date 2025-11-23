@@ -16,6 +16,7 @@ symlinks=(
 	"${HOME}/.zshrc|${HOME}/code/dotfiles/.zshrc"
 	"${HOME}/.gitconfig|${HOME}/code/dotfiles/.gitconfig"
 	"${HOME}/.gitignore_global|${HOME}/code/dotfiles/.gitignore_global"
+	"${HOME}/.gitmessage|${HOME}/code/dotfiles/.gitmessage"
 	"${HOME}/Library/Application Support/Code/User/settings.json|${HOME}/code/dotfiles/config/vscode/settings.json"
 	"${HOME}/Library/Application Support/Code/User/tasks.json|${HOME}/code/dotfiles/config/vscode/tasks.json"
 	"${HOME}/Library/Application Support/Code/User/keybindings.json|${HOME}/code/dotfiles/config/vscode/keybindings.json"

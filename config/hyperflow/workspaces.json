@@ -1,59 +1,64 @@
 {
-  "workspaces": {
-    "1": {
-      "apps": ["Ghostty"],
-      "description": "Terminal",
-      "mode": "default"
-    },
-    "2": {
-      "apps": ["Visual Studio Code"],
-      "description": "Code Editor",
-      "mode": "default"
-    },
-    "3": {
-      "apps": ["Arc"],
-      "description": "Browser",
-      "mode": "default"
-    },
-    "4": {
-      "apps": ["Obsidian"],
-      "description": "Notes",
-      "mode": "default"
-    },
-    "5": {
-      "apps": ["Microsoft Teams"],
-      "description": "Teams",
-      "mode": "professional-engineer"
-    },
-    "C": {
-      "apps": ["Claude"],
-      "description": "Claude Desktop",
-      "mode": "default"
-    },
-    "F": {
-      "apps": ["Finder"],
-      "description": "Finder",
-      "mode": "default"
-    },
-    "H1": {
-      "apps": ["Messages"],
-      "description": "Messages",
-      "mode": "casual-text"
-    },
-    "H4": {
-      "apps": ["Calendar"],
-      "description": "Calendar",
-      "mode": "default"
-    },
-    "H5": {
-      "apps": ["Microsoft Outlook"],
-      "description": "Email",
-      "mode": "email"
-    },
-    "S": {
-      "apps": ["System Settings"],
-      "description": "System Settings",
-      "mode": "default"
-    }
-  }
+	"workspaces": {
+		"1": {
+			"apps": ["Ghostty"],
+			"description": "Terminal",
+			"mode": "default"
+		},
+		"2": {
+			"apps": ["Visual Studio Code"],
+			"description": "Code Editor",
+			"mode": "default"
+		},
+		"3": {
+			"apps": ["Arc"],
+			"description": "Browser",
+			"mode": "default"
+		},
+		"4": {
+			"apps": ["Obsidian"],
+			"description": "Notes",
+			"mode": "default"
+		},
+		"5": {
+			"apps": ["Microsoft Teams"],
+			"description": "Teams",
+			"mode": "professional-engineer"
+		},
+		"C": {
+			"apps": ["Claude"],
+			"description": "Claude Desktop",
+			"mode": "default"
+		},
+		"F": {
+			"apps": ["Finder"],
+			"description": "Finder",
+			"mode": "default"
+		},
+		"H1": {
+			"apps": ["Messages"],
+			"description": "Messages",
+			"mode": "casual-text"
+		},
+		"H4": {
+			"apps": ["Calendar"],
+			"description": "Calendar",
+			"mode": "default"
+		},
+		"H5": {
+			"apps": ["Microsoft Outlook"],
+			"description": "Email",
+			"mode": "email"
+		},
+		"S": {
+			"apps": ["System Settings"],
+			"description": "System Settings",
+			"mode": "default"
+		},
+		"D": {
+			"apps": ["Docker Desktop"],
+			"description": "Docker",
+			"mode": "default"
+		}
+	}
 }

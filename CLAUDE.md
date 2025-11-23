@@ -257,3 +257,13 @@ When adding a new dotfile (e.g., `.npmrc`, `.gitignore_global`):
 - Source `bin/utils/colour_log.sh` for consistent error/warning/success logging
 - Keep scripts modular: prefer multiple small scripts over monolithic ones
 - Test individual scripts independently before integrating into orchestration
+
+## Code Style Rules
+
+### Code Formatting
+
+- No semicolons (enforced)
+- Single quotes (enforced)
+- No unnecessary curly braces (enforced)
+- 2-space indentation
+- Import order: external → internal → types

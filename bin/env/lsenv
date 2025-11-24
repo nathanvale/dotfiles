@@ -79,7 +79,14 @@ while [[ $# -gt 0 ]]; do
             ;;
         *)
             echo "Unknown option: $1"
-            echo "Use --help for usage information"
+            echo ""
+            echo "Usage: lsenv [-v] [--provider NAME] [--providers]"
+            echo ""
+            echo "Did you mean to run a different command?"
+            echo "  lsenv              - List environment variables"
+            echo "  addenv             - Add a new environment variable"
+            echo "  syncenv            - Sync .env from 1Password"
+            echo "  sync-docker-mcp    - Sync .env to Docker MCP"
             exit 1
             ;;
     esac

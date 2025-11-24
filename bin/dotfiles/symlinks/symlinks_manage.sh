@@ -21,6 +21,7 @@ symlinks=(
 	"${HOME}/Library/Application Support/Code/User/tasks.json|${HOME}/code/dotfiles/config/vscode/tasks.json"
 	"${HOME}/Library/Application Support/Code/User/keybindings.json|${HOME}/code/dotfiles/config/vscode/keybindings.json"
 	"${HOME}/Library/Application Support/Code/User/prompts|${HOME}/code/dotfiles/config/vscode/prompts"
+	"${HOME}/Library/Application Support/Code/User/mcp.json|${HOME}/code/dotfiles/config/vscode/mcp.json"
 )
 
 # Function to display usage

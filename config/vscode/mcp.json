@@ -1,0 +1,95 @@
+{
+	"servers": {
+		"wallaby": {
+			"command": "npx",
+			"args": ["-y", "-c", "node ~/.wallaby/mcp/"],
+			"type": "stdio"
+		},
+		"context7": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@upstash/context7-mcp"]
+		},
+		"chrome-devtools": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["chrome-devtools-mcp@latest"]
+		},
+		"mcp-server-firecrawl": {
+			"command": "npx",
+			"args": ["-y", "firecrawl-mcp"],
+			"env": {
+				"FIRECRAWL_API_KEY": "{FIRECRAWL_API_KEY}"
+			},
+			"type": "stdio"
+		},
+		"github/github-mcp-server": {
+			"type": "http",
+			"url": "https://api.githubcopilot.com/mcp/",
+			"gallery": "https://api.mcp.github.com/2025-09-15/v0/servers/ab12cd34-5678-90ef-1234-567890abcdef",
+			"version": "0.13.0"
+		},
+		"chromedevtools/chrome-devtools-mcp": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"chrome-devtools-mcp@latest",
+				"--browserUrl",
+				"${input:browser_url}",
+				"--headless",
+				"${input:headless}",
+				"--isolated",
+				"${input:isolated}",
+				"--channel",
+				"${input:chrome_channel}"
+			],
+			"gallery": "https://api.mcp.github.com/2025-09-15/v0/servers/13749964-2447-4c31-bcab-32731cced504",
+			"version": "0.0.1-seed"
+		},
+		"MCP_DOCKER": {
+			"command": "docker",
+			"args": ["mcp", "gateway", "run"],
+			"type": "stdio"
+		},
+		"git": {
+			"command": "docker",
+			"args": [
+				"run",
+				"-i",
+				"--rm",
+				"-v",
+				"/local-directory:/local-directory",
+				"mcp/git"
+			]
+		}
+	},
+	"inputs": [
+		{
+			"id": "browser_url",
+			"type": "promptString",
+			"description": "Optional: connect to an already-running Chrome (remote debugging / port-forward). Example: http://127.0.0.1:9222",
+			"password": false
+		},
+		{
+			"id": "headless",
+			"type": "promptString",
+			"description": "Run Chrome headless (true/false). Default: false",
+			"password": false,
+			"default": "false"
+		},
+		{
+			"id": "isolated",
+			"type": "promptString",
+			"description": "Use a temporary user-data-dir (true/false). Default: false",
+			"password": false,
+			"default": "false"
+		},
+		{
+			"id": "chrome_channel",
+			"type": "promptString",
+			"description": "Chrome channel: stable | canary | beta | dev (default: stable).",
+			"password": false,
+			"default": "stable"
+		}
+	]
+}

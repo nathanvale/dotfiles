@@ -28,9 +28,30 @@ log_error() { echo -e "${RED}✗${NC} $1" >&2; }
 log_dim() { echo -e "${DIM}  $1${NC}"; }
 
 DRY_RUN=false
-if [[ "$1" == "--dry-run" ]]; then
-    DRY_RUN=true
-    log_warn "Dry run mode - no changes will be made"
+
+# Parse arguments
+if [[ -n "$1" ]]; then
+    case "$1" in
+        --dry-run)
+            DRY_RUN=true
+            log_warn "Dry run mode - no changes will be made"
+            ;;
+        -h|--help)
+            # Help handled below
+            ;;
+        *)
+            log_error "Unknown option: $1"
+            echo ""
+            echo "Usage: syncenv [--dry-run]"
+            echo ""
+            echo "Did you mean to run a different command?"
+            echo "  syncenv            - Sync .env from 1Password"
+            echo "  lsenv              - List environment variables"
+            echo "  addenv             - Add a new environment variable"
+            echo "  sync-docker-mcp    - Sync .env to Docker MCP"
+            exit 1
+            ;;
+    esac
 fi
 
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then

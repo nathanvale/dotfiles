@@ -164,7 +164,14 @@ while [[ $# -gt 0 ]]; do
             ;;
         -*)
             log_error "Unknown option: $1"
-            echo "Use --help for usage information"
+            echo ""
+            echo "Usage: addenv KEY_NAME \"value\" -p provider [-u url] [-e expiry]"
+            echo ""
+            echo "Did you mean to run a different command?"
+            echo "  addenv             - Add a new environment variable"
+            echo "  lsenv              - List environment variables"
+            echo "  syncenv            - Sync .env from 1Password"
+            echo "  sync-docker-mcp    - Sync .env to Docker MCP"
             exit 1
             ;;
         *)
@@ -202,10 +209,18 @@ if [[ -z "$KEY_PROVIDER" ]]; then
     usage
 fi
 
-# Validate key name (uppercase with underscores)
-if [[ ! "$KEY_NAME" =~ ^[A-Z][A-Z0-9_]*$ ]]; then
+# Validate key name - must be *_API_KEY or *_TOKEN format for Docker MCP compatibility
+if [[ ! "$KEY_NAME" =~ ^[A-Z][A-Z0-9_]*_(API_KEY|TOKEN)$ ]]; then
     log_error "Invalid key name: $KEY_NAME"
-    echo "Key names must be UPPERCASE with underscores (e.g., API_KEY)"
+    echo ""
+    echo "Key names must end with _API_KEY or _TOKEN"
+    echo "This ensures automatic conversion to Docker MCP format"
+    echo ""
+    echo "Examples:"
+    echo "  FIRECRAWL_API_KEY      →  firecrawl.api_key"
+    echo "  OPENAI_API_KEY         →  openai.api_key"
+    echo "  NPM_TOKEN              →  npm.token"
+    echo "  GITHUB_TOKEN           →  github.token"
     exit 1
 fi
 
@@ -346,6 +361,12 @@ if [[ "$MODE" == "1password" ]]; then
 
     log_success "Done! $KEY_NAME is now stored in 1Password and synced to .env"
 
+    # Sync to Docker MCP if available (with prune to remove stale secrets)
+    if command -v docker &> /dev/null && docker mcp secret ls &> /dev/null; then
+        log_info "Syncing to Docker MCP..."
+        "$SCRIPT_DIR/sync-docker-mcp" --prune
+    fi
+
 else
     # Manual mode - direct .env editing
     echo ""
@@ -408,4 +429,10 @@ EOF
     echo ""
     log_success "Done! $KEY_NAME added to .env"
     log_dim "Note: To sync across machines, install 1Password CLI: brew install 1password-cli"
+
+    # Sync to Docker MCP if available (with prune to remove stale secrets)
+    if command -v docker &> /dev/null && docker mcp secret ls &> /dev/null; then
+        log_info "Syncing to Docker MCP..."
+        "$SCRIPT_DIR/sync-docker-mcp" --prune
+    fi
 fi

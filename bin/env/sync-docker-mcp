@@ -1,0 +1,249 @@
+#!/bin/bash
+# sync-docker-mcp - Sync environment variables from .env to Docker MCP secret store
+# Usage: sync-docker-mcp [--dry-run] [--filter PATTERN]
+#
+# Reads your dotfiles .env and syncs to Docker MCP Toolkit's secret store
+# Auto-converts names: FIRECRAWL_API_KEY → firecrawl.api_key
+
+set -e
+
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/code/dotfiles}"
+ENV_FILE="$DOTFILES_DIR/.env"
+
+# Convert ENV_VAR_NAME to docker.mcp.name format
+# FIRECRAWL_API_KEY → firecrawl.api_key
+# OPENAI_API_KEY → openai.api_key
+# AZURE_OPENAI_API_KEY → azure_openai.api_key
+# NPM_TOKEN → npm.token
+# GITHUB_TOKEN → github.token
+convert_to_docker_name() {
+    local key="$1"
+    # Check if it ends with _API_KEY (supports multi-word like AZURE_OPENAI_API_KEY)
+    if [[ "$key" =~ ^(.+)_API_KEY$ ]]; then
+        local service="${BASH_REMATCH[1]}"
+        local lower_service=$(echo "$service" | tr '[:upper:]' '[:lower:]')
+        echo "${lower_service}.api_key"
+    # Check if it ends with _TOKEN
+    elif [[ "$key" =~ ^(.+)_TOKEN$ ]]; then
+        local service="${BASH_REMATCH[1]}"
+        local lower_service=$(echo "$service" | tr '[:upper:]' '[:lower:]')
+        echo "${lower_service}.token"
+    else
+        # Keep original name for unrecognized patterns
+        echo "$key"
+    fi
+}
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+DIM='\033[0;90m'
+NC='\033[0m'
+
+log_info() { echo -e "${BLUE}→${NC} $1"; }
+log_success() { echo -e "${GREEN}✓${NC} $1"; }
+log_warn() { echo -e "${YELLOW}⚠${NC} $1"; }
+log_error() { echo -e "${RED}✗${NC} $1" >&2; }
+log_dim() { echo -e "${DIM}  $1${NC}"; }
+
+DRY_RUN=false
+FILTER=""
+PRUNE=false
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --dry-run)
+            DRY_RUN=true
+            shift
+            ;;
+        --filter)
+            FILTER="$2"
+            shift 2
+            ;;
+        --prune)
+            PRUNE=true
+            shift
+            ;;
+        -h|--help)
+            echo "Usage: sync-docker-mcp [--dry-run] [--filter PATTERN] [--prune]"
+            echo ""
+            echo "Sync environment variables from .env to Docker MCP secret store."
+            echo ""
+            echo "Options:"
+            echo "  --dry-run       Show what would be synced without making changes"
+            echo "  --filter PAT    Only sync keys matching pattern (e.g., 'OPENAI', 'API_KEY')"
+            echo "  --prune         Remove Docker MCP secrets not in .env"
+            echo "  -h, --help      Show this help message"
+            echo ""
+            echo "Examples:"
+            echo "  sync-docker-mcp                    # Sync all keys"
+            echo "  sync-docker-mcp --prune            # Sync and remove stale secrets"
+            echo "  sync-docker-mcp --filter OPENAI    # Only sync OPENAI keys"
+            echo "  sync-docker-mcp --dry-run          # Preview what would be synced"
+            echo ""
+            echo "Docker MCP secrets can be listed with: docker mcp secret ls"
+            exit 0
+            ;;
+        *)
+            log_error "Unknown option: $1"
+            echo ""
+            echo "Usage: sync-docker-mcp [--dry-run] [--prune]"
+            echo ""
+            echo "Did you mean to run a different command?"
+            echo "  lsenv              - List environment variables"
+            echo "  addenv             - Add a new environment variable"
+            echo "  syncenv            - Sync .env from 1Password"
+            echo "  sync-docker-mcp    - Sync .env to Docker MCP"
+            exit 1
+            ;;
+    esac
+done
+
+# Check prerequisites
+if ! command -v docker &> /dev/null; then
+    log_error "Docker is not installed"
+    echo ""
+    echo "Install Docker Desktop from: https://www.docker.com/products/docker-desktop"
+    echo "Or with Homebrew: brew install --cask docker"
+    exit 1
+fi
+
+if ! docker mcp secret ls &> /dev/null; then
+    log_error "Docker MCP Toolkit not available"
+    echo ""
+    echo "Make sure:"
+    echo "  1. Docker Desktop is running"
+    echo "  2. MCP Toolkit is enabled in Docker Desktop settings"
+    echo ""
+    echo "Enable MCP Toolkit: Docker Desktop → Settings → Features in Development → MCP Toolkit"
+    exit 1
+fi
+
+if [[ ! -f "$ENV_FILE" ]]; then
+    log_error "No .env file found at $ENV_FILE"
+    echo "Run 'syncenv' to generate it from 1Password"
+    exit 1
+fi
+
+echo ""
+if [[ "$DRY_RUN" == true ]]; then
+    log_warn "Dry run mode - no changes will be made"
+fi
+log_info "Reading secrets from: $ENV_FILE"
+if [[ -n "$FILTER" ]]; then
+    log_info "Filter: $FILTER"
+fi
+echo ""
+
+# Get existing Docker MCP secrets
+EXISTING_SECRETS=$(docker mcp secret ls 2>/dev/null | tail -n +2 | awk '{print $1}' || echo "")
+
+# Process .env file
+SYNCED=0
+SKIPPED=0
+UPDATED=0
+EXPECTED_KEYS=()  # Track expected Docker secret names for pruning
+
+while IFS= read -r line; do
+    # Match lines like: export KEY_NAME="value"
+    if [[ "$line" =~ ^export[[:space:]]+([A-Z][A-Z0-9_]*)=\"(.*)\"$ ]]; then
+        KEY="${BASH_REMATCH[1]}"
+        VALUE="${BASH_REMATCH[2]}"
+
+        # Apply filter if specified
+        if [[ -n "$FILTER" && ! "$KEY" =~ $FILTER ]]; then
+            continue
+        fi
+
+        # Check if secret already exists
+        EXISTS=false
+        if echo "$EXISTING_SECRETS" | grep -q "^${KEY}$"; then
+            EXISTS=true
+        fi
+
+        # Convert to Docker MCP naming format
+        DOCKER_KEY=$(convert_to_docker_name "$KEY")
+
+        # Track expected keys for pruning (only when not filtering)
+        if [[ -z "$FILTER" ]]; then
+            EXPECTED_KEYS+=("$DOCKER_KEY")
+        fi
+
+        if [[ "$DRY_RUN" == true ]]; then
+            if [[ "$KEY" != "$DOCKER_KEY" ]]; then
+                log_dim "$KEY → $DOCKER_KEY (would create)"
+            else
+                log_dim "$KEY (would create)"
+            fi
+            ((SYNCED++))
+        else
+            # Set the secret in Docker MCP with converted name
+            if echo "$VALUE" | docker mcp secret set "$DOCKER_KEY" 2>/dev/null; then
+                if [[ "$KEY" != "$DOCKER_KEY" ]]; then
+                    log_dim "$KEY → $DOCKER_KEY (synced)"
+                else
+                    log_dim "$KEY (synced)"
+                fi
+                ((SYNCED++))
+            else
+                log_warn "Failed to set $DOCKER_KEY"
+                ((SKIPPED++))
+            fi
+        fi
+    fi
+done < "$ENV_FILE"
+
+echo ""
+if [[ "$DRY_RUN" == true ]]; then
+    log_info "Would sync $SYNCED secrets to Docker MCP"
+else
+    log_success "Synced $SYNCED secrets to Docker MCP ($UPDATED updated)"
+    if [[ $SKIPPED -gt 0 ]]; then
+        log_warn "Skipped $SKIPPED secrets (errors)"
+    fi
+fi
+
+# Prune stale secrets if requested (only when not filtering)
+if [[ "$PRUNE" == true && -z "$FILTER" ]]; then
+    PRUNED=0
+    while IFS= read -r secret; do
+        [[ -z "$secret" ]] && continue
+        # Check if this secret is in our expected list
+        FOUND=false
+        for expected in "${EXPECTED_KEYS[@]}"; do
+            if [[ "$secret" == "$expected" ]]; then
+                FOUND=true
+                break
+            fi
+        done
+        if [[ "$FOUND" == false ]]; then
+            if [[ "$DRY_RUN" == true ]]; then
+                log_warn "$secret (would remove - not in .env)"
+                ((PRUNED++))
+            else
+                if docker mcp secret rm "$secret" 2>/dev/null; then
+                    log_warn "$secret (removed - not in .env)"
+                    ((PRUNED++))
+                fi
+            fi
+        fi
+    done <<< "$EXISTING_SECRETS"
+
+    if [[ $PRUNED -gt 0 ]]; then
+        echo ""
+        if [[ "$DRY_RUN" == true ]]; then
+            log_info "Would prune $PRUNED stale secrets"
+        else
+            log_success "Pruned $PRUNED stale secrets"
+        fi
+    fi
+elif [[ "$PRUNE" == true && -n "$FILTER" ]]; then
+    log_warn "Prune skipped when using --filter (would affect unfiltered secrets)"
+fi
+
+echo ""
+log_dim "View secrets: docker mcp secret ls"
+log_dim "Remove secret: docker mcp secret rm KEY_NAME"

@@ -21,6 +21,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "chat.agent.maxRequests": 300,
+  "chat.commandCenter.enabled": false,
   // Prevent Copilot search from scanning noisy folders
   "chat.search.exclude": [
     "**/node_modules/**",
@@ -97,17 +98,19 @@
     "**/dist/**": true,
     "**/node_modules/**": true
   },
-  "github.copilot.chat.showWelcomeMessage": false,
-  "github.copilot.chat.view": "editor",
-  "github.copilot.editor.enableAutoCompletions": true,
-  "gitlens.ai.model": "vscode",
-  "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
   // ============================================================================
   // GIT COMMIT MESSAGE VALIDATION — Match commitlint rules
   // ============================================================================
   "git.inputValidation": true,
   "git.inputValidationLength": 100,
   "git.inputValidationSubjectLength": 100,
+  "github.copilot.chat.showWelcomeMessage": false,
+  "github.copilot.chat.view": "editor",
+  "github.copilot.editor.enableAutoCompletions": true,
+  "gitlens.ai.model": "vscode",
+  "gitlens.ai.vscode.model": "copilot:gpt-4.1",
   "multiCommand.commands": [
     {
       // 14" Laptop Mode: editor-focused, only primary sidebar visible
@@ -156,6 +159,7 @@
   "terminal.integrated.revealOnStartup": "never",
   "terminal.integrated.splitCwd": "inherited",
   "terminal.integrated.startInInteractiveShell": false,
+  "window.commandCenter": false,
   // ============================================================================
   // EDITOR EXPERIENCE — Smooth, Predictable, ADHD-Friendly
   // ============================================================================
@@ -168,6 +172,7 @@
   "workbench.editor.wrapTabs": true,
   // Keep sidebar anchored, no layout surprises
   "workbench.layoutControl.enabled": false,
+  "workbench.navigationControl.enabled": false,
   "workbench.sideBar.location": "left",
   "workbench.startupEditor": "none",
   "workbench.statusBar.visible": true,
@@ -180,10 +185,5 @@
   "zenMode.hideStatusBar": true,
   "zenMode.restore": true,
   "zenMode.showTabs": "single",
-  "zenMode.silentNotifications": true,
-  "workbench.navigationControl.enabled": false,
-  "chat.commandCenter.enabled": false,
-  "window.commandCenter": false,
-  "git.confirmSync": false,
-  "git.enableSmartCommit": true
+  "zenMode.silentNotifications": true
 }

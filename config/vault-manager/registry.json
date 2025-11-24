@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-11-19T23:20:09Z",
+  "lastUpdated": "2025-11-23T04:40:19Z",
   "vaults": {
     "personal": {
       "path": "/Users/nathanvale/code/my-second-brain",
@@ -96,6 +96,21 @@
           "name": "imessage-timeline",
           "path": "/Users/nathanvale/code/imessage-timeline",
           "registered": "2025-11-19T23:20:09Z"
+        },
+        {
+          "name": "capture-bridge",
+          "path": "/Users/nathanvale/code/capture-bridge",
+          "fingerprint": {
+            "vault_id": "d16d42e3-bc97-4a9c-bac0-fe2c87deb46f",
+            "git_remote": "git@github.com:nathanvale/capture-bridge.git",
+            "has_agent_os": false,
+            "has_docs": true,
+            "name": "capture-bridge"
+          },
+          "components": {
+            "docs": true
+          },
+          "registered": "2025-11-23T04:40:19Z"
         }
       ],
       "type": "unified"

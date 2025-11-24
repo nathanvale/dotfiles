@@ -453,3 +453,9 @@ cdg() {
 # ============================================================================
 # END DEVELOPER ENHANCEMENTS
 # ============================================================================
+export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin"
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/nathanvale/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions

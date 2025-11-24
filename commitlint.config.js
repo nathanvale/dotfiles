@@ -1,35 +1,29 @@
-/**
- * Commitlint Configuration
- * Enforces Gitmoji + Conventional Commits format
- *
- * Format: <emoji> <type>(<scope>): <subject>
- *
- * Types (with emoji):
- *   🎉 init     - Begin a project
- *   ✨ feat     - A new feature
- *   🐞 fix      - A bug fix
- *   📃 docs     - Documentation changes
- *   🌈 style    - Code style changes (formatting, etc)
- *   🦄 refactor - Code refactoring
- *   🎈 perf     - Performance improvements
- *   🧪 test     - Adding or updating tests
- *   🔧 build    - Build system changes
- *   🐎 ci       - CI/CD configuration changes
- *   🐳 chore    - Maintenance tasks
- *   ↩ revert    - Revert changes
- *
- * Example:
- *   ✨ feat(vault): add auto-registration for project vaults
- *   🐞 fix(tmux): resolve window naming conflicts in parallel sessions
- *   🐳 chore(deps): update pnpm lock file
- */
-
 module.exports = {
-  extends: ['git-commit-emoji'],
+  extends: ['@commitlint/config-conventional'],
   rules: {
+    // Remove hard line-length limits in commit body/footer to reduce friction
+    'body-max-line-length': [0, 'always'],
+    'footer-max-line-length': [0, 'always'],
+    // Keep header length reasonable but not draconian
     'header-max-length': [2, 'always', 100],
-    'body-leading-blank': [2, 'always'],
-    'body-max-line-length': [2, 'always', 100],
-    'footer-leading-blank': [2, 'always'],
+    // Encourage clear types and non-empty subject
+    'type-enum': [
+      2,
+      'always',
+      [
+        'feat',
+        'fix',
+        'docs',
+        'style',
+        'refactor',
+        'perf',
+        'test',
+        'build',
+        'ci',
+        'chore',
+        'revert',
+      ],
+    ],
+    'subject-empty': [2, 'never'],
   },
 };

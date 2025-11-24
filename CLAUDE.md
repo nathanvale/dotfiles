@@ -53,7 +53,7 @@ voice dictation), and Raycast (window management).
 - **Right Command** = Hyper Key (Ctrl+Opt+Cmd+Shift) - used for letter shortcuts only
 - **Caps Lock** = Control (Escape if tapped alone) - preserves muscle memory for Ctrl+C, Ctrl+E,
   etc.
-- **Control+1-7**: Primary apps (Ghostty, VS Code, Arc, Obsidian, Teams, Outlook, Messages)
+- **Control+1-5**: Primary apps (Ghostty, VS Code, Arc, Obsidian, Teams)
 - **Hyper+Letters**: Secondary apps and actions
 - **Hyper+H/J/K/L**: Arrow navigation (Vim-style)
 - **Hyper+\\**: Cycle tmux sessions
@@ -223,6 +223,12 @@ Dotfiles in Root:
 - Custom TypeScript-based extensions for productivity workflows
 - Includes Bluetooth management, color tools, JSON formatting, and more
 
+**VS Code Configuration:**
+
+- `config/vscode/` - Settings, keybindings, tasks, MCP config, and prompt templates
+- Symlinked to `~/Library/Application Support/Code/User/`
+- MCP servers configured in `mcp.json` for Claude Code integration
+
 ## Working with This Codebase
 
 ### Understanding the Structure
@@ -238,8 +244,8 @@ Run `/index` to generate `PROJECT_INDEX.json`, which gives Claude architectural 
 
 When adding a new dotfile (e.g., `.npmrc`, `.gitignore_global`):
 
-1. Place the file in the root of this repo
-2. Add symlink creation to `bin/dotfiles/symlinks/symlinks_install.sh`
+1. Place the file in the root of this repo (or `config/<tool>/` for app-specific configs)
+2. Add symlink entry to `bin/dotfiles/symlinks/symlinks_manage.sh`
 3. If the file contains secrets, use environment variable substitution (e.g., `${TOKEN_NAME}`)
 4. Add the variable to `.env.secrets` and ensure `.zshrc` sources it
 5. Exclude the dotfile from git only if it contains hardcoded secrets; otherwise it's safe to commit

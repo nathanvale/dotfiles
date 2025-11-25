@@ -40,6 +40,24 @@
   },
   "includeCoAuthoredBy": false,
   "permissions": {
-    "allow": ["Bash"]
+    "allow": ["Bash"],
+    "ask": [
+      "Bash(git rebase:*)",
+      "Bash(git stash drop:*)",
+      "Bash(git branch -D:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git reset HEAD~:*)",
+      "Bash(git clean -f:*)",
+      "Bash(git clean -fd:*)",
+      "Bash(git clean -fx:*)",
+      "Bash(git checkout -- :*)",
+      "Bash(git checkout .:*)",
+      "Bash(git restore --staged:*)",
+      "Bash(git restore .:*)",
+      "Bash(rm -rf:*)"
+    ],
+    "deny": []
   }
 }

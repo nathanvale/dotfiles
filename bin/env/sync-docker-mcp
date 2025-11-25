@@ -1,45 +1,34 @@
 #!/bin/bash
-# sync-docker-mcp - Sync environment variables from .env to Docker MCP secret store
-# Usage: sync-docker-mcp [--dry-run] [--filter PATTERN]
+# sync-docker-mcp - Dynamically sync environment variables to Docker MCP secrets
+# Usage: sync-docker-mcp [--dry-run] [--setup] [--filter PATTERN]
 #
-# Reads your dotfiles .env and syncs to Docker MCP Toolkit's secret store
-# Auto-converts names: FIRECRAWL_API_KEY → firecrawl.api_key
+# Reads the Docker MCP catalog to discover secret mappings, then syncs
+# matching variables from your .env file to Docker MCP's secret store.
+#
+# First run: Use --setup to interactively map your env vars to Docker secrets
+# Subsequent runs: Uses saved mappings from .env.docker.map
 
 set -e
 
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/code/dotfiles}"
+SCRIPT_DIR="$(dirname "$0")"
 ENV_FILE="$DOTFILES_DIR/.env"
+MAP_FILE="$DOTFILES_DIR/.env.docker.map"
+CATALOG_FILE="$HOME/.docker/mcp/catalogs/docker-mcp.yaml"
 
-# Convert ENV_VAR_NAME to docker.mcp.name format
-# FIRECRAWL_API_KEY → firecrawl.api_key
-# OPENAI_API_KEY → openai.api_key
-# AZURE_OPENAI_API_KEY → azure_openai.api_key
-# NPM_TOKEN → npm.token
-# GITHUB_TOKEN → github.token
-convert_to_docker_name() {
-    local key="$1"
-    # Check if it ends with _API_KEY (supports multi-word like AZURE_OPENAI_API_KEY)
-    if [[ "$key" =~ ^(.+)_API_KEY$ ]]; then
-        local service="${BASH_REMATCH[1]}"
-        local lower_service=$(echo "$service" | tr '[:upper:]' '[:lower:]')
-        echo "${lower_service}.api_key"
-    # Check if it ends with _TOKEN
-    elif [[ "$key" =~ ^(.+)_TOKEN$ ]]; then
-        local service="${BASH_REMATCH[1]}"
-        local lower_service=$(echo "$service" | tr '[:upper:]' '[:lower:]')
-        echo "${lower_service}.token"
-    else
-        # Keep original name for unrecognized patterns
-        echo "$key"
-    fi
-}
+# Temp files for data (works with bash 3.x)
+TMP_CATALOG=$(mktemp)
+TMP_ENV=$(mktemp)
+trap "rm -f $TMP_CATALOG $TMP_ENV" EXIT
 
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
 DIM='\033[0;90m'
+BOLD='\033[1m'
 NC='\033[0m'
 
 log_info() { echo -e "${BLUE}→${NC} $1"; }
@@ -47,10 +36,13 @@ log_success() { echo -e "${GREEN}✓${NC} $1"; }
 log_warn() { echo -e "${YELLOW}⚠${NC} $1"; }
 log_error() { echo -e "${RED}✗${NC} $1" >&2; }
 log_dim() { echo -e "${DIM}  $1${NC}"; }
+log_header() { echo -e "\n${BOLD}${CYAN}$1${NC}"; }
 
 DRY_RUN=false
 FILTER=""
-PRUNE=false
+SETUP=false
+VERBOSE=false
+SKIP_1P_SYNC=false
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -63,40 +55,44 @@ while [[ $# -gt 0 ]]; do
             FILTER="$2"
             shift 2
             ;;
-        --prune)
-            PRUNE=true
+        --setup)
+            SETUP=true
+            shift
+            ;;
+        --verbose|-v)
+            VERBOSE=true
+            shift
+            ;;
+        --no-sync)
+            SKIP_1P_SYNC=true
             shift
             ;;
         -h|--help)
-            echo "Usage: sync-docker-mcp [--dry-run] [--filter PATTERN] [--prune]"
+            echo "Usage: sync-docker-mcp [--dry-run] [--setup] [--filter PATTERN] [--verbose] [--no-sync]"
             echo ""
-            echo "Sync environment variables from .env to Docker MCP secret store."
+            echo "Dynamically sync .env variables to Docker MCP secrets."
             echo ""
             echo "Options:"
+            echo "  --setup         Interactive setup - choose which env vars map to which secrets"
             echo "  --dry-run       Show what would be synced without making changes"
-            echo "  --filter PAT    Only sync keys matching pattern (e.g., 'OPENAI', 'API_KEY')"
-            echo "  --prune         Remove Docker MCP secrets not in .env"
+            echo "  --filter PAT    Only sync keys matching pattern (e.g., 'TAVILY')"
+            echo "  --verbose, -v   Show detailed mapping information"
+            echo "  --no-sync       Skip pulling from 1Password first (use existing .env)"
             echo "  -h, --help      Show this help message"
             echo ""
-            echo "Examples:"
-            echo "  sync-docker-mcp                    # Sync all keys"
-            echo "  sync-docker-mcp --prune            # Sync and remove stale secrets"
-            echo "  sync-docker-mcp --filter OPENAI    # Only sync OPENAI keys"
-            echo "  sync-docker-mcp --dry-run          # Preview what would be synced"
+            echo "Workflow:"
+            echo "  1. Run 'sync-docker-mcp --setup' to interactively create mappings"
+            echo "  2. Run 'sync-docker-mcp' to sync using saved mappings"
             echo ""
-            echo "Docker MCP secrets can be listed with: docker mcp secret ls"
+            echo "Note: If 1Password is available, automatically pulls latest secrets first"
+            echo ""
+            echo "Files:"
+            echo "  .env              Your environment variables"
+            echo "  .env.docker.map   Saved mappings (ENV_VAR=docker.secret.name)"
             exit 0
             ;;
         *)
             log_error "Unknown option: $1"
-            echo ""
-            echo "Usage: sync-docker-mcp [--dry-run] [--prune]"
-            echo ""
-            echo "Did you mean to run a different command?"
-            echo "  lsenv              - List environment variables"
-            echo "  addenv             - Add a new environment variable"
-            echo "  syncenv            - Sync .env from 1Password"
-            echo "  sync-docker-mcp    - Sync .env to Docker MCP"
             exit 1
             ;;
     esac
@@ -105,145 +101,322 @@ done
 # Check prerequisites
 if ! command -v docker &> /dev/null; then
     log_error "Docker is not installed"
-    echo ""
-    echo "Install Docker Desktop from: https://www.docker.com/products/docker-desktop"
-    echo "Or with Homebrew: brew install --cask docker"
     exit 1
 fi
 
 if ! docker mcp secret ls &> /dev/null; then
     log_error "Docker MCP Toolkit not available"
-    echo ""
-    echo "Make sure:"
-    echo "  1. Docker Desktop is running"
-    echo "  2. MCP Toolkit is enabled in Docker Desktop settings"
-    echo ""
-    echo "Enable MCP Toolkit: Docker Desktop → Settings → Features in Development → MCP Toolkit"
     exit 1
 fi
 
 if [[ ! -f "$ENV_FILE" ]]; then
     log_error "No .env file found at $ENV_FILE"
-    echo "Run 'syncenv' to generate it from 1Password"
     exit 1
 fi
 
-echo ""
-if [[ "$DRY_RUN" == true ]]; then
-    log_warn "Dry run mode - no changes will be made"
+if [[ ! -f "$CATALOG_FILE" ]]; then
+    log_error "Docker MCP catalog not found at $CATALOG_FILE"
+    exit 1
 fi
-log_info "Reading secrets from: $ENV_FILE"
-if [[ -n "$FILTER" ]]; then
-    log_info "Filter: $FILTER"
-fi
-echo ""
 
-# Get existing Docker MCP secrets
-EXISTING_SECRETS=$(docker mcp secret ls 2>/dev/null | tail -n +2 | awk '{print $1}' || echo "")
+# Build catalog mapping from YAML
+# Output format: docker.secret.name|ENV_VAR
+build_catalog_map() {
+    local current_secret=""
+    local in_secrets=false
 
-# Process .env file
-SYNCED=0
-SKIPPED=0
-UPDATED=0
-EXPECTED_KEYS=()  # Track expected Docker secret names for pruning
-
-while IFS= read -r line; do
-    # Match lines like: export KEY_NAME="value"
-    if [[ "$line" =~ ^export[[:space:]]+([A-Z][A-Z0-9_]*)=\"(.*)\"$ ]]; then
-        KEY="${BASH_REMATCH[1]}"
-        VALUE="${BASH_REMATCH[2]}"
-
-        # Apply filter if specified
-        if [[ -n "$FILTER" && ! "$KEY" =~ $FILTER ]]; then
+    while IFS= read -r line; do
+        if [[ "$line" =~ ^[[:space:]]+secrets: ]]; then
+            in_secrets=true
             continue
         fi
 
-        # Check if secret already exists
-        EXISTS=false
-        if echo "$EXISTING_SECRETS" | grep -q "^${KEY}$"; then
-            EXISTS=true
+        if [[ "$in_secrets" == true ]] && [[ "$line" =~ ^[[:space:]]+(env|prompts|resources|config|metadata):[[:space:]]*$ ]]; then
+            in_secrets=false
+            continue
         fi
 
-        # Convert to Docker MCP naming format
-        DOCKER_KEY=$(convert_to_docker_name "$KEY")
-
-        # Track expected keys for pruning (only when not filtering)
-        if [[ -z "$FILTER" ]]; then
-            EXPECTED_KEYS+=("$DOCKER_KEY")
+        if [[ "$in_secrets" == true ]] && [[ "$line" =~ ^[[:space:]]+-[[:space:]]+name:[[:space:]]+([a-zA-Z0-9._-]+) ]]; then
+            current_secret="${BASH_REMATCH[1]}"
+            continue
         fi
 
-        if [[ "$DRY_RUN" == true ]]; then
-            if [[ "$KEY" != "$DOCKER_KEY" ]]; then
-                log_dim "$KEY → $DOCKER_KEY (would create)"
-            else
-                log_dim "$KEY (would create)"
-            fi
-            ((SYNCED++))
-        else
-            # Set the secret in Docker MCP with converted name
-            if echo "$VALUE" | docker mcp secret set "$DOCKER_KEY" 2>/dev/null; then
-                if [[ "$KEY" != "$DOCKER_KEY" ]]; then
-                    log_dim "$KEY → $DOCKER_KEY (synced)"
-                else
-                    log_dim "$KEY (synced)"
-                fi
-                ((SYNCED++))
-            else
-                log_warn "Failed to set $DOCKER_KEY"
-                ((SKIPPED++))
-            fi
+        if [[ "$in_secrets" == true ]] && [[ -n "$current_secret" ]] && [[ "$line" =~ ^[[:space:]]+env:[[:space:]]+([A-Z][A-Z0-9_]+) ]]; then
+            echo "${current_secret}|${BASH_REMATCH[1]}"
+            current_secret=""
         fi
-    fi
-done < "$ENV_FILE"
+    done < "$CATALOG_FILE" | sort -u > "$TMP_CATALOG"
+}
 
-echo ""
-if [[ "$DRY_RUN" == true ]]; then
-    log_info "Would sync $SYNCED secrets to Docker MCP"
-else
-    log_success "Synced $SYNCED secrets to Docker MCP ($UPDATED updated)"
-    if [[ $SKIPPED -gt 0 ]]; then
-        log_warn "Skipped $SKIPPED secrets (errors)"
-    fi
-fi
-
-# Prune stale secrets if requested (only when not filtering)
-if [[ "$PRUNE" == true && -z "$FILTER" ]]; then
-    PRUNED=0
-    while IFS= read -r secret; do
-        [[ -z "$secret" ]] && continue
-        # Check if this secret is in our expected list
-        FOUND=false
-        for expected in "${EXPECTED_KEYS[@]}"; do
-            if [[ "$secret" == "$expected" ]]; then
-                FOUND=true
-                break
-            fi
-        done
-        if [[ "$FOUND" == false ]]; then
-            if [[ "$DRY_RUN" == true ]]; then
-                log_warn "$secret (would remove - not in .env)"
-                ((PRUNED++))
-            else
-                if docker mcp secret rm "$secret" 2>/dev/null; then
-                    log_warn "$secret (removed - not in .env)"
-                    ((PRUNED++))
-                fi
-            fi
+# Read env vars from .env file
+# Output format: ENV_VAR|value
+read_env_file() {
+    while IFS= read -r line; do
+        if [[ "$line" =~ ^export[[:space:]]+([A-Z][A-Z0-9_]*)=\"(.*)\"$ ]]; then
+            echo "${BASH_REMATCH[1]}|${BASH_REMATCH[2]}"
         fi
-    done <<< "$EXISTING_SECRETS"
+    done < "$ENV_FILE" > "$TMP_ENV"
+}
 
-    if [[ $PRUNED -gt 0 ]]; then
+# Get env var value from temp file
+get_env_value() {
+    local var="$1"
+    grep "^${var}|" "$TMP_ENV" 2>/dev/null | cut -d'|' -f2-
+}
+
+# Get docker secret for env var from catalog
+get_docker_secret_for_env() {
+    local env_var="$1"
+    grep "|${env_var}$" "$TMP_CATALOG" 2>/dev/null | cut -d'|' -f1
+}
+
+# Get expected env var for docker secret
+get_expected_env_for_secret() {
+    local docker_secret="$1"
+    grep "^${docker_secret}|" "$TMP_CATALOG" 2>/dev/null | cut -d'|' -f2
+}
+
+# Find env vars containing a substring (case insensitive)
+find_matching_env_vars() {
+    local pattern="$1"
+    local upper_pattern=$(echo "$pattern" | tr '[:lower:]' '[:upper:]')
+    cut -d'|' -f1 "$TMP_ENV" | grep -i "$upper_pattern" 2>/dev/null || true
+}
+
+# Interactive setup mode
+run_setup() {
+    log_header "Docker MCP Secret Mapping Setup"
+    echo ""
+    log_info "Discovering secrets from Docker MCP catalog..."
+    build_catalog_map
+    local catalog_count=$(wc -l < "$TMP_CATALOG" | tr -d ' ')
+    log_info "Found $catalog_count secrets in catalog"
+    echo ""
+
+    log_info "Reading your .env file..."
+    read_env_file
+    local env_count=$(wc -l < "$TMP_ENV" | tr -d ' ')
+    log_info "Found $env_count environment variables"
+    echo ""
+
+    # Output file for new mappings
+    local NEW_MAP=$(mktemp)
+
+    log_header "Mapping Docker MCP Secrets to Your Environment Variables"
+    echo ""
+
+    while IFS='|' read -r docker_secret expected_env; do
+        [[ -z "$docker_secret" ]] && continue
+
+        # Check if exact match exists in .env
+        local value=$(get_env_value "$expected_env")
+        if [[ -n "$value" ]]; then
+            echo "${expected_env}=${docker_secret}" >> "$NEW_MAP"
+            if [[ "$VERBOSE" == true ]]; then
+                log_dim "$expected_env → $docker_secret (auto-matched)"
+            fi
+            continue
+        fi
+
+        # Find similar env vars (extract base name from docker secret)
+        local base_name="${docker_secret%%.*}"
+        local similar=$(find_matching_env_vars "$base_name")
+
+        if [[ -z "$similar" ]]; then
+            continue
+        fi
+
+        # Interactive prompt
+        echo -e "${BOLD}Docker MCP secret:${NC} ${CYAN}$docker_secret${NC}"
+        echo -e "${DIM}Container expects: $expected_env${NC}"
         echo ""
-        if [[ "$DRY_RUN" == true ]]; then
-            log_info "Would prune $PRUNED stale secrets"
-        else
-            log_success "Pruned $PRUNED stale secrets"
-        fi
-    fi
-elif [[ "$PRUNE" == true && -n "$FILTER" ]]; then
-    log_warn "Prune skipped when using --filter (would affect unfiltered secrets)"
-fi
+        echo "Matching env vars from your .env:"
 
-echo ""
-log_dim "View secrets: docker mcp secret ls"
-log_dim "Remove secret: docker mcp secret rm KEY_NAME"
+        local i=1
+        local options=()
+        while IFS= read -r env_var; do
+            [[ -z "$env_var" ]] && continue
+            local val=$(get_env_value "$env_var")
+            local masked
+            if [[ ${#val} -gt 8 ]]; then
+                masked="${val:0:4}...${val: -4}"
+            else
+                masked="***"
+            fi
+            echo -e "  ${GREEN}$i)${NC} $env_var = $masked"
+            options+=("$env_var")
+            ((i++))
+        done <<< "$similar"
+
+        echo -e "  ${YELLOW}s)${NC} Skip this secret"
+        echo -e "  ${YELLOW}m)${NC} Manually enter env var name"
+        echo ""
+
+        read -p "Choice [1-$((i-1))/s/m]: " choice
+
+        case "$choice" in
+            [1-9]*)
+                local idx=$((choice - 1))
+                if [[ $idx -lt ${#options[@]} ]]; then
+                    echo "${options[$idx]}=${docker_secret}" >> "$NEW_MAP"
+                    log_success "Mapped ${options[$idx]} → $docker_secret"
+                fi
+                ;;
+            m|M)
+                read -p "Enter env var name: " manual_var
+                local manual_val=$(get_env_value "$manual_var")
+                if [[ -n "$manual_val" ]]; then
+                    echo "${manual_var}=${docker_secret}" >> "$NEW_MAP"
+                    log_success "Mapped $manual_var → $docker_secret"
+                else
+                    log_warn "$manual_var not found in .env, skipping"
+                fi
+                ;;
+            s|S|"")
+                log_dim "Skipped $docker_secret"
+                ;;
+        esac
+        echo ""
+    done < "$TMP_CATALOG"
+
+    # Consolidate duplicates into comma-separated format
+    # ENV_VAR=secret1,secret2,secret3
+    log_header "Saving Mappings"
+    local CONSOLIDATED=$(mktemp)
+
+    # Get unique env vars and consolidate their docker secrets
+    cut -d'=' -f1 "$NEW_MAP" | sort -u | while read -r env_var; do
+        [[ -z "$env_var" ]] && continue
+        # Get all docker secrets for this env var, join with comma
+        local secrets=$(grep "^${env_var}=" "$NEW_MAP" | cut -d'=' -f2 | sort -u | tr '\n' ',' | sed 's/,$//')
+        echo "${env_var}=${secrets}"
+    done > "$CONSOLIDATED"
+
+    {
+        echo "# Docker MCP Secret Mappings"
+        echo "# Generated by sync-docker-mcp --setup on $(date '+%Y-%m-%d %H:%M:%S')"
+        echo "# Format: ENV_VAR=secret1,secret2 (comma-separated for multiple targets)"
+        echo "#"
+        echo "# Edit this file to change mappings, then run: sync-docker-mcp"
+        echo ""
+        cat "$CONSOLIDATED"
+    } > "$MAP_FILE"
+    rm -f "$CONSOLIDATED"
+
+    local map_count=$(grep -c '^[A-Z]' "$MAP_FILE" 2>/dev/null || echo 0)
+    log_success "Saved $map_count mappings to $MAP_FILE"
+    rm -f "$NEW_MAP"
+    echo ""
+    log_info "Run 'sync-docker-mcp' to sync your secrets"
+}
+
+# Normal sync mode
+run_sync() {
+    echo ""
+    if [[ "$DRY_RUN" == true ]]; then
+        log_warn "Dry run mode - no changes will be made"
+    fi
+
+    # Sync from 1Password first to ensure .env is up-to-date
+    if [[ "$SKIP_1P_SYNC" != true ]] && command -v op &> /dev/null && op vault list &> /dev/null; then
+        log_info "Pulling latest secrets from 1Password..."
+        "$SCRIPT_DIR/syncenv" 2>/dev/null || log_warn "Failed to sync from 1Password"
+        echo ""
+    fi
+
+    # Check for map file
+    if [[ ! -f "$MAP_FILE" ]]; then
+        log_warn "No mapping file found at $MAP_FILE"
+        echo ""
+        echo "Run 'sync-docker-mcp --setup' to create mappings interactively,"
+        echo "or create $MAP_FILE manually with format:"
+        echo "  ENV_VAR_NAME=docker.secret.name"
+        exit 1
+    fi
+
+    log_info "Reading mappings from: $MAP_FILE"
+    log_info "Reading secrets from: $ENV_FILE"
+    if [[ -n "$FILTER" ]]; then
+        log_info "Filter: $FILTER"
+    fi
+    echo ""
+
+    read_env_file
+
+    SYNCED=0
+    SKIPPED=0
+
+    while IFS= read -r line; do
+        # Skip comments and empty lines
+        [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
+
+        # Match: ENV_VAR=secret1,secret2,secret3
+        if [[ "$line" =~ ^([A-Z][A-Z0-9_]*)=(.+)$ ]]; then
+            local env_var="${BASH_REMATCH[1]}"
+            local docker_secrets="${BASH_REMATCH[2]}"
+
+            # Apply filter
+            if [[ -n "$FILTER" && ! "$env_var" =~ $FILTER ]]; then
+                continue
+            fi
+
+            local value=$(get_env_value "$env_var")
+
+            # Check if env var exists
+            if [[ -z "$value" ]]; then
+                log_warn "$env_var not found in .env"
+                ((SKIPPED++))
+                continue
+            fi
+
+            # Mask value
+            local masked
+            if [[ ${#value} -gt 8 ]]; then
+                masked="${value:0:4}...${value: -4}"
+            else
+                masked="***"
+            fi
+
+            # Sync to each docker secret (comma-separated)
+            IFS=',' read -ra SECRET_ARRAY <<< "$docker_secrets"
+            for docker_secret in "${SECRET_ARRAY[@]}"; do
+                [[ -z "$docker_secret" ]] && continue
+
+                if [[ "$DRY_RUN" == true ]]; then
+                    log_dim "$env_var → $docker_secret (would sync)"
+                    ((SYNCED++))
+                else
+                    if printf '%s' "$value" | docker mcp secret set "$docker_secret" 2>/dev/null; then
+                        log_dim "$env_var → $docker_secret = $masked"
+                        ((SYNCED++))
+                    else
+                        log_warn "Failed to set $docker_secret"
+                        ((SKIPPED++))
+                    fi
+                fi
+            done
+        fi
+    done < "$MAP_FILE"
+
+    echo ""
+    if [[ "$DRY_RUN" == true ]]; then
+        log_info "Would sync $SYNCED secrets to Docker MCP"
+    else
+        log_success "Synced $SYNCED secrets to Docker MCP"
+    fi
+
+    if [[ $SKIPPED -gt 0 ]]; then
+        log_warn "Skipped $SKIPPED secrets (missing or errors)"
+    fi
+
+    echo ""
+    log_dim "View secrets: docker mcp secret ls"
+    log_dim "Edit mappings: $MAP_FILE"
+}
+
+# Main
+if [[ "$SETUP" == true ]]; then
+    run_setup
+else
+    run_sync
+fi

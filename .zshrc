@@ -1,9 +1,13 @@
 # ----------------------------------------------------------------------------
-# PATH Setup
+# PATH Setup (consolidated - order matters: later entries take priority)
 # ----------------------------------------------------------------------------
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 export PNPM_HOME="$HOME/.local/share/pnpm"
+export BUN_INSTALL="$HOME/.bun"
 export PATH="$PNPM_HOME/bin:$PATH"
+export PATH="$BUN_INSTALL/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
 
 # Add dotfiles scripts to PATH
 export PATH="$HOME/code/dotfiles/bin:$PATH"
@@ -12,6 +16,9 @@ export PATH="$HOME/code/dotfiles/bin/tmux:$PATH"
 export PATH="$HOME/code/dotfiles/bin/vault:$PATH"
 export PATH="$HOME/code/dotfiles/bin/utils:$PATH"
 export PATH="$HOME/code/dotfiles/bin/env:$PATH"
+
+# Homebrew takes priority (must be last)
+export PATH="/opt/homebrew/bin:$PATH"
 
 # ----------------------------------------------------------------------------
 # Environment Variables
@@ -79,6 +86,7 @@ load-nvmrc < /dev/null
 # ----------------------------------------------------------------------------
 autoload -Uz vcs_info
 precmd() {
+  local cmd_status=$?  # Capture exit status immediately
   # Git branch info
   vcs_info
   # Set terminal title to current directory name
@@ -93,7 +101,7 @@ precmd() {
 
       if [ $elapsed -gt 1000 ]; then
         local elapsed_seconds=$(printf "%.1f" $(echo "scale=1; $elapsed/1000" | bc))
-        if [ $? -eq 0 ]; then
+        if [ $cmd_status -eq 0 ]; then
           echo -e "\033[0;32m✓ ${elapsed_seconds}s\033[0m"
         else
           echo -e "\033[0;31m✗ ${elapsed_seconds}s\033[0m"
@@ -118,12 +126,13 @@ PS2='> '
 # History Configuration
 # ----------------------------------------------------------------------------
 HISTFILE=~/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=100000
+SAVEHIST=100000
 setopt APPEND_HISTORY
 setopt SHARE_HISTORY
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE      # Commands starting with space won't be saved
 
 # ----------------------------------------------------------------------------
 # Auto-completion (built-in, no plugins needed)
@@ -163,6 +172,8 @@ setopt PUSHD_SILENT        # Don't print dir stack after pushd/popd
 # ----------------------------------------------------------------------------
 
 # Navigation
+mkcd() { mkdir -p "$1" && cd "$1"; }
+alias take='mkcd'
 d() { cd ~/code; }          # Quick jump to code directory (overrides Oh My Zsh)
 alias de="cd ~/Desktop"
 alias c="code ."
@@ -196,9 +207,16 @@ alias mv="gmv"
 
 # Git
 alias lz="lazygit"
+alias gs="git status"
+alias gp="git push"
+alias gl="git pull"
+alias gd="git diff"
+alias ga="git add"
+alias gc="git commit"
 
 # Utilities
 alias pg="echo 'Pinging Google' && ping www.google.com"
+ports() { lsof -i :"$1"; }  # See what's running on a port
 
 # Claude Code
 alias cc="claude --dangerously-skip-permissions"
@@ -207,6 +225,7 @@ alias ccu="npx ccusage@latest"
 alias ccs="npx @mariozechner/snap-happy to local"
 alias ccd="c ~/Library/Application\ Support/Claude/claude_desktop_config.json"
 alias ccr="claude --dangerously-skip-permissions -r"
+alias cleanpaste='pbpaste | sed "s/^[[:space:]]*//" | pbcopy'  # Fix Claude Code copy-paste whitespace
 
 # Aerospace (window manager)
 alias sa="aerospace reload-config"
@@ -317,19 +336,9 @@ if [ -z "$TMUX_STARTUP_RAN" ]; then
 fi
 
 # ----------------------------------------------------------------------------
-# Bun Completions & PATH
+# Bun Completions
 # ----------------------------------------------------------------------------
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# Bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
-
-# ----------------------------------------------------------------------------
-# Ensure Homebrew takes priority over NVM and Bun
-# ----------------------------------------------------------------------------
-# This must come after NVM and Bun setup to override their PATH additions
-export PATH="/opt/homebrew/bin:$PATH"
 
 # ============================================================================
 # DEVELOPER PRODUCTIVITY ENHANCEMENTS
@@ -453,12 +462,6 @@ cdg() {
 # ============================================================================
 # END DEVELOPER ENHANCEMENTS
 # ============================================================================
-export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin"
-# The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=(/Users/nathanvale/.docker/completions $fpath)
-autoload -Uz compinit
-compinit
-# End of Docker CLI completions
 
-# Created by `pipx` on 2025-11-24 19:17:40
-export PATH="$PATH:/Users/nathanvale/.local/bin"
+# Docker CLI completions
+fpath=(/Users/nathanvale/.docker/completions $fpath)

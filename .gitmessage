@@ -1,23 +1,24 @@
-# <emoji> <type>(<scope>): <subject>
+# <type>(<scope>): <subject>
 #
-# Example: ✨ feat(auth): add OAuth2 login support
+# Example: feat(auth): add OAuth2 login support
 #
-# Emoji + Type combinations:
-#   🎉 init     - Begin a project
-#   ✨ feat     - A new feature
-#   🐞 fix      - A bug fix
-#   📃 docs     - Documentation changes
-#   🌈 style    - Code style changes (formatting, etc)
-#   🦄 refactor - Code refactoring
-#   🎈 perf     - Performance improvements
-#   🧪 test     - Adding or updating tests
-#   🔧 build    - Build system changes
-#   🐎 ci       - CI/CD configuration changes
-#   🐳 chore    - Maintenance tasks
-#   ↩ revert    - Revert changes
+# Types (from commitlint.config.mjs):
+#   feat     - A new feature
+#   fix      - A bug fix
+#   docs     - Documentation changes
+#   style    - Code style changes (formatting, etc)
+#   refactor - Code refactoring
+#   perf     - Performance improvements
+#   test     - Adding or updating tests
+#   build    - Build system changes
+#   ci       - CI/CD configuration changes
+#   chore    - Maintenance tasks
+#   revert   - Revert changes
 #
 # Rules:
-#   - Subject line max 100 characters
+#   - Header max 100 characters
+#   - Body/Footer: no hard line length limit
+#   - Subject must not be empty
 #   - Use lowercase for type and scope
 #   - No period at end of subject
 #   - Blank line between subject and body

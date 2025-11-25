@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-11-23T04:40:19Z",
+  "lastUpdated": "2025-11-24T19:02:02Z",
   "vaults": {
     "personal": {
       "path": "/Users/nathanvale/code/my-second-brain",
@@ -111,6 +111,36 @@
             "docs": true
           },
           "registered": "2025-11-23T04:40:19Z"
+        },
+        {
+          "name": "dotfiles",
+          "path": "/Users/nathanvale/code/dotfiles",
+          "fingerprint": {
+            "vault_id": "1f398cf6-a86b-4fbc-afbd-164675be5425",
+            "git_remote": "git@github.com:nathanvale/dotfiles.git",
+            "has_agent_os": false,
+            "has_docs": true,
+            "name": "dotfiles"
+          },
+          "components": {
+            "docs": true
+          },
+          "registered": "2025-11-24T04:41:02Z"
+        },
+        {
+          "name": "claude-starter",
+          "path": "/Users/nathanvale/code/claude-starter",
+          "fingerprint": {
+            "vault_id": "8c936388-0619-439c-8e00-862dd5bd8df7",
+            "git_remote": "git@github.com:nathanvale/claude-starter.git",
+            "has_agent_os": false,
+            "has_docs": true,
+            "name": "claude-starter"
+          },
+          "components": {
+            "docs": true
+          },
+          "registered": "2025-11-24T19:02:02Z"
         }
       ],
       "type": "unified"

@@ -185,5 +185,6 @@
   "zenMode.hideStatusBar": true,
   "zenMode.restore": true,
   "zenMode.showTabs": "single",
-  "zenMode.silentNotifications": true
+  "zenMode.silentNotifications": true,
+  "editor.stickyScroll.enabled": false
 }

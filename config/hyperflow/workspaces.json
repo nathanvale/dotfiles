@@ -59,6 +59,11 @@
 			"apps": ["Docker Desktop"],
 			"description": "Docker",
 			"mode": "default"
+		},
+		"P": {
+			"apps": ["Podcasts"],
+			"description": "Apple Podcasts",
+			"mode": "default"
 		}
 	}
 }

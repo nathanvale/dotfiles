@@ -1,0 +1,66 @@
+# ~/.config/tmuxinator/claude-starter.yml
+
+name: claude-starter
+root: /Users/nathanvale/code/claude-starter
+
+# Project hooks - runs on project start
+on_project_start: |
+  source ~/.config/tmuxinator/scripts/common-setup.sh
+  setup_logs "claude-starter"
+  setup_vscode_marker "claude-starter"
+
+# Run on project stop - cleanup
+on_project_stop: |
+  source ~/.config/tmuxinator/scripts/common-setup.sh
+  cleanup_vscode_marker "claude-starter"
+
+# Runs before each window starts
+pre_window: |
+  source ~/.config/tmuxinator/scripts/common-setup.sh
+  open_vscode_once "claude-starter"
+
+# Set window base-index to 1 and load tmux config
+tmux_options: -f ~/.tmux.conf
+
+# Start with the first window (claude)
+startup_window: claude
+startup_pane: 1
+windows:
+  - claude:
+      root: /Users/nathanvale/code/claude-starter
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "claude"
+          claude
+  - git:
+      root: /Users/nathanvale/code/claude-starter
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "git"
+          lazygit
+  - shell:
+      root: /Users/nathanvale/code/claude-starter
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "shell"
+          clear
+  - vault:
+      root: /Users/nathanvale/code/claude-starter
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "vault"
+          # Show vault status for this project
+                    if command -v "/Users/nathanvale/code/dotfiles/bin/vault" >/dev/null 2>&1; then
+                        "/Users/nathanvale/code/dotfiles/bin/vault" status
+          else
+            echo "Vault manager not available"
+          fi
+          echo
+          echo "Vault shortcuts:"
+          echo "  Ctrl-g V - Browse all vaults"
+          echo "  Ctrl-g v - Open current project vault"
+          echo "  Ctrl-g D - Browse docs vaults"

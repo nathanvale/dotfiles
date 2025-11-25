@@ -459,3 +459,6 @@ fpath=(/Users/nathanvale/.docker/completions $fpath)
 autoload -Uz compinit
 compinit
 # End of Docker CLI completions
+
+# Created by `pipx` on 2025-11-24 19:17:40
+export PATH="$PATH:/Users/nathanvale/.local/bin"

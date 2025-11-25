@@ -146,6 +146,24 @@ Format: `<type>(<scope>): <subject>` — Example: `feat(auth): add OAuth2 login`
 `feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert` Rules: max 100 chars, lowercase, no
 period, squash merge PRs, feature branches from main
 
+### Git Plugin Read Tools (REQUIRED for Token Efficiency)
+
+**ALWAYS use git plugin MCP tools instead of bash for reading git history:**
+
+| Task | Tool | Why |
+|------|------|-----|
+| Recent commits | `get_recent_commits` | Structured output, ~70% fewer tokens |
+| Search history | `search_commits` | Find by message or code changes (-S style) |
+| Diff summary | `get_diff_summary` | Summary of changes vs ref (replaces `git diff --stat`) |
+
+All tools prefixed with `mcp__plugin_git_git-intelligence__`
+
+**Never use bash for reads**: `git log`, `git show`, `git diff --stat` — use MCP tools instead.
+
+**For writes** (commits, branches, pushes): Use bash or `/git:*` slash commands (token-efficient).
+
+**For complex git analysis**: Use `/git:history` slash command which auto-selects best approach.
+
 ---
 
 ## Working with Nathan

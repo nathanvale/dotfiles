@@ -185,7 +185,7 @@ Dotfiles in Root:
 ├── .npmrc                # Node package manager (uses ${NPM_TOKEN})
 ├── .zshrc                # Shell configuration (sources .env.secrets)
 ├── .gitconfig            # Git configuration
-├── .env.secrets          # Secrets and environment variables (git-ignored)
+├── .env                  # Secrets and environment variables (git-ignored)
 └── ...
 ```
 

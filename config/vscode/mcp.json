@@ -19,7 +19,7 @@
 			"command": "npx",
 			"args": ["-y", "firecrawl-mcp"],
 			"env": {
-				"FIRECRAWL_API_KEY": "{FIRECRAWL_API_KEY}"
+				"FIRECRAWL_API_KEY": "${FIRECRAWL_API_KEY}"
 			},
 			"type": "stdio"
 		},
@@ -58,9 +58,10 @@
 				"-i",
 				"--rm",
 				"-v",
-				"/local-directory:/local-directory",
+				"/Users/nathanvale:/Users/nathanvale",
 				"mcp/git"
-			]
+			],
+			"type": "stdio"
 		}
 	},
 	"inputs": [

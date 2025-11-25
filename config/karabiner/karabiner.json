@@ -254,7 +254,7 @@
 						]
 					},
 					{
-						"description": "Additional shortcuts: Ctrl+Command+M for Messages, Ctrl+Command+C for Claude, Ctrl+Command+D for Docker",
+						"description": "Additional shortcuts: Ctrl+Command+M for Messages, Ctrl+Command+C for Claude, Ctrl+Command+D for Docker, Ctrl+Command+P for Podcasts",
 						"manipulators": [
 							{
 								"from": {
@@ -278,6 +278,14 @@
 									"modifiers": { "mandatory": ["control", "command"] }
 								},
 								"to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow D" }],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "p",
+									"modifiers": { "mandatory": ["control", "command"] }
+								},
+								"to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow P" }],
 								"type": "basic"
 							}
 						]

@@ -6,6 +6,17 @@
 - **Exploratory mindset** - I want to learn from what you do. Explain the "why."
 - **Morning person** - Up early, start coding immediately. Get tired early evenings.
 
+## Working with Nathan
+
+**Plan, then Execute:**
+
+1. **Read** relevant files first
+2. **Plan** using think mode for complex tasks
+3. **Confirm** with Nathan before implementing
+4. **Execute** incrementally in small chunks
+5. **Test** and verify each step
+6. **Explain** what you did and why
+
 ### Important People
 
 - **Melanie** - Partner (also "Bestie" or "Sweetheart")
@@ -26,6 +37,9 @@ want to install it.**
 
 Essential: `git`, `para-brain`, `claude-code-docs`, `atuin`, `bun-runner`, `claude-code-claude-md`
 
+**Claude Code docs**: Use `/claude-code-docs:help [topic]` instead of the `claude-code-guide`
+subagent.
+
 ### Reference Context
 
 `~/.claude/context/`: `personal.md`, `personal-projects.md`, `learning-goals.md`,
@@ -34,6 +48,8 @@ Essential: `git`, `para-brain`, `claude-code-docs`, `atuin`, `bun-runner`, `clau
 ---
 
 ## Critical Rules
+
+**REMEMBER** It is ok if you dont have an answer. You have permission to say, "Sorry Nathan, I dont know.". Nathan will always be a willing colleage and provide more context.
 
 ### Never Do These
 
@@ -44,7 +60,7 @@ Essential: `git`, `para-brain`, `claude-code-docs`, `atuin`, `bun-runner`, `clau
 
 ### Git Safety Rules (CRITICAL)
 
-**BLOCKED** (have to ask in settings.json): `git reset --hard`, `git reset HEAD~`,
+**BLOCKED** (have to ask, in settings.json): `git reset --hard`, `git reset HEAD~`,
 `git clean -f/-fd/-fx`, `git checkout -- .`, `git restore .`, `git push --force/-f`, `rm -rf`
 
 **ASK FIRST** (will prompt for confirmation):
@@ -59,6 +75,21 @@ Essential: `git`, `para-brain`, `claude-code-docs`, `atuin`, `bun-runner`, `clau
 - Use `git stash` before risky operations (recoverable with `git stash pop`)
 - Create backup branch first: `git branch backup-$(date +%s)`
 - Use `git diff` and `git status` before any operation that modifies files
+
+### Obsidian Vault / PARA Rules (STRICT)
+
+**NEVER use Write/Edit tools for vault content.** Always use `/para-brain:*` commands — they handle
+frontmatter, timestamps, and backlinks automatically.
+
+| Task                         | Command                             |
+| ---------------------------- | ----------------------------------- |
+| Create project/area/resource | `/para-brain:create [type] [title]` |
+| Quick capture                | `/para-brain:capture [text]`        |
+| Search                       | `/para-brain:search [query]`        |
+| Process inbox                | `/para-brain:process`               |
+| Weekly review                | `/para-brain:review`                |
+
+Commands work from any directory (plugin knows vault location: `~/code/my-second-brain`).
 
 ### Always Do These
 
@@ -150,11 +181,11 @@ period, squash merge PRs, feature branches from main
 
 **ALWAYS use git plugin MCP tools instead of bash for reading git history:**
 
-| Task | Tool | Why |
-|------|------|-----|
-| Recent commits | `get_recent_commits` | Structured output, ~70% fewer tokens |
-| Search history | `search_commits` | Find by message or code changes (-S style) |
-| Diff summary | `get_diff_summary` | Summary of changes vs ref (replaces `git diff --stat`) |
+| Task           | Tool                 | Why                                                    |
+| -------------- | -------------------- | ------------------------------------------------------ |
+| Recent commits | `get_recent_commits` | Structured output, ~70% fewer tokens                   |
+| Search history | `search_commits`     | Find by message or code changes (-S style)             |
+| Diff summary   | `get_diff_summary`   | Summary of changes vs ref (replaces `git diff --stat`) |
 
 All tools prefixed with `mcp__plugin_git_git-intelligence__`
 
@@ -166,11 +197,8 @@ All tools prefixed with `mcp__plugin_git_git-intelligence__`
 
 ---
 
-## Working with Nathan
+### Homebrew Workflow
 
-1. **Read** relevant files first
-2. **Plan** using think mode for complex tasks
-3. **Confirm** with Nathan before implementing
-4. **Execute** incrementally in small chunks
-5. **Test** and verify each step
-6. **Explain** what you did and why
+When installing a package that should be a first-class citizen (permanent tool)1. **Install**:
+`brew install <package>` 2. **Record**: Add to `~/.config/brew/Brewfile` 3. **Sync**: Run
+`brew bundle --file=~/.config/brew/Brewfile` to ensure state matches

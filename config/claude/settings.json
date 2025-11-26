@@ -1,46 +1,10 @@
 {
-  "alwaysThinkingEnabled": false,
-  "enabledPlugins": {
-    "atuin@side-quest-marketplace": true,
-    "bun-runner@side-quest-marketplace": true,
-    "claude-code-claude-md@side-quest-marketplace": true,
-    "claude-code-docs@side-quest-marketplace": true,
-    "ddd@context-engineering-kit": true,
-    "example-skills@anthropic-agent-skills": true,
-    "git@side-quest-marketplace": true,
-    "kaizen@context-engineering-kit": true,
-    "nvcc@side-quest-marketplace": true,
-    "para-brain@side-quest-marketplace": true,
-    "validate-plugin@side-quest-marketplace": true
-  },
-  "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "command": "/Users/nathanvale/.claude-code-project-index/scripts/run_python.sh /Users/nathanvale/.claude-code-project-index/scripts/stop_hook.py",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": ""
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "command": "/Users/nathanvale/.claude-code-project-index/scripts/run_python.sh /Users/nathanvale/.claude-code-project-index/scripts/i_flag_hook.py",
-            "timeout": 20,
-            "type": "command"
-          }
-        ]
-      }
-    ]
-  },
   "includeCoAuthoredBy": false,
   "permissions": {
-    "allow": ["Bash"],
+    "allow": [
+      "Bash"
+    ],
+    "deny": [],
     "ask": [
       "Bash(git rebase:*)",
       "Bash(git stash drop:*)",
@@ -57,7 +21,62 @@
       "Bash(git restore --staged:*)",
       "Bash(git restore .:*)",
       "Bash(rm -rf:*)"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/nathanvale/.claude-code-project-index/scripts/run_python.sh /Users/nathanvale/.claude-code-project-index/scripts/stop_hook.py",
+            "timeout": 10
+          }
+        ]
+      }
     ],
-    "deny": []
-  }
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/nathanvale/.claude-code-project-index/scripts/run_python.sh /Users/nathanvale/.claude-code-project-index/scripts/i_flag_hook.py",
+            "timeout": 20
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "atuin@side-quest-marketplace": true,
+    "bun-runner@side-quest-marketplace": true,
+    "claude-code-claude-md@side-quest-marketplace": true,
+    "claude-code-docs@side-quest-marketplace": true,
+    "ddd@context-engineering-kit": true,
+    "example-skills@anthropic-agent-skills": true,
+    "git@side-quest-marketplace": true,
+    "kaizen@context-engineering-kit": true,
+    "nvcc@side-quest-marketplace": true,
+    "para-brain@side-quest-marketplace": true,
+    "validate-plugin@side-quest-marketplace": true,
+    "plugin-template@side-quest-marketplace": true,
+    "firecrawl@side-quest-marketplace": true,
+    "mcp-manager@side-quest-marketplace": true
+  },
+  "alwaysThinkingEnabled": false,
+  "enableAllProjectMcpServers": true,
+  "disabledMcpjsonServers": [
+    "mcp-obsidian",
+    "youtube-transcript",
+    "wallaby",
+    "firecrawl",
+    "sequential-thinking",
+    "filesystem",
+    "context7",
+    "tavily-mcp",
+    "linkedin",
+    "chrome-devtools",
+    "snap-happy"
+  ]
 }

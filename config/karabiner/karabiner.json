@@ -1,717 +1,611 @@
 {
-  "global": {
-    "show_in_menu_bar": false
-  },
-  "profiles": [
-    {
-      "name": "Default profile"
-    },
-    {
-      "complex_modifications": {
-        "rules": [
-          {
-            "description": "Caps Lock → Control (Escape if alone)",
-            "manipulators": [
-              {
-                "from": {
-                  "key_code": "caps_lock"
-                },
-                "to": [
-                  {
-                    "key_code": "left_control"
-                  }
-                ],
-                "to_if_alone": [
-                  {
-                    "key_code": "escape"
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "Right Command → Hyper Key (⌃⌥⇧⌘)",
-            "manipulators": [
-              {
-                "from": {
-                  "key_code": "right_command"
-                },
-                "to": [
-                  {
-                    "key_code": "left_shift",
-                    "modifiers": [
-                      "left_command",
-                      "left_control",
-                      "left_option"
-                    ]
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "Change Hyper + h/j/k/l to Arrows and Hyper + [ to Escape",
-            "manipulators": [
-              {
-                "from": {
-                  "key_code": "h",
-                  "modifiers": {
-                    "mandatory": [
-                      "control",
-                      "option",
-                      "command",
-                      "shift"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "left_arrow"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "j",
-                  "modifiers": {
-                    "mandatory": [
-                      "control",
-                      "option",
-                      "command",
-                      "shift"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "down_arrow"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "k",
-                  "modifiers": {
-                    "mandatory": [
-                      "control",
-                      "option",
-                      "command",
-                      "shift"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "up_arrow"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "l",
-                  "modifiers": {
-                    "mandatory": [
-                      "control",
-                      "option",
-                      "command",
-                      "shift"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "right_arrow"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "open_bracket",
-                  "modifiers": {
-                    "mandatory": [
-                      "control",
-                      "option",
-                      "command",
-                      "shift"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "escape"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "backslash",
-                  "modifiers": {
-                    "mandatory": [
-                      "control",
-                      "option",
-                      "command",
-                      "shift"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "backslash",
-                    "modifiers": [
-                      "control"
-                    ]
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "Change Control + h/j/k/l to Arrows",
-            "manipulators": [
-              {
-                "from": {
-                  "key_code": "h",
-                  "modifiers": {
-                    "mandatory": [
-                      "control"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "left_arrow"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "j",
-                  "modifiers": {
-                    "mandatory": [
-                      "control"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "down_arrow"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "k",
-                  "modifiers": {
-                    "mandatory": [
-                      "control"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "up_arrow"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "l",
-                  "modifiers": {
-                    "mandatory": [
-                      "control"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "right_arrow"
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "HyperFlow - Control+1-5 (primary apps) and Hyper+1-5,S,F (secondary apps)",
-            "manipulators": [
-              {
-                "from": {
-                  "key_code": "1",
-                  "modifiers": {
-                    "mandatory": [
-                      "control"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "shell_command": "~/code/dotfiles/bin/hyperflow 1"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "2",
-                  "modifiers": {
-                    "mandatory": [
-                      "control"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "shell_command": "~/code/dotfiles/bin/hyperflow 2"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "3",
-                  "modifiers": {
-                    "mandatory": [
-                      "control"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "shell_command": "~/code/dotfiles/bin/hyperflow 3"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "4",
-                  "modifiers": {
-                    "mandatory": [
-                      "control"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "shell_command": "~/code/dotfiles/bin/hyperflow 4"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "5",
-                  "modifiers": {
-                    "mandatory": [
-                      "control"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "shell_command": "~/code/dotfiles/bin/hyperflow 5"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "1",
-                  "modifiers": {
-                    "mandatory": [
-                      "control",
-                      "option",
-                      "command",
-                      "shift"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "shell_command": "~/code/dotfiles/bin/hyperflow H1"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "2",
-                  "modifiers": {
-                    "mandatory": [
-                      "control",
-                      "option",
-                      "command",
-                      "shift"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "shell_command": "~/code/dotfiles/bin/hyperflow H2"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "3",
-                  "modifiers": {
-                    "mandatory": [
-                      "control",
-                      "option",
-                      "command",
-                      "shift"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "shell_command": "~/code/dotfiles/bin/hyperflow H3"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "4",
-                  "modifiers": {
-                    "mandatory": [
-                      "control",
-                      "option",
-                      "command",
-                      "shift"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "shell_command": "~/code/dotfiles/bin/hyperflow H4"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "5",
-                  "modifiers": {
-                    "mandatory": [
-                      "control",
-                      "option",
-                      "command",
-                      "shift"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "shell_command": "~/code/dotfiles/bin/hyperflow H5"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "s",
-                  "modifiers": {
-                    "mandatory": [
-                      "control",
-                      "option",
-                      "command",
-                      "shift"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "shell_command": "~/code/dotfiles/bin/hyperflow S"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "f",
-                  "modifiers": {
-                    "mandatory": [
-                      "control",
-                      "option",
-                      "command",
-                      "shift"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "shell_command": "~/code/dotfiles/bin/hyperflow F"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "v",
-                  "modifiers": {
-                    "mandatory": [
-                      "control",
-                      "option",
-                      "command",
-                      "shift"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "shell_command": "pbpaste | sed 's/^[[:space:]]*//' | pbcopy"
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "Additional shortcuts: Ctrl+Command+M for Messages, Ctrl+Command+C for Claude, Ctrl+Command+D for Docker, Ctrl+Command+P for Podcasts",
-            "manipulators": [
-              {
-                "from": {
-                  "key_code": "m",
-                  "modifiers": {
-                    "mandatory": [
-                      "control",
-                      "command"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "shell_command": "~/code/dotfiles/bin/hyperflow H1"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "c",
-                  "modifiers": {
-                    "mandatory": [
-                      "control",
-                      "command"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "shell_command": "~/code/dotfiles/bin/hyperflow C"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "d",
-                  "modifiers": {
-                    "mandatory": [
-                      "control",
-                      "command"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "shell_command": "~/code/dotfiles/bin/hyperflow D"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "p",
-                  "modifiers": {
-                    "mandatory": [
-                      "control",
-                      "command"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "shell_command": "~/code/dotfiles/bin/hyperflow P"
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          }
-        ]
-      },
-      "devices": [
-        {
-          "identifiers": {
-            "is_keyboard": true,
-            "product_id": 835,
-            "vendor_id": 1452
-          },
-          "simple_modifications": [
-            {
-              "from": {
-                "key_code": "caps_lock"
-              },
-              "to": [
-                {
-                  "key_code": "left_control"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "identifiers": {
-            "is_keyboard": true,
-            "product_id": 591,
-            "vendor_id": 1452
-          },
-          "simple_modifications": [
-            {
-              "from": {
-                "key_code": "caps_lock"
-              },
-              "to": [
-                {
-                  "key_code": "left_control"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "identifiers": {
-            "is_keyboard": true
-          },
-          "manipulate_caps_lock_led": false
-        },
-        {
-          "identifiers": {
-            "device_address": "ce-f3-a8-6c-93-a9",
-            "is_keyboard": true,
-            "is_pointing_device": true
-          },
-          "ignore": false,
-          "manipulate_caps_lock_led": false,
-          "treat_as_built_in_keyboard": true
-        },
-        {
-          "identifiers": {
-            "device_address": "ce-f3-a8-6c-93-af",
-            "is_keyboard": true,
-            "is_pointing_device": true
-          },
-          "ignore": false,
-          "manipulate_caps_lock_led": false
-        },
-        {
-          "identifiers": {
-            "device_address": "ce-f3-a8-6c-93-ae",
-            "is_keyboard": true,
-            "is_pointing_device": true
-          },
-          "ignore": false,
-          "manipulate_caps_lock_led": false
-        },
-        {
-          "identifiers": {
-            "device_address": "ce-f3-a8-6c-93-ad",
-            "is_keyboard": true,
-            "is_pointing_device": true
-          },
-          "ignore": false,
-          "simple_modifications": [
-            {
-              "from": {
-                "key_code": "caps_lock"
-              },
-              "to": [
-                {
-                  "key_code": "left_control"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "identifiers": {
-            "is_keyboard": true,
-            "is_pointing_device": true,
-            "product_id": 12885,
-            "vendor_id": 6645
-          },
-          "ignore": false
-        },
-        {
-          "identifiers": {
-            "device_address": "ce-f3-a8-6c-93-a1",
-            "is_keyboard": true,
-            "is_pointing_device": true
-          },
-          "ignore": false
-        },
-        {
-          "identifiers": {
-            "is_keyboard": true,
-            "is_pointing_device": true,
-            "product_id": 591,
-            "vendor_id": 1452
-          },
-          "ignore": false,
-          "simple_modifications": [
-            {
-              "from": {
-                "key_code": "caps_lock"
-              },
-              "to": [
-                {
-                  "key_code": "left_control"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "identifiers": {
-            "is_keyboard": true,
-            "is_pointing_device": true,
-            "product_id": 3616,
-            "vendor_id": 13364
-          },
-          "ignore": false
-        }
-      ],
-      "name": "Nathan",
-      "selected": true,
-      "simple_modifications": [
-        {
-          "from": {
-            "key_code": "caps_lock"
-          },
-          "to": [
-            {
-              "key_code": "left_control"
-            }
-          ]
-        }
-      ],
-      "virtual_hid_keyboard": {
-        "keyboard_type_v2": "ansi"
-      }
-    }
-  ]
+	"global": {
+		"show_in_menu_bar": false
+	},
+	"profiles": [
+		{
+			"name": "Default profile"
+		},
+		{
+			"complex_modifications": {
+				"rules": [
+					{
+						"description": "Caps Lock → Control (Escape if alone)",
+						"manipulators": [
+							{
+								"from": {
+									"key_code": "caps_lock"
+								},
+								"to": [
+									{
+										"key_code": "left_control"
+									}
+								],
+								"to_if_alone": [
+									{
+										"key_code": "escape"
+									}
+								],
+								"type": "basic"
+							}
+						]
+					},
+					{
+						"description": "Right Command → Hyper Key (⌃⌥⇧⌘)",
+						"manipulators": [
+							{
+								"from": {
+									"key_code": "right_command"
+								},
+								"to": [
+									{
+										"key_code": "left_shift",
+										"modifiers": ["left_command", "left_control", "left_option"]
+									}
+								],
+								"type": "basic"
+							}
+						]
+					},
+					{
+						"description": "Change Hyper + h/j/k/l to Arrows and Hyper + [ to Escape",
+						"manipulators": [
+							{
+								"from": {
+									"key_code": "h",
+									"modifiers": {
+										"mandatory": ["control", "option", "command", "shift"]
+									}
+								},
+								"to": [
+									{
+										"key_code": "left_arrow"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "j",
+									"modifiers": {
+										"mandatory": ["control", "option", "command", "shift"]
+									}
+								},
+								"to": [
+									{
+										"key_code": "down_arrow"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "k",
+									"modifiers": {
+										"mandatory": ["control", "option", "command", "shift"]
+									}
+								},
+								"to": [
+									{
+										"key_code": "up_arrow"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "l",
+									"modifiers": {
+										"mandatory": ["control", "option", "command", "shift"]
+									}
+								},
+								"to": [
+									{
+										"key_code": "right_arrow"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "open_bracket",
+									"modifiers": {
+										"mandatory": ["control", "option", "command", "shift"]
+									}
+								},
+								"to": [
+									{
+										"key_code": "escape"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "backslash",
+									"modifiers": {
+										"mandatory": ["control", "option", "command", "shift"]
+									}
+								},
+								"to": [
+									{
+										"key_code": "backslash",
+										"modifiers": ["control"]
+									}
+								],
+								"type": "basic"
+							}
+						]
+					},
+					{
+						"description": "Change Control + h/j/k/l to Arrows",
+						"manipulators": [
+							{
+								"from": {
+									"key_code": "h",
+									"modifiers": {
+										"mandatory": ["control"]
+									}
+								},
+								"to": [
+									{
+										"key_code": "left_arrow"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "j",
+									"modifiers": {
+										"mandatory": ["control"]
+									}
+								},
+								"to": [
+									{
+										"key_code": "down_arrow"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "k",
+									"modifiers": {
+										"mandatory": ["control"]
+									}
+								},
+								"to": [
+									{
+										"key_code": "up_arrow"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "l",
+									"modifiers": {
+										"mandatory": ["control"]
+									}
+								},
+								"to": [
+									{
+										"key_code": "right_arrow"
+									}
+								],
+								"type": "basic"
+							}
+						]
+					},
+					{
+						"description": "HyperFlow - Control+1-5 (primary apps) and Hyper+1-5,S,F (secondary apps)",
+						"manipulators": [
+							{
+								"from": {
+									"key_code": "1",
+									"modifiers": {
+										"mandatory": ["control"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/hyperflow 1"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "2",
+									"modifiers": {
+										"mandatory": ["control"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/hyperflow 2"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "3",
+									"modifiers": {
+										"mandatory": ["control"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/hyperflow 3"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "4",
+									"modifiers": {
+										"mandatory": ["control"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/hyperflow 4"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "5",
+									"modifiers": {
+										"mandatory": ["control"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/hyperflow 5"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "1",
+									"modifiers": {
+										"mandatory": ["control", "option", "command", "shift"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/hyperflow H1"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "2",
+									"modifiers": {
+										"mandatory": ["control", "option", "command", "shift"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/hyperflow H2"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "3",
+									"modifiers": {
+										"mandatory": ["control", "option", "command", "shift"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/hyperflow H3"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "4",
+									"modifiers": {
+										"mandatory": ["control", "option", "command", "shift"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/hyperflow H4"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "5",
+									"modifiers": {
+										"mandatory": ["control", "option", "command", "shift"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/hyperflow H5"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "s",
+									"modifiers": {
+										"mandatory": ["control", "option", "command", "shift"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/hyperflow S"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "f",
+									"modifiers": {
+										"mandatory": ["control", "option", "command", "shift"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/hyperflow F"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "t",
+									"modifiers": {
+										"mandatory": ["control", "option", "command", "shift"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "pbpaste | sed 's/^[[:space:]]*//' | pbcopy"
+									}
+								],
+								"type": "basic"
+							}
+						]
+					},
+					{
+						"description": "Additional shortcuts: Ctrl+Command+M for Messages, Ctrl+Command+C for Claude, Ctrl+Command+D for Docker, Ctrl+Command+P for Podcasts",
+						"manipulators": [
+							{
+								"from": {
+									"key_code": "m",
+									"modifiers": {
+										"mandatory": ["control", "command"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/hyperflow H1"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "c",
+									"modifiers": {
+										"mandatory": ["control", "command"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/hyperflow C"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "d",
+									"modifiers": {
+										"mandatory": ["control", "command"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/hyperflow D"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "p",
+									"modifiers": {
+										"mandatory": ["control", "command"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/hyperflow P"
+									}
+								],
+								"type": "basic"
+							}
+						]
+					}
+				]
+			},
+			"devices": [
+				{
+					"identifiers": {
+						"is_keyboard": true,
+						"product_id": 835,
+						"vendor_id": 1452
+					},
+					"simple_modifications": [
+						{
+							"from": {
+								"key_code": "caps_lock"
+							},
+							"to": [
+								{
+									"key_code": "left_control"
+								}
+							]
+						}
+					]
+				},
+				{
+					"identifiers": {
+						"is_keyboard": true,
+						"product_id": 591,
+						"vendor_id": 1452
+					},
+					"simple_modifications": [
+						{
+							"from": {
+								"key_code": "caps_lock"
+							},
+							"to": [
+								{
+									"key_code": "left_control"
+								}
+							]
+						}
+					]
+				},
+				{
+					"identifiers": {
+						"is_keyboard": true
+					},
+					"manipulate_caps_lock_led": false
+				},
+				{
+					"identifiers": {
+						"device_address": "ce-f3-a8-6c-93-a9",
+						"is_keyboard": true,
+						"is_pointing_device": true
+					},
+					"ignore": false,
+					"manipulate_caps_lock_led": false,
+					"treat_as_built_in_keyboard": true
+				},
+				{
+					"identifiers": {
+						"device_address": "ce-f3-a8-6c-93-af",
+						"is_keyboard": true,
+						"is_pointing_device": true
+					},
+					"ignore": false,
+					"manipulate_caps_lock_led": false
+				},
+				{
+					"identifiers": {
+						"device_address": "ce-f3-a8-6c-93-ae",
+						"is_keyboard": true,
+						"is_pointing_device": true
+					},
+					"ignore": false,
+					"manipulate_caps_lock_led": false
+				},
+				{
+					"identifiers": {
+						"device_address": "ce-f3-a8-6c-93-ad",
+						"is_keyboard": true,
+						"is_pointing_device": true
+					},
+					"ignore": false,
+					"simple_modifications": [
+						{
+							"from": {
+								"key_code": "caps_lock"
+							},
+							"to": [
+								{
+									"key_code": "left_control"
+								}
+							]
+						}
+					]
+				},
+				{
+					"identifiers": {
+						"is_keyboard": true,
+						"is_pointing_device": true,
+						"product_id": 12885,
+						"vendor_id": 6645
+					},
+					"ignore": false
+				},
+				{
+					"identifiers": {
+						"device_address": "ce-f3-a8-6c-93-a1",
+						"is_keyboard": true,
+						"is_pointing_device": true
+					},
+					"ignore": false
+				},
+				{
+					"identifiers": {
+						"is_keyboard": true,
+						"is_pointing_device": true,
+						"product_id": 591,
+						"vendor_id": 1452
+					},
+					"ignore": false,
+					"simple_modifications": [
+						{
+							"from": {
+								"key_code": "caps_lock"
+							},
+							"to": [
+								{
+									"key_code": "left_control"
+								}
+							]
+						}
+					]
+				},
+				{
+					"identifiers": {
+						"is_keyboard": true,
+						"is_pointing_device": true,
+						"product_id": 3616,
+						"vendor_id": 13364
+					},
+					"ignore": false
+				}
+			],
+			"name": "Nathan",
+			"selected": true,
+			"simple_modifications": [
+				{
+					"from": {
+						"key_code": "caps_lock"
+					},
+					"to": [
+						{
+							"key_code": "left_control"
+						}
+					]
+				}
+			],
+			"virtual_hid_keyboard": {
+				"keyboard_type_v2": "ansi"
+			}
+		}
+	]
 }

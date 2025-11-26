@@ -1,38 +1,66 @@
 # ~/.config/tmuxinator/dotfiles.yml
 
 name: dotfiles
-root: ~/code/dotfiles
+root: /Users/nathanvale/code/dotfiles
 
-# Project hooks
+# Project hooks - runs on project start
 on_project_start: |
   source ~/.config/tmuxinator/scripts/common-setup.sh
+  setup_logs "dotfiles"
   setup_vscode_marker "dotfiles"
 
+# Run on project stop - cleanup
 on_project_stop: |
   source ~/.config/tmuxinator/scripts/common-setup.sh
   cleanup_vscode_marker "dotfiles"
 
+# Runs before each window starts
 pre_window: |
   source ~/.config/tmuxinator/scripts/common-setup.sh
   open_vscode_once "dotfiles"
 
-# Tmux configuration
+# Set window base-index to 1 and load tmux config
 tmux_options: -f ~/.tmux.conf
+
+# Start with the first window (claude)
 startup_window: claude
 startup_pane: 1
-
-# Windows with inline anchor definitions
 windows:
-  - claude: &claude_window
-      panes: &claude_pane
+  - claude:
+      root: /Users/nathanvale/code/dotfiles
+      panes:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh
           pane_setup "claude"
           claude
-
-  - git: &git_window
-      panes: &git_pane
+  - git:
+      root: /Users/nathanvale/code/dotfiles
+      panes:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh
           pane_setup "git"
           lazygit
+  - dev:
+      root: /Users/nathanvale/code/dotfiles
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "dev" "dev"
+          npm run dev 2>&1 | tee -a .logs/dev/dev.$(date +%s).log
+  - vault:
+      root: /Users/nathanvale/code/dotfiles
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "vault"
+          # Show vault status for this project
+                    if command -v "/Users/nathanvale/code/dotfiles/bin/vault" >/dev/null 2>&1; then
+                        "/Users/nathanvale/code/dotfiles/bin/vault" status
+          else
+            echo "Vault manager not available"
+          fi
+          echo
+          echo "Vault shortcuts:"
+          echo "  Ctrl-g V - Browse all vaults"
+          echo "  Ctrl-g v - Open current project vault"
+          echo "  Ctrl-g D - Browse docs vaults"

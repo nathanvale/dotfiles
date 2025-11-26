@@ -17,6 +17,9 @@ export PATH="$HOME/code/dotfiles/bin/vault:$PATH"
 export PATH="$HOME/code/dotfiles/bin/utils:$PATH"
 export PATH="$HOME/code/dotfiles/bin/env:$PATH"
 
+# fnm default node (makes node/npm/npx available in non-interactive shells)
+export PATH="$HOME/.local/share/fnm/aliases/default/bin:$PATH"
+
 # Homebrew takes priority (must be last)
 export PATH="/opt/homebrew/bin:$PATH"
 
@@ -54,32 +57,12 @@ fi
 #   lsenv               - List all keys stored in 1Password
 
 # ----------------------------------------------------------------------------
-# NVM (Node Version Manager)
+# FNM (Fast Node Manager) - Faster alternative to NVM
 # ----------------------------------------------------------------------------
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+eval "$(fnm env --use-on-cd)"
 
-# Auto-switch Node version based on .nvmrc
-autoload -U add-zsh-hook
-load-nvmrc() {
-  local nvmrc_path="$(nvm_find_nvmrc)"
-
-  if [ -n "$nvmrc_path" ]; then
-    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
-    if [ "$nvmrc_node_version" = "N/A" ]; then
-      nvm install
-    elif [ "$nvmrc_node_version" != "$(nvm version)" ]; then
-      nvm use
-    fi
-  elif [ -n "$(PWD=$OLDPWD nvm_find_nvmrc)" ] && [ "$(nvm version)" != "$(nvm version default)" ]; then
-    echo "Reverting to nvm default version"
-    nvm use default
-  fi
-}
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc < /dev/null
+# Strict mode: fail if .nvmrc exists but version not installed (ADHD-friendly)
+export FNM_STRICT=true
 
 # ----------------------------------------------------------------------------
 # Prompt with Git Branch Support + Execution Time
@@ -118,7 +101,8 @@ zstyle ':vcs_info:*' formats '%b'
 zstyle ':vcs_info:*' actionformats '%b|%a'
 
 setopt PROMPT_SUBST
-PROMPT='%F{cyan}%1~%f %F{green}${vcs_info_msg_0_}%f%(?.%(!.#.>).%(!.#.>)) '
+# ADHD-friendly prompt with Node version indicator
+PROMPT='%F{cyan}%1~%f %F{yellow}[$(node -v 2>/dev/null | sed "s/v//")]%f %F{green}${vcs_info_msg_0_}%f%(?.%(!.#.>).%(!.#.>)) '
 RPS1=''  # Clear right prompt
 PS2='> '
 
@@ -176,6 +160,16 @@ mkcd() { mkdir -p "$1" && cd "$1"; }
 alias take='mkcd'
 d() { cd ~/code; }          # Quick jump to code directory (overrides Oh My Zsh)
 alias de="cd ~/Desktop"
+
+# ADHD-friendly: Clear version switching feedback
+cd() {
+  local prev_node=$(node -v 2>/dev/null)
+  builtin cd "$@"
+  local new_node=$(node -v 2>/dev/null)
+  if [[ "$prev_node" != "$new_node" && -n "$new_node" ]]; then
+    echo "🔄 Switched Node: $prev_node → $new_node"
+  fi
+}
 alias c="code ."
 alias ca="code . ~/code/dotfiles/config/aerospace/aerospace.toml"
 
@@ -226,6 +220,7 @@ alias ccs="npx @mariozechner/snap-happy to local"
 alias ccd="c ~/Library/Application\ Support/Claude/claude_desktop_config.json"
 alias ccr="claude --dangerously-skip-permissions -r"
 alias cleanpaste='pbpaste | sed "s/^[[:space:]]*//" | pbcopy'  # Fix Claude Code copy-paste whitespace
+alias claude-mcp="bun run ~/code/side-quest-marketplace/plugins/mcp-manager/src/cli.ts"
 
 # Aerospace (window manager)
 alias sa="aerospace reload-config"
@@ -239,11 +234,23 @@ alias teams-meeting="meeting"
 alias cz="code ~/.zshrc"
 alias sz="source ~/.zshrc"
 
+# Morning routine for ADHD brain
+morning() {
+  echo "☕ Good morning, Nathan!"
+  echo "Node versions installed:"
+  fnm list  # See what you have
+  echo "---"
+  echo "Recent projects:"
+  eza -l --sort=modified --reverse ~/code | head -5
+}
+
 # Projects
 alias p.dotfiles="cd ~/code/dotfiles/ && code ."
 
 # Node
 alias w.nvmrc="node -v > .nvmrc"
+alias node-lock="node -v > .nvmrc && echo '📌 Locked to $(node -v)'"
+alias nv="echo 'Node: $(node -v) | npm: $(npm -v) | pnpm: $(pnpm -v)'"
 
 # Tmux
 alias tx='~/code/dotfiles/bin/tmux/startup.sh'
@@ -465,3 +472,69 @@ cdg() {
 
 # Docker CLI completions
 fpath=(/Users/nathanvale/.docker/completions $fpath)
+
+# ============================================================================
+# ADHD-FRIENDLY TERMINAL STARTUP REMINDER
+# ============================================================================
+# Full quick reference display
+show_quick_reference() {
+  local node_ver=$(node -v 2>/dev/null | sed 's/v//')
+  
+  echo ""
+  echo "  🧠 ADHD Quick Reference"
+  echo "  ────────────────────────────────────"
+  echo ""
+  echo "  📦 Node ${node_ver} (shown in prompt)"
+  echo ""
+  echo "  🔥 Daily"
+  echo "     morning    ☕ Start your day"
+  echo "     qr         📋 Show this reference"
+  echo ""
+  echo "  ⚡ Navigation"
+  echo "     cc         → Claude Code"
+  echo "     lz         → LazyGit" 
+  echo "     cdg        → Jump to git root"
+  echo "     d          → ~/code directory"
+  echo ""
+  echo "  🔧 Node Tools"
+  echo "     node-lock  📌 Save .nvmrc"
+  echo "     nv         📊 Version check"
+  echo ""
+  echo "  💡 Auto: Node switches on cd"
+  echo "  ────────────────────────────────────"
+  echo ""
+}
+
+# Alias for quick access
+alias qr='show_quick_reference'
+alias help='show_quick_reference'
+
+# Shows helpful reminders when opening a new terminal (once per day)
+terminal_reminder() {
+  local reminder_file="$HOME/.cache/terminal_reminder_shown"
+  local today=$(date +%Y-%m-%d)
+
+  # Create cache directory if it doesn't exist
+  mkdir -p "$HOME/.cache"
+
+  # Check if we've shown the reminder today
+  if [ -f "$reminder_file" ]; then
+    local last_shown=$(cat "$reminder_file")
+    if [ "$last_shown" = "$today" ]; then
+      # Already shown - display compressed version
+      echo "💡 Quick ref: \`qr\` | Node: [$(node -v | sed 's/v//')] | morning, cc, lz"
+      return
+    fi
+  fi
+
+  # Show the full reminder
+  show_quick_reference
+
+  # Mark as shown for today
+  echo "$today" > "$reminder_file"
+}
+
+# Show reminder on terminal startup (but not in tmux panes)
+if [ -z "$TMUX" ]; then
+  terminal_reminder
+fi

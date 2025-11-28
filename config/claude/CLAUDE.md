@@ -12,12 +12,13 @@
 **YOU MUST** follow Plan → Confirm → Execute → Test every time:
 
 1. **Read** relevant files first
-2. **Plan** using think mode for complex tasks
+2. **Plan** using ultrathink/think mode for complex tasks
 3. **Confirm** with Nathan before implementing
 4. **Execute** incrementally in small chunks
-5. **Test** and verify each step
-6. **Commit** invoke AskQuestion tool
-7. **Explain** what you did and why
+5. **Document** leave JSDoc/comments
+6. **Test** verify each step
+7. **Commit** invoke AskQuestion tool
+8. **Explain** what you did and why
 
 ### NEVER Do These
 
@@ -25,10 +26,14 @@
 - **NEVER start implementing without confirmation** — Always present plan first
 - **NEVER refactor without asking** — Propose changes, wait for approval
 - **NEVER use destructive git commands** — See @~/.claude/context/git-workflow.md
+- **NEVER use the `claude-code-guide` sub-agent** - Docs → `/claude-code-docs:help`
+- **NEVER write an exported function without JSDoc** - `@~/.claude/context/code-style.md`→ See
+  documentation section
 
 ### Obsidian Vault / PARA Rules (STRICT)
 
-**NEVER use Write/Edit tools for vault content.** Use `/para-brain:*` commands only.
+**NEVER use Write/Edit tools for managing obsidian vault content.** Use `/para-brain:*` commands
+only.
 
 Create → `/para-brain:create` | Capture → `/para-brain:capture` | Search → `/para-brain:search`
 
@@ -61,7 +66,7 @@ Full tool guide: @~/.claude/context/search-tools.md
 Hooks run automatically on Write/Edit (Biome fix + tsc check). Full guide:
 @~/.claude/context/bun-runner.md
 
-## Atuin History Tools
+## Atuin Bash/Zsh History Tools
 
 **Search** → `atuin_search_history`, `atuin_get_recent_history`, `atuin_search_by_context`
 

@@ -1,1 +1,0 @@
-- Don't write: 🤖 Generated with [Claude Code](https://claude.ai/code)

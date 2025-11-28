@@ -1,150 +1,150 @@
 {
-  "lastUpdated": "2025-11-24T19:02:02Z",
-  "vaults": {
-    "personal": {
-      "path": "/Users/nathanvale/code/my-second-brain",
-      "type": "personal"
-    },
-    "repos": {
-      "path": "/Users/nathanvale/Documents/ObsidianVaults/Repos",
-      "repositories": [
-        {
-          "components": {
-            "docs": true
-          },
-          "fingerprint": {
-            "git_remote": "git@github.com:nathanvale/adhd-brain.git",
-            "has_agent_os": false,
-            "has_docs": true,
-            "name": "adhd-brain",
-            "vault_id": "184bf407-b3b6-4a31-91ee-328ef5cf6ed9"
-          },
-          "name": "adhd-brain",
-          "path": "/Users/nathanvale/code/adhd-brain",
-          "registered": "2025-10-02T01:55:03Z"
-        },
-        {
-          "components": {
-            "agentOS": true,
-            "docs": true
-          },
-          "fingerprint": {
-            "has_agent_os": true,
-            "has_docs": true,
-            "name": "test_repo",
-            "vault_id": "5c80c95f-ec80-4f2a-af37-ad717c02c4f3"
-          },
-          "name": "test_repo",
-          "path": "/tmp/test_repo",
-          "registered": "2025-11-13T21:25:57Z"
-        },
-        {
-          "components": {
-            "docs": true
-          },
-          "fingerprint": {
-            "has_agent_os": false,
-            "has_docs": true,
-            "name": "migration-cli",
-            "vault_id": "42f4dcd4-9a19-4956-a408-e6e6a0be33f0"
-          },
-          "name": "migration-cli",
-          "path": "/Users/nathanvale/code/MPCU-Build-and-Deliver/apps/migration-cli",
-          "registered": "2025-11-17T21:51:17Z"
-        },
-        {
-          "components": {
-            "docs": true
-          },
-          "fingerprint": {
-            "git_remote": "https://medicalpanels@dev.azure.com/medicalpanels/MPCU%20Build%20and%20Deliver/_git/MPCU%20Build%20and%20Deliver",
-            "has_agent_os": false,
-            "has_docs": true,
-            "name": "MPCU-Build-and-Deliver",
-            "vault_id": "7d263c57-0fa5-46e7-bac9-90ca95ab1937"
-          },
-          "name": "MPCU-Build-and-Deliver",
-          "path": "/Users/nathanvale/code/MPCU-Build-and-Deliver",
-          "registered": "2025-11-19T10:34:26Z"
-        },
-        {
-          "components": {
-            "docs": true
-          },
-          "fingerprint": {
-            "git_remote": "git@github.com:nathanvale/dotfiles.git",
-            "has_agent_os": false,
-            "has_docs": true,
-            "name": "dotfiles",
-            "vault_id": "dcd1af04-abe2-4744-a7e1-7655919a5969"
-          },
-          "name": "dotfiles",
-          "path": "/Users/nathanvale/code/dotfiles",
-          "registered": "2025-11-19T22:27:07Z"
-        },
-        {
-          "components": {
-            "docs": true
-          },
-          "fingerprint": {
-            "git_remote": "git@github.com:nathanvale/imessage-timeline.git",
-            "has_agent_os": false,
-            "has_docs": true,
-            "name": "imessage-timeline",
-            "vault_id": "2bbe168f-91ec-4508-a61d-37f7e87defea"
-          },
-          "name": "imessage-timeline",
-          "path": "/Users/nathanvale/code/imessage-timeline",
-          "registered": "2025-11-19T23:20:09Z"
-        },
-        {
-          "name": "capture-bridge",
-          "path": "/Users/nathanvale/code/capture-bridge",
-          "fingerprint": {
-            "vault_id": "d16d42e3-bc97-4a9c-bac0-fe2c87deb46f",
-            "git_remote": "git@github.com:nathanvale/capture-bridge.git",
-            "has_agent_os": false,
-            "has_docs": true,
-            "name": "capture-bridge"
-          },
-          "components": {
-            "docs": true
-          },
-          "registered": "2025-11-23T04:40:19Z"
-        },
-        {
-          "name": "dotfiles",
-          "path": "/Users/nathanvale/code/dotfiles",
-          "fingerprint": {
-            "vault_id": "1f398cf6-a86b-4fbc-afbd-164675be5425",
-            "git_remote": "git@github.com:nathanvale/dotfiles.git",
-            "has_agent_os": false,
-            "has_docs": true,
-            "name": "dotfiles"
-          },
-          "components": {
-            "docs": true
-          },
-          "registered": "2025-11-24T04:41:02Z"
-        },
-        {
-          "name": "claude-starter",
-          "path": "/Users/nathanvale/code/claude-starter",
-          "fingerprint": {
-            "vault_id": "8c936388-0619-439c-8e00-862dd5bd8df7",
-            "git_remote": "git@github.com:nathanvale/claude-starter.git",
-            "has_agent_os": false,
-            "has_docs": true,
-            "name": "claude-starter"
-          },
-          "components": {
-            "docs": true
-          },
-          "registered": "2025-11-24T19:02:02Z"
-        }
-      ],
-      "type": "unified"
-    }
-  },
-  "version": "2.0.0"
+	"lastUpdated": "2025-11-24T19:02:02Z",
+	"vaults": {
+		"personal": {
+			"path": "/Users/nathanvale/code/my-second-brain",
+			"type": "personal"
+		},
+		"repos": {
+			"path": "/Users/nathanvale/Documents/ObsidianVaults/Repos",
+			"repositories": [
+				{
+					"components": {
+						"docs": true
+					},
+					"fingerprint": {
+						"git_remote": "git@github.com:nathanvale/adhd-brain.git",
+						"has_agent_os": false,
+						"has_docs": true,
+						"name": "adhd-brain",
+						"vault_id": "184bf407-b3b6-4a31-91ee-328ef5cf6ed9"
+					},
+					"name": "adhd-brain",
+					"path": "/Users/nathanvale/code/adhd-brain",
+					"registered": "2025-10-02T01:55:03Z"
+				},
+				{
+					"components": {
+						"agentOS": true,
+						"docs": true
+					},
+					"fingerprint": {
+						"has_agent_os": true,
+						"has_docs": true,
+						"name": "test_repo",
+						"vault_id": "5c80c95f-ec80-4f2a-af37-ad717c02c4f3"
+					},
+					"name": "test_repo",
+					"path": "/tmp/test_repo",
+					"registered": "2025-11-13T21:25:57Z"
+				},
+				{
+					"components": {
+						"docs": true
+					},
+					"fingerprint": {
+						"has_agent_os": false,
+						"has_docs": true,
+						"name": "migration-cli",
+						"vault_id": "42f4dcd4-9a19-4956-a408-e6e6a0be33f0"
+					},
+					"name": "migration-cli",
+					"path": "/Users/nathanvale/code/MPCU-Build-and-Deliver/apps/migration-cli",
+					"registered": "2025-11-17T21:51:17Z"
+				},
+				{
+					"components": {
+						"docs": true
+					},
+					"fingerprint": {
+						"git_remote": "https://medicalpanels@dev.azure.com/medicalpanels/MPCU%20Build%20and%20Deliver/_git/MPCU%20Build%20and%20Deliver",
+						"has_agent_os": false,
+						"has_docs": true,
+						"name": "MPCU-Build-and-Deliver",
+						"vault_id": "7d263c57-0fa5-46e7-bac9-90ca95ab1937"
+					},
+					"name": "MPCU-Build-and-Deliver",
+					"path": "/Users/nathanvale/code/MPCU-Build-and-Deliver",
+					"registered": "2025-11-19T10:34:26Z"
+				},
+				{
+					"components": {
+						"docs": true
+					},
+					"fingerprint": {
+						"git_remote": "git@github.com:nathanvale/dotfiles.git",
+						"has_agent_os": false,
+						"has_docs": true,
+						"name": "dotfiles",
+						"vault_id": "dcd1af04-abe2-4744-a7e1-7655919a5969"
+					},
+					"name": "dotfiles",
+					"path": "/Users/nathanvale/code/dotfiles",
+					"registered": "2025-11-19T22:27:07Z"
+				},
+				{
+					"components": {
+						"docs": true
+					},
+					"fingerprint": {
+						"git_remote": "git@github.com:nathanvale/imessage-timeline.git",
+						"has_agent_os": false,
+						"has_docs": true,
+						"name": "imessage-timeline",
+						"vault_id": "2bbe168f-91ec-4508-a61d-37f7e87defea"
+					},
+					"name": "imessage-timeline",
+					"path": "/Users/nathanvale/code/imessage-timeline",
+					"registered": "2025-11-19T23:20:09Z"
+				},
+				{
+					"name": "capture-bridge",
+					"path": "/Users/nathanvale/code/capture-bridge",
+					"fingerprint": {
+						"vault_id": "d16d42e3-bc97-4a9c-bac0-fe2c87deb46f",
+						"git_remote": "git@github.com:nathanvale/capture-bridge.git",
+						"has_agent_os": false,
+						"has_docs": true,
+						"name": "capture-bridge"
+					},
+					"components": {
+						"docs": true
+					},
+					"registered": "2025-11-23T04:40:19Z"
+				},
+				{
+					"name": "dotfiles",
+					"path": "/Users/nathanvale/code/dotfiles",
+					"fingerprint": {
+						"vault_id": "1f398cf6-a86b-4fbc-afbd-164675be5425",
+						"git_remote": "git@github.com:nathanvale/dotfiles.git",
+						"has_agent_os": false,
+						"has_docs": true,
+						"name": "dotfiles"
+					},
+					"components": {
+						"docs": true
+					},
+					"registered": "2025-11-24T04:41:02Z"
+				},
+				{
+					"name": "claude-starter",
+					"path": "/Users/nathanvale/code/claude-starter",
+					"fingerprint": {
+						"vault_id": "8c936388-0619-439c-8e00-862dd5bd8df7",
+						"git_remote": "git@github.com:nathanvale/claude-starter.git",
+						"has_agent_os": false,
+						"has_docs": true,
+						"name": "claude-starter"
+					},
+					"components": {
+						"docs": true
+					},
+					"registered": "2025-11-24T19:02:02Z"
+				}
+			],
+			"type": "unified"
+		}
+	},
+	"version": "2.0.0"
 }

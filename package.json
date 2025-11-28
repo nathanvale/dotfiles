@@ -1,38 +1,38 @@
 {
-  "author": "",
-  "description": "Personal dotfiles and configuration management",
-  "devDependencies": {
-    "@commitlint/cli": "^20.1.0",
-    "@commitlint/config-conventional": "^20.0.0",
-    "commitlint-config-git-commit-emoji": "^1.0.0",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.2.7",
-    "prettier": "^3.6.2",
-    "prettier-plugin-sort-json": "^4.1.1"
-  },
-  "keywords": [],
-  "license": "ISC",
-  "lint-staged": {
-    "*.{json,md,yml,yaml,toml}": [
-      "prettier --write"
-    ],
-    "*.{sh,bash,zsh}": [
-      "shellcheck"
-    ],
-    ".github/workflows/*.{yml,yaml}": [
-      "actionlint"
-    ]
-  },
-  "name": "dotfiles",
-  "packageManager": "pnpm@10.22.0",
-  "private": true,
-  "scripts": {
-    "format": "prettier --ignore-path .gitignore --write .",
-    "format:check": "prettier --ignore-path .gitignore --check .",
-    "lint:shell": "find . -type f \\( -name '*.sh' -o -name '*.bash' -o -name '*.zsh' \\) ! -path './node_modules/*' -exec shellcheck {} +",
-    "lint:workflows": "actionlint",
-    "prepare": "husky",
-    "validate": "pnpm format:check && pnpm lint:shell && pnpm lint:workflows"
-  },
-  "version": "1.0.0"
+	"author": "",
+	"description": "Personal dotfiles and configuration management",
+	"devDependencies": {
+		"@commitlint/cli": "^20.1.0",
+		"@commitlint/config-conventional": "^20.0.0",
+		"commitlint-config-git-commit-emoji": "^1.0.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.2.7",
+		"prettier": "^3.6.2",
+		"prettier-plugin-sort-json": "^4.1.1"
+	},
+	"keywords": [],
+	"license": "ISC",
+	"lint-staged": {
+		"*.{json,md,yml,yaml,toml}": [
+			"prettier --write"
+		],
+		"*.{sh,bash,zsh}": [
+			"shellcheck"
+		],
+		".github/workflows/*.{yml,yaml}": [
+			"actionlint"
+		]
+	},
+	"name": "dotfiles",
+	"packageManager": "pnpm@10.22.0",
+	"private": true,
+	"scripts": {
+		"format": "prettier --ignore-path .gitignore --write .",
+		"format:check": "prettier --ignore-path .gitignore --check .",
+		"lint:shell": "find . -type f \\( -name '*.sh' -o -name '*.bash' -o -name '*.zsh' \\) ! -path './node_modules/*' -exec shellcheck {} +",
+		"lint:workflows": "actionlint",
+		"prepare": "husky",
+		"validate": "pnpm format:check && pnpm lint:shell && pnpm lint:workflows"
+	},
+	"version": "1.0.0"
 }

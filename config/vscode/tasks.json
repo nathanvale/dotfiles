@@ -1,136 +1,136 @@
 {
-  "tasks": [
-    {
-      "args": [
-        "-c",
-        "TASK_ID=$(${env:HOME}/.claude/scripts/find-next-task.sh) && if [ -z \"$TASK_ID\" ]; then echo '❌ No READY tasks found'; exit 0; fi && echo \"✅ Selected: $TASK_ID\" && ${env:HOME}/.claude/scripts/create-worktree.sh \"$TASK_ID\" && code -n ./worktrees/\"$TASK_ID\""
-      ],
-      "command": "bash",
-      "label": "Next Task",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "presentation": {
-        "focus": true,
-        "panel": "dedicated",
-        "reveal": "always",
-        "showReuseMessage": false
-      },
-      "problemMatcher": [],
-      "type": "shell"
-    },
-    {
-      "command": "${env:HOME}/.claude/scripts/cleanup-merged-worktrees.sh",
-      "label": "Cleanup Merged Worktrees",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "presentation": {
-        "focus": true,
-        "panel": "dedicated",
-        "reveal": "always",
-        "showReuseMessage": false
-      },
-      "problemMatcher": [],
-      "type": "shell"
-    },
-    {
-      "command": "${env:HOME}/.claude/scripts/worktree-status.sh",
-      "label": "Show Worktree Status",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "presentation": {
-        "panel": "shared",
-        "reveal": "always"
-      },
-      "problemMatcher": [],
-      "type": "shell"
-    },
-    {
-      "command": "${env:HOME}/.claude/scripts/clean-stale-locks.sh",
-      "label": "Clean Stale Locks",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "presentation": {
-        "panel": "shared",
-        "reveal": "always"
-      },
-      "problemMatcher": [],
-      "type": "shell"
-    },
-    {
-      "args": [
-        "-c",
-        "echo '=== Tasks ===' && find . -name 'T[0-9][0-9][0-9][0-9]-*.md' -exec bash -c 'echo \"\" && basename \"{}\" && grep \"^status:\" \"{}\" && grep \"^priority:\" \"{}\"' \\;"
-      ],
-      "command": "bash",
-      "label": "List Tasks",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "presentation": {
-        "panel": "shared",
-        "reveal": "always"
-      },
-      "problemMatcher": [],
-      "type": "shell"
-    },
-    {
-      "args": ["--current"],
-      "command": "${env:HOME}/.claude/scripts/merge-pr.sh",
-      "label": "Merge PR (Current Worktree)",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "presentation": {
-        "focus": true,
-        "panel": "dedicated",
-        "reveal": "always",
-        "showReuseMessage": false
-      },
-      "problemMatcher": [],
-      "type": "shell"
-    },
-    {
-      "args": [
-        "-c",
-        "read -p 'Enter Task ID (e.g., T0030 or MPCU-0005): ' TASK_ID && ${env:HOME}/.claude/scripts/merge-pr.sh \"$TASK_ID\""
-      ],
-      "command": "bash",
-      "label": "Merge PR (by Task ID)",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "presentation": {
-        "focus": true,
-        "panel": "dedicated",
-        "reveal": "always",
-        "showReuseMessage": false
-      },
-      "problemMatcher": [],
-      "type": "shell"
-    },
-    {
-      "args": [
-        "-c",
-        "read -p 'Enter PR Number: ' PR_NUM && ${env:HOME}/.claude/scripts/merge-pr.sh \"$PR_NUM\""
-      ],
-      "command": "bash",
-      "label": "Merge PR (by PR Number)",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "presentation": {
-        "focus": true,
-        "panel": "dedicated",
-        "reveal": "always",
-        "showReuseMessage": false
-      },
-      "problemMatcher": [],
-      "type": "shell"
-    }
-  ],
-  "version": "2.0.0"
+	"tasks": [
+		{
+			"args": [
+				"-c",
+				"TASK_ID=$(${env:HOME}/.claude/scripts/find-next-task.sh) && if [ -z \"$TASK_ID\" ]; then echo '❌ No READY tasks found'; exit 0; fi && echo \"✅ Selected: $TASK_ID\" && ${env:HOME}/.claude/scripts/create-worktree.sh \"$TASK_ID\" && code -n ./worktrees/\"$TASK_ID\""
+			],
+			"command": "bash",
+			"label": "Next Task",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"focus": true,
+				"panel": "dedicated",
+				"reveal": "always",
+				"showReuseMessage": false
+			},
+			"problemMatcher": [],
+			"type": "shell"
+		},
+		{
+			"command": "${env:HOME}/.claude/scripts/cleanup-merged-worktrees.sh",
+			"label": "Cleanup Merged Worktrees",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"focus": true,
+				"panel": "dedicated",
+				"reveal": "always",
+				"showReuseMessage": false
+			},
+			"problemMatcher": [],
+			"type": "shell"
+		},
+		{
+			"command": "${env:HOME}/.claude/scripts/worktree-status.sh",
+			"label": "Show Worktree Status",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"panel": "shared",
+				"reveal": "always"
+			},
+			"problemMatcher": [],
+			"type": "shell"
+		},
+		{
+			"command": "${env:HOME}/.claude/scripts/clean-stale-locks.sh",
+			"label": "Clean Stale Locks",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"panel": "shared",
+				"reveal": "always"
+			},
+			"problemMatcher": [],
+			"type": "shell"
+		},
+		{
+			"args": [
+				"-c",
+				"echo '=== Tasks ===' && find . -name 'T[0-9][0-9][0-9][0-9]-*.md' -exec bash -c 'echo \"\" && basename \"{}\" && grep \"^status:\" \"{}\" && grep \"^priority:\" \"{}\"' \\;"
+			],
+			"command": "bash",
+			"label": "List Tasks",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"panel": "shared",
+				"reveal": "always"
+			},
+			"problemMatcher": [],
+			"type": "shell"
+		},
+		{
+			"args": ["--current"],
+			"command": "${env:HOME}/.claude/scripts/merge-pr.sh",
+			"label": "Merge PR (Current Worktree)",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"focus": true,
+				"panel": "dedicated",
+				"reveal": "always",
+				"showReuseMessage": false
+			},
+			"problemMatcher": [],
+			"type": "shell"
+		},
+		{
+			"args": [
+				"-c",
+				"read -p 'Enter Task ID (e.g., T0030 or MPCU-0005): ' TASK_ID && ${env:HOME}/.claude/scripts/merge-pr.sh \"$TASK_ID\""
+			],
+			"command": "bash",
+			"label": "Merge PR (by Task ID)",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"focus": true,
+				"panel": "dedicated",
+				"reveal": "always",
+				"showReuseMessage": false
+			},
+			"problemMatcher": [],
+			"type": "shell"
+		},
+		{
+			"args": [
+				"-c",
+				"read -p 'Enter PR Number: ' PR_NUM && ${env:HOME}/.claude/scripts/merge-pr.sh \"$PR_NUM\""
+			],
+			"command": "bash",
+			"label": "Merge PR (by PR Number)",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"focus": true,
+				"panel": "dedicated",
+				"reveal": "always",
+				"showReuseMessage": false
+			},
+			"problemMatcher": [],
+			"type": "shell"
+		}
+	],
+	"version": "2.0.0"
 }

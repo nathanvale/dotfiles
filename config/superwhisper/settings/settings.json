@@ -1,21 +1,16 @@
 {
-  "modeKeys" : [
-    "default",
-    "melanie"
-  ],
-  "replacements" : [
-    {
-      "id" : "DDFAE32A-87A4-4B40-809B-3E95DD94D713",
-      "original" : "Ultra think.",
-      "with" : "ultrathink"
-    },
-    {
-      "id" : "CCEEF5C0-14B2-4EC1-9127-1A36989496B7",
-      "original" : "Ultra-think",
-      "with" : "ultrathink"
-    }
-  ],
-  "vocabulary" : [
-
-  ]
+	"modeKeys": ["default", "melanie"],
+	"replacements": [
+		{
+			"id": "DDFAE32A-87A4-4B40-809B-3E95DD94D713",
+			"original": "ultra think.",
+			"with": "ultrathink"
+		},
+		{
+			"id": "CCEEF5C0-14B2-4EC1-9127-1A36989496B7",
+			"original": "ultra-think",
+			"with": "ultrathink"
+		}
+	],
+	"vocabulary": []
 }

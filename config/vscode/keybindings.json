@@ -4,218 +4,258 @@
 // ============================================================================
 
 [
-  { "key": "ctrl+cmd+,", "command": "workbench.action.openSettingsJson" },
-  { "key": "ctrl+g ;", "command": "workbench.action.openGlobalKeybindings" },
-  { "key": "ctrl+backspace", "command": "workbench.action.navigateToLastEditLocation" },
+	{ "key": "ctrl+cmd+,", "command": "workbench.action.openSettingsJson" },
+	{ "key": "ctrl+g ;", "command": "workbench.action.openGlobalKeybindings" },
+	{
+		"key": "ctrl+backspace",
+		"command": "workbench.action.navigateToLastEditLocation"
+	},
 
-  // ───────────────────────────────────────────────────────────────
-  // LAYOUT MODES (Laptop / Big Monitor)
-  // ───────────────────────────────────────────────────────────────
+	// ───────────────────────────────────────────────────────────────
+	// LAYOUT MODES (Laptop / Big Monitor)
+	// ───────────────────────────────────────────────────────────────
 
-  {
-    "key": "ctrl+cmd+1",
-    "command": "extension.multiCommand.execute",
-    "args": { "command": "layout.laptopMode" }
-  },
-  {
-    "key": "ctrl+cmd+2",
-    "command": "extension.multiCommand.execute",
-    "args": { "command": "layout.bigMonitor" }
-  },
-  // ───────────────────────────────────────────────────────────────
-  // ZEN MODE
-  // ───────────────────────────────────────────────────────────────
+	{
+		"key": "ctrl+cmd+1",
+		"command": "extension.multiCommand.execute",
+		"args": { "command": "layout.laptopMode" }
+	},
+	{
+		"key": "ctrl+cmd+2",
+		"command": "extension.multiCommand.execute",
+		"args": { "command": "layout.bigMonitor" }
+	},
+	// ───────────────────────────────────────────────────────────────
+	// ZEN MODE
+	// ───────────────────────────────────────────────────────────────
 
-  { "key": "ctrl+g z", "command": "workbench.action.toggleZenMode" },
-  { "key": "ctrl+g z", "command": "workbench.action.exitZenMode", "when": "inZenMode" },
-  { "key": "escape escape", "command": "-workbench.action.exitZenMode", "when": "inZenMode" },
+	{ "key": "ctrl+g z", "command": "workbench.action.toggleZenMode" },
+	{
+		"key": "ctrl+g z",
+		"command": "workbench.action.exitZenMode",
+		"when": "inZenMode"
+	},
+	{
+		"key": "escape escape",
+		"command": "-workbench.action.exitZenMode",
+		"when": "inZenMode"
+	},
 
-  // ───────────────────────────────────────────────────────────────
-  // TERMINAL PANE NAVIGATION
-  // ───────────────────────────────────────────────────────────────
+	// ───────────────────────────────────────────────────────────────
+	// TERMINAL PANE NAVIGATION
+	// ───────────────────────────────────────────────────────────────
 
-  {
-    "key": "ctrl+alt+h",
-    "command": "workbench.action.terminal.focusPreviousPane",
-    "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
-  },
-  { "key": "alt+cmd+left", "command": "-workbench.action.terminal.focusPreviousPane" },
+	{
+		"key": "ctrl+alt+h",
+		"command": "workbench.action.terminal.focusPreviousPane",
+		"when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+	},
+	{
+		"key": "alt+cmd+left",
+		"command": "-workbench.action.terminal.focusPreviousPane"
+	},
 
-  {
-    "key": "ctrl+alt+l",
-    "command": "workbench.action.terminal.focusNextPane",
-    "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
-  },
-  { "key": "alt+cmd+right", "command": "-workbench.action.terminal.focusNextPane" },
+	{
+		"key": "ctrl+alt+l",
+		"command": "workbench.action.terminal.focusNextPane",
+		"when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+	},
+	{
+		"key": "alt+cmd+right",
+		"command": "-workbench.action.terminal.focusNextPane"
+	},
 
-  {
-    "key": "shift+alt+h",
-    "command": "workbench.action.terminal.focusPrevious",
-    "when": "terminalFocus && terminalHasBeenCreated && !terminalEditorFocus"
-  },
-  { "key": "shift+cmd[", "command": "-workbench.action.terminal.focusPrevious" },
+	{
+		"key": "shift+alt+h",
+		"command": "workbench.action.terminal.focusPrevious",
+		"when": "terminalFocus && terminalHasBeenCreated && !terminalEditorFocus"
+	},
+	{
+		"key": "shift+cmd[",
+		"command": "-workbench.action.terminal.focusPrevious"
+	},
 
-  // ───────────────────────────────────────────────────────────────
-  // EDITOR SPLITTING / GROUP MANAGEMENT
-  // ───────────────────────────────────────────────────────────────
+	// ───────────────────────────────────────────────────────────────
+	// EDITOR SPLITTING / GROUP MANAGEMENT
+	// ───────────────────────────────────────────────────────────────
 
-  { "key": "ctrl--", "command": "workbench.action.previousEditor" },
-  { "key": "ctrl-=", "command": "workbench.action.nextEditor" },
+	{ "key": "ctrl--", "command": "workbench.action.previousEditor" },
+	{ "key": "ctrl-=", "command": "workbench.action.nextEditor" },
 
-  // ───────────────────────────────────────────────────────────────
-  // VMUX GROUP FOCUS (H J K L)
-  // ───────────────────────────────────────────────────────────────
+	// ───────────────────────────────────────────────────────────────
+	// VMUX GROUP FOCUS (H J K L)
+	// ───────────────────────────────────────────────────────────────
 
-  { "key": "ctrl+g h", "command": "workbench.action.focusLeftGroup" },
-  { "key": "ctrl+g l", "command": "workbench.action.focusRightGroup" },
-  { "key": "ctrl+g j", "command": "workbench.action.focusBelowGroup" },
-  { "key": "ctrl+g k", "command": "workbench.action.focusAboveGroup" },
+	{ "key": "ctrl+g h", "command": "workbench.action.focusLeftGroup" },
+	{ "key": "ctrl+g l", "command": "workbench.action.focusRightGroup" },
+	{ "key": "ctrl+g j", "command": "workbench.action.focusBelowGroup" },
+	{ "key": "ctrl+g k", "command": "workbench.action.focusAboveGroup" },
 
-  // ───────────────────────────────────────────────────────────────
-  // PANEL / SIDEBAR RESIZING
-  // ───────────────────────────────────────────────────────────────
+	// ───────────────────────────────────────────────────────────────
+	// PANEL / SIDEBAR RESIZING
+	// ───────────────────────────────────────────────────────────────
 
-  { "key": "ctrl+'", "command": "workbench.action.increaseViewWidth" },
-  { "key": "ctrl+;", "command": "workbench.action.decreaseViewWidth" },
+	{ "key": "ctrl+'", "command": "workbench.action.increaseViewWidth" },
+	{ "key": "ctrl+;", "command": "workbench.action.decreaseViewWidth" },
 
-  // ───────────────────────────────────────────────────────────────
-  // ACTION LAYER — CTRL+G .
-  // ───────────────────────────────────────────────────────────────
+	// ───────────────────────────────────────────────────────────────
+	// ACTION LAYER — CTRL+G .
+	// ───────────────────────────────────────────────────────────────
 
-  {
-    "key": "ctrl+g .",
-    "command": "editor.action.autoFix",
-    "when": "editorTextFocus && !editorReadonly"
-  },
-  {
-    "key": "ctrl+g .",
-    "command": "editor.action.quickFix",
-    "when": "editorHasCodeActionsProvider && textInputFocus"
-  },
-  {
-    "key": "ctrl+g .",
-    "command": "workbench.action.terminal.showQuickFixes",
-    "when": "terminalFocus"
-  },
-  { "key": "ctrl+g .", "command": "acceptSelectedCodeAction", "when": "codeActionMenuVisible" },
-  { "key": "ctrl+g .", "command": "editor.changeDropType", "when": "dropWidgetVisible" },
-  { "key": "ctrl+g .", "command": "problems.action.showQuickFixes", "when": "problemFocus" },
+	{
+		"key": "ctrl+g .",
+		"command": "editor.action.autoFix",
+		"when": "editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "ctrl+g .",
+		"command": "editor.action.quickFix",
+		"when": "editorHasCodeActionsProvider && textInputFocus"
+	},
+	{
+		"key": "ctrl+g .",
+		"command": "workbench.action.terminal.showQuickFixes",
+		"when": "terminalFocus"
+	},
+	{
+		"key": "ctrl+g .",
+		"command": "acceptSelectedCodeAction",
+		"when": "codeActionMenuVisible"
+	},
+	{
+		"key": "ctrl+g .",
+		"command": "editor.changeDropType",
+		"when": "dropWidgetVisible"
+	},
+	{
+		"key": "ctrl+g .",
+		"command": "problems.action.showQuickFixes",
+		"when": "problemFocus"
+	},
 
-  // ───────────────────────────────────────────────────────────────
-  // HOVER / INFO
-  // ───────────────────────────────────────────────────────────────
+	// ───────────────────────────────────────────────────────────────
+	// HOVER / INFO
+	// ───────────────────────────────────────────────────────────────
 
-  { "key": "ctrl+g i", "command": "editor.action.showHover", "when": "editorTextFocus" },
-  { "key": "ctrl+g i", "command": "workbench.action.terminal.focusHover", "when": "terminalFocus" },
-  {
-    "key": "ctrl+g i",
-    "command": "workbench.action.showTreeHover",
-    "when": "customTreeView && listFocus"
-  },
-  {
-    "key": "ctrl+g i",
-    "command": "editor.debug.action.showDebugHover",
-    "when": "editorTextFocus && inDebugMode"
-  },
+	{
+		"key": "ctrl+g i",
+		"command": "editor.action.showHover",
+		"when": "editorTextFocus"
+	},
+	{
+		"key": "ctrl+g i",
+		"command": "workbench.action.terminal.focusHover",
+		"when": "terminalFocus"
+	},
+	{
+		"key": "ctrl+g i",
+		"command": "workbench.action.showTreeHover",
+		"when": "customTreeView && listFocus"
+	},
+	{
+		"key": "ctrl+g i",
+		"command": "editor.debug.action.showDebugHover",
+		"when": "editorTextFocus && inDebugMode"
+	},
 
-  // ───────────────────────────────────────────────────────────────
-  // NAVIGATION
-  // ───────────────────────────────────────────────────────────────
+	// ───────────────────────────────────────────────────────────────
+	// NAVIGATION
+	// ───────────────────────────────────────────────────────────────
 
-  { "key": "ctrl+g -", "command": "workbench.action.navigateBack" },
-  { "key": "ctrl+g =", "command": "workbench.action.navigateForward" },
-  { "key": "ctrl+g o", "command": "workbench.action.gotoSymbol" },
-  { "key": "ctrl+g d", "command": "editor.action.revealDefinition" },
+	{ "key": "ctrl+g -", "command": "workbench.action.navigateBack" },
+	{ "key": "ctrl+g =", "command": "workbench.action.navigateForward" },
+	{ "key": "ctrl+g o", "command": "workbench.action.gotoSymbol" },
+	{ "key": "ctrl+g d", "command": "editor.action.revealDefinition" },
 
-  // ───────────────────────────────────────────────────────────────
-  // FILE / TAB / WINDOW
-  // ───────────────────────────────────────────────────────────────
+	// ───────────────────────────────────────────────────────────────
+	// FILE / TAB / WINDOW
+	// ───────────────────────────────────────────────────────────────
 
-  { "key": "ctrl+g w", "command": "workbench.action.closeAllEditors" },
-  { "key": "ctrl+s w", "command": "workbench.action.switchWindow" },
+	{ "key": "ctrl+g w", "command": "workbench.action.closeAllEditors" },
+	{ "key": "ctrl+s w", "command": "workbench.action.switchWindow" },
 
-  // ───────────────────────────────────────────────────────────────
-  // VIEW SWITCHING
-  // ───────────────────────────────────────────────────────────────
+	// ───────────────────────────────────────────────────────────────
+	// VIEW SWITCHING
+	// ───────────────────────────────────────────────────────────────
 
-  { "key": "ctrl+g g", "command": "workbench.view.scm" },
-  { "key": "ctrl+g e", "command": "workbench.view.explorer" },
-  { "key": "ctrl+g x", "command": "workbench.view.extensions" },
-  { "key": "ctrl+g f", "command": "workbench.action.findInFiles" },
+	{ "key": "ctrl+g g", "command": "workbench.view.scm" },
+	{ "key": "ctrl+g e", "command": "workbench.view.explorer" },
+	{ "key": "ctrl+g x", "command": "workbench.view.extensions" },
+	{ "key": "ctrl+g f", "command": "workbench.action.findInFiles" },
 
-  // ───────────────────────────────────────────────────────────────
-  // GIT / GITLENS
-  // ───────────────────────────────────────────────────────────────
+	// ───────────────────────────────────────────────────────────────
+	// GIT / GITLENS
+	// ───────────────────────────────────────────────────────────────
 
-  { "key": "ctrl+g u", "command": "git.undoCommit" },
-  { "key": "ctrl+g a", "command": "git.stageAll" },
-  { "key": "ctrl+g p", "command": "workbench.view.extension.gitlens" },
+	{ "key": "ctrl+g u", "command": "git.undoCommit" },
+	{ "key": "ctrl+g a", "command": "git.stageAll" },
+	{ "key": "ctrl+g p", "command": "workbench.view.extension.gitlens" },
 
-  {
-    "key": "ctrl+g ,",
-    "command": "gitlens.diffWithPreviousInDiffLeft",
-    "when": "editorTextFocus && isInDiffEditor && !isInDiffRightEditor"
-  },
-  {
-    "key": "ctrl+g ,",
-    "command": "gitlens.diffWithPreviousInDiffRight",
-    "when": "editorTextFocus && isInDiffRightEditor"
-  },
+	{
+		"key": "ctrl+g ,",
+		"command": "gitlens.diffWithPreviousInDiffLeft",
+		"when": "editorTextFocus && isInDiffEditor && !isInDiffRightEditor"
+	},
+	{
+		"key": "ctrl+g ,",
+		"command": "gitlens.diffWithPreviousInDiffRight",
+		"when": "editorTextFocus && isInDiffRightEditor"
+	},
 
-  // ───────────────────────────────────────────────────────────────
-  // AI / COPILOT
-  // ───────────────────────────────────────────────────────────────
+	// ───────────────────────────────────────────────────────────────
+	// AI / COPILOT
+	// ───────────────────────────────────────────────────────────────
 
-  {
-    "key": "ctrl+g i",
-    "command": "workbench.action.chat.openEditSession",
-    "when": "chatEditingParticipantRegistered"
-  },
-  {
-    "key": "ctrl+g i",
-    "command": "workbench.panel.chat",
-    "when": "workbench.panel.chat.view.copilot.active"
-  },
+	{
+		"key": "ctrl+g i",
+		"command": "workbench.action.chat.openEditSession",
+		"when": "chatEditingParticipantRegistered"
+	},
+	{
+		"key": "ctrl+g i",
+		"command": "workbench.panel.chat",
+		"when": "workbench.panel.chat.view.copilot.active"
+	},
 
-  {
-    "key": "alt+space",
-    "command": "editor.action.inlineSuggest.trigger",
-    "when": "editorTextFocus && !inlineSuggestionsVisible"
-  },
+	{
+		"key": "alt+space",
+		"command": "editor.action.inlineSuggest.trigger",
+		"when": "editorTextFocus && !inlineSuggestionsVisible"
+	},
 
-  // ───────────────────────────────────────────────────────────────
-  // TERMINAL MISC
-  // ───────────────────────────────────────────────────────────────
+	// ───────────────────────────────────────────────────────────────
+	// TERMINAL MISC
+	// ───────────────────────────────────────────────────────────────
 
-  {
-    "key": "ctrl+g t",
-    "command": "workbench.action.terminal.toggleTerminal",
-    "when": "terminal.active"
-  },
-  {
-    "key": "shift+enter",
-    "command": "workbench.action.terminal.sendSequence",
-    "args": { "text": "\\\r\n" },
-    "when": "terminalFocus"
-  },
-  {
-    "key": "ctrl+g c",
-    "command": "workbench.action.openChat",
-    "when": "chatIsEnabled"
-  },
-  {
-    "key": "cmd+n",
-    "command": "-workbench.action.chat.newChat",
-    "when": "chatIsEnabled && inChat && chatLocation == 'panel'"
-  },
-  {
-    "key": "cmd+n",
-    "command": "-workbench.action.openChat",
-    "when": "chatIsEnabled && inChat && inChatEditor"
-  },
-  {
-    "key": "ctrl+l",
-    "command": "-workbench.action.chat.newChat",
-    "when": "chatIsEnabled && inChat && chatLocation == 'panel'"
-  }
+	{
+		"key": "ctrl+g t",
+		"command": "workbench.action.terminal.toggleTerminal",
+		"when": "terminal.active"
+	},
+	{
+		"key": "shift+enter",
+		"command": "workbench.action.terminal.sendSequence",
+		"args": { "text": "\\\r\n" },
+		"when": "terminalFocus"
+	},
+	{
+		"key": "ctrl+g c",
+		"command": "workbench.action.openChat",
+		"when": "chatIsEnabled"
+	},
+	{
+		"key": "cmd+n",
+		"command": "-workbench.action.chat.newChat",
+		"when": "chatIsEnabled && inChat && chatLocation == 'panel'"
+	},
+	{
+		"key": "cmd+n",
+		"command": "-workbench.action.openChat",
+		"when": "chatIsEnabled && inChat && inChatEditor"
+	},
+	{
+		"key": "ctrl+l",
+		"command": "-workbench.action.chat.newChat",
+		"when": "chatIsEnabled && inChat && chatLocation == 'panel'"
+	}
 ]

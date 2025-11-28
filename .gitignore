@@ -33,3 +33,6 @@ config/google-chrome-devtools
 node_modules/
 dist/
 
+# SuperWhisper recordings (large, personal)
+config/superwhisper/recordings/
+

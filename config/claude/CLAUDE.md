@@ -4,201 +4,113 @@
 - **ADHD** - Cognitive load is my enemy. DX matters enormously.
 - **Visual learner** - Clear structure, whitespace, and formatting help me process.
 - **Exploratory mindset** - I want to learn from what you do. Explain the "why."
-- **Morning person** - Up early, start coding immediately. Get tired early evenings.
 
-## Working with Nathan
+---
 
-**Plan, then Execute:**
+## CRITICAL RULES — READ FIRST
+
+**YOU MUST** follow Plan → Confirm → Execute → Test every time:
 
 1. **Read** relevant files first
 2. **Plan** using think mode for complex tasks
 3. **Confirm** with Nathan before implementing
 4. **Execute** incrementally in small chunks
 5. **Test** and verify each step
-6. **Explain** what you did and why
+6. **Commit** invoke AskQuestion tool
+7. **Explain** what you did and why
 
-### Important People
+### NEVER Do These
 
-- **Melanie** - Partner (also "Bestie" or "Sweetheart")
-- **Levi** - Son (age 9), Nathan is sole parent
-- **Mum** - Lives in Sydney
-
-For birthdays, hobbies, and other personal details: `~/.claude/context/personal.md`
-
-### Second Brain (Obsidian + PARA)
-
-Obsidian vault stores all project and personal context using PARA method. Use `/para-brain:*`
-commands. Full setup: `~/.claude/context/obsidian-setup.md`
-
-### SideQuest Marketplace
-
-ADHD-focused plugins at `~/code/side-quest-marketplace/` **If a plugin isn't installed, ask if I
-want to install it.**
-
-Essential: `git`, `para-brain`, `claude-code-docs`, `atuin`, `bun-runner`, `claude-code-claude-md`
-
-**Claude Code docs**: Use `/claude-code-docs:help [topic]` instead of the `claude-code-guide`
-subagent.
-
-### Reference Context
-
-`~/.claude/context/`: `personal.md`, `personal-projects.md`, `learning-goals.md`,
-`obsidian-setup.md`
-
----
-
-## Critical Rules
-
-**REMEMBER** It is ok if you dont have an answer. You have permission to say, "Sorry Nathan, I dont know.". Nathan will always be a willing colleage and provide more context.
-
-### Never Do These
-
-- **NEVER delete or remove untracked git changes** - This is catastrophic
-- **NEVER start implementing without confirmation** - Always present plan first
-- **NEVER refactor without asking** - Propose changes, wait for approval
-- **NEVER use destructive git commands** - See Git Safety Rules below
-
-### Git Safety Rules (CRITICAL)
-
-**BLOCKED** (have to ask, in settings.json): `git reset --hard`, `git reset HEAD~`,
-`git clean -f/-fd/-fx`, `git checkout -- .`, `git restore .`, `git push --force/-f`, `rm -rf`
-
-**ASK FIRST** (will prompt for confirmation):
-
-- `git rebase` - rewrites history
-- `git stash drop` - permanently deletes stashed work
-- `git branch -D` - force deletes branch
-
-**SAFE ALTERNATIVES**:
-
-- Use `git stash -u` instead of `git clean` to preserve untracked files
-- Use `git stash` before risky operations (recoverable with `git stash pop`)
-- Create backup branch first: `git branch backup-$(date +%s)`
-- Use `git diff` and `git status` before any operation that modifies files
+- **NEVER delete or remove untracked git changes** — Catastrophic
+- **NEVER start implementing without confirmation** — Always present plan first
+- **NEVER refactor without asking** — Propose changes, wait for approval
+- **NEVER use destructive git commands** — See @~/.claude/context/git-workflow.md
 
 ### Obsidian Vault / PARA Rules (STRICT)
 
-**NEVER use Write/Edit tools for vault content.** Always use `/para-brain:*` commands — they handle
-frontmatter, timestamps, and backlinks automatically.
+**NEVER use Write/Edit tools for vault content.** Use `/para-brain:*` commands only.
 
-| Task                         | Command                             |
-| ---------------------------- | ----------------------------------- |
-| Create project/area/resource | `/para-brain:create [type] [title]` |
-| Quick capture                | `/para-brain:capture [text]`        |
-| Search                       | `/para-brain:search [query]`        |
-| Process inbox                | `/para-brain:process`               |
-| Weekly review                | `/para-brain:review`                |
+Create → `/para-brain:create` | Capture → `/para-brain:capture` | Search → `/para-brain:search`
 
-Commands work from any directory (plugin knows vault location: `~/code/my-second-brain`).
-
-### Always Do These
-
-- **Read code before proposing changes** - Understand context first
-- **Plan → Confirm → Execute → Test** - Every time
-- **Chunk work into small pieces** - Helps me follow along
-- **Use visual formatting** - Headers, bullets, code blocks, whitespace
+Vault: `~/code/my-second-brain` — Full setup: @~/.claude/context/obsidian-setup.md
 
 ---
+
+## Git MCP Tools (Token Efficiency)
+
+**Use MCP for reads** → `git_get_recent_commits`, `git_search_commits`, `git_get_diff_summary`,
+`git_get_status`
+
+**Use bash for writes** → commits, branches, pushes (or `/git:*` slash commands)
+
+Full tool list & safety rules: @~/.claude/context/git-workflow.md
+
+## Search Tools (Kit Plugin)
+
+Text/regex → `kit_grep` | Semantic → `kit_semantic` | Symbols → `kit_symbols` | Structure →
+`kit_ast_search`
+
+Full tool guide: @~/.claude/context/search-tools.md
+
+## Bun Runner Tools (Prefer Over CLI)
+
+**Use MCP tools** → `bun_runTests`, `bun_testFile`, `bun_lintCheck`, `bun_lintFix`
+
+**NOT direct CLI** → Avoid raw `bun test`, `biome check` (MCP tools have token-efficient output)
+
+Hooks run automatically on Write/Edit (Biome fix + tsc check). Full guide:
+@~/.claude/context/bun-runner.md
+
+## Atuin History Tools
+
+**Search** → `atuin_search_history`, `atuin_get_recent_history`, `atuin_search_by_context`
+
+**Insights** → `atuin_history_insights` (frequent commands, failure patterns)
+
+All Bash commands auto-captured with context. Full guide: @~/.claude/context/atuin.md
 
 ## Communication Style
 
-- Technical and concise
-- Explain decisions (the "why" not just "what")
-- No emojis unless I ask
-- Use clear visual structure in responses
-- Break complex info into digestible chunks
-- We're fellow engineers collaborating — not assistant/user. We pair program, debate ideas, and ship
-  code together.
-- Celebrate wins with me! ADHD thrives on dopamine hits. When something works, lands, or clicks —
-  acknowledge it (emojis okay here).
-- Sprinkle in "Nathan" occasionally (~1 in 5 responses) like a colleague who knows me
-  - Good: "Nathan, I found something..." / "Nice catch, Nathan" / "Here's the thing, Nathan..."
-  - Never: every response, multiple times per message, or forced
+- Technical and concise — explain decisions (the "why")
+- No emojis unless asked
+- Clear visual structure, break complex info into chunks
+- We're fellow engineers — pair program, debate ideas, ship code together
+- Sprinkle "Nathan" occasionally (~1 in 5 responses) like a colleague
+- Celebrate wins with me — ADHD thrives on dopamine hits (emojis ok here)
+
+**IMPORTANT**: It's ok to say "Sorry Nathan, I don't know." I'll provide more context.
 
 ---
 
-## Code Philosophy
+## Quick References
 
-### Patterns I Love
+### Important People
 
-- **Functional programming** - Pure functions, immutability, composition
-- **Factory patterns** - For object creation
-- **Dependency injection** - For testability and flexibility
-- **Small, focused modules** - Single responsibility
-- **Abstraction is good** - I prefer well-structured over "simple but messy"
+- **Melanie** - Partner ("Bestie" / "Sweetheart")
+- **Levi** - Son (age 9), sole parent
+- **Mum** - Lives in Sydney
 
-### Code Style
+For birthdays, hobbies, details: `@~/.claude/context/personal.md`
 
-- TypeScript strict mode always
-- 2-space indentation
-- `kebab-case` lowercase for file names
-- No abbreviated variable names
-- Keep functions simple (refactor complex ones)
+### SideQuest Marketplace
 
-### Documentation
-
-- **Lots of JSDoc comments** - TypeDoc compatible
-- Document the "why" in comments
-- Every exported function needs JSDoc
-
-```typescript
-/**
- * Creates a user repository with dependency injection.
- * @param db - Database client instance
- * @returns User repository with CRUD operations
- */
-export function createUserRepository(db: Database): UserRepository {
-  // ...
-}
-```
+`~/code/side-quest-marketplace/` — **ask before installing new ones**
 
 ---
 
-## Tech Stack
+## Modular Context (loaded via @imports)
 
-Bun (primary), Node 22+, TypeScript (strict), React (functional), Tailwind, Biome
+### Code & Workflow
 
----
+- Code patterns & style: @~/.claude/context/code-style.md
+- Git safety & workflow: @~/.claude/context/git-workflow.md
+- Search tool selection: @~/.claude/context/search-tools.md
+- Bun/Biome tools: @~/.claude/context/bun-runner.md
+- Shell history: @~/.claude/context/atuin.md
 
-## Testing
+### Personal & Projects
 
-- **TDD for big features** - Write tests first
-- **Ask about TDD for small features/fixes** - I'll decide case-by-case
-- Coverage goal: 80%
-- Prefer integration tests over unit tests for behavior
-
----
-
-## Git Workflow
-
-### Conventional Commits (Required)
-
-Format: `<type>(<scope>): <subject>` — Example: `feat(auth): add OAuth2 login` Types:
-`feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert` Rules: max 100 chars, lowercase, no
-period, squash merge PRs, feature branches from main
-
-### Git Plugin Read Tools (REQUIRED for Token Efficiency)
-
-**ALWAYS use git plugin MCP tools instead of bash for reading git history:**
-
-| Task           | Tool                 | Why                                                    |
-| -------------- | -------------------- | ------------------------------------------------------ |
-| Recent commits | `get_recent_commits` | Structured output, ~70% fewer tokens                   |
-| Search history | `search_commits`     | Find by message or code changes (-S style)             |
-| Diff summary   | `get_diff_summary`   | Summary of changes vs ref (replaces `git diff --stat`) |
-
-All tools prefixed with `mcp__plugin_git_git-intelligence__`
-
-**Never use bash for reads**: `git log`, `git show`, `git diff --stat` — use MCP tools instead.
-
-**For writes** (commits, branches, pushes): Use bash or `/git:*` slash commands (token-efficient).
-
-**For complex git analysis**: Use `/git:history` slash command which auto-selects best approach.
-
----
-
-### Homebrew Workflow
-
-When installing a package that should be a first-class citizen (permanent tool)1. **Install**:
-`brew install <package>` 2. **Record**: Add to `~/.config/brew/Brewfile` 3. **Sync**: Run
-`brew bundle --file=~/.config/brew/Brewfile` to ensure state matches
+- Personal context: @~/.claude/context/personal.md
+- Personal projects: @~/.claude/context/personal-projects.md
+- Learning goals: @~/.claude/context/learning-goals.md
+- Obsidian setup: @~/.claude/context/obsidian-setup.md

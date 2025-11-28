@@ -59,7 +59,10 @@ fi
 # ----------------------------------------------------------------------------
 # FNM (Fast Node Manager) - Faster alternative to NVM
 # ----------------------------------------------------------------------------
-eval "$(fnm env --use-on-cd)"
+eval "$(fnm env --use-on-cd --shell zsh)"
+
+# Ensure active node is in PATH for subprocesses (silences Bun's fnm warning)
+export PATH="$(dirname "$(which node 2>/dev/null)"):$PATH" 2>/dev/null
 
 # Strict mode: fail if .nvmrc exists but version not installed (ADHD-friendly)
 export FNM_STRICT=true
@@ -451,6 +454,9 @@ alias nrt="pnpm test"
 alias nrd="pnpm run dev"
 alias nrb="pnpm run build"
 alias nrl="pnpm run lint"
+
+# List available scripts from package.json (ADHD-friendly quick reference)
+alias scripts='jq -r ".scripts | to_entries[] | \"  \(.key)\"" package.json 2>/dev/null || echo "No package.json found"'
 
 # ----------------------------------------------------------------------------
 # 15. CD to Git Root

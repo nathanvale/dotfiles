@@ -1,0 +1,49 @@
+# ~/.config/tmuxinator/calendar-ticker.yml
+
+name: calendar-ticker
+root: /Users/nathanvale/code/calendar-ticker
+
+# Project hooks - runs on project start
+on_project_start: |
+  source ~/.config/tmuxinator/scripts/common-setup.sh
+  setup_logs "calendar-ticker"
+  setup_vscode_marker "calendar-ticker"
+
+# Run on project stop - cleanup
+on_project_stop: |
+  source ~/.config/tmuxinator/scripts/common-setup.sh
+  cleanup_vscode_marker "calendar-ticker"
+
+# Runs before each window starts
+pre_window: |
+  source ~/.config/tmuxinator/scripts/common-setup.sh
+  open_vscode_once "calendar-ticker"
+
+# Set window base-index to 1 and load tmux config
+tmux_options: -f ~/.tmux.conf
+
+# Start with the first window (claude)
+startup_window: claude
+startup_pane: 1
+windows:
+  - claude:
+      root: /Users/nathanvale/code/calendar-ticker
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "claude"
+          claude
+  - git:
+      root: /Users/nathanvale/code/calendar-ticker
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "git"
+          lazygit
+  - shell:
+      root: /Users/nathanvale/code/calendar-ticker
+      panes:
+        - |
+          source ~/.config/tmuxinator/scripts/common-setup.sh
+          pane_setup "shell"
+          clear

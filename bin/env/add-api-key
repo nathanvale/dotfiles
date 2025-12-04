@@ -1,0 +1,295 @@
+#!/bin/bash
+# add-api-key - Add an API key to 1Password vault "API Credentials"
+# Usage: add-api-key KEY_NAME "value" -p|--provider <name> [-u|--url <url>] [-e|--expiry <date>]
+#
+# Keys are stored in 1Password and synced to .env.1password
+# Pull at runtime with: op read "op://API Credentials/KEY_NAME/credential"
+#
+# Provider is MANDATORY - keys are grouped by provider for easy management
+
+set -e
+
+VAULT="API Credentials"
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/code/dotfiles}"
+ENV_FILE="$DOTFILES_DIR/.env.1password"
+SCRIPT_DIR="$(dirname "$0")"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+DIM='\033[0;90m'
+NC='\033[0m' # No Color
+
+log_info() { echo -e "${BLUE}→${NC} $1"; }
+log_success() { echo -e "${GREEN}✓${NC} $1"; }
+log_warn() { echo -e "${YELLOW}⚠${NC} $1"; }
+log_error() { echo -e "${RED}✗${NC} $1" >&2; }
+log_dim() { echo -e "${DIM}$1${NC}"; }
+
+usage() {
+    echo "Usage: add-api-key KEY_NAME \"value\" -p|--provider <name> [-u|--url <url>] [-e|--expiry <date>]"
+    echo ""
+    echo "Add an API key to 1Password vault \"API Credentials\"."
+    echo "Keys are synced to .env.1password (auto-generated, don't edit manually)."
+    echo ""
+    echo -e "${CYAN}Arguments:${NC}"
+    echo "  KEY_NAME              Environment variable name (UPPERCASE_WITH_UNDERSCORES)"
+    echo "  value                 The API key value"
+    echo ""
+    echo -e "${CYAN}Required Flags:${NC}"
+    echo "  -p, --provider <name> Provider name (e.g., openai, stripe, tavily)"
+    echo ""
+    echo -e "${CYAN}Optional Flags:${NC}"
+    echo "  -u, --url <url>       URL where to get/regenerate this key"
+    echo "  -e, --expiry <date>   Expiration date (YYYY-MM-DD) or relative (30d, 6m, 1y)"
+    echo "  -h, --help            Show this help message"
+    echo ""
+    echo -e "${CYAN}Examples:${NC}"
+    echo "  add-api-key OPENAI_API_KEY \"sk-xxx\" -p openai -u \"https://platform.openai.com/api-keys\" -e 1y"
+    echo "  add-api-key STRIPE_KEY \"sk_live_xxx\" -p stripe -u \"https://dashboard.stripe.com/apikeys\""
+    echo "  add-api-key TAVILY_API_KEY \"tvly-xxx\" -p tavily -e 90d"
+    echo ""
+    echo -e "${CYAN}Related Commands:${NC}"
+    echo "  sync-api-keys          Sync from 1Password → .env.1password"
+    echo "  ls-api-keys -p X       List keys by provider"
+    exit 1
+}
+
+# Parse relative date to absolute date
+parse_expiry_date() {
+    local input="$1"
+
+    # If already in YYYY-MM-DD format, return as-is
+    if [[ "$input" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+        echo "$input"
+        return
+    fi
+
+    # Parse relative dates (30d, 6m, 1y, etc.)
+    if [[ "$input" =~ ^([0-9]+)([dDmMyY])$ ]]; then
+        local num="${BASH_REMATCH[1]}"
+        local unit="${BASH_REMATCH[2]}"
+
+        case "${unit,,}" in
+            d) # days
+                if [[ "$(uname)" == "Darwin" ]]; then
+                    date -v+"${num}d" "+%Y-%m-%d"
+                else
+                    date -d "+${num} days" "+%Y-%m-%d"
+                fi
+                ;;
+            m) # months
+                if [[ "$(uname)" == "Darwin" ]]; then
+                    date -v+"${num}m" "+%Y-%m-%d"
+                else
+                    date -d "+${num} months" "+%Y-%m-%d"
+                fi
+                ;;
+            y) # years
+                if [[ "$(uname)" == "Darwin" ]]; then
+                    date -v+"${num}y" "+%Y-%m-%d"
+                else
+                    date -d "+${num} years" "+%Y-%m-%d"
+                fi
+                ;;
+        esac
+        return
+    fi
+
+    # Invalid format
+    echo ""
+}
+
+# Initialize variables
+KEY_NAME=""
+KEY_VALUE=""
+KEY_PROVIDER=""
+KEY_URL=""
+KEY_EXPIRY=""
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help)
+            usage
+            ;;
+        -p|--provider)
+            if [[ -z "$2" || "$2" == -* ]]; then
+                log_error "Option $1 requires a provider name"
+                exit 1
+            fi
+            KEY_PROVIDER="$2"
+            shift 2
+            ;;
+        -u|--url)
+            if [[ -z "$2" || "$2" == -* ]]; then
+                log_error "Option $1 requires a URL"
+                echo ""
+                echo "Tip: Quote URLs containing # (fragment identifiers):"
+                echo "  -u \"https://example.com/page#section\""
+                exit 1
+            fi
+            KEY_URL="$2"
+            shift 2
+            ;;
+        -e|--expiry)
+            if [[ -z "$2" || "$2" == -* ]]; then
+                log_error "Option $1 requires an expiry date"
+                exit 1
+            fi
+            KEY_EXPIRY="$2"
+            shift 2
+            ;;
+        -*)
+            log_error "Unknown option: $1"
+            echo ""
+            echo "Usage: add-api-key KEY_NAME \"value\" -p provider [-u url] [-e expiry]"
+            echo ""
+            echo "Did you mean to run a different command?"
+            echo "  add-api-key        - Add an API key to 1Password"
+            echo "  sync-api-keys      - Sync from 1Password → .env.1password"
+            echo "  ls-api-keys        - List API keys"
+            exit 1
+            ;;
+        *)
+            # Positional arguments: KEY_NAME and value
+            if [[ -z "$KEY_NAME" ]]; then
+                KEY_NAME="$1"
+            elif [[ -z "$KEY_VALUE" ]]; then
+                KEY_VALUE="$1"
+            else
+                log_error "Unexpected argument: $1"
+                echo "Use --help for usage information"
+                exit 1
+            fi
+            shift
+            ;;
+    esac
+done
+
+# Validate required arguments
+if [[ -z "$KEY_NAME" ]]; then
+    log_error "Missing KEY_NAME"
+    usage
+fi
+
+if [[ -z "$KEY_VALUE" ]]; then
+    log_error "Missing value"
+    usage
+fi
+
+if [[ -z "$KEY_PROVIDER" ]]; then
+    log_error "Missing required --provider flag"
+    echo ""
+    echo "Example: add-api-key $KEY_NAME \"...\" -p openai"
+    echo ""
+    usage
+fi
+
+# Validate key name - must be uppercase with underscores
+if [[ ! "$KEY_NAME" =~ ^[A-Z][A-Z0-9_]*$ ]]; then
+    log_error "Invalid key name: $KEY_NAME"
+    echo "Key names must be uppercase with underscores (e.g., LINKEDIN_COOKIE, OPENAI_API_KEY)"
+    exit 1
+fi
+
+# Validate and normalize provider name (lowercase, alphanumeric with hyphens)
+KEY_PROVIDER=$(echo "$KEY_PROVIDER" | tr '[:upper:]' '[:lower:]')
+if [[ ! "$KEY_PROVIDER" =~ ^[a-z][a-z0-9-]*$ ]]; then
+    log_error "Invalid provider name: $KEY_PROVIDER"
+    echo "Provider names must be lowercase alphanumeric with hyphens (e.g., openai, azure-ai)"
+    exit 1
+fi
+
+# Parse expiry date if provided
+EXPIRY_DATE=""
+if [[ -n "$KEY_EXPIRY" ]]; then
+    EXPIRY_DATE=$(parse_expiry_date "$KEY_EXPIRY")
+    if [[ -z "$EXPIRY_DATE" ]]; then
+        log_error "Invalid expiry date format: $KEY_EXPIRY"
+        echo "Use YYYY-MM-DD or relative format (30d, 6m, 1y)"
+        exit 1
+    fi
+fi
+
+# Check if 1Password CLI is available and authenticated
+if ! command -v op &> /dev/null; then
+    log_error "1Password CLI not installed"
+    echo "Install with: brew install 1password-cli"
+    exit 1
+fi
+
+if ! op vault list &> /dev/null; then
+    log_error "1Password CLI not authenticated"
+    echo "Run: op signin"
+    exit 1
+fi
+
+echo ""
+log_info "Adding $KEY_NAME to 1Password vault: $VAULT"
+log_info "Provider: $KEY_PROVIDER"
+
+# Check if item already exists
+EXISTING_ID=$(op item list --vault "$VAULT" --format json 2>/dev/null | jq -r ".[] | select(.title == \"$KEY_NAME\") | .id" || echo "")
+
+# Build the op command arguments
+OP_ARGS=("credential=$KEY_VALUE")
+
+if [[ -n "$EXPIRY_DATE" ]]; then
+    OP_ARGS+=("Expiry Date[date]=$EXPIRY_DATE")
+    log_info "Expiry date: $EXPIRY_DATE"
+fi
+
+if [[ -n "$EXISTING_ID" ]]; then
+    log_warn "Key $KEY_NAME already exists, updating..."
+    # Update existing item with new tag
+    if [[ -n "$KEY_URL" ]]; then
+        op item edit "$KEY_NAME" \
+            --vault "$VAULT" \
+            --url "$KEY_URL" \
+            --tags "$KEY_PROVIDER" \
+            "${OP_ARGS[@]}" \
+            > /dev/null
+    else
+        op item edit "$KEY_NAME" \
+            --vault "$VAULT" \
+            --tags "$KEY_PROVIDER" \
+            "${OP_ARGS[@]}" \
+            > /dev/null
+    fi
+    log_success "Updated $KEY_NAME in 1Password (provider: $KEY_PROVIDER)"
+else
+    # Create new API Credential item with provider tag
+    if [[ -n "$KEY_URL" ]]; then
+        op item create \
+            --category "API Credential" \
+            --vault "$VAULT" \
+            --title "$KEY_NAME" \
+            --url "$KEY_URL" \
+            --tags "$KEY_PROVIDER" \
+            "${OP_ARGS[@]}" \
+            > /dev/null
+    else
+        op item create \
+            --category "API Credential" \
+            --vault "$VAULT" \
+            --title "$KEY_NAME" \
+            --tags "$KEY_PROVIDER" \
+            "${OP_ARGS[@]}" \
+            > /dev/null
+    fi
+    log_success "Created $KEY_NAME in 1Password (provider: $KEY_PROVIDER)"
+fi
+
+if [[ -n "$EXPIRY_DATE" ]]; then
+    log_dim "1Password will track expiry and can notify you before it expires"
+fi
+
+# Regenerate .env.1password file
+log_info "Syncing to .env.1password..."
+"$SCRIPT_DIR/sync-api-keys"
+
+log_success "Done! $KEY_NAME is now stored in 1Password and synced to .env.1password"

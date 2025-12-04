@@ -1,0 +1,214 @@
+#!/bin/bash
+# sync-api-keys - Sync API keys from 1Password vault "API Credentials" to .env.1password
+# Usage: sync-api-keys [--dry-run]
+#
+# Pulls all keys from 1Password and regenerates .env.1password
+# This file is auto-generated - don't edit manually!
+
+set -e
+
+VAULT="API Credentials"
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/code/dotfiles}"
+ENV_FILE="$DOTFILES_DIR/.env.1password"
+IGNORE_FILE="$DOTFILES_DIR/.env.ignore"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+DIM='\033[0;90m'
+NC='\033[0m' # No Color
+
+log_info() { echo -e "${BLUE}→${NC} $1"; }
+log_success() { echo -e "${GREEN}✓${NC} $1"; }
+log_warn() { echo -e "${YELLOW}⚠${NC} $1"; }
+log_error() { echo -e "${RED}✗${NC} $1" >&2; }
+log_dim() { echo -e "${DIM}  $1${NC}"; }
+
+DRY_RUN=false
+
+# Parse arguments
+if [[ -n "$1" ]]; then
+    case "$1" in
+        --dry-run)
+            DRY_RUN=true
+            log_warn "Dry run mode - no changes will be made"
+            ;;
+        -h|--help)
+            echo "Usage: sync-api-keys [--dry-run]"
+            echo ""
+            echo "Sync API keys from 1Password vault \"API Credentials\" to .env.1password"
+            echo ""
+            echo -e "${CYAN}Options:${NC}"
+            echo "  --dry-run    Show what would be done without making changes"
+            echo "  -h, --help   Show this help message"
+            echo ""
+            echo -e "${CYAN}Related Commands:${NC}"
+            echo "  add-api-key KEY \"value\" -p provider   Add/update a key"
+            echo "  ls-api-keys --providers               List all providers"
+            echo "  ls-api-keys -p <name>                 Filter by provider"
+            exit 0
+            ;;
+        *)
+            log_error "Unknown option: $1"
+            echo ""
+            echo "Usage: sync-api-keys [--dry-run]"
+            exit 1
+            ;;
+    esac
+fi
+
+# Check if 1Password CLI is available and authenticated
+if ! command -v op &> /dev/null; then
+    log_error "1Password CLI not installed"
+    echo "Install with: brew install 1password-cli"
+    exit 1
+fi
+
+if ! op vault list &> /dev/null; then
+    log_error "1Password CLI not authenticated"
+    echo "Run: op signin"
+    exit 1
+fi
+
+echo ""
+log_dim "Source: 1Password vault '$VAULT'"
+log_dim "Target: $ENV_FILE"
+if [[ -f "$IGNORE_FILE" ]]; then
+    log_dim "Ignore: $IGNORE_FILE"
+fi
+echo ""
+
+# Load ignore patterns (one per line, # comments supported)
+IGNORE_PATTERNS=()
+if [[ -f "$IGNORE_FILE" ]]; then
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        # Skip empty lines and comments
+        [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
+        # Trim whitespace
+        line=$(echo "$line" | xargs)
+        [[ -n "$line" ]] && IGNORE_PATTERNS+=("$line")
+    done < "$IGNORE_FILE"
+fi
+
+# Check if item should be ignored
+should_ignore() {
+    local item="$1"
+    for pattern in "${IGNORE_PATTERNS[@]}"; do
+        # Exact match or glob match
+        if [[ "$item" == "$pattern" ]] || [[ "$item" == $pattern ]]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+log_info "Fetching keys from 1Password..."
+
+# Get all items from the API Credentials vault
+ITEMS=$(op item list --vault "$VAULT" --format json 2>/dev/null || echo "[]")
+ITEM_COUNT=$(echo "$ITEMS" | jq -r 'length')
+
+if [[ "$ITEM_COUNT" -eq 0 ]]; then
+    log_warn "No items found in vault $VAULT"
+    echo "Use 'add-api-key KEY_NAME value -p provider' to add API keys"
+    exit 0
+fi
+
+log_info "Found $ITEM_COUNT keys in 1Password"
+
+# Build the .env.1password file content
+ENV_CONTENT="# .env.1password - API keys (auto-generated from 1Password)
+# Generated: $(date '+%Y-%m-%d %H:%M:%S')
+# Source: 1Password vault \"$VAULT\"
+#
+# DO NOT EDIT - use 'add-api-key' to add/update keys
+# Regenerate with: sync-api-keys
+
+"
+
+# Process each item
+SYNCED_COUNT=0
+IGNORED_COUNT=0
+while IFS= read -r ITEM_TITLE; do
+    if [[ -z "$ITEM_TITLE" ]]; then
+        continue
+    fi
+
+    # Check if item is in ignore list
+    if should_ignore "$ITEM_TITLE"; then
+        log_dim "$ITEM_TITLE (ignored)"
+        ((IGNORED_COUNT++))
+        continue
+    fi
+
+    # Get the credential field from the item (--reveal to get actual value)
+    CREDENTIAL=$(op item get "$ITEM_TITLE" --vault "$VAULT" --fields credential --reveal 2>/dev/null || echo "")
+
+    if [[ -z "$CREDENTIAL" ]]; then
+        log_warn "Skipping $ITEM_TITLE (no credential field)"
+        continue
+    fi
+
+    # Get item details for documentation
+    ITEM_JSON=$(op item get "$ITEM_TITLE" --vault "$VAULT" --format json 2>/dev/null || echo "{}")
+    ITEM_URL=$(echo "$ITEM_JSON" | jq -r '.urls[0].href // empty' || echo "")
+    ITEM_PROVIDER=$(echo "$ITEM_JSON" | jq -r '.tags[0] // empty' || echo "")
+
+    # Build comment with provider and URL
+    COMMENT="# ${ITEM_TITLE}"
+    if [[ -n "$ITEM_PROVIDER" ]]; then
+        COMMENT+=" [provider: ${ITEM_PROVIDER}]"
+    fi
+    if [[ -n "$ITEM_URL" ]]; then
+        COMMENT+=" (${ITEM_URL})"
+    fi
+    ENV_CONTENT+="${COMMENT}\n"
+    ENV_CONTENT+="export ${ITEM_TITLE}=\"${CREDENTIAL}\"\n\n"
+    log_dim "$ITEM_TITLE"
+    ((SYNCED_COUNT++))
+done < <(echo "$ITEMS" | jq -r '.[].title' | sort)
+
+if [[ "$DRY_RUN" == true ]]; then
+    echo ""
+    log_info "Would write to $ENV_FILE:"
+    echo "---"
+    echo -e "$ENV_CONTENT"
+    echo "---"
+    exit 0
+fi
+
+# Write the .env.1password file
+echo -e "$ENV_CONTENT" > "$ENV_FILE"
+chmod 600 "$ENV_FILE"  # Restrict permissions
+if [[ "$IGNORED_COUNT" -gt 0 ]]; then
+    log_success "Wrote $SYNCED_COUNT keys to $ENV_FILE ($IGNORED_COUNT ignored)"
+else
+    log_success "Wrote $SYNCED_COUNT keys to $ENV_FILE"
+fi
+
+# Sync to launchctl for GUI apps (macOS)
+if [[ "$(uname)" == "Darwin" ]]; then
+    log_info "Syncing to launchctl (for GUI apps)..."
+    LAUNCHCTL_COUNT=0
+    while IFS= read -r ITEM_TITLE; do
+        if [[ -z "$ITEM_TITLE" ]]; then
+            continue
+        fi
+        # Skip ignored items for launchctl too
+        if should_ignore "$ITEM_TITLE"; then
+            continue
+        fi
+        CREDENTIAL=$(op item get "$ITEM_TITLE" --vault "$VAULT" --fields credential --reveal 2>/dev/null || echo "")
+        if [[ -n "$CREDENTIAL" ]]; then
+            launchctl setenv "$ITEM_TITLE" "$CREDENTIAL" 2>/dev/null || true
+            ((LAUNCHCTL_COUNT++))
+        fi
+    done < <(echo "$ITEMS" | jq -r '.[].title' | sort)
+    log_success "Synced $LAUNCHCTL_COUNT keys to launchctl"
+fi
+
+echo ""
+log_success "Sync complete!"

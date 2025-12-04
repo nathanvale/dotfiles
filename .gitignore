@@ -9,7 +9,7 @@ config/gcloud/
 config/google-chrome-devtools
 .vault-id
 .env
-.env.secrets
+.env.1password
 
 # Claude Code - ignore ephemeral/cache files
 .claude/debug/
@@ -35,4 +35,7 @@ dist/
 
 # SuperWhisper recordings (large, personal)
 config/superwhisper/recordings/
+
+# Credentials (sensitive)
+config/the-cinema-bandit/
 

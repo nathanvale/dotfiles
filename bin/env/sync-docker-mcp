@@ -3,7 +3,7 @@
 # Usage: sync-docker-mcp [--dry-run] [--setup] [--filter PATTERN]
 #
 # Reads the Docker MCP catalog to discover secret mappings, then syncs
-# matching variables from your .env file to Docker MCP's secret store.
+# matching variables from your .env.op file to Docker MCP's secret store.
 #
 # First run: Use --setup to interactively map your env vars to Docker secrets
 # Subsequent runs: Uses saved mappings from .env.docker.map
@@ -12,7 +12,7 @@ set -e
 
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/code/dotfiles}"
 SCRIPT_DIR="$(dirname "$0")"
-ENV_FILE="$DOTFILES_DIR/.env"
+ENV_FILE="$DOTFILES_DIR/.env.op"
 MAP_FILE="$DOTFILES_DIR/.env.docker.map"
 CATALOG_FILE="$HOME/.docker/mcp/catalogs/docker-mcp.yaml"
 
@@ -70,14 +70,14 @@ while [[ $# -gt 0 ]]; do
         -h|--help)
             echo "Usage: sync-docker-mcp [--dry-run] [--setup] [--filter PATTERN] [--verbose] [--no-sync]"
             echo ""
-            echo "Dynamically sync .env variables to Docker MCP secrets."
+            echo "Dynamically sync .env.op variables to Docker MCP secrets."
             echo ""
             echo "Options:"
             echo "  --setup         Interactive setup - choose which env vars map to which secrets"
             echo "  --dry-run       Show what would be synced without making changes"
             echo "  --filter PAT    Only sync keys matching pattern (e.g., 'TAVILY')"
             echo "  --verbose, -v   Show detailed mapping information"
-            echo "  --no-sync       Skip pulling from 1Password first (use existing .env)"
+            echo "  --no-sync       Skip pulling from 1Password first (use existing .env.op)"
             echo "  -h, --help      Show this help message"
             echo ""
             echo "Workflow:"
@@ -87,7 +87,7 @@ while [[ $# -gt 0 ]]; do
             echo "Note: If 1Password is available, automatically pulls latest secrets first"
             echo ""
             echo "Files:"
-            echo "  .env              Your environment variables"
+            echo "  .env.op           Your environment variables"
             echo "  .env.docker.map   Saved mappings (ENV_VAR=docker.secret.name)"
             exit 0
             ;;
@@ -110,7 +110,7 @@ if ! docker mcp secret ls &> /dev/null; then
 fi
 
 if [[ ! -f "$ENV_FILE" ]]; then
-    log_error "No .env file found at $ENV_FILE"
+    log_error "No .env.op file found at $ENV_FILE"
     exit 1
 fi
 
@@ -148,7 +148,7 @@ build_catalog_map() {
     done < "$CATALOG_FILE" | sort -u > "$TMP_CATALOG"
 }
 
-# Read env vars from .env file
+# Read env vars from .env.op file
 # Output format: ENV_VAR|value
 read_env_file() {
     while IFS= read -r line; do
@@ -193,7 +193,7 @@ run_setup() {
     log_info "Found $catalog_count secrets in catalog"
     echo ""
 
-    log_info "Reading your .env file..."
+    log_info "Reading your .env.op file..."
     read_env_file
     local env_count=$(wc -l < "$TMP_ENV" | tr -d ' ')
     log_info "Found $env_count environment variables"
@@ -208,7 +208,7 @@ run_setup() {
     while IFS='|' read -r docker_secret expected_env; do
         [[ -z "$docker_secret" ]] && continue
 
-        # Check if exact match exists in .env
+        # Check if exact match exists in .env.op
         local value=$(get_env_value "$expected_env")
         if [[ -n "$value" ]]; then
             echo "${expected_env}=${docker_secret}" >> "$NEW_MAP"
@@ -230,7 +230,7 @@ run_setup() {
         echo -e "${BOLD}Docker MCP secret:${NC} ${CYAN}$docker_secret${NC}"
         echo -e "${DIM}Container expects: $expected_env${NC}"
         echo ""
-        echo "Matching env vars from your .env:"
+        echo "Matching env vars from your .env.op:"
 
         local i=1
         local options=()
@@ -269,7 +269,7 @@ run_setup() {
                     echo "${manual_var}=${docker_secret}" >> "$NEW_MAP"
                     log_success "Mapped $manual_var → $docker_secret"
                 else
-                    log_warn "$manual_var not found in .env, skipping"
+                    log_warn "$manual_var not found in .env.op, skipping"
                 fi
                 ;;
             s|S|"")
@@ -317,7 +317,7 @@ run_sync() {
         log_warn "Dry run mode - no changes will be made"
     fi
 
-    # Sync from 1Password first to ensure .env is up-to-date
+    # Sync from 1Password first to ensure .env.op is up-to-date
     if [[ "$SKIP_1P_SYNC" != true ]] && command -v op &> /dev/null && op vault list &> /dev/null; then
         log_info "Pulling latest secrets from 1Password..."
         "$SCRIPT_DIR/syncenv" 2>/dev/null || log_warn "Failed to sync from 1Password"
@@ -364,7 +364,7 @@ run_sync() {
 
             # Check if env var exists
             if [[ -z "$value" ]]; then
-                log_warn "$env_var not found in .env"
+                log_warn "$env_var not found in .env.op"
                 ((SKIPPED++))
                 continue
             fi

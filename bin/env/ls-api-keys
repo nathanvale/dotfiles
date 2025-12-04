@@ -1,0 +1,212 @@
+#!/bin/bash
+# ls-api-keys - List API keys from 1Password vault "API Credentials"
+# Usage: ls-api-keys [--verbose] [--provider <name>] [--providers]
+#
+# Lists keys from 1Password vault (source of truth)
+
+set -e
+
+VAULT="API Credentials"
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/code/dotfiles}"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+DIM='\033[0;90m'
+NC='\033[0m' # No Color
+
+log_info() { echo -e "${BLUE}→${NC} $1"; }
+log_warn() { echo -e "${YELLOW}⚠${NC} $1"; }
+log_dim() { echo -e "${DIM}$1${NC}"; }
+
+# Parse arguments
+VERBOSE=false
+FILTER_PROVIDER=""
+LIST_PROVIDERS=false
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -v|--verbose)
+            VERBOSE=true
+            shift
+            ;;
+        -p|--provider)
+            if [[ -z "$2" || "$2" == -* ]]; then
+                echo "Error: --provider requires a provider name"
+                exit 1
+            fi
+            FILTER_PROVIDER=$(echo "$2" | tr '[:upper:]' '[:lower:]')
+            shift 2
+            ;;
+        --providers)
+            LIST_PROVIDERS=true
+            shift
+            ;;
+        -h|--help)
+            echo "Usage: ls-api-keys [--verbose] [--provider <name>] [--providers]"
+            echo ""
+            echo "List API keys from 1Password vault \"API Credentials\"."
+            echo ""
+            echo -e "${CYAN}Options:${NC}"
+            echo "  -v, --verbose         Show additional details (provider, expiry, dates)"
+            echo "  -p, --provider <name> Filter keys by provider (e.g., openai, stripe)"
+            echo "  --providers           List all unique providers"
+            echo "  -h, --help            Show this help message"
+            echo ""
+            echo -e "${CYAN}Examples:${NC}"
+            echo "  ls-api-keys                    # List all keys"
+            echo "  ls-api-keys -v                 # Verbose output with all details"
+            echo "  ls-api-keys --provider openai  # Show only OpenAI keys"
+            echo "  ls-api-keys --providers        # List all providers"
+            echo ""
+            echo -e "${CYAN}Related Commands:${NC}"
+            echo "  add-api-key KEY \"value\" -p provider   Add/update a key"
+            echo "  sync-api-keys                         Sync from 1Password"
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo ""
+            echo "Usage: ls-api-keys [-v] [--provider NAME] [--providers]"
+            echo ""
+            echo "Did you mean to run a different command?"
+            echo "  ls-api-keys        - List API keys"
+            echo "  add-api-key        - Add a new API key"
+            echo "  sync-api-keys      - Sync from 1Password"
+            exit 1
+            ;;
+    esac
+done
+
+# Check if 1Password CLI is available and authenticated
+if ! command -v op &> /dev/null; then
+    echo "Error: 1Password CLI not installed"
+    echo "Install with: brew install 1password-cli"
+    exit 1
+fi
+
+if ! op vault list &> /dev/null; then
+    echo "Error: 1Password CLI not authenticated"
+    echo "Run: op signin"
+    exit 1
+fi
+
+echo ""
+log_dim "Source: 1Password vault '$VAULT'"
+echo ""
+
+# Get all items from the API Credentials vault
+if [[ -n "$FILTER_PROVIDER" ]]; then
+    # Filter by tag (provider)
+    ITEMS=$(op item list --vault "$VAULT" --tags "$FILTER_PROVIDER" --format json 2>/dev/null || echo "[]")
+else
+    ITEMS=$(op item list --vault "$VAULT" --format json 2>/dev/null || echo "[]")
+fi
+ITEM_COUNT=$(echo "$ITEMS" | jq -r 'length')
+
+# Handle --providers flag
+if [[ "$LIST_PROVIDERS" == true ]]; then
+    echo -e "${CYAN}Providers in 1Password ($VAULT):${NC}"
+    echo ""
+
+    # Get all items and extract unique tags
+    ALL_ITEMS=$(op item list --vault "$VAULT" --format json 2>/dev/null || echo "[]")
+    PROVIDERS=$(echo "$ALL_ITEMS" | jq -r '.[].tags[]?' 2>/dev/null | sort -u)
+
+    if [[ -z "$PROVIDERS" ]]; then
+        echo "  (no providers found)"
+        echo ""
+        echo "Tip: Add keys with provider tags: add-api-key KEY \"value\" -p provider"
+    else
+        PROVIDER_COUNT=0
+        while IFS= read -r provider; do
+            if [[ -n "$provider" ]]; then
+                # Count keys for this provider
+                COUNT=$(echo "$ALL_ITEMS" | jq -r --arg p "$provider" '[.[] | select(.tags[]? == $p)] | length')
+                printf "  ${GREEN}%-20s${NC} (%d keys)\n" "$provider" "$COUNT"
+                ((PROVIDER_COUNT++))
+            fi
+        done <<< "$PROVIDERS"
+        echo ""
+        echo -e "${DIM}Total: $PROVIDER_COUNT providers${NC}"
+    fi
+    exit 0
+fi
+
+if [[ "$ITEM_COUNT" -eq 0 ]]; then
+    if [[ -n "$FILTER_PROVIDER" ]]; then
+        echo "No API keys found for provider: $FILTER_PROVIDER"
+    else
+        echo "No API keys found in vault: $VAULT"
+    fi
+    echo "Use 'add-api-key KEY_NAME value -p provider' to add keys"
+    exit 0
+fi
+
+if [[ -n "$FILTER_PROVIDER" ]]; then
+    echo -e "${CYAN}API keys for provider '$FILTER_PROVIDER':${NC}"
+else
+    echo -e "${CYAN}API keys in 1Password ($VAULT):${NC}"
+fi
+echo ""
+
+if [[ "$VERBOSE" == true ]]; then
+    # Verbose output with provider, timestamps and expiry
+    printf "  ${DIM}%-25s %-15s %-12s %s${NC}\n" "KEY" "PROVIDER" "EXPIRES" "LAST MODIFIED"
+    printf "  ${DIM}%-25s %-15s %-12s %s${NC}\n" "---" "--------" "-------" "-------------"
+
+    echo "$ITEMS" | jq -r '.[].title' | sort | while read -r TITLE; do
+        # Get item details
+        ITEM_JSON=$(op item get "$TITLE" --vault "$VAULT" --format json 2>/dev/null || echo "{}")
+
+        # Get provider from tags
+        PROVIDER=$(echo "$ITEM_JSON" | jq -r '.tags[0] // "-"' 2>/dev/null || echo "-")
+
+        # Get last modified
+        TIMESTAMP=$(echo "$ITEM_JSON" | jq -r '.updated_at // .created_at // empty')
+        if [[ -n "$TIMESTAMP" ]]; then
+            FORMATTED_DATE=$(date -j -f "%Y-%m-%dT%H:%M:%S" "${TIMESTAMP%.*}" "+%Y-%m-%d" 2>/dev/null || echo "-")
+        else
+            FORMATTED_DATE="-"
+        fi
+
+        # Get expiry date from custom field (stored as Unix timestamp)
+        EXPIRY_RAW=$(echo "$ITEM_JSON" | jq -r '.fields[]? | select(.label == "Expiry Date") | .value // empty' 2>/dev/null || echo "")
+        if [[ -z "$EXPIRY_RAW" ]]; then
+            EXPIRY="-"
+        else
+            # Convert Unix timestamp to date string
+            if [[ "$(uname)" == "Darwin" ]]; then
+                EXPIRY=$(date -r "$EXPIRY_RAW" "+%Y-%m-%d" 2>/dev/null || echo "$EXPIRY_RAW")
+            else
+                EXPIRY=$(date -d "@$EXPIRY_RAW" "+%Y-%m-%d" 2>/dev/null || echo "$EXPIRY_RAW")
+            fi
+
+            # Check if expired or expiring soon
+            TODAY=$(date "+%Y-%m-%d")
+            SOON=$(date -v+30d "+%Y-%m-%d" 2>/dev/null || date -d "+30 days" "+%Y-%m-%d")
+            if [[ "$EXPIRY" < "$TODAY" ]]; then
+                EXPIRY="${RED}${EXPIRY}${NC} ⚠️"
+            elif [[ "$EXPIRY" < "$SOON" ]]; then
+                EXPIRY="${YELLOW}${EXPIRY}${NC}"
+            fi
+        fi
+
+        printf "  ${GREEN}%-25s${NC} %-15s %-12b %s\n" "$TITLE" "$PROVIDER" "$EXPIRY" "$FORMATTED_DATE"
+    done
+else
+    # Simple list with provider
+    echo "$ITEMS" | jq -r '.[].title' | sort | while read -r TITLE; do
+        echo -e "  ${GREEN}$TITLE${NC}"
+    done
+fi
+
+echo ""
+if [[ -n "$FILTER_PROVIDER" ]]; then
+    echo -e "${DIM}Total: $ITEM_COUNT keys for provider '$FILTER_PROVIDER'${NC}"
+else
+    echo -e "${DIM}Total: $ITEM_COUNT keys${NC}"
+fi

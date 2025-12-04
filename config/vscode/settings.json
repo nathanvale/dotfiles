@@ -165,9 +165,6 @@
 	"terminal.integrated.splitCwd": "inherited",
 	"terminal.integrated.startInInteractiveShell": false,
 	"window.commandCenter": false,
-	// ============================================================================
-	// EDITOR EXPERIENCE — Smooth, Predictable, ADHD-Friendly
-	// ============================================================================
 	"workbench.colorTheme": "Night Owl",
 	// No preview tabs (prevents tab-jumping)
 	"workbench.editor.enablePreview": false,
@@ -192,5 +189,13 @@
 	"zenMode.showTabs": "single",
 	"zenMode.silentNotifications": true,
 	"editor.stickyScroll.enabled": false,
-	"claudeCode.preferredLocation": "panel"
+	"claudeCode.preferredLocation": "panel",
+	"github.copilot.chat.agent.autoFix": true,
+	"github.copilot.chat.anthropic.tools.websearch.enabled": true,
+	"github.copilot.enable": {
+		"*": true,
+		"plaintext": false,
+		"markdown": true,
+		"scminput": false
+	}
 }

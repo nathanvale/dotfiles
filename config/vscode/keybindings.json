@@ -243,6 +243,17 @@
 		"command": "workbench.action.openChat",
 		"when": "chatIsEnabled"
 	},
+
+	// ───────────────────────────────────────────────────────────────
+	// TASKS
+	// ───────────────────────────────────────────────────────────────
+
+	{ "key": "ctrl+g r", "command": "workbench.action.tasks.runTask" },
+	{ "key": "ctrl+g shift+r", "command": "workbench.action.tasks.reRunTask" },
+	{
+		"key": "ctrl+g shift+t",
+		"command": "workbench.action.tasks.test"
+	},
 	{
 		"key": "cmd+n",
 		"command": "-workbench.action.chat.newChat",

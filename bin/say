@@ -1,0 +1,240 @@
+#!/usr/bin/env zsh
+# ----------------------------------------------------------------------------
+# Say - ADHD-friendly macOS text-to-speech CLI
+# ----------------------------------------------------------------------------
+# Usage:
+#   say speak "text"           # Speak text aloud
+#   say speak "text" -v Alex   # Speak with specific voice
+#   say speak "text" -r 150    # Speak at specific rate (words/min)
+#   say voices                 # List all available voices
+#   say voices --lang en       # List voices for language
+#   say save "text" -o file    # Save speech to audio file
+#   say help                   # Show this help
+# ----------------------------------------------------------------------------
+
+set -euo pipefail
+
+# Colors (ADHD-friendly: minimal, clear)
+readonly GREEN='\033[0;32m'
+readonly BLUE='\033[0;34m'
+readonly YELLOW='\033[0;33m'
+readonly RED='\033[0;31m'
+readonly GRAY='\033[0;90m'
+readonly BOLD='\033[1m'
+readonly RESET='\033[0m'
+
+# ----------------------------------------------------------------------------
+# Helper Functions
+# ----------------------------------------------------------------------------
+
+print_header() {
+  echo "${BOLD}${BLUE}🔊 $1${RESET}"
+  echo "${GRAY}────────────────────────────────────────${RESET}"
+}
+
+# ----------------------------------------------------------------------------
+# Commands
+# ----------------------------------------------------------------------------
+
+cmd_speak() {
+  local text=""
+  local voice=""
+  local rate=""
+
+  # Parse arguments
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -v|--voice)
+        voice="$2"
+        shift 2
+        ;;
+      -r|--rate)
+        rate="$2"
+        shift 2
+        ;;
+      *)
+        if [[ -z "$text" ]]; then
+          text="$1"
+        else
+          text="$text $1"
+        fi
+        shift
+        ;;
+    esac
+  done
+
+  if [[ -z "$text" ]]; then
+    echo "${RED}Error: No text provided${RESET}" >&2
+    echo "Usage: say speak \"text\" [-v voice] [-r rate]" >&2
+    exit 1
+  fi
+
+  # Build command
+  local cmd=("say")
+  [[ -n "$voice" ]] && cmd+=("-v" "$voice")
+  [[ -n "$rate" ]] && cmd+=("-r" "$rate")
+  cmd+=("$text")
+
+  # Execute
+  "${cmd[@]}"
+  echo "${GREEN}✓${RESET} Spoke: ${GRAY}${text:0:50}...${RESET}"
+}
+
+cmd_voices() {
+  local lang_filter=""
+
+  # Parse arguments
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -l|--lang|--language)
+        lang_filter="$2"
+        shift 2
+        ;;
+      *)
+        shift
+        ;;
+    esac
+  done
+
+  print_header "Available Voices"
+
+  # Get voices and optionally filter by language
+  if [[ -n "$lang_filter" ]]; then
+    echo "${GRAY}Filtering by language: ${lang_filter}${RESET}"
+    echo ""
+    say -v '?' | grep -i "${lang_filter}" | while IFS= read -r line; do
+      local name=$(echo "$line" | awk '{print $1}')
+      local lang=$(echo "$line" | awk '{print $2}')
+      local desc=$(echo "$line" | cut -d'#' -f2 | sed 's/^ *//')
+      echo "${GREEN}${name}${RESET} ${GRAY}(${lang})${RESET}"
+      [[ -n "$desc" ]] && echo "  ${GRAY}${desc}${RESET}"
+    done
+  else
+    say -v '?' | while IFS= read -r line; do
+      local name=$(echo "$line" | awk '{print $1}')
+      local lang=$(echo "$line" | awk '{print $2}')
+      echo "${GREEN}${name}${RESET} ${GRAY}(${lang})${RESET}"
+    done
+  fi
+
+  echo ""
+  echo "${GRAY}Tip: Use 'say voices --lang en' for English voices${RESET}"
+}
+
+cmd_save() {
+  local text=""
+  local output=""
+  local voice=""
+  local rate=""
+
+  # Parse arguments
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -o|--output)
+        output="$2"
+        shift 2
+        ;;
+      -v|--voice)
+        voice="$2"
+        shift 2
+        ;;
+      -r|--rate)
+        rate="$2"
+        shift 2
+        ;;
+      *)
+        if [[ -z "$text" ]]; then
+          text="$1"
+        else
+          text="$text $1"
+        fi
+        shift
+        ;;
+    esac
+  done
+
+  if [[ -z "$text" ]]; then
+    echo "${RED}Error: No text provided${RESET}" >&2
+    exit 1
+  fi
+
+  if [[ -z "$output" ]]; then
+    echo "${RED}Error: No output file specified${RESET}" >&2
+    echo "Usage: say save \"text\" -o output.aiff [-v voice] [-r rate]" >&2
+    exit 1
+  fi
+
+  # Validate output extension
+  if [[ ! "$output" =~ \.(aiff|m4a)$ ]]; then
+    echo "${RED}Error: Output must end with .aiff or .m4a${RESET}" >&2
+    exit 1
+  fi
+
+  # Build command
+  local cmd=("say" "-o" "$output")
+  [[ -n "$voice" ]] && cmd+=("-v" "$voice")
+  [[ -n "$rate" ]] && cmd+=("-r" "$rate")
+  cmd+=("$text")
+
+  # Execute
+  "${cmd[@]}"
+  echo "${GREEN}✓${RESET} Saved to: ${BLUE}${output}${RESET}"
+}
+
+cmd_help() {
+  cat <<EOF
+${BOLD}${BLUE}Say${RESET} - ADHD-friendly macOS text-to-speech CLI
+
+${BOLD}USAGE:${RESET}
+  say <command> [options]
+
+${BOLD}COMMANDS:${RESET}
+  ${GREEN}speak "text"${RESET}      Speak text aloud
+    -v, --voice NAME    Voice to use (e.g., Samantha, Alex, Daniel)
+    -r, --rate WPM      Speaking rate in words per minute (default: ~175)
+
+  ${GREEN}voices${RESET}            List available voices
+    -l, --lang CODE     Filter by language code (e.g., en, de, fr)
+
+  ${GREEN}save "text"${RESET}       Save speech to audio file
+    -o, --output FILE   Output file (.aiff or .m4a)
+    -v, --voice NAME    Voice to use
+    -r, --rate WPM      Speaking rate
+
+  ${GREEN}help${RESET}              Show this help message
+
+${BOLD}EXAMPLES:${RESET}
+  say speak "Hello world"                    # Basic speech
+  say speak "Hello" -v Daniel                # British accent
+  say speak "Slow down" -r 100               # Slow rate
+  say voices --lang en                       # English voices
+  say save "Podcast intro" -o intro.m4a      # Save to file
+
+${BOLD}POPULAR VOICES:${RESET}
+  ${GRAY}Premium:${RESET}  Samantha (en_US), Alex (en_US), Daniel (en_GB)
+  ${GRAY}Fun:${RESET}      Albert, Bells, Bubbles, Wobble
+EOF
+}
+
+# ----------------------------------------------------------------------------
+# Main Command Router
+# ----------------------------------------------------------------------------
+
+main() {
+  local cmd="${1:-help}"
+  shift || true
+
+  case "$cmd" in
+    speak)    cmd_speak "$@" ;;
+    voices)   cmd_voices "$@" ;;
+    save)     cmd_save "$@" ;;
+    help|--help|-h) cmd_help ;;
+    *)
+      echo "${RED}Error: Unknown command '${cmd}'${RESET}" >&2
+      echo "Run 'say help' for usage information" >&2
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"

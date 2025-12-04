@@ -1,0 +1,123 @@
+#!/usr/bin/env zsh
+# ----------------------------------------------------------------------------
+# SCRIPT_NAME - Brief description of what this script does
+# ----------------------------------------------------------------------------
+# Usage:
+#   script-name command     # Do something
+#   script-name other       # Do something else
+#   script-name help        # Show help
+# ----------------------------------------------------------------------------
+
+set -euo pipefail
+
+# ============================================================================
+# Configuration
+# ============================================================================
+
+readonly SCRIPT_NAME="${0:t}"  # zsh way to get basename
+readonly SCRIPT_DIR="${0:A:h}" # zsh way to get absolute dir
+
+# ============================================================================
+# Colors (disabled when piped, NO_COLOR set, or dumb terminal)
+# ============================================================================
+
+if [[ -t 2 ]] && [[ -z "${NO_COLOR-}" ]] && [[ "${TERM-}" != "dumb" ]]; then
+  readonly RED=$'\033[0;31m'
+  readonly GREEN=$'\033[0;32m'
+  readonly YELLOW=$'\033[0;33m'
+  readonly BLUE=$'\033[0;34m'
+  readonly MAGENTA=$'\033[0;35m'
+  readonly CYAN=$'\033[0;36m'
+  readonly GRAY=$'\033[0;90m'
+  readonly BOLD=$'\033[1m'
+  readonly DIM=$'\033[2m'
+  readonly RESET=$'\033[0m'
+else
+  readonly RED='' GREEN='' YELLOW='' BLUE='' MAGENTA='' CYAN=''
+  readonly GRAY='' BOLD='' DIM='' RESET=''
+fi
+
+# ============================================================================
+# Logging Helpers
+# ============================================================================
+
+# Print to stderr (for messages, not output)
+msg()     { echo >&2 "$@"; }
+log_info()    { msg "${BLUE}→${RESET} $1"; }
+log_success() { msg "${GREEN}✓${RESET} $1"; }
+log_warn()    { msg "${YELLOW}⚠${RESET} $1"; }
+log_error()   { msg "${RED}✗${RESET} $1"; }
+log_dim()     { msg "${GRAY}$1${RESET}"; }
+
+die() {
+  log_error "$1"
+  exit "${2:-1}"
+}
+
+# ============================================================================
+# UI Helpers
+# ============================================================================
+
+print_header() {
+  msg "${BOLD}${BLUE}$1${RESET}"
+  msg "${GRAY}────────────────────────────────────────${RESET}"
+}
+
+print_item() {
+  local label="$1"
+  local value="$2"
+  msg "  ${GREEN}${label}${RESET}  ${value}"
+}
+
+# ============================================================================
+# Commands
+# ============================================================================
+
+cmd_example() {
+  print_header "Example Command"
+  log_info "Doing something..."
+  log_success "Done!"
+}
+
+cmd_help() {
+  msg "${BOLD}${BLUE}${SCRIPT_NAME}${RESET} - Brief description"
+  msg ""
+  msg "${BOLD}USAGE:${RESET}"
+  msg "  ${SCRIPT_NAME} <command> [options]"
+  msg ""
+  msg "${BOLD}COMMANDS:${RESET}"
+  msg "  ${GREEN}example${RESET}         Run example command"
+  msg "  ${GREEN}help${RESET}            Show this help message"
+  msg ""
+  msg "${BOLD}OPTIONS:${RESET}"
+  msg "  ${GREEN}-h, --help${RESET}      Show this help message"
+  msg ""
+  msg "${BOLD}ENVIRONMENT:${RESET}"
+  msg "  ${GREEN}NO_COLOR=1${RESET}      Disable colored output"
+  msg ""
+  msg "${BOLD}EXAMPLES:${RESET}"
+  msg "  ${SCRIPT_NAME} example        # Run example"
+  msg "  ${SCRIPT_NAME} help           # Show help"
+}
+
+# ============================================================================
+# Main
+# ============================================================================
+
+main() {
+  local cmd="${1:-help}"
+  [[ $# -gt 0 ]] && shift
+
+  case "$cmd" in
+    example)          cmd_example "$@" ;;
+    help|--help|-h)   cmd_help ;;
+    *)
+      log_error "Unknown command: ${cmd}"
+      msg "Run '${SCRIPT_NAME} help' for usage"
+      exit 1
+      ;;
+  esac
+}
+
+# To disable colors, run with: NO_COLOR=1 script-name command
+main "$@"

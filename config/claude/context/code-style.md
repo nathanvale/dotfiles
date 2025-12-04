@@ -1,25 +1,23 @@
 # Code Style & Patterns
 
-## Patterns I Love
+## Patterns
 
-- **Functional programming** — Pure functions, immutability, composition
-- **Factory patterns** — For object creation
-- **Dependency injection** — For testability and flexibility
-- **Small, focused modules** — Single responsibility
-- **Abstraction is good** — Well-structured over "simple but messy"
+- Functional → pure functions, immutability, composition
+- Factory patterns → for object creation
+- Dependency injection → for testability
+- Small modules → single responsibility
+- Abstraction → well-structured over "simple but messy"
 
-## Code Style
+## Style
 
 - TypeScript strict mode always
-- **Biome defaults** — Tab indentation, opinionated formatting
-- `kebab-case` lowercase for file names
+- Biome defaults → tab indentation, opinionated formatting
+- Import order → `node:*` → external → local
+- File names → `kebab-case` lowercase
 - No abbreviated variable names
-- Keep functions simple (refactor complex ones)
-- Template literals over string concatenation
+- Template literals over concatenation
 
-## Documentation
-
-Every exported function needs JSDoc (TypeDoc compatible). Document the "why."
+## JSDoc (Required for exports)
 
 ```typescript
 /**
@@ -27,18 +25,18 @@ Every exported function needs JSDoc (TypeDoc compatible). Document the "why."
  * @param db - Database client instance
  * @returns User repository with CRUD operations
  */
-export function createUserRepository(db: Database): UserRepository {
-  // ...
-}
+export function createUserRepository(db: Database): UserRepository {}
 ```
 
 ## Tech Stack
 
-Bun (primary), Node 22+, TypeScript (strict), React (functional), Tailwind, Biome
+Bun | Node 22+ | TypeScript (strict) | React (functional) | Tailwind | Biome
 
 ## Testing
 
-- **TDD for big features** — Write tests first
-- **Ask about TDD for small features** — Nathan decides case-by-case
-- Coverage goal: 80%
-- Prefer integration tests over unit tests for behavior
+- TDD for big features → write tests first
+- Small features → ask Nathan
+- Coverage goal → 80%
+- Prefer integration over unit tests
+- Colocated → `*.test.ts` alongside source
+- Arrow notation in test descriptions

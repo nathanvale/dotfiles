@@ -44,17 +44,17 @@ export HOMEBREW_BUNDLE_FILE="$HOME/.config/brew/Brewfile"
 export CDPATH=".:~:$HOME/code"
 
 # ----------------------------------------------------------------------------
-# Load Secrets (MCP API keys, Azure credentials, etc.)
+# Load Environment Variables
 # ----------------------------------------------------------------------------
+# Manual env vars (includes OP_SERVICE_ACCOUNT_TOKEN for 1Password)
 if [ -f "$HOME/code/dotfiles/.env" ]; then
   source "$HOME/code/dotfiles/.env"
 fi
 
-# Environment variable management (1Password-backed)
-# Commands available via bin/env/:
-#   addenv KEY "value"  - Add key to 1Password + regenerate .env
-#   syncenv             - Pull from 1Password → regenerate .env + sync launchctl
-#   lsenv               - List all keys stored in 1Password
+# API keys (auto-generated from 1Password via sync-api-keys)
+if [ -f "$HOME/code/dotfiles/.env.1password" ]; then
+  source "$HOME/code/dotfiles/.env.1password"
+fi
 
 # ----------------------------------------------------------------------------
 # FNM (Fast Node Manager) - Faster alternative to NVM
@@ -225,6 +225,9 @@ alias ccr="claude --dangerously-skip-permissions -r"
 alias cleanpaste='pbpaste | sed "s/^[[:space:]]*//" | pbcopy'  # Fix Claude Code copy-paste whitespace
 alias claude-mcp="bun run ~/code/side-quest-marketplace/plugins/mcp-manager/src/cli.ts"
 
+# Codex (YOLO mode)
+alias cx="codex --dangerously-bypass-approvals-and-sandbox"
+
 # Aerospace (window manager)
 alias sa="aerospace reload-config"
 alias aero-help="~/code/dotfiles/bin/aerospace/help.sh"
@@ -257,8 +260,7 @@ alias nv="echo 'Node: $(node -v) | npm: $(npm -v) | pnpm: $(pnpm -v)'"
 
 # Tmux
 alias tx='~/code/dotfiles/bin/tmux/startup.sh'
-alias tmuxnew='~/code/dotfiles/bin/tmux/new-project.sh'
-alias tnew='~/code/dotfiles/bin/tmux/new-project.sh'
+alias txnew='~/code/dotfiles/bin/tmux/new-project.sh'
 
 # Function to jump to a project directory and start tmuxinator
 tcd() {
@@ -456,7 +458,16 @@ alias nrb="pnpm run build"
 alias nrl="pnpm run lint"
 
 # List available scripts from package.json (ADHD-friendly quick reference)
-alias scripts='jq -r ".scripts | to_entries[] | \"  \(.key)\"" package.json 2>/dev/null || echo "No package.json found"'
+unalias scripts 2>/dev/null
+scripts() {
+  if [ ! -f package.json ]; then
+    echo "No package.json found"
+    return 1
+  fi
+  echo ""
+  jq -r '.scripts | to_entries[] | "  \(.key)\t→ \(.value)"' package.json | column -t -s $'\t'
+  echo ""
+}
 
 # ----------------------------------------------------------------------------
 # 15. CD to Git Root
@@ -485,7 +496,7 @@ fpath=(/Users/nathanvale/.docker/completions $fpath)
 # Full quick reference display
 show_quick_reference() {
   local node_ver=$(node -v 2>/dev/null | sed 's/v//')
-  
+
   echo ""
   echo "  🧠 ADHD Quick Reference"
   echo "  ────────────────────────────────────"
@@ -498,7 +509,7 @@ show_quick_reference() {
   echo ""
   echo "  ⚡ Navigation"
   echo "     cc         → Claude Code"
-  echo "     lz         → LazyGit" 
+  echo "     lz         → LazyGit"
   echo "     cdg        → Jump to git root"
   echo "     d          → ~/code directory"
   echo ""

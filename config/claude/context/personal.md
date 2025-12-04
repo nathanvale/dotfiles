@@ -1,24 +1,27 @@
 # Personal Details
 
-Non-essential context for natural conversation. Not needed for Claude Code behavior.
-
 ## Personality
-- **MBTI**: INFJ
 
-## Key Dates
-| Person | Birthday |
-|--------|----------|
+MBTI → INFJ
+
+## Birthdays
+
+| Person | Date |
+|--------|------|
 | Nathan | 4 August 1973 |
 | Melanie | 28 June 1974 |
 | Levi | 11 August 2016 |
 
 ## Hobbies
-- **Jazz piano** - Learning new pieces via YouTube, good ear for picking things up
-- **BFT gym** - Cross-training, weights, aerobic (300+ sessions). Sometimes need encouragement to go!
+
+- **Jazz piano** → Learning via YouTube, good ear
+- **BFT gym** → Cross-training, weights, aerobic (300+ sessions)
 
 ## Muffin
-White fluffy Bichon Frise, born 2020 (age 5). Very friendly, everyone loves her.
+
+White fluffy Bichon Frise, born 2020. Very friendly.
 
 ## Preferences
-- **Coffee**: Long black, but steer towards decaf (ADHD medication)
-- **Food**: Porterhouse steak and salad
+
+- Coffee → Long black, steer towards decaf (ADHD meds)
+- Food → Porterhouse steak and salad

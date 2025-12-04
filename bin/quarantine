@@ -1,0 +1,419 @@
+#!/usr/bin/env zsh
+# ----------------------------------------------------------------------------
+# Quarantine - ADHD-friendly macOS quarantine database CLI
+# ----------------------------------------------------------------------------
+# Usage:
+#   quarantine recent [--limit N]      # Recent downloads (default: 10)
+#   quarantine search-app NAME         # Search by downloading app
+#   quarantine search-url PATTERN      # Search by source URL
+#   quarantine by-date --days N        # Downloads in last N days
+#   quarantine apps                    # List apps with download counts
+#   quarantine audit                   # Weekly audit summary
+#   quarantine oldest                  # Find oldest download
+#   quarantine clear --confirm         # Clear quarantine history (DANGEROUS)
+#   quarantine help                    # Show this help
+# ----------------------------------------------------------------------------
+
+set -euo pipefail
+
+# Colors (ADHD-friendly: minimal, clear)
+readonly GREEN='\033[0;32m'
+readonly BLUE='\033[0;34m'
+readonly YELLOW='\033[0;33m'
+readonly RED='\033[0;31m'
+readonly GRAY='\033[0;90m'
+readonly BOLD='\033[1m'
+readonly RESET='\033[0m'
+
+# Quarantine database path
+readonly QUARANTINE_DB="${HOME}/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2"
+
+# ----------------------------------------------------------------------------
+# Helper Functions
+# ----------------------------------------------------------------------------
+
+print_header() {
+  echo "${BOLD}${BLUE}🔒 $1${RESET}"
+  echo "${GRAY}────────────────────────────────────────${RESET}"
+}
+
+check_db() {
+  if [[ ! -f "$QUARANTINE_DB" ]]; then
+    echo "${RED}Error: Quarantine database not found${RESET}" >&2
+    echo "${GRAY}Expected: ${QUARANTINE_DB}${RESET}" >&2
+    exit 1
+  fi
+}
+
+# Convert Core Data timestamp to human-readable date
+# macOS uses seconds since 2001-01-01 (Core Data epoch)
+format_timestamp() {
+  local timestamp="$1"
+  if [[ -z "$timestamp" || "$timestamp" == "null" ]]; then
+    echo "Unknown"
+    return
+  fi
+  # Add Core Data epoch offset (978307200 seconds from Unix epoch to 2001-01-01)
+  local unix_ts=$((${timestamp%.*} + 978307200))
+  date -r "$unix_ts" "+%Y-%m-%d %H:%M" 2>/dev/null || echo "Unknown"
+}
+
+# Query the quarantine database
+query_db() {
+  local query="$1"
+  sqlite3 -separator '|' "$QUARANTINE_DB" "$query" 2>/dev/null
+}
+
+# ----------------------------------------------------------------------------
+# Commands
+# ----------------------------------------------------------------------------
+
+cmd_recent() {
+  local limit=10
+
+  # Parse arguments
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -l|--limit)
+        limit="$2"
+        shift 2
+        ;;
+      *)
+        shift
+        ;;
+    esac
+  done
+
+  check_db
+  print_header "Recent Downloads (last ${limit})"
+
+  local query="SELECT LSQuarantineTimeStamp, LSQuarantineAgentName, LSQuarantineDataURLString
+               FROM LSQuarantineEvent
+               ORDER BY LSQuarantineTimeStamp DESC
+               LIMIT ${limit};"
+
+  local count=0
+  while IFS='|' read -r timestamp app url; do
+    [[ -z "$timestamp" ]] && continue
+    count=$((count + 1))
+    local date_str=$(format_timestamp "$timestamp")
+    echo "${GREEN}${count}.${RESET} ${BOLD}${date_str}${RESET}"
+    echo "   ${GRAY}App:${RESET} ${app:-Unknown}"
+    [[ -n "$url" ]] && echo "   ${GRAY}URL:${RESET} ${BLUE}${url:0:80}${RESET}"
+    echo ""
+  done < <(query_db "$query")
+
+  if [[ $count -eq 0 ]]; then
+    echo "${GRAY}No quarantine records found${RESET}"
+  fi
+}
+
+cmd_search_app() {
+  local app_name="$1"
+
+  if [[ -z "$app_name" ]]; then
+    echo "${RED}Error: App name required${RESET}" >&2
+    echo "Usage: quarantine search-app NAME" >&2
+    exit 1
+  fi
+
+  check_db
+  print_header "Downloads by '${app_name}'"
+
+  local query="SELECT LSQuarantineTimeStamp, LSQuarantineAgentName, LSQuarantineDataURLString
+               FROM LSQuarantineEvent
+               WHERE LSQuarantineAgentName LIKE '%${app_name}%'
+               ORDER BY LSQuarantineTimeStamp DESC
+               LIMIT 20;"
+
+  local count=0
+  while IFS='|' read -r timestamp app url; do
+    [[ -z "$timestamp" ]] && continue
+    count=$((count + 1))
+    local date_str=$(format_timestamp "$timestamp")
+    echo "${GREEN}${count}.${RESET} ${BOLD}${date_str}${RESET} - ${app}"
+    [[ -n "$url" ]] && echo "   ${GRAY}${url:0:80}${RESET}"
+  done < <(query_db "$query")
+
+  echo ""
+  echo "${GRAY}Found ${count} downloads from apps matching '${app_name}'${RESET}"
+}
+
+cmd_search_url() {
+  local pattern="$1"
+
+  if [[ -z "$pattern" ]]; then
+    echo "${RED}Error: URL pattern required${RESET}" >&2
+    echo "Usage: quarantine search-url PATTERN" >&2
+    exit 1
+  fi
+
+  check_db
+  print_header "Downloads matching URL '${pattern}'"
+
+  local query="SELECT LSQuarantineTimeStamp, LSQuarantineAgentName, LSQuarantineDataURLString
+               FROM LSQuarantineEvent
+               WHERE LSQuarantineDataURLString LIKE '%${pattern}%'
+               ORDER BY LSQuarantineTimeStamp DESC
+               LIMIT 20;"
+
+  local count=0
+  while IFS='|' read -r timestamp app url; do
+    [[ -z "$timestamp" ]] && continue
+    count=$((count + 1))
+    local date_str=$(format_timestamp "$timestamp")
+    echo "${GREEN}${count}.${RESET} ${BOLD}${date_str}${RESET}"
+    echo "   ${GRAY}App:${RESET} ${app:-Unknown}"
+    echo "   ${GRAY}URL:${RESET} ${BLUE}${url}${RESET}"
+    echo ""
+  done < <(query_db "$query")
+
+  if [[ $count -eq 0 ]]; then
+    echo "${GRAY}No downloads matching '${pattern}'${RESET}"
+  fi
+}
+
+cmd_by_date() {
+  local days=7
+
+  # Parse arguments
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -d|--days)
+        days="$2"
+        shift 2
+        ;;
+      *)
+        shift
+        ;;
+    esac
+  done
+
+  check_db
+  print_header "Downloads in last ${days} days"
+
+  # Calculate timestamp for N days ago (Core Data epoch)
+  local now=$(date +%s)
+  local cutoff=$((now - (days * 86400) - 978307200))
+
+  local query="SELECT LSQuarantineTimeStamp, LSQuarantineAgentName, LSQuarantineDataURLString
+               FROM LSQuarantineEvent
+               WHERE LSQuarantineTimeStamp >= ${cutoff}
+               ORDER BY LSQuarantineTimeStamp DESC;"
+
+  local count=0
+  while IFS='|' read -r timestamp app url; do
+    [[ -z "$timestamp" ]] && continue
+    count=$((count + 1))
+    local date_str=$(format_timestamp "$timestamp")
+    echo "${GREEN}${count}.${RESET} ${BOLD}${date_str}${RESET} - ${app:-Unknown}"
+    [[ -n "$url" ]] && echo "   ${GRAY}${url:0:80}${RESET}"
+  done < <(query_db "$query")
+
+  echo ""
+  echo "${GRAY}Total: ${count} downloads in last ${days} days${RESET}"
+}
+
+cmd_apps() {
+  check_db
+  print_header "Apps by Download Count"
+
+  local query="SELECT LSQuarantineAgentName, COUNT(*) as count
+               FROM LSQuarantineEvent
+               WHERE LSQuarantineAgentName IS NOT NULL
+               GROUP BY LSQuarantineAgentName
+               ORDER BY count DESC
+               LIMIT 20;"
+
+  local rank=0
+  while IFS='|' read -r app count; do
+    [[ -z "$app" ]] && continue
+    rank=$((rank + 1))
+    printf "${GREEN}%2d.${RESET} ${BOLD}%-30s${RESET} ${GRAY}%d downloads${RESET}\n" "$rank" "$app" "$count"
+  done < <(query_db "$query")
+
+  if [[ $rank -eq 0 ]]; then
+    echo "${GRAY}No apps found in quarantine database${RESET}"
+  fi
+}
+
+cmd_audit() {
+  check_db
+  print_header "Weekly Audit Summary"
+
+  # Get total count
+  local total=$(query_db "SELECT COUNT(*) FROM LSQuarantineEvent;")
+  echo "${BOLD}Total Records:${RESET} ${total}"
+  echo ""
+
+  # Downloads by day (last 7 days)
+  echo "${BOLD}Last 7 Days:${RESET}"
+  for i in {0..6}; do
+    local day_start=$(($(date +%s) - (i * 86400) - 978307200))
+    local day_end=$((day_start + 86400))
+    local day_count=$(query_db "SELECT COUNT(*) FROM LSQuarantineEvent WHERE LSQuarantineTimeStamp >= ${day_start} AND LSQuarantineTimeStamp < ${day_end};")
+    local day_name=$(date -v-${i}d "+%a %m/%d")
+    printf "  ${GRAY}%-12s${RESET} %d downloads\n" "$day_name" "${day_count:-0}"
+  done
+  echo ""
+
+  # Top apps this week
+  local week_start=$(($(date +%s) - (7 * 86400) - 978307200))
+  echo "${BOLD}Top Apps This Week:${RESET}"
+  local query="SELECT LSQuarantineAgentName, COUNT(*) as count
+               FROM LSQuarantineEvent
+               WHERE LSQuarantineTimeStamp >= ${week_start}
+               AND LSQuarantineAgentName IS NOT NULL
+               GROUP BY LSQuarantineAgentName
+               ORDER BY count DESC
+               LIMIT 5;"
+
+  while IFS='|' read -r app count; do
+    [[ -z "$app" ]] && continue
+    echo "  ${GREEN}${app}${RESET}: ${count}"
+  done < <(query_db "$query")
+}
+
+cmd_oldest() {
+  check_db
+  print_header "Oldest Download"
+
+  local query="SELECT LSQuarantineTimeStamp, LSQuarantineAgentName, LSQuarantineDataURLString
+               FROM LSQuarantineEvent
+               ORDER BY LSQuarantineTimeStamp ASC
+               LIMIT 1;"
+
+  local result=$(query_db "$query")
+  if [[ -z "$result" ]]; then
+    echo "${GRAY}No quarantine records found${RESET}"
+    return
+  fi
+
+  IFS='|' read -r timestamp app url <<< "$result"
+  local date_str=$(format_timestamp "$timestamp")
+
+  echo "${BOLD}Date:${RESET} ${date_str}"
+  echo "${BOLD}App:${RESET} ${app:-Unknown}"
+  [[ -n "$url" ]] && echo "${BOLD}URL:${RESET} ${BLUE}${url}${RESET}"
+
+  # Calculate age
+  local now=$(date +%s)
+  local record_unix=$((${timestamp%.*} + 978307200))
+  local age_days=$(( (now - record_unix) / 86400 ))
+  echo ""
+  echo "${GRAY}Age: ${age_days} days old${RESET}"
+}
+
+cmd_clear() {
+  local confirm=""
+
+  # Parse arguments
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --confirm)
+        confirm="yes"
+        shift
+        ;;
+      *)
+        shift
+        ;;
+    esac
+  done
+
+  check_db
+
+  if [[ "$confirm" != "yes" ]]; then
+    echo "${RED}${BOLD}WARNING: This will delete all quarantine history!${RESET}"
+    echo ""
+    echo "This action:"
+    echo "  - Removes all download source records"
+    echo "  - Cannot be undone"
+    echo "  - May affect security auditing"
+    echo ""
+    echo "To proceed, run: ${YELLOW}quarantine clear --confirm${RESET}"
+    exit 1
+  fi
+
+  # Get count before clearing
+  local count=$(query_db "SELECT COUNT(*) FROM LSQuarantineEvent;")
+
+  print_header "Clearing Quarantine History"
+  echo "${YELLOW}Deleting ${count} records...${RESET}"
+
+  sqlite3 "$QUARANTINE_DB" "DELETE FROM LSQuarantineEvent;" 2>/dev/null
+
+  echo "${GREEN}✓${RESET} Cleared ${count} quarantine records"
+}
+
+cmd_help() {
+  cat <<EOF
+${BOLD}${BLUE}Quarantine${RESET} - ADHD-friendly macOS quarantine database CLI
+
+${BOLD}USAGE:${RESET}
+  quarantine <command> [options]
+
+${BOLD}COMMANDS:${RESET}
+  ${GREEN}recent${RESET}            Show recent downloads (default: 10)
+    -l, --limit N     Number of records to show
+
+  ${GREEN}search-app NAME${RESET}   Search by downloading app name
+
+  ${GREEN}search-url PATTERN${RESET} Search by source URL pattern
+
+  ${GREEN}by-date${RESET}           Show downloads by date range
+    -d, --days N      Number of days to look back (default: 7)
+
+  ${GREEN}apps${RESET}              List apps ranked by download count
+
+  ${GREEN}audit${RESET}             Weekly audit summary
+
+  ${GREEN}oldest${RESET}            Show the oldest download record
+
+  ${GREEN}clear${RESET}             Clear quarantine history ${RED}(DANGEROUS)${RESET}
+    --confirm         Required flag to actually clear
+
+  ${GREEN}help${RESET}              Show this help message
+
+${BOLD}EXAMPLES:${RESET}
+  quarantine recent                    # Last 10 downloads
+  quarantine recent --limit 20         # Last 20 downloads
+  quarantine search-app Safari         # Downloads from Safari
+  quarantine search-url github.com     # Downloads from GitHub
+  quarantine by-date --days 30         # Last month's downloads
+  quarantine apps                      # App rankings
+  quarantine audit                     # Weekly summary
+  quarantine clear --confirm           # Clear all history
+
+${BOLD}DATABASE:${RESET}
+  ${GRAY}Location: ~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2${RESET}
+  ${GRAY}This database tracks where files were downloaded from.${RESET}
+EOF
+}
+
+# ----------------------------------------------------------------------------
+# Main Command Router
+# ----------------------------------------------------------------------------
+
+main() {
+  local cmd="${1:-help}"
+  shift || true
+
+  case "$cmd" in
+    recent)       cmd_recent "$@" ;;
+    search-app)   cmd_search_app "$@" ;;
+    search-url)   cmd_search_url "$@" ;;
+    by-date)      cmd_by_date "$@" ;;
+    apps)         cmd_apps "$@" ;;
+    audit)        cmd_audit "$@" ;;
+    oldest)       cmd_oldest "$@" ;;
+    clear)        cmd_clear "$@" ;;
+    help|--help|-h) cmd_help ;;
+    *)
+      echo "${RED}Error: Unknown command '${cmd}'${RESET}" >&2
+      echo "Run 'quarantine help' for usage information" >&2
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"

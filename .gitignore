@@ -39,3 +39,6 @@ config/superwhisper/recordings/
 # Credentials (sensitive)
 config/the-cinema-bandit/
 
+# Work-specific scripts (not for public dotfiles)
+bin/kgp
+

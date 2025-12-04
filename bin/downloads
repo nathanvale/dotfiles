@@ -1,0 +1,327 @@
+#!/usr/bin/env zsh
+# ----------------------------------------------------------------------------
+# Downloads Manager - ADHD-friendly downloads folder management
+# ----------------------------------------------------------------------------
+# Usage:
+#   downloads recent      # What did I download recently? (last 10)
+#   downloads search X    # Did I download X?
+#   downloads clear       # Clear .DS_Store and cache files
+#   downloads apps        # What apps did I download?
+#   downloads week        # This week's downloads
+#   downloads today       # Today's downloads
+#   downloads month       # This month's downloads
+#   downloads stats       # Download statistics
+#   downloads help        # Show this help
+# ----------------------------------------------------------------------------
+
+set -euo pipefail
+
+# Configuration
+DOWNLOADS_DIR="${HOME}/Downloads"
+DEFAULT_LIMIT=10
+
+# Colors (disabled when piped, NO_COLOR set, or dumb terminal)
+if [[ -t 2 ]] && [[ -z "${NO_COLOR-}" ]] && [[ "${TERM-}" != "dumb" ]]; then
+  readonly GREEN=$'\033[0;32m'
+  readonly BLUE=$'\033[0;34m'
+  readonly YELLOW=$'\033[0;33m'
+  readonly RED=$'\033[0;31m'
+  readonly GRAY=$'\033[0;90m'
+  readonly BOLD=$'\033[1m'
+  readonly RESET=$'\033[0m'
+else
+  readonly GREEN='' BLUE='' YELLOW='' RED='' GRAY='' BOLD='' RESET=''
+fi
+
+# ----------------------------------------------------------------------------
+# Helper Functions
+# ----------------------------------------------------------------------------
+
+print_header() {
+  echo "${BOLD}${BLUE}📦 $1${RESET}"
+  echo "${GRAY}────────────────────────────────────────${RESET}"
+}
+
+print_file() {
+  local file="$1"
+  local size=$(du -h "$file" 2>/dev/null | cut -f1)
+  local date=$(stat -f "%Sm" -t "%Y-%m-%d %H:%M" "$file" 2>/dev/null)
+  local name=$(basename "$file")
+
+  # Color based on file type
+  local color="${RESET}"
+  case "${name##*.}" in
+    dmg|pkg|app) color="${GREEN}" ;;
+    zip|tar|gz|bz2) color="${YELLOW}" ;;
+    pdf|doc|docx) color="${BLUE}" ;;
+  esac
+
+  echo "${color}${name}${RESET} ${GRAY}(${size}, ${date})${RESET}"
+}
+
+count_files() {
+  find "$DOWNLOADS_DIR" -maxdepth 1 -type f ! -name ".*" 2>/dev/null | wc -l | tr -d ' '
+}
+
+# ----------------------------------------------------------------------------
+# Commands
+# ----------------------------------------------------------------------------
+
+cmd_recent() {
+  local limit="${1:-$DEFAULT_LIMIT}"
+  print_header "Recent Downloads (last ${limit})"
+
+  find "$DOWNLOADS_DIR" -maxdepth 1 -type f ! -name ".*" -print0 2>/dev/null \
+    | xargs -0 stat -f "%m %N" 2>/dev/null \
+    | sort -rn \
+    | head -n "$limit" \
+    | while read -r timestamp file; do
+      print_file "$file"
+    done
+
+  local total=$(count_files)
+  echo ""
+  echo "${GRAY}Total: ${total} files in Downloads${RESET}"
+}
+
+cmd_search() {
+  local query="$1"
+  print_header "Search Results for '${query}'"
+
+  local found=0
+  find "$DOWNLOADS_DIR" -maxdepth 1 -iname "*${query}*" ! -name ".*" 2>/dev/null \
+    | sort \
+    | while read -r file; do
+      print_file "$file"
+      ((found++))
+    done
+
+  if [ $found -eq 0 ]; then
+    echo "${GRAY}No files found matching '${query}'${RESET}"
+  else
+    echo ""
+    echo "${GRAY}Found ${found} file(s)${RESET}"
+  fi
+}
+
+cmd_clear() {
+  print_header "Clearing Cache Files"
+
+  local cleared=0
+
+  # Remove .DS_Store files
+  find "$DOWNLOADS_DIR" -name ".DS_Store" -type f -delete 2>/dev/null && {
+    echo "${GREEN}✓${RESET} Removed .DS_Store files"
+    ((cleared++))
+  }
+
+  # Remove ._ files (macOS resource forks)
+  find "$DOWNLOADS_DIR" -name "._*" -type f -delete 2>/dev/null && {
+    echo "${GREEN}✓${RESET} Removed resource fork files"
+    ((cleared++))
+  }
+
+  # Remove .crdownload (Chrome partial downloads)
+  find "$DOWNLOADS_DIR" -name "*.crdownload" -type f -delete 2>/dev/null && {
+    echo "${GREEN}✓${RESET} Removed Chrome partial downloads"
+    ((cleared++))
+  }
+
+  # Remove .part (Firefox partial downloads)
+  find "$DOWNLOADS_DIR" -name "*.part" -type f -delete 2>/dev/null && {
+    echo "${GREEN}✓${RESET} Removed Firefox partial downloads"
+    ((cleared++))
+  }
+
+  echo ""
+  echo "${GREEN}Cache cleared successfully${RESET}"
+}
+
+cmd_apps() {
+  print_header "Downloaded Applications"
+
+  local found=0
+
+  # Find .dmg files
+  find "$DOWNLOADS_DIR" -maxdepth 1 \( -iname "*.dmg" -o -iname "*.pkg" -o -iname "*.app" \) ! -name ".*" 2>/dev/null \
+    | xargs -I {} stat -f "%m %N" {} 2>/dev/null \
+    | sort -rn \
+    | while read -r timestamp file; do
+      print_file "$file"
+      ((found++))
+    done
+
+  if [ $found -eq 0 ]; then
+    echo "${GRAY}No app installers found${RESET}"
+  else
+    echo ""
+    echo "${GRAY}Found ${found} app installer(s)${RESET}"
+  fi
+}
+
+cmd_today() {
+  print_header "Today's Downloads"
+
+  local today=$(date +%Y-%m-%d)
+  local found=0
+
+  find "$DOWNLOADS_DIR" -maxdepth 1 -type f ! -name ".*" -newermt "$today" 2>/dev/null \
+    | xargs -I {} stat -f "%m %N" {} 2>/dev/null \
+    | sort -rn \
+    | while read -r timestamp file; do
+      print_file "$file"
+      ((found++))
+    done
+
+  if [ $found -eq 0 ]; then
+    echo "${GRAY}No downloads today${RESET}"
+  else
+    echo ""
+    echo "${GRAY}Downloaded ${found} file(s) today${RESET}"
+  fi
+}
+
+cmd_week() {
+  print_header "This Week's Downloads"
+
+  local week_ago=$(date -v-7d +%Y-%m-%d)
+  local found=0
+
+  find "$DOWNLOADS_DIR" -maxdepth 1 -type f ! -name ".*" -newermt "$week_ago" 2>/dev/null \
+    | xargs -I {} stat -f "%m %N" {} 2>/dev/null \
+    | sort -rn \
+    | while read -r timestamp file; do
+      print_file "$file"
+      ((found++))
+    done
+
+  if [ $found -eq 0 ]; then
+    echo "${GRAY}No downloads this week${RESET}"
+  else
+    echo ""
+    echo "${GRAY}Downloaded ${found} file(s) this week${RESET}"
+  fi
+}
+
+cmd_month() {
+  print_header "This Month's Downloads"
+
+  local month_ago=$(date -v-30d +%Y-%m-%d)
+  local found=0
+
+  find "$DOWNLOADS_DIR" -maxdepth 1 -type f ! -name ".*" -newermt "$month_ago" 2>/dev/null \
+    | xargs -I {} stat -f "%m %N" {} 2>/dev/null \
+    | sort -rn \
+    | while read -r timestamp file; do
+      print_file "$file"
+      ((found++))
+    done
+
+  if [ $found -eq 0 ]; then
+    echo "${GRAY}No downloads this month${RESET}"
+  else
+    echo ""
+    echo "${GRAY}Downloaded ${found} file(s) this month${RESET}"
+  fi
+}
+
+cmd_stats() {
+  print_header "Download Statistics"
+
+  local total=$(count_files)
+  local total_size=$(du -sh "$DOWNLOADS_DIR" 2>/dev/null | cut -f1)
+
+  # Count by type
+  local apps=$(find "$DOWNLOADS_DIR" -maxdepth 1 \( -iname "*.dmg" -o -iname "*.pkg" -o -iname "*.app" \) 2>/dev/null | wc -l | tr -d ' ')
+  local archives=$(find "$DOWNLOADS_DIR" -maxdepth 1 \( -iname "*.zip" -o -iname "*.tar" -o -iname "*.gz" \) 2>/dev/null | wc -l | tr -d ' ')
+  local docs=$(find "$DOWNLOADS_DIR" -maxdepth 1 \( -iname "*.pdf" -o -iname "*.doc" -o -iname "*.docx" \) 2>/dev/null | wc -l | tr -d ' ')
+  local images=$(find "$DOWNLOADS_DIR" -maxdepth 1 \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.gif" \) 2>/dev/null | wc -l | tr -d ' ')
+
+  # Time-based stats
+  local today=$(find "$DOWNLOADS_DIR" -maxdepth 1 -type f ! -name ".*" -newermt "$(date +%Y-%m-%d)" 2>/dev/null | wc -l | tr -d ' ')
+  local week=$(find "$DOWNLOADS_DIR" -maxdepth 1 -type f ! -name ".*" -newermt "$(date -v-7d +%Y-%m-%d)" 2>/dev/null | wc -l | tr -d ' ')
+  local month=$(find "$DOWNLOADS_DIR" -maxdepth 1 -type f ! -name ".*" -newermt "$(date -v-30d +%Y-%m-%d)" 2>/dev/null | wc -l | tr -d ' ')
+
+  echo "${BOLD}Total Files:${RESET}      ${total}"
+  echo "${BOLD}Total Size:${RESET}       ${total_size}"
+  echo ""
+  echo "${BOLD}By Type:${RESET}"
+  echo "  Apps/Installers:  ${apps}"
+  echo "  Archives:         ${archives}"
+  echo "  Documents:        ${docs}"
+  echo "  Images:           ${images}"
+  echo ""
+  echo "${BOLD}By Time:${RESET}"
+  echo "  Today:            ${today}"
+  echo "  This Week:        ${week}"
+  echo "  This Month:       ${month}"
+}
+
+cmd_help() {
+  echo "${BOLD}${BLUE}Downloads Manager${RESET} - ADHD-friendly downloads folder management"
+  echo ""
+  echo "${BOLD}USAGE:${RESET}"
+  echo "  downloads <command> [options]"
+  echo ""
+  echo "${BOLD}COMMANDS:${RESET}"
+  echo "  ${GREEN}recent [N]${RESET}      Show N most recent downloads (default: 10)"
+  echo "  ${GREEN}search <query>${RESET}  Search for files matching query"
+  echo "  ${GREEN}clear${RESET}           Remove cache files (.DS_Store, partial downloads)"
+  echo "  ${GREEN}apps${RESET}            Show downloaded applications (.dmg, .pkg, .app)"
+  echo "  ${GREEN}today${RESET}           Show today's downloads"
+  echo "  ${GREEN}week${RESET}            Show this week's downloads"
+  echo "  ${GREEN}month${RESET}           Show this month's downloads"
+  echo "  ${GREEN}stats${RESET}           Show download statistics"
+  echo "  ${GREEN}help${RESET}            Show this help message"
+  echo ""
+  echo "${BOLD}EXAMPLES:${RESET}"
+  echo "  downloads recent 20        # Show 20 most recent files"
+  echo "  downloads search docker    # Find docker-related downloads"
+  echo "  downloads apps             # See what apps you downloaded"
+  echo "  downloads clear            # Clean up cache files"
+  echo ""
+  echo "${BOLD}LOCATION:${RESET}"
+  echo "  ${GRAY}${DOWNLOADS_DIR}${RESET}"
+}
+
+# ----------------------------------------------------------------------------
+# Main Command Router
+# ----------------------------------------------------------------------------
+
+main() {
+  # Check if Downloads directory exists
+  if [ ! -d "$DOWNLOADS_DIR" ]; then
+    echo "${RED}Error: Downloads directory not found: ${DOWNLOADS_DIR}${RESET}" >&2
+    exit 1
+  fi
+
+  # Parse command (show help if no args)
+  local cmd="${1:-help}"
+  [[ $# -gt 0 ]] && shift
+
+  case "$cmd" in
+    recent)   cmd_recent "$@" ;;
+    search)
+      if [ $# -eq 0 ]; then
+        echo "${RED}Error: search requires a query${RESET}" >&2
+        echo "Usage: downloads search <query>" >&2
+        exit 1
+      fi
+      cmd_search "$@"
+      ;;
+    clear)    cmd_clear ;;
+    apps)     cmd_apps ;;
+    today)    cmd_today ;;
+    week)     cmd_week ;;
+    month)    cmd_month ;;
+    stats)    cmd_stats ;;
+    help|--help|-h) cmd_help ;;
+    *)
+      echo "${RED}Error: Unknown command '${cmd}'${RESET}" >&2
+      echo "Run 'downloads help' for usage information" >&2
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"

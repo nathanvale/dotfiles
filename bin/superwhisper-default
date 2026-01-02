@@ -1,0 +1,8 @@
+#!/bin/bash
+# superwhisper-default - Toggle recording in default mode
+#
+# Triggered by Karabiner: Option + Space
+#
+# Just toggles recording - we stay in default mode unless Daily Note switches away
+
+open "superwhisper://record"

@@ -1,0 +1,32 @@
+#!/bin/bash
+# superwhisper-email-complete - Smart email paste and return to default mode
+#
+# Called by Macrowhisper after Email mode transcription completes.
+# - If Mail compose window is open: paste at cursor
+# - If no compose window: create new email with content
+# Then switches back to default mode.
+
+osascript <<'APPLESCRIPT'
+set emailContent to the clipboard
+
+tell application "Mail"
+    -- Check if there's a compose window (outgoing message)
+    set composeWindows to (windows whose name contains "New Message" or name contains "Re:" or name contains "Fwd:")
+
+    if (count of composeWindows) > 0 then
+        -- Compose window exists - paste at cursor
+        activate
+        tell application "System Events"
+            keystroke "v" using command down
+        end tell
+    else
+        -- No compose window - create new email
+        set newMessage to make new outgoing message with properties {content:emailContent, visible:true}
+        activate
+    end if
+end tell
+APPLESCRIPT
+
+# Small delay then switch back to default mode
+sleep 0.3
+open "superwhisper://mode?key=default"

@@ -1,0 +1,45 @@
+#!/bin/bash
+# obsidian-daily-capture - Append text to Obsidian Daily Note
+#
+# Usage: obsidian-daily-capture "Your text here"
+#        echo "Your text" | obsidian-daily-capture
+#        TRANSCRIPT="Your text" obsidian-daily-capture
+#
+# Called by Macrowhisper when SuperWhisper's daily-note mode completes.
+# Appends voice transcriptions to the Daily Note with timestamp.
+
+set -e
+
+VAULT="my-second-brain"
+
+# Get input from: argument > TRANSCRIPT env var > stdin
+if [[ -n "$1" ]]; then
+  text="$1"
+elif [[ -n "$TRANSCRIPT" ]]; then
+  text="$TRANSCRIPT"
+else
+  text=$(cat)
+fi
+
+if [[ -z "$text" ]]; then
+  echo "Error: No text provided" >&2
+  exit 1
+fi
+
+# Format: timestamp + text
+timestamp=$(date "+%I:%M %p" | tr '[:upper:]' '[:lower:]')
+formatted_text="- ${timestamp} - ${text}"
+
+# URL encode the text (using Python for reliability)
+encoded_text=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$formatted_text'''))")
+
+# Build Obsidian Advanced URI
+uri="obsidian://adv-uri?vault=${VAULT}&daily=true&data=${encoded_text}&mode=append"
+
+# Open in Obsidian
+open "$uri"
+
+# Switch back to default mode so Option+Space works correctly
+open "superwhisper://mode?key=default"
+
+echo "Captured to Daily Note: ${text:0:50}..."

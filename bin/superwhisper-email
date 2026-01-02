@@ -1,0 +1,13 @@
+#!/bin/bash
+# superwhisper-email - Activate Email mode and start recording
+#
+# Triggered by Karabiner: Hyper + E
+#
+# Flow:
+# 1. Switch to email mode
+# 2. Start recording
+# 3. After transcript is processed, switch back to default mode
+
+open "superwhisper://mode?key=email"
+sleep 0.2
+open "superwhisper://record"

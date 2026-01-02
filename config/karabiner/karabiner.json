@@ -382,6 +382,53 @@
 									}
 								],
 								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "e",
+									"modifiers": {
+										"mandatory": ["control", "option", "command", "shift"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/superwhisper-email"
+									}
+								],
+								"type": "basic"
+							},
+							{
+								"from": {
+									"key_code": "o",
+									"modifiers": {
+										"mandatory": ["control", "option", "command", "shift"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/mail-to-obsidian"
+									}
+								],
+								"type": "basic"
+							}
+						]
+					},
+					{
+						"description": "SuperWhisper Daily Note: Right Shift + Option + Space",
+						"manipulators": [
+							{
+								"from": {
+									"key_code": "spacebar",
+									"modifiers": {
+										"mandatory": ["right_shift", "option"]
+									}
+								},
+								"to": [
+									{
+										"shell_command": "~/code/dotfiles/bin/superwhisper-daily-note"
+									}
+								],
+								"type": "basic"
 							}
 						]
 					},
@@ -397,7 +444,7 @@
 								},
 								"to": [
 									{
-										"shell_command": "~/code/dotfiles/bin/hyperflow H1"
+										"shell_command": "~/code/dotfiles/bin/hyperflow M"
 									}
 								],
 								"type": "basic"

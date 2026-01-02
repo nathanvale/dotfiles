@@ -1,11 +1,15 @@
 tap "homebrew/bundle"
 tap "homebrew/services"
 tap "nikitabobko/tap"
+tap "ognistik/formulae"
 tap "oven-sh/bun"
 brew "oven-sh/bun/bun"
 brew "python"  # Includes pip by default
 brew "uv"      # Fast Python package installer and resolver
 brew "pipx"    # Install Python CLI tools in isolated environments
+brew "pyenv"   # Python version manager
+brew "m4"      # GNU macro processor (needed by autoconf)
+brew "autoconf"  # Tool for generating configure scripts
 brew "aider"   # AI pair programming CLI tool
 brew "docker"
 brew "colima"    # lightweight VM for running containers (better on macOS)
@@ -17,6 +21,7 @@ brew "atuin"
 brew "az"
 brew "lnav"
 brew "pnpm"
+brew "poppler"   # PDF utilities including pdftotext
 brew "ripgrep"
 brew "awscli"
 brew "bat"
@@ -46,6 +51,7 @@ brew "zsh"
 brew "zsh-syntax-highlighting"
 brew "zsh-autosuggestions"
 brew "wget"
+brew "macrowhisper"
 cask "betterdisplay"
 cask "cleanmymac"
 cask "karabiner-elements"
@@ -54,12 +60,10 @@ cask "visual-studio-code"
 cask "aldente"
 cask "discord"
 cask "firefox"
-cask "arc"
 cask "imazing"
 cask "postman"
 cask "slack"
 cask "zoom"
-cask "figma"
 cask "gcloud-cli"
 cask "notion"
 cask "notion-calendar"
@@ -73,12 +77,11 @@ cask "1password-cli"
 cask "claude"
 cask "iterm2"
 cask "superwhisper"
+brew "macrowhisper"  # Automation helper for SuperWhisper post-transcription actions
 cask "ollama-app"
 cask "obsidian"
 cask "docker-desktop"
 cask "claude-code"
 cask "raspberry-pi-imager"
 cask "superhuman"
-cask "loom"
-brew "lume"
 cask "codex"

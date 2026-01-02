@@ -1,0 +1,13 @@
+#!/bin/bash
+# superwhisper-daily-note - Activate Daily Note mode and start recording
+#
+# Triggered by Karabiner: Right Shift + Option + Space
+#
+# Flow:
+# 1. Switch to daily-note mode
+# 2. Start recording
+# 3. After transcript is processed, obsidian-daily-capture returns to default mode
+
+open "superwhisper://mode?key=daily-note"
+sleep 0.2
+open "superwhisper://record"

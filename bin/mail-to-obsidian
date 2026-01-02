@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Mail to Obsidian: Appends selected email as markdown link to daily note
+# Usage: mail-to-obsidian (or via Hyper+O)
+
+# Get selected email info from Mail
+mail_info=$(osascript <<'APPLESCRIPT'
+tell application "Mail"
+    set theMessages to selection
+    if (count of theMessages) = 0 then
+        return "ERROR:No email selected"
+    end if
+    set theMessage to item 1 of theMessages
+    set theSubject to subject of theMessage
+    set theMessageId to message id of theMessage
+    return theSubject & "|||" & theMessageId
+end tell
+APPLESCRIPT
+)
+
+# Check for error
+if [[ "$mail_info" == ERROR:* ]]; then
+    osascript -e "display notification \"${mail_info#ERROR:}\" with title \"Mail to Obsidian\""
+    exit 1
+fi
+
+# Parse subject and message ID
+subject="${mail_info%|||*}"
+message_id="${mail_info#*|||}"
+
+# Get current time in Melbourne timezone
+current_time=$(TZ='Australia/Melbourne' date '+%-I:%M %p' | tr '[:upper:]' '[:lower:]')
+
+# Build markdown link
+markdown="- ${current_time} - 📧 [${subject}](message:<${message_id}>)"
+
+# URL encode using python with stdin (safer for special chars)
+encoded=$(echo -n "$markdown" | python3 -c "import sys, urllib.parse; print(urllib.parse.quote(sys.stdin.read(), safe=''))")
+
+# Build and open Obsidian URI
+obsidian_url="obsidian://adv-uri?vault=my-second-brain&daily=true&data=${encoded}&mode=append"
+
+open "$obsidian_url"
+
+# Notification
+osascript -e "display notification \"Added to daily note\" with title \"Mail to Obsidian\" subtitle \"${subject//\"/\\\"}\""

@@ -1,0 +1,67 @@
+{
+	"$schema": "file:///opt/homebrew/share/macrowhisper/macrowhisper-schema.json",
+	"defaults": {
+		"actionDelay": 0,
+		"activeAction": "",
+		"autoUpdateConfig": true,
+		"clipboardBuffer": 5,
+		"clipboardStacking": false,
+		"history": null,
+		"icon": "",
+		"moveTo": "",
+		"noEsc": false,
+		"noNoti": false,
+		"noUpdates": false,
+		"pressReturn": false,
+		"restoreClipboard": true,
+		"returnDelay": 0.1,
+		"scheduledActionTimeout": 5,
+		"simKeypress": false,
+		"watch": "/Users/nathanvale/Documents/superwhisper"
+	},
+	"inserts": {
+		"autoPaste": {
+			"action": ".autoPaste",
+			"actionDelay": null,
+			"icon": "•",
+			"moveTo": "",
+			"noEsc": null,
+			"pressReturn": null,
+			"restoreClipboard": null,
+			"simKeypress": null,
+			"triggerApps": "",
+			"triggerLogic": "and",
+			"triggerModes": "!Daily Note|!Email",
+			"triggerVoice": ""
+		}
+	},
+	"scriptsAS": {},
+	"scriptsShell": {
+		"dailyNoteCapture": {
+			"action": "/Users/nathanvale/code/dotfiles/bin/obsidian-daily-capture \"{{swResult}}\"",
+			"actionDelay": null,
+			"icon": "📝",
+			"moveTo": null,
+			"noEsc": true,
+			"restoreClipboard": null,
+			"triggerApps": "",
+			"triggerLogic": "or",
+			"triggerModes": "Daily Note",
+			"triggerVoice": ""
+		},
+		"emailComplete": {
+			"action": "/Users/nathanvale/code/dotfiles/bin/superwhisper-email-complete",
+			"actionDelay": null,
+			"icon": "📧",
+			"moveTo": null,
+			"noEsc": false,
+			"restoreClipboard": null,
+			"triggerApps": "",
+			"triggerLogic": "or",
+			"triggerModes": "Email",
+			"triggerVoice": ""
+		}
+	},
+	"shortcuts": {},
+	"urls": {}
+}

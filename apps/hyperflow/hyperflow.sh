@@ -7,39 +7,8 @@
 set -euo pipefail
 
 WORKSPACE="$1"
-SUPERWHISPER_SWITCHER="$HOME/code/dotfiles/apps/hyperflow/superwhisper-mode-switch.sh"
-MODE_STATE_FILE="/tmp/hyperflow-current-mode.txt"
 WORKSPACE_STATE_FILE="/tmp/hyperflow-current-workspace.txt"
 WORKSPACES_CONFIG="$HOME/.config/hyperflow/workspaces.json"
-
-# Function to get the current mode from state file
-get_current_mode() {
-    if [[ -f "$MODE_STATE_FILE" ]]; then
-        cat "$MODE_STATE_FILE"
-    else
-        echo ""
-    fi
-}
-
-# Function to set the current mode in state file
-set_current_mode() {
-    local mode="$1"
-    echo "$mode" > "$MODE_STATE_FILE"
-}
-
-# Function to switch mode only if it's different from current
-switch_mode_if_needed() {
-    local new_mode="$1"
-    local current_mode
-    current_mode=$(get_current_mode)
-
-    if [[ "$current_mode" != "$new_mode" ]]; then
-        # Mode is different, switch it
-        "$SUPERWHISPER_SWITCHER" "$new_mode" &
-        set_current_mode "$new_mode"
-    fi
-    # If modes are the same, do nothing (saves time)
-}
 
 # Function to get the current workspace from state file
 get_current_workspace() {
@@ -80,11 +49,6 @@ wait_for_app_focus() {
 cycle_windows() {
     # Send Option+N keystroke to cycle through windows
     osascript -e 'tell application "System Events" to keystroke "n" using {option down}' 2>/dev/null || true
-}
-
-# Function to kill any running mode switchers (prevents race conditions)
-kill_previous_mode_switchers() {
-    pkill -f "superwhisper-mode-switch.sh" 2>/dev/null || true
 }
 
 # Map application names to their actual process names
@@ -138,7 +102,6 @@ open_and_activate() {
 handle_workspace() {
     local workspace_id="$1"
     local app_name="$2"
-    local mode="$3"
 
     local current_workspace
     current_workspace=$(get_current_workspace)
@@ -157,8 +120,6 @@ handle_workspace() {
             # App lost focus (user clicked elsewhere) - re-activate it
             open_and_activate "$app_name"
             wait_for_app_focus "$app_name"
-            # Also restore the correct mode (may have changed if user switched apps manually)
-            switch_mode_if_needed "$mode"
         fi
     else
         # Different workspace - full switch
@@ -170,17 +131,13 @@ handle_workspace() {
 
         # 3. Wait for app to be focused before continuing
         wait_for_app_focus "$app_name"
-
-        # 4. Switch mode in background (doesn't block)
-        switch_mode_if_needed "$mode"
     fi
 }
 
 # Multi-app workspace handler (opens multiple apps and toggles between them)
 handle_multi_workspace() {
     local workspace_id="$1"
-    local mode="$2"
-    shift 2
+    shift 1
     local apps=("$@")
 
     local current_workspace
@@ -209,13 +166,8 @@ handle_multi_workspace() {
         # If no match found (focus was lost to non-workspace app), activate first app
         if [[ -z "$next_app" ]]; then
             next_app="${apps[0]}"
-            # Focus was lost - also restore the mode
-            open_and_activate "$next_app"
-            switch_mode_if_needed "$mode"
-        else
-            # Toggling between workspace apps - just switch, mode stays same
-            open_and_activate "$next_app"
         fi
+        open_and_activate "$next_app"
     else
         # Different workspace - full switch
         # 1. Mark workspace FIRST (prevents race on rapid presses)
@@ -228,14 +180,8 @@ handle_multi_workspace() {
 
         # 3. Wait for first app to be focused
         wait_for_app_focus "${apps[0]}"
-
-        # 4. Switch mode in background (doesn't block)
-        switch_mode_if_needed "$mode"
     fi
 }
-
-# Kill any previous mode switchers to prevent race conditions
-kill_previous_mode_switchers
 
 # Load workspace configuration from JSON
 if [[ ! -f "$WORKSPACES_CONFIG" ]]; then
@@ -248,23 +194,21 @@ WORKSPACE_DATA=$(jq -r ".workspaces[\"$WORKSPACE\"] // empty" "$WORKSPACES_CONFI
 
 if [[ -z "$WORKSPACE_DATA" ]]; then
     echo "Unknown workspace: $WORKSPACE"
-    switch_mode_if_needed "default"
     exit 1
 fi
 
-# Extract apps array and mode
+# Extract apps array
 # Use a safer method to handle app names with spaces
 APPS=()
 while IFS= read -r app; do
     APPS+=("$app")
 done < <(echo "$WORKSPACE_DATA" | jq -r '.apps[]')
-MODE=$(echo "$WORKSPACE_DATA" | jq -r '.mode // "default"')
 
 # Determine which handler to use based on number of apps
 if [[ ${#APPS[@]} -eq 1 ]]; then
     # Single app - use standard handler
-    handle_workspace "$WORKSPACE" "${APPS[0]}" "$MODE"
+    handle_workspace "$WORKSPACE" "${APPS[0]}"
 else
     # Multiple apps - use multi-app handler
-    handle_multi_workspace "$WORKSPACE" "$MODE" "${APPS[@]}"
+    handle_multi_workspace "$WORKSPACE" "${APPS[@]}"
 fi

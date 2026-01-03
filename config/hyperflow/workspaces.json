@@ -11,7 +11,7 @@
 			"mode": "default"
 		},
 		"3": {
-			"apps": ["Arc"],
+			"apps": ["Safari"],
 			"description": "Browser",
 			"mode": "default"
 		},
@@ -36,19 +36,24 @@
 			"mode": "default"
 		},
 		"H1": {
-			"apps": ["Messages"],
-			"description": "Messages",
-			"mode": "casual-text"
+			"apps": ["Mail"],
+			"description": "Apple Mail",
+			"mode": "email"
 		},
-		"H4": {
+		"H2": {
 			"apps": ["Calendar"],
-			"description": "Calendar",
+			"description": "Apple Calendar",
 			"mode": "default"
 		},
-		"H5": {
-			"apps": ["Microsoft Outlook"],
-			"description": "Email",
-			"mode": "email"
+		"H3": {
+			"apps": ["Music"],
+			"description": "Apple Music",
+			"mode": "default"
+		},
+		"H4": {
+			"apps": ["Podcasts"],
+			"description": "Apple Podcasts",
+			"mode": "default"
 		},
 		"S": {
 			"apps": ["System Settings"],
@@ -63,6 +68,11 @@
 		"P": {
 			"apps": ["Podcasts"],
 			"description": "Apple Podcasts",
+			"mode": "default"
+		},
+		"M": {
+			"apps": ["Messages"],
+			"description": "Apple Messages",
 			"mode": "default"
 		}
 	}

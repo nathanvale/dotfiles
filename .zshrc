@@ -190,9 +190,30 @@ alias lt="eza --tree --color=always --icons"
 # Must unalias first before defining function
 unalias cat 2>/dev/null
 cat() {
-  if [ -t 1 ]; then
-    # Output is to terminal - use bat for pretty display
-    command bat --paging=never "$@"
+  # If no arguments and stdin is a terminal, show usage hint
+  if [[ $# -eq 0 && -t 0 ]]; then
+    echo "Usage: cat <file>... (waiting for stdin, Ctrl+D to end, Ctrl+C to cancel)" >&2
+    command cat "$@"
+    return
+  fi
+
+  if [[ -t 1 ]]; then
+    # Check if any file is binary
+    local has_binary=0
+    for file in "$@"; do
+      if [[ -f "$file" ]] && ! file -b --mime "$file" | grep -q "^text/"; then
+        has_binary=1
+        break
+      fi
+    done
+    
+    if [[ $has_binary -eq 1 ]]; then
+      # Binary file detected - use regular cat
+      command cat "$@"
+    else
+      # Text file - use bat for pretty display
+      command bat --paging=never --style=plain "$@"
+    fi
   else
     # Output is piped - use real cat (no line numbers!)
     command cat "$@"
@@ -224,6 +245,9 @@ alias ccd="c ~/Library/Application\ Support/Claude/claude_desktop_config.json"
 alias ccr="claude --dangerously-skip-permissions -r"
 alias cleanpaste='pbpaste | sed "s/^[[:space:]]*//" | pbcopy'  # Fix Claude Code copy-paste whitespace
 alias claude-mcp="bun run ~/code/side-quest-marketplace/plugins/mcp-manager/src/cli.ts"
+
+# Para-Obsidian Inbox Processor (AI-powered inbox processing)
+alias inbox="bun run ~/code/side-quest-marketplace/plugins/para-obsidian/src/cli.ts process-inbox"
 
 # Codex (YOLO mode)
 alias cx="codex --dangerously-bypass-approvals-and-sandbox"
@@ -555,3 +579,7 @@ terminal_reminder() {
 if [ -z "$TMUX" ]; then
   terminal_reminder
 fi
+eval "$(pyenv init -)"
+
+# PARA Obsidian CLI
+alias para="bun run /Users/nathanvale/code/side-quest-marketplace/plugins/para-obsidian/src/cli.ts"

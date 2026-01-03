@@ -3,6 +3,8 @@ tap "homebrew/services"
 tap "nikitabobko/tap"
 tap "ognistik/formulae"
 tap "oven-sh/bun"
+brew "whisper-cpp"
+brew "ffmpeg"
 brew "oven-sh/bun/bun"
 brew "python"  # Includes pip by default
 brew "uv"      # Fast Python package installer and resolver
@@ -19,6 +21,7 @@ brew "zoxide"
 brew "tmuxinator"
 brew "atuin"
 brew "az"
+brew "hl"
 brew "lnav"
 brew "pnpm"
 brew "poppler"   # PDF utilities including pdftotext

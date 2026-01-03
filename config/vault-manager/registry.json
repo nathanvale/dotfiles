@@ -1,5 +1,5 @@
 {
-	"lastUpdated": "2025-11-24T19:02:02Z",
+	"lastUpdated": "2025-12-08T08:49:54Z",
 	"vaults": {
 		"personal": {
 			"path": "/Users/nathanvale/code/my-second-brain",
@@ -141,6 +141,36 @@
 						"docs": true
 					},
 					"registered": "2025-11-24T19:02:02Z"
+				},
+				{
+					"name": "side-quest-marketplace",
+					"path": "/Users/nathanvale/code/side-quest-marketplace",
+					"fingerprint": {
+						"vault_id": "78313630-b343-42c5-98f9-17dc9334d4c0",
+						"git_remote": "git@github.com:nathanvale/side-quest-marketplace.git",
+						"has_agent_os": false,
+						"has_docs": true,
+						"name": "side-quest-marketplace"
+					},
+					"components": {
+						"docs": true
+					},
+					"registered": "2025-12-07T21:00:57Z"
+				},
+				{
+					"name": "dotfiles",
+					"path": "/Users/nathanvale/code/dotfiles",
+					"fingerprint": {
+						"vault_id": "eb7b57ff-3fc6-43eb-8155-cbd39492e2e7",
+						"git_remote": "git@github.com:nathanvale/dotfiles.git",
+						"has_agent_os": false,
+						"has_docs": true,
+						"name": "dotfiles"
+					},
+					"components": {
+						"docs": true
+					},
+					"registered": "2025-12-08T08:49:54Z"
 				}
 			],
 			"type": "unified"

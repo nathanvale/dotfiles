@@ -1,8 +1,21 @@
 #!/bin/bash
 # Tmux startup script - shows project selector when terminal starts
 
-# Don't run if already in tmux
+# If already in tmux, show helpful session info instead
 if [ -n "$TMUX" ]; then
+    current_session=$(tmux display-message -p '#S')
+    echo "📍 Current session: $current_session"
+    echo ""
+    echo "🚀 Available sessions:"
+    tmux list-sessions | nl -w2 -s': '
+    echo ""
+    echo "💡 Quick actions:"
+    echo "  Ctrl+g s    → Switch session"
+    echo "  Ctrl+g d    → Detach from tmux"
+    echo "  Ctrl+g c    → New window"
+    echo "  Ctrl+g ,    → Rename window"
+    echo "  txnew       → Create new tmuxinator project"
+    echo ""
     exit 0
 fi
 

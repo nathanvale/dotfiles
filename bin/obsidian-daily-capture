@@ -28,7 +28,7 @@ fi
 
 # Format: timestamp + text
 timestamp=$(date "+%I:%M %p" | tr '[:upper:]' '[:lower:]')
-formatted_text="- ${timestamp} - ${text}"
+formatted_text="- ${timestamp} - 🎤 ${text}"
 
 # URL encode the text (using Python for reliability)
 encoded_text=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$formatted_text'''))")

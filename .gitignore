@@ -36,9 +36,15 @@ dist/
 # SuperWhisper recordings (large, personal)
 config/superwhisper/recordings/
 
+# Para-Obsidian state files (personal transcription data)
+config/para-obsidian/voice-state.json
+
 # Credentials (sensitive)
 config/the-cinema-bandit/
 
 # Work-specific scripts (not for public dotfiles)
 bin/kgp
+
+# Kit plugin vector database (generated, not source)
+.kit/
 

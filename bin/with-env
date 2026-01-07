@@ -1,0 +1,23 @@
+#!/bin/bash
+# with-env - Source environment variables and execute a command
+# Usage: with-env <command> [args...]
+#
+# Sources .env.1password before running the command.
+# Useful for GUI apps that don't inherit shell environment.
+#
+# Examples:
+#   with-env npx -y firecrawl-mcp
+#   with-env uvx mcp-obsidian
+
+set -e
+
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/code/dotfiles}"
+ENV_FILE="$DOTFILES_DIR/.env.1password"
+
+if [[ -f "$ENV_FILE" ]]; then
+    set -a
+    source "$ENV_FILE"
+    set +a
+fi
+
+exec "$@"

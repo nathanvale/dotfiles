@@ -1,0 +1,18 @@
+#!/bin/bash
+# Debug script to see what SuperWhisper passes to scripts
+
+LOG_FILE="/tmp/superwhisper-debug.log"
+
+echo "=== $(date) ===" >> "$LOG_FILE"
+echo "Args: $@" >> "$LOG_FILE"
+echo "Arg count: $#" >> "$LOG_FILE"
+echo "Arg 1: $1" >> "$LOG_FILE"
+echo "TRANSCRIPT env: $TRANSCRIPT" >> "$LOG_FILE"
+echo "All env vars:" >> "$LOG_FILE"
+env | grep -i transcript >> "$LOG_FILE" 2>&1 || echo "(none found)" >> "$LOG_FILE"
+echo "stdin:" >> "$LOG_FILE"
+cat >> "$LOG_FILE" 2>&1 || echo "(no stdin)" >> "$LOG_FILE"
+echo "---" >> "$LOG_FILE"
+
+# Show notification so you know it ran
+osascript -e 'display notification "Check /tmp/superwhisper-debug.log" with title "SW Debug"'

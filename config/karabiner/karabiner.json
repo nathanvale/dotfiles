@@ -385,20 +385,6 @@
 							},
 							{
 								"from": {
-									"key_code": "e",
-									"modifiers": {
-										"mandatory": ["control", "option", "command", "shift"]
-									}
-								},
-								"to": [
-									{
-										"shell_command": "~/code/dotfiles/bin/superwhisper-email"
-									}
-								],
-								"type": "basic"
-							},
-							{
-								"from": {
 									"key_code": "o",
 									"modifiers": {
 										"mandatory": ["control", "option", "command", "shift"]

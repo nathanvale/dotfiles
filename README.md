@@ -1,153 +1,126 @@
 # Nathan's Dotfiles
 
-A comprehensive macOS development environment setup featuring terminal tools, window management, and
-productivity extensions.
+A comprehensive macOS development environment setup featuring terminal tools, keyboard orchestration, and productivity extensions.
+
+## Quick Start (Fresh Mac)
+
+**One-liner:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/nathanvale/dotfiles/main/setup.sh | bash
+```
+
+**Or step by step:**
+```bash
+# 1. Clone the repo
+git clone git@github.com:nathanvale/dotfiles.git ~/code/dotfiles
+cd ~/code/dotfiles
+
+# 2. Install Homebrew + packages (one-time)
+./bootstrap.sh
+
+# 3. Create symlinks + apply preferences
+./install.sh
+```
+
+**Update existing installation:**
+```bash
+cd ~/code/dotfiles
+git pull
+./install.sh
+```
+
+## What Gets Installed
+
+### bootstrap.sh (run once)
+- Xcode Command Line Tools
+- Homebrew
+- All packages from `config/brew/Brewfile`
+
+### install.sh (run anytime)
+- Symlinks for dotfiles (`.zshrc`, `.gitconfig`, etc.)
+- Symlinks for config directories (`.config` → `config/`)
+- VS Code settings and keybindings
+- Claude Code personal settings
+- macOS preferences
 
 ## Features
 
-- **Terminal Environment**: Custom tmux configuration with Night Owl theme
-- **Package Management**: Automated Homebrew package installation
-- **Window Management**: AeroSpace tiling window manager
-- **Productivity**: Raycast extensions for enhanced workflows
-- **Development Tools**: Git, Lazygit, and shell configurations
-- **Keyboard Customization**: Karabiner-Elements key remapping
+- **HyperFlow**: Hyper key (Right Cmd) orchestration for app switching and keyboard shortcuts
+- **Terminal**: Custom tmux config with Night Owl theme, Ctrl-g prefix
+- **Shell**: Zsh with syntax highlighting, autosuggestions, and fzf
+- **Git**: Lazygit, delta for diffs, conventional commits
+- **Productivity**: Raycast, Karabiner-Elements, SuperWhisper voice dictation
 
-## Quick Start
+## Key Bindings
 
-```bash
-git clone https://github.com/nathanvale/dotfiles.git
-cd dotfiles
-# Run individual scripts as needed (order to be determined)
-```
-
-## Installation Options
-
-### Individual Components
-
-```bash
-# Install specific components from bin/dotfiles/, bin/system/, etc.
-./bin/dotfiles/symlinks/symlinks_install.sh      # Configuration symlinks
-./bin/system/fonts/nerd_fonts_install.sh         # Nerd Fonts
-./bin/system/iterm/iterm_preferences_install.sh  # iTerm2 settings
-./bin/system/macos/macos_preferences_install.sh  # macOS preferences
-```
-
-### Uninstallation
-
-Run corresponding uninstall scripts in reverse order:
-
-```bash
-./bin/dotfiles/symlinks/symlinks_uninstall.sh
-./bin/system/macos/macos_preferences_uninstall.sh
-# etc.
-```
-
-## Key Components
-
-### Terminal Configuration
-
-- **tmux**: Custom configuration with Ctrl-g prefix
-- **tmuxinator**: Project session templates
-- **Night Owl theme**: Consistent theming across terminal tools
-
-### Development Tools
-
-- **Git**: Custom configurations and ignore patterns
-- **Lazygit**: Terminal UI for git operations
-- **Homebrew**: Package management with curated Brewfile
-
-### Productivity Extensions
-
-- **Raycast**: Custom extensions for workflow automation
-- **AeroSpace**: Tiling window manager for macOS
-- **Karabiner-Elements**: Advanced keyboard customization
-
-### Key Bindings
-
-- **tmux prefix**: Ctrl-g
-- **Vi-style navigation**: Throughout terminal applications
-- **Custom key mappings**: Via Karabiner-Elements
+| Key | Action |
+|-----|--------|
+| `Ctrl-g` | tmux prefix |
+| `Hyper+1-5` | Switch to workspace apps |
+| `Hyper+H/J/K/L` | Arrow navigation (Vim-style) |
+| `Hyper+\\` | Cycle tmux sessions |
 
 ## Project Structure
 
 ```
-config/           # Configuration files
-   tmux/         # Tmux configuration and themes
-   tmuxinator/   # Project session templates
-   brew/         # Homebrew package definitions
-   karabiner/    # Keyboard remapping rules
-   raycast/      # Raycast extension configurations
-   git/          # Git configuration
-   ...
-
-bin/              # Installation and utility scripts
-   dotfiles/     # Symlink and dotfile management
-   system/       # macOS system and iTerm2 settings
-   tmux/         # Tmux utilities
-   utils/        # General utilities
-   *.sh          # Individual component scripts
-
-misc/             # Fonts, themes, and assets
+~/code/dotfiles/
+├── bootstrap.sh          # One-time Homebrew setup
+├── install.sh            # Symlinks + preferences
+├── setup.sh              # Curl-able installer
+├── config/               # All configuration files
+│   ├── brew/Brewfile     # Homebrew packages
+│   ├── tmux/             # Tmux configuration
+│   ├── karabiner/        # Keyboard remapping
+│   ├── vscode/           # VS Code settings
+│   ├── claude/           # Claude Code settings
+│   └── ...
+├── bin/                  # Scripts and utilities
+│   ├── dotfiles/         # Symlink management
+│   └── ...
+└── .zshrc, .gitconfig    # Root dotfiles
 ```
+
+## Symlinks Created
+
+| Link | Target |
+|------|--------|
+| `~/.config` | `dotfiles/config` |
+| `~/.zshrc` | `dotfiles/.zshrc` |
+| `~/.gitconfig` | `dotfiles/.gitconfig` |
+| `~/.tmux.conf` | `dotfiles/config/tmux/tmux.conf` |
+| `~/.claude/CLAUDE.md` | `dotfiles/config/claude/CLAUDE.md` |
+| `~/bin` | `dotfiles/bin` |
+| VS Code settings | `dotfiles/config/vscode/` |
+
+Run `./install.sh status` to see all symlinks and their status.
+
+## Post-Install
+
+1. **Restart terminal** or `source ~/.zshrc`
+2. **Copy secrets**: `cp .env.example .env` and fill in API keys
+3. **Start tmux**: `tmux` or use tmuxinator projects
 
 ## Customization
 
-### Adding Packages
+### Add Homebrew packages
+```bash
+# Edit config/brew/Brewfile
+brew "new-package"
+cask "new-app"
 
-Edit `config/brew/Brewfile` to add new Homebrew packages:
-
-```ruby
-brew "package-name"
-cask "application-name"
+# Then run
+brew bundle --file=config/brew/Brewfile
 ```
 
-### Tmux Projects
-
-Create new tmuxinator projects in `config/tmuxinator/`:
-
-```yaml
-name: my-project
-root: ~/code/my-project
-windows:
-  - editor: vim
-  - console:
-```
-
-### Raycast Extensions
-
-Custom extensions are located in `config/raycast/extensions/`
-
-## Development
-
-### Individual Scripts
-
-All installation scripts can be run independently:
-
-- Symlinks management in `bin/dotfiles/symlinks/`
-- macOS preferences in `bin/system/macos/`
-- iTerm2 settings in `bin/system/iterm/`
-- Font installation in `bin/system/fonts/`
-
-### Script Guidelines
-
-- All scripts use `set -e` for immediate exit on errors
-- Scripts are idempotent and can be run multiple times
-- Individual components can be installed/uninstalled independently
+### Add new symlinks
+Edit `bin/dotfiles/symlinks/symlinks_manage.sh` and add to the `symlinks` array.
 
 ## Requirements
 
-- macOS (tested on recent versions)
-- Internet connection for package downloads
-- Administrator privileges for system modifications
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test the installation process
-5. Submit a pull request
+- macOS (Apple Silicon or Intel)
+- Internet connection
+- Admin privileges for Homebrew
 
 ## License
 
-MIT License - see LICENSE file for details
+MIT

@@ -85,9 +85,6 @@ venv/
 # Project metadata
 PROJECT_INDEX.json
 
-# Obsidian
-.obsidian/
-
 # Claude Code
 .claude/settings.local.json
 

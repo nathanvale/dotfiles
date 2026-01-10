@@ -1,7 +1,7 @@
 # ~/.config/tmuxinator/calendar-ticker.yml
 
 name: calendar-ticker
-root: /Users/nathanvale/code/calendar-ticker
+root: <%= ENV['HOME'] %>/code/calendar-ticker
 
 # Project hooks - runs on project start
 on_project_start: |
@@ -27,21 +27,21 @@ startup_window: claude
 startup_pane: 1
 windows:
   - claude:
-      root: /Users/nathanvale/code/calendar-ticker
+      root: <%= ENV['HOME'] %>/code/calendar-ticker
       panes:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh
           pane_setup "claude"
           claude
   - git:
-      root: /Users/nathanvale/code/calendar-ticker
+      root: <%= ENV['HOME'] %>/code/calendar-ticker
       panes:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh
           pane_setup "git"
           lazygit
   - shell:
-      root: /Users/nathanvale/code/calendar-ticker
+      root: <%= ENV['HOME'] %>/code/calendar-ticker
       panes:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh

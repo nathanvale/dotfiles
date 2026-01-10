@@ -1,7 +1,7 @@
 # ~/.config/tmuxinator/orchestr8-legacy.yml
 
 name: orchestr8-legacy
-root: /Users/nathanvale/code/@orchestr8-legacy
+root: <%= ENV['HOME'] %>/code/@orchestr8-legacy
 
 # Project hooks
 on_project_start: |

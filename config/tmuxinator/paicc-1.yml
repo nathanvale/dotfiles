@@ -1,7 +1,7 @@
 # ~/.config/tmuxinator/paicc-1.yml
 
 name: paicc-1
-root: /Users/nathanvale/code/paicc-1
+root: <%= ENV['HOME'] %>/code/paicc-1
 
 # Project hooks
 on_project_start: |

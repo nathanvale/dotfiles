@@ -1,7 +1,7 @@
 # ~/.config/tmuxinator/entain-next-to-go.yml
 
 name: entain-next-to-go
-root: /Users/nathanvale/code/entain-next-to-go
+root: <%= ENV['HOME'] %>/code/entain-next-to-go
 
 # Project hooks
 on_project_start: |

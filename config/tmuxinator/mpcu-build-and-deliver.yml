@@ -1,7 +1,7 @@
 # ~/.config/tmuxinator/mpcu-build-and-deliver.yml
 
 name: mpcu-build-and-deliver
-root: /Users/nathanvale/code/MPCU-Build-and-Deliver
+root: <%= ENV['HOME'] %>/code/MPCU-Build-and-Deliver
 
 # Project hooks
 on_project_start: |

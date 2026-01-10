@@ -1,7 +1,7 @@
 # ~/.config/tmuxinator/orchestr8.yml
 
 name: orchestr8
-root: /Users/nathanvale/code/orchestr8
+root: <%= ENV['HOME'] %>/code/orchestr8
 
 # Project hooks
 on_project_start: |

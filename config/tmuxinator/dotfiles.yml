@@ -1,7 +1,7 @@
 # ~/.config/tmuxinator/dotfiles.yml
 
 name: dotfiles
-root: /Users/nathanvale/code/dotfiles
+root: <%= ENV['HOME'] %>/code/dotfiles
 
 # Project hooks - runs on project start
 on_project_start: |
@@ -27,35 +27,35 @@ startup_window: claude
 startup_pane: 1
 windows:
   - claude:
-      root: /Users/nathanvale/code/dotfiles
+      root: <%= ENV['HOME'] %>/code/dotfiles
       panes:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh
           pane_setup "claude"
           claude
   - git:
-      root: /Users/nathanvale/code/dotfiles
+      root: <%= ENV['HOME'] %>/code/dotfiles
       panes:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh
           pane_setup "git"
           lazygit
   - dev:
-      root: /Users/nathanvale/code/dotfiles
+      root: <%= ENV['HOME'] %>/code/dotfiles
       panes:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh
           pane_setup "dev" "dev"
           npm run dev 2>&1 | tee -a .logs/dev/dev.$(date +%s).log
   - vault:
-      root: /Users/nathanvale/code/dotfiles
+      root: <%= ENV['HOME'] %>/code/dotfiles
       panes:
         - |
           source ~/.config/tmuxinator/scripts/common-setup.sh
           pane_setup "vault"
           # Show vault status for this project
-                    if command -v "/Users/nathanvale/code/dotfiles/bin/vault" >/dev/null 2>&1; then
-                        "/Users/nathanvale/code/dotfiles/bin/vault" status
+                    if command -v "<%= ENV['HOME'] %>/code/dotfiles/bin/vault" >/dev/null 2>&1; then
+                        "<%= ENV['HOME'] %>/code/dotfiles/bin/vault" status
           else
             echo "Vault manager not available"
           fi

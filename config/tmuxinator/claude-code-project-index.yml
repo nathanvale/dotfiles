@@ -1,7 +1,7 @@
 # ~/.config/tmuxinator/claude-code-project-index.yml
 
 name: claude-code-project-index
-root: /Users/nathanvale/code/claude-code-project-index
+root: <%= ENV['HOME'] %>/code/claude-code-project-index
 
 # Project hooks
 on_project_start: |

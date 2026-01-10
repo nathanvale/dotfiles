@@ -1,7 +1,7 @@
 # ~/.config/tmuxinator/modern-ts-cli-starter.yml
 
 name: modern-ts-cli-starter
-root: /Users/nathanvale/code/modern-ts-cli-starter
+root: <%= ENV['HOME'] %>/code/modern-ts-cli-starter
 
 # Project hooks
 on_project_start: |

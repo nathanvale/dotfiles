@@ -1,7 +1,7 @@
 # ~/.config/tmuxinator/vtm-cli.yml
 
 name: vtm-cli
-root: /Users/nathanvale/code/vtm-cli
+root: <%= ENV['HOME'] %>/code/vtm-cli
 
 # Project hooks
 on_project_start: |

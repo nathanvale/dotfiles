@@ -31,8 +31,7 @@ windows:
   - dev:
       panes:
         - |
-          echo "Starting Next.js dev server..."
-          pnpm dev || npm run dev
+          echo "Dev server ready. Run: pnpm dev / npm run dev / bun dev"
 <% if HAS_PRISMA %>
   - prisma:
       panes:

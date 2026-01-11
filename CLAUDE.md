@@ -21,8 +21,8 @@ repository.
 **Development Environment:**
 
 - `tmux` - Terminal multiplexer (prefix: Ctrl-g)
-- `tmuxinator start <project>` - Start tmuxinator project sessions
-- `lazygit` - Terminal UI for git operations
+- `tx` - Universal tmux session launcher (press `Ctrl-g t` or run `tx` to launch)
+- `lazygit` - Terminal UI for git operations (Ctrl-g g)
 
 **Testing and Validation:**
 
@@ -130,7 +130,8 @@ the setup of development environments.
 **Tmux Integration:**
 
 - Custom tmux configuration with Ctrl-g prefix
-- Tmuxinator project templates for different development environments
+- Universal tmuxinator templates (3 templates replace 20+ project-specific configs)
+- Smart template detection based on project type
 - Night Owl theme integration across terminal tools
 
 **Raycast Integration:**
@@ -207,8 +208,9 @@ Dotfiles in Root:
 
 **Terminal and Shell:**
 
-- `config/tmux/tmux.conf` - Tmux configuration with Night Owl theme
-- `config/tmuxinator/` - Project session templates for different codebases
+- `config/tmux/tmux.conf` - Tmux configuration with Night Owl theme and `tx` launcher
+- `config/tmuxinator/` - Universal templates: standard.yml, fullstack.yml, nextjs.yml
+- `bin/tmux/tx` - Smart session launcher with fzf picker and template selection
 - Shell configurations support zsh with various productivity tools
 
 **Personal Claude Code Setup:**
@@ -250,12 +252,40 @@ When adding a new dotfile (e.g., `.npmrc`, `.gitignore_global`):
 4. Add the variable to `.env.secrets` and ensure `.zshrc` sources it
 5. Exclude the dotfile from git only if it contains hardcoded secrets; otherwise it's safe to commit
 
-### Tmux Configuration
+### Tmux Session Management
 
-- Main config: `config/tmux/tmux.conf` (prefix: Ctrl-g)
-- Custom keybindings are at the bottom of tmux.conf
-- Any bindings using `-n` flag work globally (no prefix needed)
-- Project sessions defined in `config/tmuxinator/` are auto-loaded with `tmuxinator start <project>`
+**Launch a session:**
+```bash
+tx                          # Interactive fzf picker (running sessions + ~/code projects)
+tx paicc-1                  # Start with standard template (default)
+tx ~/code/my-app fullstack  # Use specific template
+tx .                        # Current directory
+Ctrl-g t                    # Same as 'tx' (tmux popup binding)
+```
+
+**Available templates:**
+- `standard` - claude (ccdev) + git (lazygit) + shell — basic projects
+- `fullstack` - standard + dev server + vault — full-stack apps
+- `nextjs` - claude + git + dev + conditional prisma/storybook + shell — Next.js projects
+
+**Key bindings in templates:**
+- `Ctrl-g g` - Switch to git (lazygit) window
+- `Ctrl-g c` - Switch to claude window
+- Window "claude" pane runs `ccdev` alias (25 local plugins for development)
+
+**How it works:**
+1. `tx` resolves project path (supports `~/code/name`, `.`, `~/.claude`, or full paths)
+2. Generates session name from path (my-project → my-project, .claude → dot-claude)
+3. Creates session if new, reattaches if exists
+4. Auto-detects template or uses specified one
+5. Templates use ERB for smart detection (nextjs.yml checks for Prisma/Storybook)
+
+**Deprecated (deleted):**
+- ✗ `bin/tmux/new-project.sh` - Replaced by `tx` CLI
+- ✗ `bin/tmux/startup.sh` - No auto-startup (use `tx` manually)
+- ✗ `bin/tmux/session-menu.sh` - Replaced by `tx` with fzf picker
+- ✗ `alias tx='startup.sh'` - Now points to tx CLI
+- ✗ Project-specific configs (dotfiles.yml, paicc-1.yml, etc.) - Consolidated into 3 templates
 
 ### Script Development Patterns
 
@@ -263,6 +293,7 @@ When adding a new dotfile (e.g., `.npmrc`, `.gitignore_global`):
 - Source `bin/utils/colour_log.sh` for consistent error/warning/success logging
 - Keep scripts modular: prefer multiple small scripts over monolithic ones
 - Test individual scripts independently before integrating into orchestration
+- For tmux/tmuxinator work, edit universal templates in `config/tmuxinator/` instead of creating project-specific configs
 
 ## Code Style Rules
 

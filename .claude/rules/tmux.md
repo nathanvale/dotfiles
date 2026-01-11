@@ -17,21 +17,28 @@ tx .                        # Current directory
 Ctrl-g t                    # Same as 'tx' (tmux binding)
 ```
 
-## Templates (3 Universal Templates)
+## Templates
 
-| Template | Windows | Use Case |
-|----------|---------|----------|
-| `standard` | claude + git + shell | Basic projects |
-| `fullstack` | + dev server + vault | Full-stack apps |
+| Template | Layout | Use Case |
+|----------|--------|----------|
+| `standard` | 3 windows: claude, git, shell | Basic projects |
+| `fullstack` | 4 windows: + dev, vault | Full-stack apps |
 | `nextjs` | + conditional prisma/storybook | Next.js projects |
+| `ultrawide` | 3 panes in 1 window | Ultrawide monitors, accordion toggle |
 
 ## Key Bindings
 
-- `Ctrl-g` = tmux prefix
-- `Ctrl-g g` = Switch to git (lazygit)
-- `Ctrl-g c` = Switch to claude window
+**Window switching:**
+- `Ctrl-g 1/2/3` = Switch to window 1/2/3
 - `Ctrl-g t` = Launch tx picker
 - `Ctrl-g \` = Cycle tmux sessions
+
+**Ultrawide/Accordion mode (pane-based layouts):**
+- `Ctrl-g Space` = Toggle zoom (accordion ↔ tiled)
+- `Ctrl-g F1/F2/F3/F4` = Jump to pane 1/2/3/4 (zoomed)
+- `Ctrl-g T` = Tiled layout (all panes equal)
+- `Ctrl-g E` = Even-horizontal (side-by-side)
+- `Ctrl-g S` = Even-vertical (stacked)
 
 ## Development Guidelines
 

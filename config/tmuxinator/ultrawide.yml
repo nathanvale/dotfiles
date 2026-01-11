@@ -1,0 +1,24 @@
+# ultrawide.yml - Single window with panes for ultrawide monitors
+# Toggle between accordion (one pane zoomed) and tiled (all visible)
+# Usage: tmuxinator start ultrawide ~/code/my-project
+
+<% ROOT = @args[0] || ENV["PWD"] %>
+<% NAME = ROOT.split('/').last.gsub(/^\./, 'dot-').gsub('.', '-').downcase %>
+
+name: <%= NAME %>
+root: <%= ROOT %>
+
+on_project_start: |
+  echo "Starting <%= NAME %> (ultrawide mode)..."
+
+tmux_options: -f ~/.tmux.conf
+startup_window: main
+startup_pane: 1
+
+windows:
+  - main:
+      layout: even-horizontal
+      panes:
+        - ccdev
+        - lazygit
+        - clear

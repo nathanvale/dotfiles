@@ -73,122 +73,72 @@ the setup of development environments.
 **Modular Installation System:**
 
 - Each component (brew, symlinks, preferences, fonts) has its own install/uninstall/manage scripts
-- Critical hotspots: `execute_scripts` (orchestration), `get_config` (configuration loading),
-  `log_error` (error handling)
-- Scripts are organized by domain: `bin/dotfiles/`, `bin/system/`, `bin/tmux/`, `bin/utils/`
-- Major applications in `apps/`: `apps/taskdock/`, `apps/hyperflow/`, `apps/vault/`
-- All scripts use `set -e` for fail-fast behavior and are idempotent (safe to run multiple times)
+- Critical hotspots: `execute_scripts` (orchestration), `get_config` (configuration loading), `log_error` (error handling)
+- Scripts organized by domain: `bin/dotfiles/`, `bin/system/`, `bin/tmux/`, `bin/utils/`
+- All scripts use `set -e` for fail-fast behavior and are idempotent
 
 **Symlink Strategy:**
 
-- Dotfiles in root (e.g., `.zshrc`, `.npmrc`, `.gitconfig`) are symlinked from `$HOME` to the repo
-- Configuration directories are symlinked from `config/` subdirectories to `$HOME/.config/`
-- Use `bin/dotfiles/symlinks/symlinks_manage.sh` to manage all symlinks
+- Dotfiles in root symlinked from `$HOME` to repo
+- Configuration directories symlinked from `config/` to `$HOME/.config/`
+- Managed via `bin/dotfiles/symlinks/symlinks_manage.sh`
 
 **Environment Variables & Secrets:**
 
-- Sensitive data (API tokens, auth credentials) stored in `.env.secrets` (git-ignored)
-- `.env.secrets` is sourced in `.zshrc` and auto-exports variables to shell environment
-- Config files use variable substitution (e.g., `${NPM_TOKEN}`) to reference secrets without
-  hardcoding
-- Example: `.npmrc` uses `${NPM_TOKEN}` which resolves from exported environment variables
-
-### Key Components
-
-**Installation Scripts (`bin/`):**
-
-- Modular bash script system for installing/uninstalling dotfiles
-- Local scripts that handle brew packages, symlinks, macOS preferences, fonts, and iTerm2 settings
-- Individual scripts can be run manually for specific tasks
-
-**Configuration Structure (`config/`):**
-
-- Each tool has its own subdirectory (tmux, git, karabiner, etc.)
-- Configs are symlinked to their proper locations during installation
-- Supports both local and remote configuration management
-- Contains environment variable references for secrets instead of hardcoded credentials
-
-**Individual Scripts (`bin/`):**
-
-- `brew_install.sh` - Installs Homebrew package manager
-- `brew_remote_bundle.sh` - Installs packages from Brewfile
-- `brew_uninstall.sh` - Uninstalls Homebrew packages
-- `check_shell.sh` - Validates shell configuration
-- `colour_log.sh` - Logging utilities with color support
-- `dotfiles_install.sh` - Main dotfiles installation
-- `dotfiles_uninstall.sh` - Removes dotfiles configuration
-- `iterm_preferences_install.sh` - Configures iTerm2 settings
-- `iterm_preferences_uninstall.sh` - Removes iTerm2 settings
-- `macos_preferences_install.sh` - Applies macOS system preferences
-- `macos_preferences_uninstall.sh` - Resets macOS preferences
-- `nerd_fonts_install.sh` - Installs Nerd Fonts
-- `nerd_fonts_uninstall.sh` - Removes Nerd Fonts
-- `ssh_config_remove.sh` - Cleans SSH configuration
-- `symlinks_install.sh` - Creates configuration symlinks
-- `symlinks_uninstall.sh` - Removes configuration symlinks
+- Sensitive data stored in `.env.secrets` (git-ignored), sourced in `.zshrc`
+- Config files use variable substitution (e.g., `${NPM_TOKEN}`)
 
 **Tmux Integration:**
 
 - Custom tmux configuration with Ctrl-g prefix
-- Universal tmuxinator templates (3 templates replace 20+ project-specific configs)
+- Universal templates (3 templates replace 20+ project-specific configs)
 - Smart template detection based on project type
-- Night Owl theme integration across terminal tools
 
 **Raycast Integration:**
 
-- Custom Raycast extensions for productivity workflows
-- Bluetooth device management, color tools, JSON formatting, etc.
-- Extensions are TypeScript-based with individual package.json configurations
-- Native window management hotkeys (replaces AeroSpace tiling manager for simplicity)
+- Custom TypeScript-based extensions for productivity workflows
+- Native window management hotkeys
 
 ### File Organization
 
 ```
-config/                    # All configuration files
-├── tmux/                 # Tmux configuration and themes
-├── tmuxinator/           # Project session templates
-├── brew/                 # Homebrew package definitions
-├── karabiner/            # Keyboard remapping rules (Hyper key + shortcuts)
-├── raycast/              # Raycast extension configurations
-├── claude/               # Claude Code personal configuration
-├── git/                  # Git configuration and settings
-├── superwhisper/         # SuperWhisper AI dictation modes
-└── ...
-
-bin/                      # Installation system, custom utilities, and app shims
-├── dotfiles/             # Symlink and preference management
-├── system/               # macOS system and iTerm2 preferences
-├── tmux/                 # Tmux-specific utilities
-├── utils/                # General utility functions
-├── taskdock              # TaskDock CLI shim → apps/taskdock/
-├── taskdock-vscode       # TaskDock VS Code shim → apps/taskdock/
-├── hyperflow             # HyperFlow CLI shim → apps/hyperflow/
-└── vault                 # Vault CLI shim → apps/vault/
-
-apps/                     # Major applications
-├── taskdock/             # Agentic task orchestration and worktree management
-├── hyperflow/            # Hyper key orchestration (app launcher + mode switcher)
-└── vault/                # Vault management system
-
-.claude/                   # Claude Code local configuration
-├── commands/             # Custom slash commands (e.g., /index, /review-code)
-├── agents/               # Custom subagents for specialized tasks
-├── skills/               # Reusable skill implementations
-├── instructions/         # Custom instruction sets
-└── state/                # Plugin state and metadata (git-ignored)
-
-misc/                      # Fonts, themes, and other assets
-├── iterm2/               # iTerm2 settings and profiles
-├── mesloLGS_NF/          # Nerd Font files
-└── via/                  # Keyboard layout configurations
-
-Dotfiles in Root:
-├── .npmrc                # Node package manager (uses ${NPM_TOKEN})
-├── .zshrc                # Shell configuration (sources .env.secrets)
-├── .gitconfig            # Git configuration
-├── .env                  # Secrets and environment variables (git-ignored)
-└── ...
+.                            # macOS dotfiles system
+├── apps/                    # Major standalone applications
+│   ├── hyperflow/          # Hyper key orchestration (Karabiner + Raycast + SuperWhisper)
+│   ├── taskdock/           # Agentic task orchestration and git worktree management
+│   └── vault/              # Vault management for secrets
+├── bin/                     # Scripts and CLI shims
+│   ├── dotfiles/           # Symlink and preference management
+│   ├── system/             # macOS/iTerm2 preferences
+│   ├── tmux/               # Tmux utilities (tx launcher, monitors)
+│   ├── dev/                # Development tools (homebrew)
+│   ├── env/                # API key and secrets management
+│   └── templates/          # CLI script templates
+├── config/                  # Tool configurations (symlinked to ~/.config/)
+│   ├── tmux/               # Tmux config + Night Owl theme
+│   ├── tmuxinator/         # Universal session templates (standard, fullstack, nextjs)
+│   ├── karabiner/          # Keyboard remapping (Hyper key)
+│   ├── ghostty/            # Terminal emulator config
+│   ├── superwhisper/       # Voice dictation modes
+│   ├── claude/             # Claude Code personal config
+│   ├── vscode/             # VS Code settings + MCP config
+│   └── brew/               # Brewfile package definitions
+├── .claude/                 # Claude Code project configuration
+│   ├── commands/           # Slash commands (/index, /review-code)
+│   ├── agents/             # Custom subagents
+│   ├── skills/             # Skill implementations
+│   └── rules/              # Path-scoped rules (code-style, architecture, tmux)
+├── docs/                    # Project documentation
+├── misc/                    # Fonts, themes, assets
+└── Root dotfiles           # .zshrc, .gitconfig, .npmrc (symlinked from $HOME)
 ```
+
+### Rules Directory
+
+Path-scoped rules in `.claude/rules/` provide focused guidance:
+- `code-style.md` - Shell script and TypeScript conventions
+- `architecture.md` - Core patterns and critical hotspots
+- `tmux.md` - Session management and templates
 
 ## Development Notes
 
@@ -279,13 +229,6 @@ Ctrl-g t                    # Same as 'tx' (tmux popup binding)
 3. Creates session if new, reattaches if exists
 4. Auto-detects template or uses specified one
 5. Templates use ERB for smart detection (nextjs.yml checks for Prisma/Storybook)
-
-**Deprecated (deleted):**
-- ✗ `bin/tmux/new-project.sh` - Replaced by `tx` CLI
-- ✗ `bin/tmux/startup.sh` - No auto-startup (use `tx` manually)
-- ✗ `bin/tmux/session-menu.sh` - Replaced by `tx` with fzf picker
-- ✗ `alias tx='startup.sh'` - Now points to tx CLI
-- ✗ Project-specific configs (dotfiles.yml, paicc-1.yml, etc.) - Consolidated into 3 templates
 
 ### Script Development Patterns
 

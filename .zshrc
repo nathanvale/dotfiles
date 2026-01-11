@@ -305,38 +305,11 @@ alias w.nvmrc="node -v > .nvmrc"
 alias node-lock="node -v > .nvmrc && echo '📌 Locked to $(node -v)'"
 alias nv="echo 'Node: $(node -v) | npm: $(npm -v) | pnpm: $(pnpm -v)'"
 
-# Tmux
-alias tx='~/code/dotfiles/bin/tmux/startup.sh'
-alias txnew='~/code/dotfiles/bin/tmux/new-project.sh'
-
-# Function to jump to a project directory and start tmuxinator
-tcd() {
-    if [ $# -eq 0 ]; then
-        echo "Usage: tcd <project-name>"
-        return 1
-    fi
-
-    local project_dir="$HOME/code/$1"
-
-    if [ ! -d "$project_dir" ]; then
-        echo "Project directory not found: $project_dir"
-        return 1
-    fi
-
-    cd "$project_dir"
-
-    # Check if tmuxinator config exists
-    if [ -f "$HOME/.config/tmuxinator/$1.yml" ]; then
-        tmuxinator start "$1"
-    else
-        echo "No tmuxinator config found for $1"
-        read -q "?Generate one now? (y/n): "
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            ~/code/dotfiles/bin/tmux/new-project.sh "$1"
-        fi
-    fi
-}
+# Tmux - unified launcher (tx --help for usage)
+# tx          → Interactive picker (fzf)
+# tx <project> → Start project (auto-detect template)
+# tx .         → Start current directory
+# tx --list    → List available templates
 
 # Script Discovery & Test Helpers
 alias .aero-scripts="ls -1 ~/code/dotfiles/bin/aerospace/ | column"
@@ -383,16 +356,6 @@ alias pip='pip3'
 # ============================================================================
 # END OF MINIMAL ZSHRC
 # ============================================================================
-
-# ----------------------------------------------------------------------------
-# Tmux Auto-Startup
-# ----------------------------------------------------------------------------
-if [ -z "$TMUX_STARTUP_RAN" ]; then
-  export TMUX_STARTUP_RAN=1
-  if [ -f ~/code/dotfiles/bin/tmux/startup.sh ]; then
-    ~/code/dotfiles/bin/tmux/startup.sh
-  fi
-fi
 
 # ----------------------------------------------------------------------------
 # Bun Completions

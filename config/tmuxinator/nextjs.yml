@@ -1,0 +1,50 @@
+# nextjs.yml - Next.js projects with optional Prisma/Storybook
+# Usage: tmuxinator start nextjs ~/code/my-nextjs-app
+
+<% ROOT = @args[0] || ENV["PWD"] %>
+<% NAME = ROOT.split('/').last.gsub(/^\./, 'dot-').gsub('.', '-').downcase %>
+<%
+  # Detect optional tools
+  pkg_json = File.join(ROOT, 'package.json')
+  pkg_content = File.exist?(pkg_json) ? File.read(pkg_json) : ''
+  HAS_PRISMA = pkg_content.include?('"prisma"') || File.exist?(File.join(ROOT, 'prisma/schema.prisma'))
+  HAS_STORYBOOK = pkg_content.include?('"@storybook')
+%>
+
+name: <%= NAME %>
+root: <%= ROOT %>
+
+on_project_start: |
+  echo "Starting <%= NAME %>..."
+
+tmux_options: -f ~/.tmux.conf
+startup_window: claude
+startup_pane: 1
+
+windows:
+  - claude:
+      panes:
+        - claude
+  - git:
+      panes:
+        - lazygit
+  - dev:
+      panes:
+        - |
+          echo "Starting Next.js dev server..."
+          pnpm dev || npm run dev
+<% if HAS_PRISMA %>
+  - prisma:
+      panes:
+        - |
+          echo "Prisma Studio ready. Run: pnpm prisma studio"
+<% end %>
+<% if HAS_STORYBOOK %>
+  - storybook:
+      panes:
+        - |
+          echo "Storybook ready. Run: pnpm storybook"
+<% end %>
+  - shell:
+      panes:
+        - clear

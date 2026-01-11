@@ -1,7 +1,7 @@
 github.com:
-  - user: nathanvale
-    git_protocol: ssh
-    ssh_key: ~/.ssh/id_rsa_github
+    - user: nathanvale
+      git_protocol: ssh
+      ssh_key: ~/.ssh/id_rsa_github
 # What editor gh should run when creating issues, pull requests, etc. If blank, will refer to environment.
 editor: code
 # When to interactively prompt. This is a global config that cannot be overridden by hostname. Supported values: enabled, disabled
@@ -10,7 +10,7 @@ prompt: enabled
 pager: bat
 # Aliases allow you to create nicknames for gh commands
 aliases:
-  co: pr checkout
-  ci: issue create
+    co: pr checkout
+    ci: issue create
 browser: open
 version: "1"

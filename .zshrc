@@ -232,6 +232,23 @@ alias gd="git diff"
 alias ga="git add"
 alias gc="git commit"
 
+# GitHub CLI - account switching
+alias ghwork='gh auth switch -u REDACTED_ACCOUNT'
+alias ghpersonal='gh auth switch -u nathanvale'
+
+# Clone Bunnings repos with correct SSH key
+ghclone-bunnings() {
+  if [ -z "$1" ]; then
+    echo "Usage: ghclone-bunnings <repo-name>"
+    echo "Example: ghclone-bunnings gms.app"
+    return 1
+  fi
+  local repo="$1"
+  local dest="${2:-$HOME/code/$repo}"
+  gh auth switch -u REDACTED_ACCOUNT
+  gh repo clone "REDACTED_ORG/$repo" "$dest" -- --config core.sshCommand="ssh -i ~/.ssh/REDACTED_KEY"
+}
+
 # Utilities
 alias pg="echo 'Pinging Google' && ping www.google.com"
 ports() { lsof -i :"$1"; }  # See what's running on a port

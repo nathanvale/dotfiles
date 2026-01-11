@@ -24,7 +24,7 @@ startup_pane: 1
 windows:
   - claude:
       panes:
-        - claude
+        - ccdev
   - git:
       panes:
         - lazygit

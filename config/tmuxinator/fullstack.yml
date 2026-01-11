@@ -1,0 +1,37 @@
+# fullstack.yml - Projects with dev server and vault/docs
+# Usage: tmuxinator start fullstack ~/code/my-project
+
+<% ROOT = @args[0] || ENV["PWD"] %>
+<% NAME = ROOT.split('/').last.gsub(/^\./, 'dot-').gsub('.', '-').downcase %>
+
+name: <%= NAME %>
+root: <%= ROOT %>
+
+on_project_start: |
+  echo "Starting <%= NAME %>..."
+
+tmux_options: -f ~/.tmux.conf
+startup_window: claude
+startup_pane: 1
+
+windows:
+  - claude:
+      panes:
+        - claude
+  - git:
+      panes:
+        - lazygit
+  - dev:
+      panes:
+        - |
+          echo "Dev server ready. Run: npm run dev / bun dev / pnpm dev"
+  - vault:
+      panes:
+        - |
+          if command -v "$HOME/code/dotfiles/bin/vault" &>/dev/null; then
+            "$HOME/code/dotfiles/bin/vault" status
+          fi
+          echo ""
+          echo "Vault shortcuts:"
+          echo "  Ctrl-g V - Browse all vaults"
+          echo "  Ctrl-g v - Open current project vault"

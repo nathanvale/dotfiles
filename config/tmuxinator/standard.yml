@@ -1,0 +1,26 @@
+# standard.yml - Generic template for most projects
+# Usage: tmuxinator start standard ~/code/my-project
+
+<% ROOT = @args[0] || ENV["PWD"] %>
+<% NAME = ROOT.split('/').last.gsub(/^\./, 'dot-').gsub('.', '-').downcase %>
+
+name: <%= NAME %>
+root: <%= ROOT %>
+
+on_project_start: |
+  echo "Starting <%= NAME %>..."
+
+tmux_options: -f ~/.tmux.conf
+startup_window: claude
+startup_pane: 1
+
+windows:
+  - claude:
+      panes:
+        - claude
+  - git:
+      panes:
+        - lazygit
+  - shell:
+      panes:
+        - clear

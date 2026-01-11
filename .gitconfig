@@ -108,3 +108,5 @@
 	email = hi@nathanvale.com
 [fetch]
 	prune = true
+[credential]
+	helper = osxkeychain

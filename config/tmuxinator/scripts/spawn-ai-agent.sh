@@ -119,19 +119,17 @@ clear
 echo "🔷 Gemini AI Agent"
 echo "Repository: $(pwd)"
 echo ""
-# Check if Google AI CLI is available
+# Check if Google Gemini CLI is available
 if command -v gemini &> /dev/null; then
     gemini
-elif command -v gcloud &> /dev/null; then
-    echo "💡 Tip: Install Gemini CLI or use gcloud ai"
-    echo "Run: gcloud ai models generate-content --model=gemini-pro"
-    $SHELL
 else
     echo "⚠️  Gemini CLI not installed"
     echo ""
-    echo "Install options:"
-    echo "  1. pip install google-generativeai"
-    echo "  2. brew install google-cloud-sdk"
+    echo "Install with npm:"
+    echo "  npm i -g @google/gemini-cli"
+    echo ""
+    echo "Or run without installing:"
+    echo "  npx @google/gemini-cli"
     echo ""
     $SHELL
 fi
@@ -174,22 +172,19 @@ OPENAI_EOF
 source ~/.config/tmuxinator/scripts/common-setup.sh
 pane_setup "codex"
 clear
-echo "🔷 OpenAI Codex Agent"
+echo "🔶 OpenAI Codex Agent"
 echo "Repository: $(pwd)"
 echo ""
-# Check if Codex/GitHub Copilot CLI is available
-if command -v github-copilot-cli &> /dev/null; then
-    echo "💡 GitHub Copilot CLI detected"
-    echo ""
-    github-copilot-cli
-elif command -v copilot &> /dev/null; then
-    copilot
+# Check if OpenAI Codex CLI is available
+if command -v codex &> /dev/null; then
+    codex
 else
-    echo "⚠️  Codex not configured"
+    echo "⚠️  Codex CLI not installed"
     echo ""
-    echo "Setup options:"
-    echo "  1. npm install -g @githubnext/github-copilot-cli"
-    echo "  2. Use OpenAI Codex API"
+    echo "Install with npm:"
+    echo "  npm i -g @openai/codex"
+    echo ""
+    echo "Requires ChatGPT Plus, Pro, Business, Edu, or Enterprise plan."
     echo ""
     $SHELL
 fi

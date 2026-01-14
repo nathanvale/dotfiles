@@ -1,29 +1,46 @@
 # AI Agent Spawning Guide
 
-**Dynamically spawn AI agents in any tmux session** - no need to restart your tmuxinator project!
+**Multi-agent AI workflows in tmux** - spawn and navigate between AI agents with ease!
 
 ## Quick Reference
 
-### Keyboard Shortcuts
+### Default Setup (All Templates)
 
-While in **any tmux session**, press:
+All templates (standard, fullstack, nextjs) now start with **4 Claude agents** in a tiled 2x2 grid.
+
+### Accordion Navigation (Ctrl-g + number)
+
+Focus on one agent at a time while keeping others ready:
 
 ```
-Ctrl-g + A + c    →  Spawn Claude (horizontal split)
-Ctrl-g + A + g    →  Spawn Gemini (horizontal split)
-Ctrl-g + A + o    →  Spawn OpenAI (horizontal split)
-Ctrl-g + A + x    →  Spawn Codex (horizontal split)
-Ctrl-g + A + w    →  Create new AI window
-Ctrl-g + A + v    →  Spawn Claude (vertical split)
+Ctrl-g 1    →  Jump to pane 1 + zoom (accordion mode)
+Ctrl-g 2    →  Jump to pane 2 + zoom
+Ctrl-g 3    →  Jump to pane 3 + zoom
+Ctrl-g 4    →  Jump to pane 4 + zoom
+Ctrl-g Space →  Toggle zoom (switch tiled ↔ accordion)
+Ctrl-g T    →  Force tiled layout (see all 4)
+```
+
+### Dynamic Agent Spawning (Ctrl-g A then letter)
+
+Add more agents on-demand:
+
+```
+Ctrl-g A c  →  Spawn Claude (horizontal split)
+Ctrl-g A g  →  Spawn Gemini (horizontal split)
+Ctrl-g A x  →  Spawn Codex (horizontal split)
+Ctrl-g A o  →  Spawn OpenAI (legacy, horizontal)
+Ctrl-g A n  →  Create new AI window with Claude
+Ctrl-g A v  →  Spawn Claude (vertical split)
 ```
 
 **Example workflow:**
-1. Start your fullstack project: `tmuxinator start my-webapp`
-2. You're in Claude window, working on code
-3. Need Gemini for review? Press: `Ctrl-g` then `A` then `g`
-4. Gemini pane appears, split horizontally
-5. Need OpenAI too? Press: `Ctrl-g` then `A` then `o`
-6. Now you have Claude, Gemini, and OpenAI all in one window!
+1. Start your project: `tx ~/code/my-webapp`
+2. You have 4 Claude agents in tiled layout
+3. Press `Ctrl-g 1` to focus on agent 1 (accordion mode)
+4. Press `Ctrl-g Space` to see all 4 again
+5. Need Gemini? Press `Ctrl-g A g` to spawn one
+6. Now you have 5 agents in tiled layout!
 
 ## How It Works
 
@@ -59,69 +76,50 @@ The script automatically uses **tiled layout**, which means:
 
 ### 1. Claude ✅ (Already Installed)
 ```bash
-claude
+claude      # Standard Claude Code
+ccdev       # Claude with 25 local plugins (Nathan's alias)
 ```
-Your primary AI assistant.
+Your primary AI assistant. All templates use `ccdev` by default.
 
 ### 2. Gemini 🔷
 
-**Option A: Google Generative AI CLI**
+Google's Gemini CLI - free tier: 60 requests/min, 1,000 requests/day.
+
 ```bash
-pip install google-generativeai
-export GOOGLE_API_KEY="your-api-key"
+# Install globally
+npm i -g @google/gemini-cli
+
+# Or run without installing
+npx @google/gemini-cli
+
+# Then just run:
 gemini
 ```
 
-**Option B: gcloud AI**
+Features: 1M token context, Google Search grounding, MCP support.
+
+### 3. Codex 🔶
+
+OpenAI's Codex CLI - requires ChatGPT Plus/Pro/Business/Edu/Enterprise.
+
 ```bash
-brew install google-cloud-sdk
-gcloud ai models generate-content --model=gemini-pro
+# Install globally
+npm i -g @openai/codex
+
+# Then just run:
+codex
 ```
 
-**Option C: Shell wrapper** (create your own)
-```bash
-# ~/.local/bin/gemini
-#!/bin/bash
-python3 -c "import google.generativeai as genai; genai.configure(api_key='$GOOGLE_API_KEY'); ..."
-```
+Features: GPT-5-Codex model, code review, web search, approval modes.
 
-### 3. OpenAI 🔶
+### 4. OpenAI (Legacy) 🔶
 
-**Option A: OpenAI Official CLI**
-```bash
-pip install openai
-export OPENAI_API_KEY="your-api-key"
-openai
-```
+For shell-gpt or other OpenAI integrations:
 
-**Option B: shell-gpt (Recommended)**
 ```bash
 brew install shell-gpt
 export OPENAI_API_KEY="your-api-key"
 sgpt  # Interactive mode
-```
-
-**Option C: ChatGPT CLI**
-```bash
-npm install -g @j178/chatgpt
-export OPENAI_API_KEY="your-api-key"
-chatgpt
-```
-
-### 4. Codex 🔷
-
-**Option A: GitHub Copilot CLI**
-```bash
-npm install -g @githubnext/github-copilot-cli
-github-copilot-cli auth
-copilot
-```
-
-**Option B: OpenAI Codex API**
-```bash
-# Use OpenAI's Codex models via API
-pip install openai
-# Create custom script using openai.Completion.create(engine="code-davinci-002")
 ```
 
 ## Advanced Usage
@@ -336,17 +334,33 @@ Ctrl-g + x       # Close pane (standard tmux)
 
 ## Keyboard Shortcuts Summary
 
+### Accordion Navigation
 | Keys | Action |
 |------|--------|
-| `Ctrl-g + A + c` | Spawn Claude |
-| `Ctrl-g + A + g` | Spawn Gemini |
-| `Ctrl-g + A + o` | Spawn OpenAI |
-| `Ctrl-g + A + x` | Spawn Codex |
-| `Ctrl-g + A + w` | New AI window |
-| `Ctrl-g + A + v` | Spawn Claude (vertical) |
-| `Ctrl-g + z` | Zoom/unzoom pane |
-| `Ctrl-g + x` | Kill pane |
-| `Ctrl-g + o` | Cycle through panes |
+| `Ctrl-g 1` | Jump to pane 1 + zoom |
+| `Ctrl-g 2` | Jump to pane 2 + zoom |
+| `Ctrl-g 3` | Jump to pane 3 + zoom |
+| `Ctrl-g 4` | Jump to pane 4 + zoom |
+| `Ctrl-g Space` | Toggle zoom (tiled ↔ accordion) |
+| `Ctrl-g T` | Force tiled layout |
+
+### Agent Spawning (A-prefix)
+| Keys | Action |
+|------|--------|
+| `Ctrl-g A c` | Spawn Claude |
+| `Ctrl-g A g` | Spawn Gemini |
+| `Ctrl-g A x` | Spawn Codex |
+| `Ctrl-g A o` | Spawn OpenAI (legacy) |
+| `Ctrl-g A n` | New AI window |
+| `Ctrl-g A v` | Spawn Claude (vertical) |
+
+### General Tmux
+| Keys | Action |
+|------|--------|
+| `Ctrl-g z` | Zoom/unzoom pane |
+| `Ctrl-g x` | Kill pane (with confirm) |
+| `Ctrl-g o` | Cycle through panes |
+| `Alt-1/2/3...` | Switch to window 1/2/3... |
 
 ## Next Steps
 

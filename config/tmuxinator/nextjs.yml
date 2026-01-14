@@ -18,13 +18,17 @@ on_project_start: |
   echo "Starting <%= NAME %>..."
 
 tmux_options: -f ~/.tmux.conf
-startup_window: claude
+startup_window: ai
 startup_pane: 1
 
 windows:
-  - claude:
+  - ai:
+      layout: tiled
       panes:
         - ccdev
+        - sleep 2 && ccdev
+        - sleep 4 && ccdev
+        - sleep 6 && ccdev
   - git:
       panes:
         - lazygit

@@ -119,17 +119,17 @@ clear
 echo "🔷 Gemini AI Agent"
 echo "Repository: $(pwd)"
 echo ""
-# Check if Google Gemini CLI is available
+# Check if Google Gemini CLI is available (installed via brew)
 if command -v gemini &> /dev/null; then
     gemini
 else
     echo "⚠️  Gemini CLI not installed"
     echo ""
-    echo "Install with npm:"
-    echo "  npm i -g @google/gemini-cli"
+    echo "Install with brew:"
+    echo "  brew install gemini-cli"
     echo ""
-    echo "Or run without installing:"
-    echo "  npx @google/gemini-cli"
+    echo "Or upgrade all AI tools:"
+    echo "  Ctrl-g U"
     echo ""
     $SHELL
 fi

@@ -10,7 +10,8 @@ brew "pipx"    # Install Python CLI tools in isolated environments
 brew "pyenv"   # Python version manager
 brew "m4"      # GNU macro processor (needed by autoconf)
 brew "autoconf"  # Tool for generating configure scripts
-brew "aider"   # AI pair programming CLI tool
+brew "aider"      # AI pair programming CLI tool
+brew "gemini-cli" # Google Gemini AI CLI
 brew "docker"
 brew "colima"    # lightweight VM for running containers (better on macOS)
 brew "docker-compose"

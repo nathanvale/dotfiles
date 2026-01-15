@@ -1,9 +1,0 @@
-{
-	"alwaysUpdateLinks": true,
-	"readableLineLength": true,
-	"showFrontmatter": true,
-	"showInlineTitle": true,
-	"showLineNumber": true,
-	"strictLineBreaks": false,
-	"useMarkdownLinks": true
-}

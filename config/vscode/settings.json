@@ -178,7 +178,6 @@
 	"workbench.navigationControl.enabled": false,
 	"workbench.sideBar.location": "left",
 	"workbench.startupEditor": "none",
-	"workbench.statusBar.visible": true,
 	// Calm animations
 	"workbench.useExperimentalGridLayout": false,
 	"zenMode.centerLayout": true,

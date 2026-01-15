@@ -1,0 +1,22 @@
+server: https://bunnings.atlassian.net
+login: nathan.vale1@bunnings.com.au
+project:
+  key: POS
+  type: classic
+board:
+  id: 1536
+  type: scrum
+issue:
+  types:
+    - id: "10001"
+      name: Task
+      handle: Task
+      subtask: false
+    - id: "10002"
+      name: Story
+      handle: Story
+      subtask: false
+    - id: "10003"
+      name: Bug
+      handle: Bug
+      subtask: false

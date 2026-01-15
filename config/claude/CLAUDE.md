@@ -93,3 +93,15 @@
 - `~/.claude/context/atuin.md` → Shell history search
 - `~/.claude/context/personal.md` → Birthdays, hobbies, details
 - `~/.claude/context/obsidian-setup.md` → PARA method, vault commands
+
+### Bunnings Proxy Toggle
+
+When working with Bunnings repos, proxy settings can interfere with external tools like `gh`:
+
+```bash
+proxy-on      # Enable proxy (for VPN)
+proxy-off     # Disable proxy (off VPN)
+proxy-status  # Check current state
+```
+
+If `gh pr create` fails with "error connecting to vzen01.internal.bunnings.com.au", run `proxy-off` first.

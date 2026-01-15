@@ -206,7 +206,7 @@ cat() {
         break
       fi
     done
-    
+
     if [[ $has_binary -eq 1 ]]; then
       # Binary file detected - use regular cat
       command cat "$@"
@@ -257,9 +257,7 @@ ports() { lsof -i :"$1"; }  # See what's running on a port
 alias cc="claude --dangerously-skip-permissions"
 alias ccdev="claude --dangerously-skip-permissions \
   --plugin-dir ~/code/side-quest-marketplace/plugins/atuin \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/biome-runner \
   --plugin-dir ~/code/side-quest-marketplace/plugins/bookmarks \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/bun-runner \
   --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-claude-md \
   --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-docs \
   --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-skill-expert \
@@ -276,7 +274,6 @@ alias ccdev="claude --dangerously-skip-permissions \
   --plugin-dir ~/code/side-quest-marketplace/plugins/scraper-toolkit \
   --plugin-dir ~/code/side-quest-marketplace/plugins/terminal \
   --plugin-dir ~/code/side-quest-marketplace/plugins/the-cinema-bandit \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/tsc-runner \
   --plugin-dir ~/code/side-quest-marketplace/plugins/validate-plugin"
 alias cct="npx @mariozechner/claude-trace"
 alias ccu="npx ccusage@latest"
@@ -586,3 +583,32 @@ eval "$(pyenv init -)"
 
 # PARA Obsidian CLI
 alias para="bun run /Users/nathanvale/code/side-quest-marketplace/plugins/para-obsidian/src/cli.ts"
+
+# ----------------------------------------------------------------------------
+# Bunnings Proxy Toggle (for VPN on/off)
+# ----------------------------------------------------------------------------
+proxy-on() {
+  export HTTP_PROXY=http://REDACTED_PROXY_HOST:80
+  export http_proxy=http://REDACTED_PROXY_HOST:80
+  export HTTPS_PROXY=http://REDACTED_PROXY_HOST:80
+  export https_proxy=http://REDACTED_PROXY_HOST:80
+  export NO_PROXY=REDACTED_DOMAIN,REDACTED_DOMAIN,REDACTED_DOMAIN,REDACTED_DOMAIN,REDACTED_DOMAIN,REDACTED_DOMAIN,localhost
+  export NODE_EXTRA_CA_CERTS=~/CAFile.pem
+  echo "🔒 Proxy ON (Bunnings VPN)"
+}
+
+proxy-off() {
+  unset HTTP_PROXY http_proxy HTTPS_PROXY https_proxy NO_PROXY NODE_EXTRA_CA_CERTS
+  echo "🔓 Proxy OFF"
+}
+
+proxy-status() {
+  if [[ -n "$HTTP_PROXY" ]]; then
+    echo "🔒 Proxy: ON → $HTTP_PROXY"
+  else
+    echo "🔓 Proxy: OFF"
+  fi
+}
+
+# Default: Proxy ON (assumes VPN connected during work hours)
+proxy-on >/dev/null

@@ -34,6 +34,7 @@ brew "fd"
 brew "flyctl"
 brew "fzf"
 brew "gh"
+brew "jira-cli"  # Interactive Jira CLI (ankitpokhrel/jira-cli)
 brew "ghq"
 brew "git-delta"
 brew "git-filter-repo"

@@ -68,16 +68,16 @@ list_worktrees() {
     done
 }
 
-# List ALL remote branches (as bases for new branches)
+# List ALL remote branches (as bases for new branches), newest first
 list_remote_branches() {
-    git branch -r 2>/dev/null | grep -v HEAD | sed 's/.*origin\///' | while read -r branch; do
+    git branch -r --sort=-committerdate 2>/dev/null | grep -v HEAD | sed 's/.*origin\///' | while read -r branch; do
         echo "remote:$branch"
     done
 }
 
-# List ALL local branches (as bases for new branches)
+# List ALL local branches (as bases for new branches), newest first
 list_local_branches() {
-    git branch --format='%(refname:short)' | while read -r branch; do
+    git branch --sort=-committerdate --format='%(refname:short)' | while read -r branch; do
         echo "local:$branch"
     done
 }

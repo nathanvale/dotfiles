@@ -246,6 +246,10 @@ create_ai_session() {
 main() {
     check_git_repo
 
+    # Fetch latest from remote (prune deleted branches)
+    info "Fetching latest from remote..."
+    git fetch --prune --quiet 2>/dev/null || warning "Could not fetch from remote"
+
     local branch=""
     local worktree_path=""
 

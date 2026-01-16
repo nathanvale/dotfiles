@@ -5,12 +5,10 @@
 # the popup switches the popup's client, not the parent. When popup closes,
 # the switch is lost.
 #
-# Solution: Capture original client, run popup, switch the original client after.
+# Solution: Run popup, then switch-client after popup closes.
+# Key insight: switch-client works from run-shell without -c flag (uses current client)
 
 SWITCH_FILE="/tmp/tmux-worktree-switch"
-
-# Capture the original client BEFORE popup opens
-ORIGINAL_CLIENT=$(tmux display-message -p '#{client_tty}')
 
 # Clean up any previous switch file
 rm -f "$SWITCH_FILE"
@@ -25,8 +23,8 @@ if [[ -f "$SWITCH_FILE" ]] && [[ -s "$SWITCH_FILE" ]]; then
     session_name=$(cat "$SWITCH_FILE")
     rm -f "$SWITCH_FILE"
     if tmux has-session -t "$session_name" 2>/dev/null; then
-        # Switch the ORIGINAL client to the new session
-        tmux switch-client -c "$ORIGINAL_CLIENT" -t "$session_name"
+        # Simple switch - tmux knows which client called run-shell
+        tmux switch-client -t "$session_name"
     fi
 else
     rm -f "$SWITCH_FILE"

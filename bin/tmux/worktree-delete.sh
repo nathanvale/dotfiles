@@ -153,15 +153,20 @@ delete_worktree() {
     local branch="$1"
     local repo_root
     repo_root=$(get_repo_root)
-    local worktree_path="$repo_root/$WORKTREE_DIR/$branch"
+
+    # Path-safe branch name (slashes to dashes) - must match create script
+    local path_safe_branch
+    path_safe_branch=$(echo "$branch" | tr '/' '-')
+    local worktree_path="$repo_root/$WORKTREE_DIR/$path_safe_branch"
 
     # Verify worktree exists
     if ! git worktree list --porcelain | grep -q "^worktree $worktree_path$"; then
-        error "Worktree not found: $branch"
+        error "Worktree not found: $branch (looked for $worktree_path)"
     fi
 
     local repo_name
     repo_name=$(basename "$repo_root")
+    # Session name must match create script: repo-wt-branch (sanitized, kebab-case, 30 char limit)
     local session_name="${repo_name}-wt-$(echo "$branch" | tr '/' '-' | tr '[:upper:]' '[:lower:]' | cut -c1-30)"
 
     # Get status info
@@ -249,9 +254,12 @@ delete_worktree() {
     esac
 
     # Kill tmux session if exists
+    info "Looking for session: $session_name"
     if tmux has-session -t "$session_name" 2>/dev/null; then
         info "Killing session: $session_name"
-        tmux kill-session -t "$session_name" 2>/dev/null || true
+        tmux kill-session -t "$session_name" || warning "Failed to kill session"
+    else
+        warning "Session not found: $session_name"
     fi
 
     # Remove worktree

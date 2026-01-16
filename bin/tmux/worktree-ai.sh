@@ -56,6 +56,12 @@ get_repo_root() {
     fi
 }
 
+# Check if a branch already has a worktree
+branch_has_worktree() {
+    local branch="$1"
+    git worktree list --porcelain | grep -q "^branch refs/heads/$branch$"
+}
+
 # List existing worktrees (excluding main)
 list_worktrees() {
     git worktree list --porcelain | grep "^worktree " | cut -d' ' -f2- | while read -r wt; do
@@ -97,19 +103,19 @@ pick_branch() {
         choices+="$worktrees\n"
     fi
 
-    # Local branches as bases for new branches
+    # Local branches
     local local_branches
     local_branches=$(list_local_branches)
     if [[ -n "$local_branches" ]]; then
-        choices+="${YELLOW}── New branch from Local ──${NC}\n"
+        choices+="${YELLOW}── Local Branches ──${NC}\n"
         choices+="$local_branches\n"
     fi
 
-    # Remote branches as bases for new branches
+    # Remote branches
     local remote_branches
     remote_branches=$(list_remote_branches)
     if [[ -n "$remote_branches" ]]; then
-        choices+="${BLUE}── New branch from Remote ──${NC}\n"
+        choices+="${BLUE}── Remote Branches ──${NC}\n"
         choices+="$remote_branches\n"
     fi
 
@@ -284,15 +290,27 @@ main() {
             branch=$(echo "$selection" | cut -d: -f2)
             worktree_path=$(echo "$selection" | cut -d: -f3)
         elif [[ "$selection" == local:* ]]; then
-            # Local branch selected as base - prompt for new branch name
-            base_branch=$(echo "$selection" | cut -d: -f2)
-            prompt_new_branch "$base_branch"
-            branch="$REPLY"
+            # Local branch selected
+            branch=$(echo "$selection" | cut -d: -f2)
+            # Check if this branch already has a worktree
+            if branch_has_worktree "$branch"; then
+                # Need a new branch name
+                base_branch="$branch"
+                prompt_new_branch "$base_branch"
+                branch="$REPLY"
+            fi
+            # Otherwise use the branch directly
         elif [[ "$selection" == remote:* ]]; then
-            # Remote branch selected as base - prompt for new branch name
-            base_branch=$(echo "$selection" | cut -d: -f2)
-            prompt_new_branch "origin/$base_branch"
-            branch="$REPLY"
+            # Remote branch selected
+            branch=$(echo "$selection" | cut -d: -f2)
+            # Check if local equivalent exists and has a worktree
+            if branch_has_worktree "$branch"; then
+                # Need a new branch name
+                base_branch="$branch"
+                prompt_new_branch "origin/$base_branch"
+                branch="$REPLY"
+            fi
+            # Otherwise checkout the remote branch directly
         else
             exit 0
         fi

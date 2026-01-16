@@ -2,7 +2,7 @@
 # Usage: tmuxinator start standard ~/code/my-project
 
 <% ROOT = @args[0] || ENV["PWD"] %>
-<% NAME = ROOT.split('/').last.gsub(/^\./, 'dot-').gsub('.', '-').downcase %>
+<% NAME = ENV["TMUXINATOR_SESSION_NAME"] || ROOT.split('/').last.gsub(/^\./, 'dot-').gsub('.', '-').downcase %>
 
 name: <%= NAME %>
 root: <%= ROOT %>

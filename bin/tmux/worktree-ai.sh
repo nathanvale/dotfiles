@@ -68,10 +68,10 @@ list_worktrees() {
     done
 }
 
-# List remote branches not yet checked out
+# List remote branches not yet checked out locally
 list_remote_branches() {
-    git branch -r --no-merged 2>/dev/null | grep -v HEAD | sed 's/origin\///' | while read -r branch; do
-        # Skip if already a local branch
+    git branch -r 2>/dev/null | grep -v HEAD | sed 's/.*origin\///' | while read -r branch; do
+        # Skip if already a local branch (use local instead)
         if ! git show-ref --verify --quiet "refs/heads/$branch"; then
             echo "remote:$branch"
         fi

@@ -5,10 +5,12 @@
 # the popup switches the popup's client, not the parent. When popup closes,
 # the switch is lost.
 #
-# Solution: Run popup, have script write session name to file, switch after popup closes.
+# Solution: Capture original client, run popup, switch the original client after.
 
-# Use a fixed file path (not $$) since run-shell may have different PID context
 SWITCH_FILE="/tmp/tmux-worktree-switch"
+
+# Capture the original client BEFORE popup opens
+ORIGINAL_CLIENT=$(tmux display-message -p '#{client_tty}')
 
 # Clean up any previous switch file
 rm -f "$SWITCH_FILE"
@@ -19,13 +21,12 @@ tmux display-popup -w 80% -h 70% -E \
     "WORKTREE_SWITCH_FILE='$SWITCH_FILE' bash $HOME/code/dotfiles/bin/tmux/worktree-ai.sh"
 
 # After popup closes, check if we need to switch
-# Use tmux run-shell to ensure switch happens in proper client context
 if [[ -f "$SWITCH_FILE" ]] && [[ -s "$SWITCH_FILE" ]]; then
     session_name=$(cat "$SWITCH_FILE")
     rm -f "$SWITCH_FILE"
     if tmux has-session -t "$session_name" 2>/dev/null; then
-        # Use run-shell -b to run in background after this script exits
-        exec tmux switch-client -t "$session_name"
+        # Switch the ORIGINAL client to the new session
+        tmux switch-client -c "$ORIGINAL_CLIENT" -t "$session_name"
     fi
 else
     rm -f "$SWITCH_FILE"

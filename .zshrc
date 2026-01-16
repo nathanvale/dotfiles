@@ -610,5 +610,5 @@ proxy-status() {
   fi
 }
 
-# Default: Proxy ON (assumes VPN connected during work hours)
-proxy-on >/dev/null
+# Default: Proxy OFF
+proxy-off >/dev/null

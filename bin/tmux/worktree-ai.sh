@@ -68,25 +68,17 @@ list_worktrees() {
     done
 }
 
-# List remote branches not yet checked out locally
+# List ALL remote branches (as bases for new branches)
 list_remote_branches() {
     git branch -r 2>/dev/null | grep -v HEAD | sed 's/.*origin\///' | while read -r branch; do
-        # Skip if already a local branch (use local instead)
-        if ! git show-ref --verify --quiet "refs/heads/$branch"; then
-            echo "remote:$branch"
-        fi
+        echo "remote:$branch"
     done
 }
 
-# List local branches without worktrees
+# List ALL local branches (as bases for new branches)
 list_local_branches() {
-    local worktree_branches
-    worktree_branches=$(git worktree list --porcelain | grep "^branch " | sed 's/branch refs\/heads\///')
-
     git branch --format='%(refname:short)' | while read -r branch; do
-        if ! echo "$worktree_branches" | grep -qx "$branch"; then
-            echo "branch:$branch"
-        fi
+        echo "local:$branch"
     done
 }
 
@@ -94,47 +86,50 @@ list_local_branches() {
 pick_branch() {
     local choices=""
 
-    # Header option to create new branch
-    choices="${CYAN}[+] Create new branch${NC}\n"
+    # Header option to create new branch from HEAD
+    choices="${CYAN}[+] Create new branch (from HEAD)${NC}\n"
 
     # Existing worktrees (can attach)
     local worktrees
     worktrees=$(list_worktrees)
     if [[ -n "$worktrees" ]]; then
-        choices+="${GREEN}── Existing Worktrees ──${NC}\n"
+        choices+="${GREEN}── Attach to Worktree ──${NC}\n"
         choices+="$worktrees\n"
     fi
 
-    # Local branches (can create worktree)
+    # Local branches as bases for new branches
     local local_branches
     local_branches=$(list_local_branches)
     if [[ -n "$local_branches" ]]; then
-        choices+="${YELLOW}── Local Branches ──${NC}\n"
+        choices+="${YELLOW}── New branch from Local ──${NC}\n"
         choices+="$local_branches\n"
     fi
 
-    # Remote branches (can checkout + create worktree)
+    # Remote branches as bases for new branches
     local remote_branches
     remote_branches=$(list_remote_branches)
     if [[ -n "$remote_branches" ]]; then
-        choices+="${BLUE}── Remote Branches ──${NC}\n"
+        choices+="${BLUE}── New branch from Remote ──${NC}\n"
         choices+="$remote_branches\n"
     fi
 
     # Use fzf to pick (no --height in popup, it takes full space)
     local selection
     selection=$(echo -e "$choices" | fzf --ansi --reverse \
-        --header="Select worktree/branch (or create new)" \
+        --header="Select base branch or existing worktree" \
         --no-preview) || exit 0
 
     echo "$selection"
 }
 
 # Prompt for new branch name - sets REPLY variable directly
+# Args: $1 = base branch (optional, for display)
 prompt_new_branch() {
+    local base="${1:-HEAD}"
     # After fzf exits, stdin might be weird - explicitly use /dev/tty
     exec < /dev/tty
     echo ""
+    printf "${DIM}Base: ${base}${NC}\n"
     printf "${CYAN}Enter new branch name: ${NC}"
     read -r REPLY
 
@@ -147,13 +142,19 @@ prompt_new_branch() {
 }
 
 # Create or get worktree path for a branch
+# Args: $1 = new branch name, $2 = base branch (optional)
 ensure_worktree() {
     local branch="$1"
+    local base="${2:-}"
     local repo_root
     repo_root=$(get_repo_root)
-    local worktree_path="$repo_root/$WORKTREE_DIR/$branch"
 
-    # Check if worktree already exists
+    # Sanitize branch name for path (replace / with -)
+    local path_safe_branch
+    path_safe_branch=$(echo "$branch" | tr '/' '-')
+    local worktree_path="$repo_root/$WORKTREE_DIR/$path_safe_branch"
+
+    # Check if worktree already exists for this branch
     if git worktree list --porcelain | grep -q "^worktree $worktree_path$"; then
         echo "$worktree_path"
         return 0
@@ -162,17 +163,29 @@ ensure_worktree() {
     # Create worktrees directory if needed
     mkdir -p "$repo_root/$WORKTREE_DIR"
 
-    # Check if branch exists locally (redirect info and git output to stderr)
-    if git show-ref --verify --quiet "refs/heads/$branch"; then
+    # If base is specified, create new branch from that base
+    if [[ -n "$base" ]]; then
+        # Check if it's a remote base
+        if [[ "$base" == origin/* ]] || git show-ref --verify --quiet "refs/remotes/origin/$base"; then
+            local remote_ref="origin/$base"
+            [[ "$base" == origin/* ]] && remote_ref="$base"
+            info "Creating worktree: $branch from $remote_ref" >&2
+            git worktree add -b "$branch" "$worktree_path" "$remote_ref" >&2
+        else
+            # Local base
+            info "Creating worktree: $branch from $base" >&2
+            git worktree add -b "$branch" "$worktree_path" "$base" >&2
+        fi
+    # No base specified - check if branch exists
+    elif git show-ref --verify --quiet "refs/heads/$branch"; then
         info "Creating worktree for existing branch: $branch" >&2
         git worktree add "$worktree_path" "$branch" >&2
-    # Check if branch exists on remote
     elif git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
         info "Creating worktree for remote branch: $branch" >&2
         git worktree add "$worktree_path" -b "$branch" "origin/$branch" >&2
     else
         # New branch from current HEAD
-        info "Creating worktree with new branch: $branch" >&2
+        info "Creating worktree with new branch: $branch (from HEAD)" >&2
         git worktree add -b "$branch" "$worktree_path" >&2
     fi
 
@@ -253,6 +266,8 @@ main() {
     local branch=""
     local worktree_path=""
 
+    local base_branch=""
+
     if [[ -n "$1" ]]; then
         # Branch name provided as argument
         branch="$1"
@@ -262,14 +277,22 @@ main() {
         selection=$(pick_branch)
 
         if [[ "$selection" == *"Create new branch"* ]]; then
-            prompt_new_branch
+            prompt_new_branch "HEAD"
             branch="$REPLY"
         elif [[ "$selection" == worktree:* ]]; then
             # Existing worktree - extract path and branch
             branch=$(echo "$selection" | cut -d: -f2)
             worktree_path=$(echo "$selection" | cut -d: -f3)
-        elif [[ "$selection" == branch:* ]] || [[ "$selection" == remote:* ]]; then
-            branch=$(echo "$selection" | cut -d: -f2)
+        elif [[ "$selection" == local:* ]]; then
+            # Local branch selected as base - prompt for new branch name
+            base_branch=$(echo "$selection" | cut -d: -f2)
+            prompt_new_branch "$base_branch"
+            branch="$REPLY"
+        elif [[ "$selection" == remote:* ]]; then
+            # Remote branch selected as base - prompt for new branch name
+            base_branch=$(echo "$selection" | cut -d: -f2)
+            prompt_new_branch "origin/$base_branch"
+            branch="$REPLY"
         else
             exit 0
         fi
@@ -277,7 +300,7 @@ main() {
 
     # Ensure worktree exists (skip if we already have the path)
     if [[ -z "$worktree_path" ]]; then
-        worktree_path=$(ensure_worktree "$branch")
+        worktree_path=$(ensure_worktree "$branch" "$base_branch")
     fi
 
     # Create the AI session

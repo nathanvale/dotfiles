@@ -1,10 +1,12 @@
 #!/bin/bash
 # bin/tmux/worktree-ai.sh
-# Create or attach to a git worktree and spawn 4 Claude AI panes
+# Create a git worktree and spawn a new tmux session with the standard template
 #
 # Usage: worktree-ai.sh [branch-name]
 #   - With no args: shows fzf picker for existing worktrees/branches
-#   - With branch name: creates new worktree or attaches to existing
+#   - With branch name: creates new worktree or attaches to existing session
+#
+# Session naming: <repo>-wt-<branch> (e.g., dotfiles-wt-feat-auth)
 
 set -e
 
@@ -119,43 +121,29 @@ pick_branch() {
         choices+="$remote_branches\n"
     fi
 
-    # Use fzf to pick
+    # Use fzf to pick (no --height in popup, it takes full space)
     local selection
-    selection=$(echo -e "$choices" | fzf --ansi --height=50% --reverse \
+    selection=$(echo -e "$choices" | fzf --ansi --reverse \
         --header="Select worktree/branch (or create new)" \
-        --preview='
-            line={}
-            if [[ "$line" == worktree:* ]]; then
-                path=$(echo "$line" | cut -d: -f3)
-                echo "📁 Worktree: $path"
-                echo ""
-                git -C "$path" log --oneline -5 2>/dev/null
-            elif [[ "$line" == branch:* ]] || [[ "$line" == remote:* ]]; then
-                branch=$(echo "$line" | cut -d: -f2)
-                echo "🌿 Branch: $branch"
-                echo ""
-                git log --oneline -5 "$branch" 2>/dev/null || git log --oneline -5 "origin/$branch" 2>/dev/null
-            fi
-        ' \
-        --preview-window=right:50%:wrap \
-        2>/dev/null) || exit 0
+        --no-preview) || exit 0
 
     echo "$selection"
 }
 
-# Prompt for new branch name
+# Prompt for new branch name - sets REPLY variable directly
 prompt_new_branch() {
+    # After fzf exits, stdin might be weird - explicitly use /dev/tty
+    exec < /dev/tty
     echo ""
     printf "${CYAN}Enter new branch name: ${NC}"
-    read -r branch_name
+    read -r REPLY
 
-    if [[ -z "$branch_name" ]]; then
+    if [[ -z "$REPLY" ]]; then
         error "Branch name cannot be empty"
     fi
 
-    # Sanitize branch name
-    branch_name=$(echo "$branch_name" | sed 's/[^a-zA-Z0-9._-]/-/g')
-    echo "$branch_name"
+    # Sanitize branch name (allow slashes for feat/xxx style)
+    REPLY=$(echo "$REPLY" | sed 's/[^a-zA-Z0-9._/-]/-/g')
 }
 
 # Create or get worktree path for a branch
@@ -174,57 +162,81 @@ ensure_worktree() {
     # Create worktrees directory if needed
     mkdir -p "$repo_root/$WORKTREE_DIR"
 
-    # Check if branch exists locally
+    # Check if branch exists locally (redirect info and git output to stderr)
     if git show-ref --verify --quiet "refs/heads/$branch"; then
-        info "Creating worktree for existing branch: $branch"
-        git worktree add "$worktree_path" "$branch"
+        info "Creating worktree for existing branch: $branch" >&2
+        git worktree add "$worktree_path" "$branch" >&2
     # Check if branch exists on remote
     elif git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
-        info "Creating worktree for remote branch: $branch"
-        git worktree add "$worktree_path" -b "$branch" "origin/$branch"
+        info "Creating worktree for remote branch: $branch" >&2
+        git worktree add "$worktree_path" -b "$branch" "origin/$branch" >&2
     else
         # New branch from current HEAD
-        info "Creating worktree with new branch: $branch"
-        git worktree add -b "$branch" "$worktree_path"
+        info "Creating worktree with new branch: $branch" >&2
+        git worktree add -b "$branch" "$worktree_path" >&2
     fi
 
     echo "$worktree_path"
 }
 
-# Create tmux window with 4 Claude panes
-create_ai_window() {
+# Create tmux session with standard template (using raw tmux commands)
+create_ai_session() {
     local worktree_path="$1"
     local branch="$2"
+    local repo_name
+    repo_name=$(basename "$(get_repo_root)")
+
+    # Session name: repo-wt-branch (sanitized, kebab-case)
     local session_name
+    session_name="${repo_name}-wt-$(echo "$branch" | tr '/' '-' | tr '[:upper:]' '[:lower:]' | cut -c1-30)"
 
-    session_name=$(tmux display-message -p '#S')
+    # Check if session already exists
+    if tmux has-session -t "$session_name" 2>/dev/null; then
+        success "Session '$session_name' exists, will switch to it..."
+        # Write session name for wrapper to switch after popup closes
+        if [[ -n "${WORKTREE_SWITCH_FILE:-}" ]]; then
+            echo "$session_name" > "$WORKTREE_SWITCH_FILE"
+        fi
+        return
+    fi
 
-    # Window name is the branch (sanitized for tmux)
-    local window_name
-    window_name=$(echo "$branch" | tr '/' '-' | cut -c1-20)
+    info "Creating session '$session_name'..."
 
-    # Create new window
-    tmux new-window -t "$session_name" -n "$window_name" -c "$worktree_path"
+    # Create new detached session with 'ai' window
+    tmux new-session -d -s "$session_name" -n "ai" -c "$worktree_path"
 
     # Split into 4 panes (tiled layout)
-    tmux split-window -t "$session_name:$window_name" -h -c "$worktree_path"
-    tmux split-window -t "$session_name:$window_name.1" -v -c "$worktree_path"
-    tmux split-window -t "$session_name:$window_name.2" -v -c "$worktree_path"
-
-    # Apply tiled layout
-    tmux select-layout -t "$session_name:$window_name" tiled
+    tmux split-window -t "$session_name:ai" -h -c "$worktree_path"
+    tmux split-window -t "$session_name:ai.1" -v -c "$worktree_path"
+    tmux split-window -t "$session_name:ai.2" -v -c "$worktree_path"
+    tmux select-layout -t "$session_name:ai" tiled
 
     # Start Claude in each pane with staggered delays
-    tmux send-keys -t "$session_name:$window_name.1" "ccdev" C-m
-    tmux send-keys -t "$session_name:$window_name.2" "sleep 2 && ccdev" C-m
-    tmux send-keys -t "$session_name:$window_name.3" "sleep 4 && ccdev" C-m
-    tmux send-keys -t "$session_name:$window_name.4" "sleep 6 && ccdev" C-m
+    tmux send-keys -t "$session_name:ai.1" "ccdev" C-m
+    tmux send-keys -t "$session_name:ai.2" "sleep 2 && ccdev" C-m
+    tmux send-keys -t "$session_name:ai.3" "sleep 4 && ccdev" C-m
+    tmux send-keys -t "$session_name:ai.4" "sleep 6 && ccdev" C-m
 
-    # Select first pane
-    tmux select-pane -t "$session_name:$window_name.1"
+    # Add git window with lazygit
+    tmux new-window -t "$session_name" -n "git" -c "$worktree_path"
+    tmux send-keys -t "$session_name:git" "lazygit" C-m
 
-    success "Created AI window '$window_name' with 4 Claude panes"
+    # Add shell window
+    tmux new-window -t "$session_name" -n "shell" -c "$worktree_path"
+
+    # Select the ai window
+    tmux select-window -t "$session_name:ai"
+    tmux select-pane -t "$session_name:ai.1"
+
+    success "Created session '$session_name' for worktree"
+    echo ""
     echo "Worktree: $worktree_path"
+    echo "Session:  $session_name"
+
+    # Write session name for the wrapper to switch after popup closes
+    if [[ -n "${WORKTREE_SWITCH_FILE:-}" ]]; then
+        echo "$session_name" > "$WORKTREE_SWITCH_FILE"
+    fi
 }
 
 # ============================================================================
@@ -232,11 +244,6 @@ create_ai_window() {
 # ============================================================================
 
 main() {
-    # Check prerequisites
-    if [[ -z "$TMUX" ]]; then
-        error "Not in a tmux session"
-    fi
-
     check_git_repo
 
     local branch=""
@@ -251,7 +258,8 @@ main() {
         selection=$(pick_branch)
 
         if [[ "$selection" == *"Create new branch"* ]]; then
-            branch=$(prompt_new_branch)
+            prompt_new_branch
+            branch="$REPLY"
         elif [[ "$selection" == worktree:* ]]; then
             # Existing worktree - extract path and branch
             branch=$(echo "$selection" | cut -d: -f2)
@@ -268,8 +276,8 @@ main() {
         worktree_path=$(ensure_worktree "$branch")
     fi
 
-    # Create the AI window
-    create_ai_window "$worktree_path" "$branch"
+    # Create the AI session
+    create_ai_session "$worktree_path" "$branch"
 }
 
 main "$@"

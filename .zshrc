@@ -255,26 +255,31 @@ ports() { lsof -i :"$1"; }  # See what's running on a port
 
 # Claude Code
 alias cc="claude --dangerously-skip-permissions"
-alias ccdev="claude --dangerously-skip-permissions \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/atuin \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/bookmarks \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-claude-md \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-docs \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-skill-expert \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/clipboard \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/dev-toolkit \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/firecrawl \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/git \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/kit \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/mcp-manager \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/melanie \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/nvcc \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/para-obsidian \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/plugin-template \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/scraper-toolkit \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/terminal \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/the-cinema-bandit \
-  --plugin-dir ~/code/side-quest-marketplace/plugins/validate-plugin"
+# ccdev function - disables corepack/pnpm package manager detection to avoid
+# "This project is configured to use yarn" errors when starting in non-pnpm projects
+ccdev() {
+  COREPACK_ENABLE_STRICT=0 claude --dangerously-skip-permissions \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/atuin \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/bookmarks \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-claude-md \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-docs \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-skill-expert \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/clipboard \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/dev-toolkit \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/firecrawl \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/git \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/kit \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/mcp-manager \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/melanie \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/nvcc \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/para-obsidian \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/plugin-template \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/scraper-toolkit \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/terminal \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/the-cinema-bandit \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/validate-plugin \
+    "$@"
+}
 alias cct="npx @mariozechner/claude-trace"
 alias ccu="npx ccusage@latest"
 alias ccs="npx @mariozechner/snap-happy to local"
@@ -612,3 +617,9 @@ proxy-status() {
 
 # Default: Proxy OFF
 proxy-off >/dev/null
+
+# ----------------------------------------------------------------------------
+# Direnv (directory-specific env vars)
+# ----------------------------------------------------------------------------
+eval "$(direnv hook zsh)"
+

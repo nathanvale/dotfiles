@@ -17,6 +17,7 @@ brew "colima"    # lightweight VM for running containers (better on macOS)
 brew "docker-compose"
 brew "tmux"
 brew "zoxide"
+brew "direnv"
 brew "tmuxinator"
 brew "atuin"
 brew "az"

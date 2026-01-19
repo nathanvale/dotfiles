@@ -33,6 +33,9 @@ config/google-chrome-devtools
 node_modules/
 dist/
 
+# Karabiner automatic backups (generated)
+config/karabiner/automatic_backups/
+
 # SuperWhisper recordings (large, personal)
 config/superwhisper/recordings/
 

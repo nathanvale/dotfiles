@@ -278,6 +278,7 @@ ccdev() {
     --plugin-dir ~/code/side-quest-marketplace/plugins/terminal \
     --plugin-dir ~/code/side-quest-marketplace/plugins/the-cinema-bandit \
     --plugin-dir ~/code/side-quest-marketplace/plugins/validate-plugin \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/teams-scrape \
     "$@"
 }
 alias cct="npx @mariozechner/claude-trace"

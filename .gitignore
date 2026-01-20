@@ -44,6 +44,7 @@ config/para-obsidian/voice-state.json
 
 # Credentials (sensitive)
 config/the-cinema-bandit/
+config/teams-scrape/
 
 # Work-specific scripts (not for public dotfiles)
 bin/kgp

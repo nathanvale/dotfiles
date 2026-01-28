@@ -228,6 +228,21 @@ if ! op vault list &> /dev/null; then
     exit 1
 fi
 
+# Verify vault exists and is accessible
+if ! op vault get "$VAULT" &> /dev/null; then
+    log_error "Cannot access vault \"$VAULT\""
+    echo ""
+    echo "Try re-authenticating:"
+    echo "  op signin"
+    echo ""
+    echo "Then check your available vaults:"
+    echo "  op vault list"
+    echo ""
+    echo "If \"$VAULT\" doesn't exist, create it:"
+    echo "  op vault create \"$VAULT\""
+    exit 1
+fi
+
 echo ""
 log_info "Adding $KEY_NAME to 1Password vault: $VAULT"
 log_info "Provider: $KEY_PROVIDER"

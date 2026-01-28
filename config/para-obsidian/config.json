@@ -1,0 +1,117 @@
+{
+  "stakeholders": [
+    {
+      "name": "Suzy Hall",
+      "role": "Product Owner (PO)",
+      "email": "Suzy.Hall@bunnings.com.au",
+      "company": "Bunnings",
+      "squad": "GMS (POS Yellow)",
+      "project": "[[🎯 GMS - Gift Card Management System]]"
+    },
+    {
+      "name": "Jackie Leslie",
+      "role": "Delivery Manager (DM)",
+      "email": "JLeslie@bunnings.com.au",
+      "company": "Bunnings",
+      "squad": "GMS (POS Yellow)",
+      "project": "[[🎯 GMS - Gift Card Management System]]"
+    },
+    {
+      "name": "Joshua Green",
+      "role": "Tech Lead",
+      "email": "JGreen@bunnings.com.au",
+      "company": "Bunnings",
+      "squad": "GMS (POS Yellow)",
+      "project": "[[🎯 GMS - Gift Card Management System]]"
+    },
+    {
+      "name": "Nathan Vale",
+      "role": "Expert Frontend Engineer",
+      "email": "nathan.vale1@bunnings.com.au",
+      "company": "Bunnings",
+      "squad": "GMS (POS Yellow)",
+      "project": "[[🎯 GMS - Gift Card Management System]]"
+    },
+    {
+      "name": "June Xu",
+      "role": "Developer",
+      "email": "JXu3@bunnings.com.au",
+      "company": "Bunnings",
+      "squad": "GMS (POS Yellow)",
+      "project": "[[🎯 GMS - Gift Card Management System]]"
+    },
+    {
+      "name": "Mustafa Jalil",
+      "alias": "MJ",
+      "role": "API/Backend Engineer",
+      "email": "MJalil@bunnings.com.au",
+      "company": "Bunnings",
+      "squad": "GMS (POS Yellow)",
+      "project": "[[🎯 GMS - Gift Card Management System]]"
+    },
+    {
+      "name": "Prasanth Vannalath",
+      "role": "API/Backend Engineer",
+      "email": "PVannalath@bunnings.com.au",
+      "company": "Bunnings",
+      "squad": "GMS (POS Yellow)",
+      "project": "[[🎯 GMS - Gift Card Management System]]"
+    },
+    {
+      "name": "Marc Marais",
+      "role": "Platform Engineer/Architect",
+      "email": "MMarais@bunnings.com.au",
+      "company": "Bunnings",
+      "squad": "GMS (POS Yellow)",
+      "project": "[[🎯 GMS - Gift Card Management System]]"
+    },
+    {
+      "name": "Tanya Hopmans",
+      "role": "Senior BA",
+      "email": "Tanya.Hopmans@bunnings.com.au",
+      "company": "Bunnings",
+      "squad": "GMS (POS Yellow)",
+      "project": "[[🎯 GMS - Gift Card Management System]]"
+    },
+    {
+      "name": "Sonny Hartley",
+      "role": "BA",
+      "email": "sonny.hartley@bunnings.com.au",
+      "company": "Bunnings",
+      "squad": "GMS (POS Yellow)",
+      "project": "[[🎯 GMS - Gift Card Management System]]"
+    },
+    {
+      "name": "Cheryl Sim",
+      "role": "Senior QA (POS expert)",
+      "email": "CSim@bunnings.com.au",
+      "company": "Bunnings",
+      "squad": "GMS (POS Yellow)",
+      "project": "[[🎯 GMS - Gift Card Management System]]"
+    },
+    {
+      "name": "Angela Tuason",
+      "role": "QA Tester",
+      "email": "angela.tuason@bunnings.com.au",
+      "company": "Bunnings",
+      "squad": "GMS (POS Yellow)",
+      "project": "[[🎯 GMS - Gift Card Management System]]"
+    },
+    {
+      "name": "Aarti Gagneja",
+      "role": "QA/Tester",
+      "email": "AGagneja@bunnings.com.au",
+      "company": "Bunnings",
+      "squad": "GMS (POS Yellow)",
+      "project": "[[🎯 GMS - Gift Card Management System]]"
+    },
+    {
+      "name": "Melanie",
+      "role": "partner"
+    },
+    {
+      "name": "Levi",
+      "role": "son"
+    }
+  ]
+}

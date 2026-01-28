@@ -137,6 +137,9 @@ while IFS= read -r ITEM_TITLE; do
         continue
     fi
 
+    # Trim whitespace from title
+    ITEM_TITLE=$(echo "$ITEM_TITLE" | xargs)
+
     # Check if item is in ignore list
     if should_ignore "$ITEM_TITLE"; then
         log_dim "$ITEM_TITLE (ignored)"
@@ -151,6 +154,10 @@ while IFS= read -r ITEM_TITLE; do
         log_warn "Skipping $ITEM_TITLE (no credential field)"
         continue
     fi
+
+    # Strip surrounding quotes if 1Password returned a quoted value
+    CREDENTIAL="${CREDENTIAL#\"}"
+    CREDENTIAL="${CREDENTIAL%\"}"
 
     # Get item details for documentation
     ITEM_JSON=$(op item get "$ITEM_TITLE" --vault "$VAULT" --format json 2>/dev/null || echo "{}")

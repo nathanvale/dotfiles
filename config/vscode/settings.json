@@ -198,5 +198,6 @@
 		"markdown": true,
 		"scminput": false
 	},
-	"github.copilot.nextEditSuggestions.enabled": true
+	"github.copilot.nextEditSuggestions.enabled": true,
+	"git.autofetch": true
 }

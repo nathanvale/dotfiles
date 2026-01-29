@@ -84,6 +84,36 @@
 - **Levi** → Son (age 9), sole parent
 - **Mum** → Lives in Sydney
 
+### GMS Team (Bunnings)
+
+**Team:** POS Yellow | **Comms:** Microsoft Teams | **Jira:** `POS-*`
+
+**Repos**
+- `Bunnings-Technology-Delivery/gms.app` → Frontend (React)
+- `Bunnings-Technology-Delivery/gms.api` → Backend API (internal repo)
+- `Bunnings-Technology-Delivery/voucher` → Voucher API
+
+**Teams Channels**
+- **POS Yellow and Payments Resellers** → PR reviews, announcements, technical discussions
+- **POS Yellow Chat** → Daily updates (WFH/WFO, appointments, casual)
+- **Resellers POD - Daily Standup** → Standup meeting chat
+
+| Name | Role | Email |
+|------|------|-------|
+| Suzy Hall | Product Owner (PO) | Suzy.Hall@bunnings.com.au |
+| Jackie Leslie | Delivery Manager (DM) | JLeslie@bunnings.com.au |
+| Joshua Green | Tech Lead | JGreen@bunnings.com.au |
+| Nathan Vale | Expert Frontend Engineer (you) | nathan.vale1@bunnings.com.au |
+| June Xu | Developer (pairing partner) | JXu3@bunnings.com.au |
+| Mustafa Jalil (MJ) | API/Backend Engineer | MJalil@bunnings.com.au |
+| Prasanth Vannalath | API/Backend Engineer | PVannalath@bunnings.com.au |
+| Marc Marais | Platform Engineer/Architect | MMarais@bunnings.com.au |
+| Tanya Hopmans | Senior BA | Tanya.Hopmans@bunnings.com.au |
+| Sonny Hartley | BA | sonny.hartley@bunnings.com.au |
+| Cheryl Sim | Senior QA (POS expert) | CSim@bunnings.com.au |
+| Angela Tuason | QA Tester | angela.tuason@bunnings.com.au |
+| Aarti Gagneja | QA/Tester | AGagneja@bunnings.com.au |
+
 ### Context Files (invoke with @path when needed)
 
 - `~/.claude/context/git-workflow.md` → Git safety, conventional commits

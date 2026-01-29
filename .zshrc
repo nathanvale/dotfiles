@@ -257,7 +257,7 @@ ports() { lsof -i :"$1"; }  # See what's running on a port
 alias cc="claude --dangerously-skip-permissions"
 # ccdev function - disables corepack/pnpm package manager detection to avoid
 # "This project is configured to use yarn" errors when starting in non-pnpm projects
-ccdev() {
+function ccdev() {
   COREPACK_ENABLE_STRICT=0 claude --dangerously-skip-permissions \
     --plugin-dir ~/code/side-quest-marketplace/plugins/atuin \
     --plugin-dir ~/code/side-quest-marketplace/plugins/bookmarks \

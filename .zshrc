@@ -519,7 +519,7 @@ cdg() {
 # ============================================================================
 
 # Docker CLI completions
-fpath=(/Users/nathanvale/.docker/completions $fpath)
+fpath=($HOME/.docker/completions $fpath)
 
 # ============================================================================
 # ADHD-FRIENDLY TERMINAL STARTUP REMINDER
@@ -589,7 +589,7 @@ fi
 eval "$(pyenv init -)"
 
 # PARA Obsidian CLI
-alias para="bun run /Users/nathanvale/code/side-quest-marketplace/plugins/para-obsidian/src/cli.ts"
+alias para="bun run $HOME/code/side-quest-marketplace/plugins/para-obsidian/src/cli.ts"
 
 # ----------------------------------------------------------------------------
 # Bunnings Proxy Toggle (for VPN on/off)

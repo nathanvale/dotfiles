@@ -269,6 +269,7 @@ ccdev() {
     --plugin-dir ~/code/side-quest-marketplace/plugins/firecrawl \
     --plugin-dir ~/code/side-quest-marketplace/plugins/git \
     --plugin-dir ~/code/side-quest-marketplace/plugins/kit \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/log-agent-issue \
     --plugin-dir ~/code/side-quest-marketplace/plugins/mcp-manager \
     --plugin-dir ~/code/side-quest-marketplace/plugins/melanie \
     --plugin-dir ~/code/side-quest-marketplace/plugins/nvcc \

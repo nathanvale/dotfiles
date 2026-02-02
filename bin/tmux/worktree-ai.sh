@@ -597,9 +597,15 @@ ensure_worktree() {
             error "Failed to create worktree from origin/$branch"
         fi
     else
-        # New branch from current HEAD
-        info "Creating worktree with new branch: $branch (from HEAD)" >&2
-        if ! git worktree add -b "$branch" "$worktree_path" >&2; then
+        # New branch from origin/master (or origin/main)
+        local default_base="origin/master"
+        if ! git show-ref --verify --quiet "refs/remotes/origin/master"; then
+            if git show-ref --verify --quiet "refs/remotes/origin/main"; then
+                default_base="origin/main"
+            fi
+        fi
+        info "Creating worktree with new branch: $branch (from $default_base)" >&2
+        if ! git worktree add -b "$branch" "$worktree_path" "$default_base" >&2; then
             error "Failed to create worktree for new branch $branch"
         fi
     fi

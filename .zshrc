@@ -262,6 +262,7 @@ function ccdev() {
     --plugin-dir ~/code/side-quest-marketplace/plugins/atuin \
     --plugin-dir ~/code/side-quest-marketplace/plugins/biome-runner \
     --plugin-dir ~/code/side-quest-marketplace/plugins/bookmarks \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/bun-runner \
     --plugin-dir ~/code/side-quest-marketplace/plugins/bun-starter \
     --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-claude-md \
     --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-docs \

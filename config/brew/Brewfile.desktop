@@ -1,0 +1,64 @@
+# Brewfile.desktop - Desktop-only GUI applications (MacBook Pro)
+# Used by: bootstrap.sh when profile=desktop
+#
+# These apps are for interactive desktop use - not needed on headless servers.
+# Shared tools are in Brewfile.common.
+
+# =============================================================================
+# COMMUNICATION
+# =============================================================================
+cask "slack"                   # Team chat
+cask "discord"                 # Gaming/community chat
+cask "zoom"                    # Video conferencing
+cask "microsoft-teams"         # Work meetings
+cask "microsoft-outlook"       # Work email
+
+# =============================================================================
+# BROWSERS
+# =============================================================================
+cask "firefox"                 # Privacy-focused browser
+cask "google-chrome"           # Development/testing
+
+# =============================================================================
+# DEVELOPMENT
+# =============================================================================
+cask "visual-studio-code"      # Code editor
+cask "postman"                 # API testing
+cask "docker-desktop"          # Container management (use OrbStack on server)
+cask "iterm2"                  # Backup terminal
+
+# =============================================================================
+# PRODUCTIVITY
+# =============================================================================
+cask "notion"                  # Documentation/wiki
+cask "notion-calendar"         # Calendar integration
+cask "superhuman"              # Fast email client
+
+# =============================================================================
+# AI DESKTOP APPS (GUI-based, desktop only)
+# =============================================================================
+cask "chatgpt"                 # OpenAI ChatGPT app
+cask "claude"                  # Anthropic Claude app
+cask "codex"                   # OpenAI Codex
+tap "steipete/tap"
+cask "steipete/tap/codexbar"   # Codex menubar app
+
+# =============================================================================
+# UTILITIES
+# =============================================================================
+cask "betterdisplay"           # Display management
+cask "cleanmymac"              # System cleanup
+cask "aldente"                 # Battery management
+cask "imazing"                 # iOS device management
+cask "blackhole-2ch"           # Virtual audio device
+cask "raspberry-pi-imager"     # SD card imaging
+
+# =============================================================================
+# WORK-SPECIFIC
+# =============================================================================
+brew "jira-cli"                # Interactive Jira CLI
+brew "yarn"                    # Package manager (legacy projects)
+brew "docker"                  # Docker CLI (docker-desktop provides this)
+brew "colima"                  # Lightweight container VM
+brew "docker-compose"          # Multi-container orchestration
+cask "ollama-app"              # Ollama GUI wrapper (desktop convenience)

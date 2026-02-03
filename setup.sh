@@ -196,11 +196,17 @@ main() {
         fi
         echo ""
 
-        # Run verification if available
+        # Run verification if available (informational only, don't fail setup)
         if [[ -f "$DOTFILES_DIR/verify_install.sh" ]]; then
             log_section "Running installation verification"
-            "$DOTFILES_DIR/verify_install.sh"
+            "$DOTFILES_DIR/verify_install.sh" || true
         fi
+
+        echo ""
+        echo -e "${GREEN}════════════════════════════════════════════════════${RESET}"
+        echo -e "${GREEN}  ✓ Setup complete!${RESET}"
+        echo -e "${GREEN}════════════════════════════════════════════════════${RESET}"
+        echo ""
     else
         log_info "Skipped. Run these manually when ready:"
         echo ""

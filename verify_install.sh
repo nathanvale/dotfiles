@@ -8,11 +8,17 @@
 #   ./verify_install.sh         # Run all verifications
 #   ./verify_install.sh --quiet # Only show failures
 
-set -euo pipefail
+# Note: Not using set -e because we want to continue on verification failures
+set -uo pipefail
 
 # Auto-detect dotfiles directory
 DOTFILES="$(cd "$(dirname "$0")" && pwd)"
 STATE_DIR="$HOME/.dotfiles_state"
+
+# Ensure Homebrew is in PATH for this script (Apple Silicon)
+if [[ -x /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
 
 # Colors
 RED='\033[0;31m'
@@ -46,15 +52,15 @@ verify() {
     local cmd="$2"
 
     if eval "$cmd" &>/dev/null; then
-        ((PASS_COUNT++))
+        PASS_COUNT=$((PASS_COUNT + 1))
         if ! $QUIET; then
             echo -e "${GREEN}✓${RESET} $name"
         fi
         return 0
     else
-        ((FAIL_COUNT++))
+        FAIL_COUNT=$((FAIL_COUNT + 1))
         echo -e "${RED}✗${RESET} $name ${RED}FAILED${RESET}"
-        return 1
+        return 0  # Don't fail the script, just record the failure
     fi
 }
 
@@ -64,13 +70,13 @@ verify_warn() {
     local cmd="$2"
 
     if eval "$cmd" &>/dev/null; then
-        ((PASS_COUNT++))
+        PASS_COUNT=$((PASS_COUNT + 1))
         if ! $QUIET; then
             echo -e "${GREEN}✓${RESET} $name"
         fi
         return 0
     else
-        ((WARN_COUNT++))
+        WARN_COUNT=$((WARN_COUNT + 1))
         echo -e "${YELLOW}⚠${RESET} $name ${YELLOW}(optional)${RESET}"
         return 0
     fi

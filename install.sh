@@ -69,7 +69,12 @@ install_symlinks() {
 
     local symlinks_script="$DOTFILES/bin/dotfiles/symlinks/symlinks_manage.sh"
     if [[ -f "$symlinks_script" ]]; then
-        "$symlinks_script" --link
+        # Use --force in non-interactive mode (e.g., curl | bash)
+        if [[ -t 0 ]]; then
+            "$symlinks_script" --link
+        else
+            "$symlinks_script" --link --force
+        fi
     else
         log_warn "Symlinks script not found: $symlinks_script"
         log_info "Skipping symlinks"

@@ -6,6 +6,7 @@
 #   symlinks_manage.sh --unlink    Remove all symlinks
 #   symlinks_manage.sh --status    Show current symlink status
 #   symlinks_manage.sh --dry-run   Preview what would be done (with --link or --unlink)
+#   symlinks_manage.sh --force     Replace existing files/dirs without prompting
 #
 # This script is portable - it auto-detects the dotfiles location.
 
@@ -61,6 +62,7 @@ symlinks=(
 
 # Flags
 DRY_RUN=false
+FORCE=false
 
 usage() {
 	echo "Usage: $0 [OPTIONS] COMMAND"
@@ -71,6 +73,7 @@ usage() {
 	echo "  -s, --status    Show current symlink status"
 	echo ""
 	echo "Options:"
+	echo "  -f, --force     Replace existing files/dirs without prompting"
 	echo "  -n, --dry-run   Preview changes without making them"
 	echo "  -h, --help      Show this help message"
 	echo ""
@@ -121,7 +124,17 @@ create_symlink() {
 		fi
 	elif [[ -e "$link_name" ]]; then
 		log "$WARNING" "Exists but not a symlink: $link_name"
-		if ! $DRY_RUN; then
+		if $DRY_RUN; then
+			log "$WARNING" "[DRY-RUN] Would prompt to replace: $link_name"
+		elif $FORCE; then
+			# Force mode: backup and replace without prompting
+			local backup="${link_name}.backup.$(date +%Y%m%d%H%M%S)"
+			mv "$link_name" "$backup"
+			ln -s "$target" "$link_name"
+			log "$INFO" "Backed up to: $backup"
+			log "$INFO" "Replaced: $link_name -> $target"
+		elif [[ -t 0 ]]; then
+			# Interactive mode: prompt user
 			read -p "Remove and replace with symlink? [y/N] " -n 1 -r
 			echo
 			if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -132,7 +145,8 @@ create_symlink() {
 				log "$INFO" "Skipped: $link_name"
 			fi
 		else
-			log "$WARNING" "[DRY-RUN] Would prompt to replace: $link_name"
+			# Non-interactive mode without --force: skip
+			log "$WARNING" "Skipped (non-interactive, use --force to replace): $link_name"
 		fi
 	else
 		if $DRY_RUN; then
@@ -271,6 +285,10 @@ while [[ $# -gt 0 ]]; do
 		;;
 	-n | --dry-run)
 		DRY_RUN=true
+		shift
+		;;
+	-f | --force)
+		FORCE=true
 		shift
 		;;
 	-h | --help)

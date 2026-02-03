@@ -1,0 +1,106 @@
+# Brewfile.common - Shared CLI tools for all machine profiles (desktop + server)
+# Used by: bootstrap.sh to generate combined Brewfile
+#
+# These tools work on both desktop and headless server configurations.
+# Profile-specific packages are in Brewfile.desktop and Brewfile.server.
+
+# =============================================================================
+# TAPS
+# =============================================================================
+tap "oven-sh/bun"
+tap "ognistik/homebrew-formulae"
+
+# =============================================================================
+# CORE CLI TOOLS
+# =============================================================================
+brew "tmux"                    # Terminal multiplexer (essential for SSH sessions)
+brew "zoxide"                  # Smarter cd command
+brew "direnv"                  # Environment variable management
+brew "tmuxinator"              # Tmux session manager
+brew "atuin"                   # Shell history search
+brew "ripgrep"                 # Fast grep replacement
+brew "bat"                     # Cat with syntax highlighting
+brew "eza"                     # Modern ls replacement
+brew "fd"                      # Fast find replacement
+brew "fzf"                     # Fuzzy finder
+brew "gh"                      # GitHub CLI
+brew "jq"                      # JSON processor
+brew "yq"                      # YAML processor
+brew "lazygit"                 # Git TUI
+brew "fnm"                     # Fast Node Manager
+brew "shfmt"                   # Shell script formatter
+brew "shellcheck"              # Shell script linter
+brew "wget"                    # HTTP client
+brew "git-delta"               # Better git diff
+brew "coreutils"               # GNU core utilities
+brew "tree"                    # Directory visualization
+brew "watch"                   # Command watching
+brew "gnu-sed"                 # Consistent sed behavior
+brew "htop"                    # Process viewer (useful everywhere)
+brew "lnav"                    # Log file navigator
+
+# =============================================================================
+# DEVELOPMENT TOOLS
+# =============================================================================
+brew "oven-sh/bun/bun"         # JavaScript runtime
+brew "python"                  # Python (includes pip)
+brew "uv"                      # Fast Python package installer
+brew "pipx"                    # Install Python CLI tools in isolation
+brew "pyenv"                   # Python version manager
+brew "pnpm"                    # Fast npm alternative
+brew "git-filter-repo"         # Git history rewriting
+brew "ast-grep"                # AST-based code search
+
+# Build tools
+brew "m4"                      # GNU macro processor
+brew "autoconf"                # Configure script generator
+
+# Linting/Formatting
+brew "actionlint"              # GitHub Actions linter
+brew "yamllint"                # YAML linter
+brew "bats-core"               # Bash testing framework
+
+# =============================================================================
+# SHELL
+# =============================================================================
+brew "zsh"
+brew "zsh-syntax-highlighting"
+brew "zsh-autosuggestions"
+
+# =============================================================================
+# AI CLI TOOLS (work over SSH)
+# =============================================================================
+brew "aider"                   # AI pair programming CLI
+brew "gemini-cli"              # Google Gemini AI CLI
+brew "whisper-cpp"             # Speech-to-text (local)
+brew "ognistik/homebrew-formulae/macrowhisper"  # MacroWhisper
+
+# =============================================================================
+# CLOUD & INFRASTRUCTURE
+# =============================================================================
+brew "awscli"                  # AWS CLI
+brew "az"                      # Azure CLI
+brew "flyctl"                  # Fly.io CLI
+brew "ghq"                     # Remote repository management
+
+# =============================================================================
+# UTILITIES
+# =============================================================================
+brew "blueutil"                # Bluetooth CLI control
+brew "poppler"                 # PDF utilities
+brew "grep"                    # GNU grep
+brew "hl"                      # Log highlighter
+brew "ffmpeg"                  # Media processing
+
+# =============================================================================
+# CASKS - SHARED ACROSS PROFILES
+# =============================================================================
+cask "karabiner-elements"      # Keyboard customization (Hyper key)
+cask "raycast"                 # Launcher/productivity
+cask "1password"               # Password manager
+cask "1password-cli"           # 1Password CLI (op)
+cask "ghostty"                 # GPU-accelerated terminal
+cask "superwhisper"            # Voice input anywhere
+cask "obsidian"                # Knowledge management
+cask "claude-code"             # AI coding assistant
+cask "gcloud-cli"              # Google Cloud CLI

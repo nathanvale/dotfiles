@@ -1,0 +1,45 @@
+# Brewfile.server - Server-specific tools (Mac Mini M4 Pro)
+# Used by: bootstrap.sh when profile=server
+#
+# Optimized for headless operation, AI workloads, and container hosting.
+# Shared tools are in Brewfile.common.
+
+# =============================================================================
+# CONTAINER ORCHESTRATION
+# =============================================================================
+# OrbStack is preferred over Docker Desktop on server:
+# - 0.1% idle CPU vs Docker Desktop's 5-10%
+# - Native ARM64 performance
+# - Built-in Kubernetes
+# - File sharing without FUSE overhead
+cask "orbstack"
+
+# =============================================================================
+# AI / LLM (Native for Metal GPU)
+# =============================================================================
+# Ollama installed via Homebrew (not Docker) for direct Metal GPU access
+# Docker-based Ollama cannot access GPU acceleration
+brew "ollama"
+
+# =============================================================================
+# MONITORING & DEBUGGING
+# =============================================================================
+# htop and lnav moved to common (useful everywhere)
+# Additional server-specific monitoring can be added here
+
+# =============================================================================
+# OPTIONAL: Docker CLI (OrbStack provides this)
+# Uncomment if you need standalone Docker without OrbStack
+# =============================================================================
+# brew "docker"
+# brew "docker-compose"
+
+# =============================================================================
+# NOTES
+# =============================================================================
+# The following are intentionally NOT on the server:
+# - chatgpt, claude, codex, codexbar (use web versions)
+# - Slack, Zoom, Teams, Outlook (web access when needed)
+# - VS Code, Docker Desktop (OrbStack replaces Docker)
+# - BetterDisplay, CleanMyMac, AlDente (desktop utilities)
+# - Browsers (minimal use on server)

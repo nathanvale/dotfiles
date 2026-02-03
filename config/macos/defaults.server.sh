@@ -1,0 +1,262 @@
+#!/bin/bash
+# defaults.server.sh - Server-specific macOS settings for Mac Mini M4 Pro
+#
+# Sources:
+# - Project note: Mac Mini Home Server Initial Setup
+# - Aaron Parker: stealthpuppy.com/mac-mini-home-server/
+# - Jeff Geerling: jeffgeerling.com headless CI guide
+# - Expert review: macOS Systems Engineer, SRE, DevOps Engineer
+#
+# Usage:
+#   ./defaults.server.sh           # Apply all server settings
+#   ./defaults.server.sh --dry-run # Show what would be done
+#
+# Run after bootstrap.sh on server profile installations.
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# Source colour_log if available, otherwise define minimal logging
+if [[ -f "$SCRIPT_DIR/../../bin/colour_log.sh" ]]; then
+    source "$SCRIPT_DIR/../../bin/colour_log.sh"
+else
+    # Minimal fallback logging
+    INFO="INFO"
+    WARNING="WARNING"
+    ERROR="ERROR"
+    log() {
+        local level=$1
+        local message=$2
+        echo "[$level] $message"
+    }
+fi
+
+DRY_RUN=false
+
+# Parse arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --dry-run|-d)
+            DRY_RUN=true
+            shift
+            ;;
+        --help|-h)
+            echo "Usage: $0 [--dry-run]"
+            echo "  --dry-run, -d  Show what would be done without making changes"
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            exit 1
+            ;;
+    esac
+done
+
+# Helper to run commands (respects dry-run)
+run_cmd() {
+    if $DRY_RUN; then
+        log "$INFO" "[DRY-RUN] Would execute: $*"
+    else
+        log "$INFO" "Executing: $*"
+        eval "$@"
+    fi
+}
+
+# Helper for sudo commands
+run_sudo() {
+    if $DRY_RUN; then
+        log "$INFO" "[DRY-RUN] Would execute (sudo): $*"
+    else
+        log "$INFO" "Executing (sudo): $*"
+        sudo bash -c "$*"
+    fi
+}
+
+log "$INFO" "============================================"
+log "$INFO" "Server-specific macOS settings"
+log "$INFO" "============================================"
+if $DRY_RUN; then
+    log "$WARNING" "DRY RUN MODE - No changes will be made"
+fi
+
+# ============================================
+# HOSTNAME CONFIGURATION
+# ============================================
+log "$INFO" ""
+log "$INFO" "=== Hostname Configuration ==="
+
+# Set hostname (customize as needed)
+HOSTNAME="mac-mini-server"
+run_sudo "scutil --set ComputerName '$HOSTNAME'"
+run_sudo "scutil --set HostName '$HOSTNAME'"
+run_sudo "scutil --set LocalHostName '$HOSTNAME'"
+
+# ============================================
+# ENERGY SETTINGS (pmset)
+# ============================================
+log "$INFO" ""
+log "$INFO" "=== Energy Settings (pmset) ==="
+
+# Prevent sleep (critical for server)
+run_sudo "pmset -a displaysleep 0"      # Display sleep: never
+run_sudo "pmset -a sleep 0"             # System sleep: never
+run_sudo "pmset -a disksleep 0"         # Disk sleep: never
+
+# Wake and restart options
+run_sudo "pmset -a womp 1"              # Wake on network access (magic packet)
+run_sudo "pmset -a autorestart 1"       # Auto-restart after power failure
+run_sudo "pmset -a powernap 0"          # Disable Power Nap (saves power)
+
+# Additional pmset from expert review
+run_sudo "pmset -a hibernatemode 0"     # Disable hibernation
+run_sudo "pmset -a standby 0"           # Disable standby (Apple Silicon)
+run_sudo "pmset -a autopoweroff 0"      # Disable auto power off
+run_sudo "pmset -a proximitywake 0"     # Disable wake when iPhone nearby
+run_sudo "pmset -a tcpkeepalive 1"      # Maintain TCP connections during sleep
+
+# ============================================
+# SCREEN SAVER & LOCK SCREEN
+# ============================================
+log "$INFO" ""
+log "$INFO" "=== Screen Saver & Lock Screen ==="
+
+# Screen saver: Never (saves CPU, no monitor anyway)
+run_cmd "defaults write com.apple.screensaver idleTime 0"
+
+# Login window screen saver: Never (Jeff Geerling recommendation)
+run_sudo "defaults write /Library/Preferences/com.apple.screensaver loginWindowIdleTime 0"
+
+# Lock screen: Require password never (for headless convenience)
+# Note: Security tradeoff - acceptable for home server behind firewall
+run_cmd "defaults write com.apple.screensaver askForPassword -int 0"
+run_cmd "defaults write com.apple.screensaver askForPasswordDelay -int 0"
+
+# ============================================
+# BLUETOOTH (Disable for headless)
+# ============================================
+log "$INFO" ""
+log "$INFO" "=== Bluetooth Configuration ==="
+
+# Prevent "Bluetooth Setup Assistant" popup when no keyboard/mouse
+run_sudo "defaults write /Library/Preferences/com.apple.Bluetooth BluetoothAutoSeekKeyboard -bool false"
+run_sudo "defaults write /Library/Preferences/com.apple.Bluetooth BluetoothAutoSeekPointingDevice -bool false"
+
+# Fully disable Bluetooth (expert recommendation for headless)
+run_sudo "defaults write /Library/Preferences/com.apple.Bluetooth ControllerPowerState -int 0"
+run_sudo "killall -HUP bluetoothd 2>/dev/null || true"
+
+# ============================================
+# SHARING SERVICES (Enable SSH + Screen Sharing)
+# ============================================
+log "$INFO" ""
+log "$INFO" "=== Sharing Services ==="
+
+# Enable Remote Login (SSH)
+run_sudo "systemsetup -setremotelogin on 2>/dev/null || true"
+
+# Enable Screen Sharing (VNC) for remote desktop access
+run_sudo "launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist 2>/dev/null || true"
+
+# ============================================
+# FIREWALL (Enable with stealth mode)
+# ============================================
+log "$INFO" ""
+log "$INFO" "=== Firewall Configuration ==="
+
+run_sudo "/usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on"
+run_sudo "/usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on"
+
+# ============================================
+# PERFORMANCE OPTIMIZATIONS
+# ============================================
+log "$INFO" ""
+log "$INFO" "=== Performance Optimizations ==="
+
+# Disable Apple Intelligence / Siri (not needed on server)
+run_cmd "defaults write com.apple.assistant.support 'Assistant Enabled' -bool false"
+
+# Reduce Motion & Transparency (less GPU overhead)
+run_cmd "defaults write com.apple.universalaccess reduceMotion -bool true"
+run_cmd "defaults write com.apple.universalaccess reduceTransparency -bool true"
+
+# Disable wallpaper tinting (Aaron Parker recommendation)
+run_cmd "defaults write NSGlobalDomain AppleInterfaceStyleSwitchesAutomatically -bool false"
+
+# Disable notifications when display sleeping
+run_cmd "defaults write com.apple.ncprefs show_previews -int 0"
+
+# Disable startup sound
+run_cmd "defaults write NSGlobalDomain com.apple.sound.beep.feedback -bool false"
+
+# Disable App Nap (expert recommendation)
+run_cmd "defaults write NSGlobalDomain NSAppSleepDisabled -bool true"
+
+# Disable crash reporter dialogs (expert recommendation)
+run_cmd "defaults write com.apple.CrashReporter DialogType none"
+
+# ============================================
+# HOT CORNERS (Disable for headless)
+# ============================================
+log "$INFO" ""
+log "$INFO" "=== Hot Corners (Disabled) ==="
+
+# Disable all hot corners (not useful on headless server)
+run_cmd "defaults write com.apple.dock wvous-tl-corner -int 0"
+run_cmd "defaults write com.apple.dock wvous-tr-corner -int 0"
+run_cmd "defaults write com.apple.dock wvous-bl-corner -int 0"
+run_cmd "defaults write com.apple.dock wvous-br-corner -int 0"
+
+# ============================================
+# SPOTLIGHT (Optional - saves CPU)
+# ============================================
+# Uncomment to disable Spotlight indexing entirely
+# WARNING: Reduces search effectiveness on mounted shares
+# log "$INFO" ""
+# log "$INFO" "=== Spotlight (Disabled) ==="
+# run_sudo "mdutil -a -i off"
+
+# ============================================
+# OLLAMA ENVIRONMENT NOTES
+# ============================================
+log "$INFO" ""
+log "$INFO" "=== Ollama Configuration Notes ==="
+
+if ! $DRY_RUN; then
+    cat << 'EOF'
+For optimal Ollama performance, add to ~/.zshrc or launchd plist:
+
+  export OLLAMA_FLASH_ATTENTION=1      # Enable flash attention
+  export OLLAMA_KV_CACHE_TYPE=q8_0     # Quantized KV cache
+  export OLLAMA_KEEP_ALIVE=24h         # Keep models in memory
+  export OLLAMA_GPU_PERCENT=85         # GPU memory allocation
+
+For launchd service, create ~/Library/LaunchAgents/com.ollama.plist
+EOF
+fi
+
+# ============================================
+# APPLY CHANGES
+# ============================================
+log "$INFO" ""
+log "$INFO" "=== Applying Changes ==="
+
+if ! $DRY_RUN; then
+    # Restart affected services
+    killall Dock 2>/dev/null || true
+    killall SystemUIServer 2>/dev/null || true
+
+    log "$INFO" "============================================"
+    log "$INFO" "Server settings applied successfully!"
+    log "$INFO" "============================================"
+    log "$WARNING" "Some changes require a restart to take full effect."
+    log "$INFO" ""
+    log "$INFO" "Verification commands:"
+    log "$INFO" "  pmset -g                          # Check energy settings"
+    log "$INFO" "  systemsetup -getremotelogin       # Check SSH status"
+    log "$INFO" "  defaults read com.apple.screensaver idleTime  # Screen saver"
+else
+    log "$INFO" "============================================"
+    log "$INFO" "Dry run complete - no changes made"
+    log "$INFO" "============================================"
+fi

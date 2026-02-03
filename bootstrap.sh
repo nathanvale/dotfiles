@@ -351,44 +351,25 @@ phase_5_applications() {
 
     local profile
     profile=$(get_profile)
-    local brew_dir="$DOTFILES/config/brew"
-    local combined_brewfile="$brew_dir/Brewfile"
+    local brewfile="$DOTFILES/config/brew/Brewfile"
 
-    # Check for profile-specific Brewfiles
-    if [[ ! -f "$brew_dir/Brewfile.common" ]]; then
-        log_error "Brewfile.common not found: $brew_dir/Brewfile.common"
+    # Check Brewfile exists
+    if [[ ! -f "$brewfile" ]]; then
+        log_error "Brewfile not found: $brewfile"
         return 1
     fi
 
-    if [[ ! -f "$brew_dir/Brewfile.$profile" ]]; then
-        log_error "Brewfile.$profile not found: $brew_dir/Brewfile.$profile"
-        return 1
-    fi
-
-    # Generate combined Brewfile
-    log "Generating Brewfile for profile: $profile"
-    {
-        echo "# Generated Brewfile for profile: $profile"
-        echo "# Generated at: $(date -Iseconds)"
-        echo "# Re-run bootstrap.sh to regenerate"
-        echo ""
-        echo "# === Common packages (all profiles) ==="
-        cat "$brew_dir/Brewfile.common"
-        echo ""
-        echo "# === Profile-specific: $profile ==="
-        cat "$brew_dir/Brewfile.$profile"
-    } > "$combined_brewfile"
-
-    log "Installing from combined Brewfile..."
+    log "Installing packages for profile: $profile"
     log "This may take 10-15 minutes for a full install..."
 
-    # Run brew bundle
-    if brew bundle --file="$combined_brewfile"; then
+    # Run brew bundle with profile environment variable
+    # Brewfile uses Ruby conditionals to filter by profile
+    if DOTFILES_PROFILE="$profile" brew bundle --file="$brewfile"; then
         log "All packages installed successfully"
     else
         log_warn "Some packages may have failed - check output above"
         log_warn "You can retry failed packages manually or run:"
-        log_warn "  brew bundle --file=$combined_brewfile"
+        log_warn "  DOTFILES_PROFILE=$profile brew bundle --file=$brewfile"
     fi
 
     log "Applications: COMPLETE"

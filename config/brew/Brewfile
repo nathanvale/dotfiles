@@ -1,93 +1,179 @@
-tap "nikitabobko/tap"
-tap "ognistik/homebrew-formulae"
+# Brewfile - Unified package manifest with profile conditionals
+#
+# Profiles: desktop (MacBook Pro) | server (Mac Mini headless)
+# Set via: DOTFILES_PROFILE=desktop brew bundle
+#
+# Usage:
+#   DOTFILES_PROFILE=desktop brew bundle --file=~/code/dotfiles/config/brew/Brewfile
+#   DOTFILES_PROFILE=server brew bundle --file=~/code/dotfiles/config/brew/Brewfile
+#
+# Brewfiles are Ruby, so we can use conditionals for profile-specific packages.
+
+# Profile detection (defaults to desktop)
+profile = ENV.fetch("DOTFILES_PROFILE", "desktop")
+
+# =============================================================================
+# TAPS
+# =============================================================================
 tap "oven-sh/bun"
-brew "whisper-cpp"
-brew "ffmpeg"
-brew "oven-sh/bun/bun"
-brew "python"  # Includes pip by default
-brew "uv"      # Fast Python package installer and resolver
-brew "pipx"    # Install Python CLI tools in isolated environments
-brew "pyenv"   # Python version manager
-brew "m4"      # GNU macro processor (needed by autoconf)
-brew "autoconf"  # Tool for generating configure scripts
-brew "aider"      # AI pair programming CLI tool
-brew "gemini-cli" # Google Gemini AI CLI
-brew "docker"
-brew "colima"    # lightweight VM for running containers (better on macOS)
-brew "docker-compose"
-brew "tmux"
-brew "zoxide"
-brew "direnv"
-brew "tmuxinator"
-brew "atuin"
-brew "az"
-brew "hl"
-brew "lnav"
-brew "pnpm"
-brew "poppler"   # PDF utilities including pdftotext
-brew "ripgrep"
-brew "awscli"
-brew "bat"
-brew "blueutil"
-brew "coreutils"
-brew "bats-core"
-brew "eza"
-brew "fd"
-brew "flyctl"
-brew "fzf"
-brew "gh"
-brew "jira-cli"  # Interactive Jira CLI (ankitpokhrel/jira-cli)
-brew "ghq"
-brew "git-delta"
-brew "git-filter-repo"
-brew "grep"
-brew "ast-grep"
-brew "jq"
-brew "yq"
-brew "lazygit"
-brew "fnm"
-brew "shfmt"
-brew "shellcheck"
-brew "actionlint"
-brew "yamllint"
-brew "yarn"
+tap "ognistik/homebrew-formulae"
+tap "steipete/tap" if profile == "desktop"
+
+# =============================================================================
+# CORE CLI TOOLS (all profiles)
+# =============================================================================
+brew "tmux"                    # Terminal multiplexer (essential for SSH sessions)
+brew "zoxide"                  # Smarter cd command
+brew "direnv"                  # Environment variable management
+brew "tmuxinator"              # Tmux session manager
+brew "atuin"                   # Shell history search
+brew "ripgrep"                 # Fast grep replacement
+brew "bat"                     # Cat with syntax highlighting
+brew "eza"                     # Modern ls replacement
+brew "fd"                      # Fast find replacement
+brew "fzf"                     # Fuzzy finder
+brew "gh"                      # GitHub CLI
+brew "jq"                      # JSON processor
+brew "yq"                      # YAML processor
+brew "lazygit"                 # Git TUI
+brew "fnm"                     # Fast Node Manager
+brew "shfmt"                   # Shell script formatter
+brew "shellcheck"              # Shell script linter
+brew "wget"                    # HTTP client
+brew "git-delta"               # Better git diff
+brew "coreutils"               # GNU core utilities
+brew "tree"                    # Directory visualization
+brew "watch"                   # Command watching
+brew "gnu-sed"                 # Consistent sed behavior
+brew "htop"                    # Process viewer
+brew "lnav"                    # Log file navigator
+
+# =============================================================================
+# DEVELOPMENT TOOLS (all profiles)
+# =============================================================================
+brew "oven-sh/bun/bun"         # JavaScript runtime
+brew "python"                  # Python (includes pip)
+brew "uv"                      # Fast Python package installer
+brew "pipx"                    # Install Python CLI tools in isolation
+brew "pyenv"                   # Python version manager
+brew "pnpm"                    # Fast npm alternative
+brew "git-filter-repo"         # Git history rewriting
+brew "ast-grep"                # AST-based code search
+
+# Build tools
+brew "m4"                      # GNU macro processor
+brew "autoconf"                # Configure script generator
+
+# Linting/Formatting
+brew "actionlint"              # GitHub Actions linter
+brew "yamllint"                # YAML linter
+brew "bats-core"               # Bash testing framework
+
+# =============================================================================
+# SHELL (all profiles)
+# =============================================================================
 brew "zsh"
 brew "zsh-syntax-highlighting"
 brew "zsh-autosuggestions"
-brew "wget"
-cask "betterdisplay"
-cask "cleanmymac"
-cask "karabiner-elements"
-cask "raycast"
-cask "visual-studio-code"
-cask "aldente"
-cask "discord"
-cask "firefox"
-cask "imazing"
-cask "postman"
-cask "slack"
-cask "zoom"
-cask "gcloud-cli"
-cask "notion"
-cask "notion-calendar"
-cask "microsoft-teams"
-cask "microsoft-outlook"
-cask "ghostty"
-cask "chatgpt"
-cask "google-chrome"
-cask "1password"
-cask "1password-cli"
-cask "claude"
-cask "iterm2"
-cask "superwhisper"
-brew "ognistik/homebrew-formulae/macrowhisper"
-cask "ollama-app"
-cask "obsidian"
-cask "blackhole-2ch"
-cask "docker-desktop"
-cask "claude-code"
-cask "raspberry-pi-imager"
-cask "superhuman"
-cask "codex"
-tap "steipete/tap"
-cask "steipete/tap/codexbar"
+
+# =============================================================================
+# AI CLI TOOLS (all profiles - work over SSH)
+# =============================================================================
+brew "aider"                   # AI pair programming CLI
+brew "gemini-cli"              # Google Gemini AI CLI
+brew "whisper-cpp"             # Speech-to-text (local)
+brew "ognistik/homebrew-formulae/macrowhisper"  # MacroWhisper
+
+# =============================================================================
+# CLOUD & INFRASTRUCTURE (all profiles)
+# =============================================================================
+brew "awscli"                  # AWS CLI
+brew "az"                      # Azure CLI
+brew "flyctl"                  # Fly.io CLI
+brew "ghq"                     # Remote repository management
+
+# =============================================================================
+# UTILITIES (all profiles)
+# =============================================================================
+brew "blueutil"                # Bluetooth CLI control
+brew "poppler"                 # PDF utilities
+brew "grep"                    # GNU grep
+brew "hl"                      # Log highlighter
+brew "ffmpeg"                  # Media processing
+
+# =============================================================================
+# CASKS - SHARED (all profiles)
+# =============================================================================
+cask "karabiner-elements"      # Keyboard customization (Hyper key)
+cask "raycast"                 # Launcher/productivity
+cask "1password"               # Password manager
+cask "1password-cli"           # 1Password CLI (op)
+cask "ghostty"                 # GPU-accelerated terminal
+cask "superwhisper"            # Voice input anywhere
+cask "obsidian"                # Knowledge management
+cask "claude-code"             # AI coding assistant
+cask "gcloud-cli"              # Google Cloud CLI
+
+# =============================================================================
+# DESKTOP PROFILE - GUI apps, communication, development
+# =============================================================================
+if profile == "desktop"
+  # Communication
+  cask "slack"                 # Team chat
+  cask "discord"               # Gaming/community chat
+  cask "zoom"                  # Video conferencing
+  cask "microsoft-teams"       # Work meetings
+  cask "microsoft-outlook"     # Work email
+
+  # Browsers
+  cask "firefox"               # Privacy-focused browser
+  cask "google-chrome"         # Development/testing
+
+  # Development
+  cask "visual-studio-code"    # Code editor
+  cask "postman"               # API testing
+  cask "docker-desktop"        # Container management
+  cask "iterm2"                # Backup terminal
+
+  # Productivity
+  cask "notion"                # Documentation/wiki
+  cask "notion-calendar"       # Calendar integration
+  cask "superhuman"            # Fast email client
+
+  # AI Desktop Apps (GUI-based)
+  cask "chatgpt"               # OpenAI ChatGPT app
+  cask "claude"                # Anthropic Claude app
+  cask "codex"                 # OpenAI Codex
+  cask "steipete/tap/codexbar" # Codex menubar app
+
+  # Utilities
+  cask "betterdisplay"         # Display management
+  cask "cleanmymac"            # System cleanup
+  cask "aldente"               # Battery management
+  cask "imazing"               # iOS device management
+  cask "blackhole-2ch"         # Virtual audio device
+  cask "raspberry-pi-imager"   # SD card imaging
+
+  # Work-specific
+  brew "jira-cli"              # Interactive Jira CLI
+  brew "yarn"                  # Package manager (legacy projects)
+  brew "docker"                # Docker CLI
+  brew "colima"                # Lightweight container VM
+  brew "docker-compose"        # Multi-container orchestration
+  cask "ollama-app"            # Ollama GUI wrapper
+end
+
+# =============================================================================
+# SERVER PROFILE - Headless, containers, AI workloads
+# =============================================================================
+if profile == "server"
+  # Container orchestration (OrbStack > Docker Desktop for servers)
+  # - 0.1% idle CPU vs Docker Desktop's 5-10%
+  # - Native ARM64 performance
+  # - Built-in Kubernetes
+  cask "orbstack"
+
+  # AI / LLM (native Homebrew for Metal GPU access)
+  # Docker-based Ollama cannot access GPU acceleration
+  brew "ollama"
+end

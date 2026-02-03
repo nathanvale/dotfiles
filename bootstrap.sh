@@ -363,13 +363,14 @@ phase_5_applications() {
     log "This may take 10-15 minutes for a full install..."
 
     # Run brew bundle with profile environment variable
-    # Brewfile uses Ruby conditionals to filter by profile
-    if DOTFILES_PROFILE="$profile" brew bundle --file="$brewfile"; then
+    # NOTE: Must use HOMEBREW_ prefix for env vars to pass through to Brewfile Ruby context
+    # Regular env vars are filtered out by Homebrew for security/isolation
+    if HOMEBREW_DOTFILES_PROFILE="$profile" brew bundle --file="$brewfile"; then
         log "All packages installed successfully"
     else
         log_warn "Some packages may have failed - check output above"
         log_warn "You can retry failed packages manually or run:"
-        log_warn "  DOTFILES_PROFILE=$profile brew bundle --file=$brewfile"
+        log_warn "  HOMEBREW_DOTFILES_PROFILE=$profile brew bundle --file=$brewfile"
     fi
 
     log "Applications: COMPLETE"

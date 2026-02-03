@@ -1,16 +1,19 @@
 # Brewfile - Unified package manifest with profile conditionals
 #
 # Profiles: desktop (MacBook Pro) | server (Mac Mini headless)
-# Set via: DOTFILES_PROFILE=desktop brew bundle
 #
 # Usage:
-#   DOTFILES_PROFILE=desktop brew bundle --file=~/code/dotfiles/config/brew/Brewfile
-#   DOTFILES_PROFILE=server brew bundle --file=~/code/dotfiles/config/brew/Brewfile
+#   HOMEBREW_DOTFILES_PROFILE=desktop brew bundle --file=~/code/dotfiles/config/brew/Brewfile
+#   HOMEBREW_DOTFILES_PROFILE=server brew bundle --file=~/code/dotfiles/config/brew/Brewfile
+#
+# NOTE: Environment variables must be prefixed with HOMEBREW_ to be passed through
+# to Brewfile Ruby evaluation. Regular env vars are filtered out by Homebrew.
 #
 # Brewfiles are Ruby, so we can use conditionals for profile-specific packages.
 
 # Profile detection (defaults to desktop)
-profile = ENV.fetch("DOTFILES_PROFILE", "desktop")
+# MUST use HOMEBREW_ prefix for env vars to work in Brewfile context
+profile = ENV.fetch("HOMEBREW_DOTFILES_PROFILE", "desktop")
 
 # =============================================================================
 # TAPS

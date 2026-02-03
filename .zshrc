@@ -260,9 +260,9 @@ alias cc="claude --dangerously-skip-permissions"
 function ccdev() {
   COREPACK_ENABLE_STRICT=0 claude --dangerously-skip-permissions \
     --plugin-dir ~/code/side-quest-marketplace/plugins/atuin \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/biome-runner \
+    --plugin-dir ~/code/side-quest-plugins/plugins/biome-runner \
     --plugin-dir ~/code/side-quest-marketplace/plugins/bookmarks \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/bun-runner \
+    --plugin-dir ~/code/side-quest-plugins/plugins/bun-runner \
     --plugin-dir ~/code/side-quest-marketplace/plugins/bun-starter \
     --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-claude-md \
     --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-docs \
@@ -279,7 +279,7 @@ function ccdev() {
     --plugin-dir ~/code/side-quest-marketplace/plugins/teams-scrape \
     --plugin-dir ~/code/side-quest-marketplace/plugins/terminal \
     --plugin-dir ~/code/side-quest-marketplace/plugins/the-cinema-bandit \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/tsc-runner \
+    --plugin-dir ~/code/side-quest-plugins/plugins/tsc-runner \
     --plugin-dir ~/code/side-quest-marketplace/plugins/validate-plugin \
     --plugin-dir ~/code/side-quest-plugins/plugins/x-api \
     "$@"

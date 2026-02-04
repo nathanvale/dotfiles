@@ -30,42 +30,37 @@
 			"version": "0.13.0"
 		},
 		"bun-runner": {
-			"command": "bun",
+			"type": "stdio",
+			"command": "bunx",
 			"args": [
-				"run",
-				"/Users/nathanvale/code/side-quest-marketplace/plugins/bun-runner/mcp/index.ts"
+				"--bun",
+				"@side-quest/bun-runner"
 			],
-			"cwd": "/Users/nathanvale/code/side-quest-marketplace"
+			"env": {}
 		},
 		"tsc-runner": {
-			"command": "bun",
+			"type": "stdio",
+			"command": "bunx",
 			"args": [
-				"run",
-				"/Users/nathanvale/code/side-quest-marketplace/plugins/tsc-runner/mcp/index.ts"
+				"--bun",
+				"@side-quest/tsc-runner"
 			],
-			"cwd": "/Users/nathanvale/code/side-quest-marketplace"
+			"env": {}
 		},
 		"biome-runner": {
-			"command": "bun",
+			"type": "stdio",
+			"command": "bunx",
 			"args": [
-				"run",
-				"/Users/nathanvale/code/side-quest-marketplace/plugins/biome-runner/mcp/index.ts"
+				"--bun",
+				"@side-quest/biome-runner"
 			],
-			"cwd": "/Users/nathanvale/code/side-quest-marketplace"
+			"env": {}
 		},
 		"kit": {
 			"command": "bun",
 			"args": [
 				"run",
 				"/Users/nathanvale/code/side-quest-marketplace/plugins/kit/mcp/index.ts"
-			],
-			"cwd": "/Users/nathanvale/code/side-quest-marketplace"
-		},
-		"git-intelligence": {
-			"command": "bun",
-			"args": [
-				"run",
-				"/Users/nathanvale/code/side-quest-marketplace/plugins/git/mcp/index.ts"
 			],
 			"cwd": "/Users/nathanvale/code/side-quest-marketplace"
 		}

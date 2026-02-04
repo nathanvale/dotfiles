@@ -20,7 +20,7 @@ profile = ENV.fetch("HOMEBREW_DOTFILES_PROFILE", "desktop")
 # =============================================================================
 tap "oven-sh/bun"
 tap "ognistik/homebrew-formulae"
-tap "steipete/tap" if profile == "desktop"
+tap "steipete/tap"
 
 # =============================================================================
 # CORE CLI TOOLS (all profiles)
@@ -115,6 +115,8 @@ cask "ghostty"                 # GPU-accelerated terminal
 cask "superwhisper"            # Voice input anywhere
 cask "obsidian"                # Knowledge management
 cask "claude-code"             # AI coding assistant
+cask "codex"                   # OpenAI Codex CLI
+cask "steipete/tap/codexbar"   # Codex menubar app
 cask "gcloud-cli"              # Google Cloud CLI
 
 # =============================================================================
@@ -146,8 +148,6 @@ if profile == "desktop"
   # AI Desktop Apps (GUI-based)
   cask "chatgpt"               # OpenAI ChatGPT app
   cask "claude"                # Anthropic Claude app
-  cask "codex"                 # OpenAI Codex
-  cask "steipete/tap/codexbar" # Codex menubar app
 
   # Utilities
   cask "betterdisplay"         # Display management

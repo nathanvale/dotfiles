@@ -15,33 +15,30 @@ curl -fsSL https://raw.githubusercontent.com/nathanvale/dotfiles/main/setup.sh |
 git clone git@github.com:nathanvale/dotfiles.git ~/code/dotfiles
 cd ~/code/dotfiles
 
-# 2. Install Homebrew + packages (one-time)
-./bootstrap.sh
-
-# 3. Create symlinks + apply preferences
-./install.sh
+# 2. Run full setup (Homebrew + packages + symlinks + preferences)
+./setup.sh
 ```
 
 **Update existing installation:**
 ```bash
 cd ~/code/dotfiles
 git pull
-./install.sh
+./setup.sh symlinks   # Recreate symlinks
+./setup.sh prefs      # Reapply macOS preferences
 ```
 
 ## What Gets Installed
 
-### bootstrap.sh (run once)
-- Xcode Command Line Tools
-- Homebrew
-- All packages from `config/brew/Brewfile`
+### setup.sh (7 phases)
+- **Phase 0:** Preflight checks (macOS, arch, network, disk)
+- **Phase 1:** Xcode CLT + Homebrew + repo clone
+- **Phase 2:** Claude Code (AI rescue — enables debugging for later phases)
+- **Phase 3:** 16+ essential CLI tools (git, tmux, fzf, ripgrep, etc.)
+- **Phase 4:** Development runtimes (Bun, Python, Node via fnm)
+- **Phase 5:** All GUI apps from `config/brew/Brewfile`
+- **Phase 6:** Symlinks for dotfiles + macOS preferences
 
-### install.sh (run anytime)
-- Symlinks for dotfiles (`.zshrc`, `.gitconfig`, etc.)
-- Symlinks for config directories (`.config` → `config/`)
-- VS Code settings and keybindings
-- Claude Code personal settings
-- macOS preferences
+Supports `--resume` to pick up where it left off and `--start-phase N` to skip ahead.
 
 ## Features
 
@@ -64,9 +61,8 @@ git pull
 
 ```
 ~/code/dotfiles/
-├── bootstrap.sh          # One-time Homebrew setup
-├── install.sh            # Symlinks + preferences
-├── setup.sh              # Curl-able installer
+├── setup.sh              # Unified installer (full setup + subcommands)
+├── verify_install.sh     # Post-install verification
 ├── config/               # All configuration files
 │   ├── brew/Brewfile     # Homebrew packages
 │   ├── tmux/             # Tmux configuration
@@ -92,7 +88,7 @@ git pull
 | `~/bin` | `dotfiles/bin` |
 | VS Code settings | `dotfiles/config/vscode/` |
 
-Run `./install.sh status` to see all symlinks and their status.
+Run `./setup.sh status` to see all symlinks and their status.
 
 ## Post-Install
 

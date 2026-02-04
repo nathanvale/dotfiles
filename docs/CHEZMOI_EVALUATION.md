@@ -18,7 +18,7 @@
 ### 1. Native Templating
 Instead of separate logic in shell scripts:
 ```bash
-# Current: bootstrap.sh
+# Current: setup.sh
 if [[ "$profile" == "server" ]]; then
     ./config/macos/defaults.server.sh
 fi

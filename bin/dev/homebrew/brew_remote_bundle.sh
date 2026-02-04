@@ -17,7 +17,7 @@ INSTALLING_BREW_PACKAGES=false
 # Temporarily add Homebrew to PATH
 BREW_PATH="/opt/homebrew/bin"
 # Define the URL of the Brewfile
-BREWFILE_URL="https://raw.githubusercontent.com/nathanvale/dotfiles/master/config/brew/Brewfile"
+BREWFILE_URL="https://raw.githubusercontent.com/nathanvale/dotfiles/main/config/brew/Brewfile"
 # Define a temporary file to store the downloaded Brewfile
 TEMP_BREWFILE=$(mktemp)
 export PATH="$BREW_PATH:$PATH"
@@ -56,7 +56,7 @@ trap ignore_sigint SIGINT
 if ! command -v brew &>/dev/null; then
   "log $ERROR ""Homebrew is not installed."
   "log $INFO ""Run the install script to install Homebrew."
-  "log $INFO ""curl -fsSL https://raw.githubusercontent.com/nathanvale/dotfiles/master/bin/install.sh | /bin/bash"
+  "log $INFO ""curl -fsSL https://raw.githubusercontent.com/nathanvale/dotfiles/main/setup.sh | /bin/bash"
   cleanup
   exit 1
 fi

@@ -11,7 +11,7 @@
 #   ./defaults.server.sh           # Apply all server settings
 #   ./defaults.server.sh --dry-run # Show what would be done
 #
-# Run after bootstrap.sh on server profile installations.
+# Run via setup.sh or setup.sh prefs on server profile installations.
 
 set -e
 

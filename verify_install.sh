@@ -2,7 +2,7 @@
 # verify_install.sh - Post-installation verification
 #
 # Validates that all bootstrap phases completed successfully.
-# Run after setup.sh or bootstrap.sh + install.sh to verify.
+# Run after setup.sh to verify.
 #
 # Usage:
 #   ./verify_install.sh         # Run all verifications

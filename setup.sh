@@ -140,18 +140,21 @@ main() {
             log_info "Installing Xcode Command Line Tools (required for git)..."
             touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
             local clt_pkg
-            clt_pkg=$(softwareupdate -l 2>/dev/null | grep -o '.*Command Line Tools.*' | head -1 | sed 's/^[* ]*//' | sed 's/ *$//')
+            clt_pkg=$(softwareupdate -l 2>/dev/null | grep -o '.*Command Line Tools.*' | head -1 | sed 's/^[* ]*//' | sed 's/^Label: //' | sed 's/ *$//')
 
             if [[ -n "$clt_pkg" ]]; then
                 log_info "Found: $clt_pkg"
                 softwareupdate -i "$clt_pkg" --verbose
-            else
-                log_warn "softwareupdate couldn't find CLT, trying xcode-select --install"
+            fi
+            rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+
+            # Verify installation succeeded, fall back to xcode-select --install
+            if ! xcode-select -p &>/dev/null; then
+                log_warn "softwareupdate didn't install CLT, trying xcode-select --install"
                 xcode-select --install 2>/dev/null || true
                 log_info "Waiting for Xcode CLT installation..."
                 until xcode-select -p &>/dev/null; do sleep 5; done
             fi
-            rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
             log_info "Xcode CLT installed"
         fi
 

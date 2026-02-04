@@ -186,14 +186,17 @@ phase_1_foundation() {
         # xcode-select --install requires a GUI dialog click
         touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
         local clt_pkg
-        clt_pkg=$(softwareupdate -l 2>/dev/null | grep -o '.*Command Line Tools.*' | head -1 | sed 's/^[* ]*//' | sed 's/ *$//')
+        clt_pkg=$(softwareupdate -l 2>/dev/null | grep -o '.*Command Line Tools.*' | head -1 | sed 's/^[* ]*//' | sed 's/^Label: //' | sed 's/ *$//')
 
         if [[ -n "$clt_pkg" ]]; then
             log "Found package: $clt_pkg"
             softwareupdate -i "$clt_pkg" --verbose 2>&1 | tee -a "$LOG_FILE"
-        else
-            # Fallback to xcode-select --install if softwareupdate can't find it
-            log_warn "softwareupdate couldn't find CLT, falling back to xcode-select --install"
+        fi
+        rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+
+        # Verify installation succeeded, fall back to xcode-select --install
+        if ! xcode-select -p &>/dev/null; then
+            log_warn "softwareupdate didn't install CLT, falling back to xcode-select --install"
             log_warn "You may need to click 'Install' in the dialog if running with a display"
             xcode-select --install 2>/dev/null || true
 
@@ -204,7 +207,6 @@ phase_1_foundation() {
             done
         fi
 
-        rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
         log "Xcode CLT installed"
     else
         log "Xcode CLT already installed: $(xcode-select -p)"

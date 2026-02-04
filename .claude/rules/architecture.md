@@ -35,7 +35,8 @@ paths:
 |--------|---------|
 | `bin/dotfiles/symlinks/symlinks_manage.sh` | Manage all configuration symlinks |
 | `bin/dev/homebrew/brew_remote_bundle.sh` | Install/update Homebrew packages from Brewfile |
-| `bin/system/macos/macos_preferences_manage.sh` | Configure macOS system preferences |
+| `config/macos/defaults.common.sh` | Configure macOS user-domain preferences |
+| `config/macos/defaults.server.sh` | Configure macOS server-specific settings (sudo) |
 | `bin/tmux/tx` | Universal tmux session launcher (replaces 20+ project configs) |
 | `bin/utils/colour_log.sh` | Standardized logging utilities (source in all scripts) |
 

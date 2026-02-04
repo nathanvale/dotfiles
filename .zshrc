@@ -282,6 +282,7 @@ function ccdev() {
     --plugin-dir ~/code/side-quest-marketplace/plugins/terminal \
     --plugin-dir ~/code/side-quest-marketplace/plugins/the-cinema-bandit \
     --plugin-dir ~/code/side-quest-plugins/plugins/tsc-runner \
+    --plugin-dir ~/code/side-quest-plugins/plugins/utm-testing \
     --plugin-dir ~/code/side-quest-marketplace/plugins/validate-plugin \
     --plugin-dir ~/code/side-quest-plugins/plugins/x-api \
     "$@"

@@ -167,6 +167,28 @@ log "$INFO" "=== Firewall Configuration ==="
 run_sudo "/usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on"
 run_sudo "/usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on"
 
+# Auto-restart on freeze (kernel panic recovery)
+run_sudo "systemsetup -setrestartfreeze on"
+
+# ============================================
+# LOGIN WINDOW
+# ============================================
+log "$INFO" ""
+log "$INFO" "=== Login Window ==="
+
+# Show hostname at login window (useful for identifying headless servers)
+run_sudo "defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName"
+
+# ============================================
+# AUTOMATIC UPDATES (server controls its own reboots)
+# ============================================
+log "$INFO" ""
+log "$INFO" "=== Automatic Updates ==="
+
+run_sudo "defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticDownload -bool false"
+run_sudo "defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticallyInstallMacOSUpdates -bool false"
+run_sudo "defaults write /Library/Preferences/com.apple.commerce AutoUpdate -bool false"
+
 # ============================================
 # PERFORMANCE OPTIMIZATIONS
 # ============================================

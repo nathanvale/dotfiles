@@ -90,7 +90,7 @@ install_prefs() {
     log_info "Profile: $profile"
 
     # Common preferences (works for both desktop and server)
-    local prefs_script="$DOTFILES/bin/system/macos/macos_preferences_manage.sh"
+    local prefs_script="$DOTFILES/config/macos/defaults.common.sh"
     if [[ -f "$prefs_script" ]]; then
         log_info "Applying common macOS preferences..."
         "$prefs_script" --set

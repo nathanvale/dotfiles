@@ -264,7 +264,7 @@ function ccdev() {
     --plugin-dir ~/code/side-quest-plugins/plugins/biome-runner \
     --plugin-dir ~/code/side-quest-marketplace/plugins/bookmarks \
     --plugin-dir ~/code/side-quest-plugins/plugins/bun-runner \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/bun-starter \
+    --plugin-dir ~/code/side-quest-plugins/plugins/bun-starter \
     --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-claude-md \
     --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-docs \
     --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-skill-expert \
@@ -273,6 +273,7 @@ function ccdev() {
     --plugin-dir ~/code/side-quest-marketplace/plugins/firecrawl \
     --plugin-dir ~/code/side-quest-marketplace/plugins/git \
     --plugin-dir ~/code/side-quest-marketplace/plugins/kit \
+    --plugin-dir ~/code/side-quest-plugins/plugins/macos-settings \
     --plugin-dir ~/code/side-quest-marketplace/plugins/mcp-manager \
     --plugin-dir ~/code/side-quest-marketplace/plugins/para-obsidian \
     --plugin-dir ~/code/side-quest-marketplace/plugins/plugin-template \

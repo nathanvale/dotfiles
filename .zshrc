@@ -259,6 +259,7 @@ alias cc="claude --dangerously-skip-permissions"
 # "This project is configured to use yarn" errors when starting in non-pnpm projects
 function ccdev() {
   COREPACK_ENABLE_STRICT=0 claude --dangerously-skip-permissions \
+    --plugin-dir ~/code/side-quest-plugins/plugins/agent-skills-bridge \
     --plugin-dir ~/code/side-quest-marketplace/plugins/atuin \
     --plugin-dir ~/code/side-quest-plugins/plugins/biome-runner \
     --plugin-dir ~/code/side-quest-marketplace/plugins/bookmarks \

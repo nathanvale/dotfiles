@@ -61,6 +61,7 @@
   - `atuin_search_history({ response_format: "json" })`
   - `atuin_history_insights({ response_format: "json" })`
 - **Claude Code docs** → Use `/claude-code-docs:help` (never `claude-code-guide` sub-agent)
+- **Package execution** → Prefer `bunx` over `npx` (faster, more reliable)
 
 ---
 

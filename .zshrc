@@ -615,8 +615,12 @@ proxy-off() {
 }
 
 proxy-status() {
-  if [[ -n "$HTTP_PROXY" ]]; then
-    echo "🔒 Proxy: ON → $HTTP_PROXY"
+  if [[ -n "${HTTP_PROXY:-}" ]]; then
+    echo "🔒 Proxy: ON -> $HTTP_PROXY"
+    if [[ -f "${NODE_EXTRA_CA_CERTS:-}" ]]; then
+      local cn=$(openssl x509 -in "$NODE_EXTRA_CA_CERTS" -noout -subject 2>/dev/null | sed 's/.*CN *= *//')
+      echo "   CA: $cn"
+    fi
   else
     echo "🔓 Proxy: OFF"
   fi

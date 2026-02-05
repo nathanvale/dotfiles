@@ -136,3 +136,23 @@ proxy-status  # Check current state
 ```
 
 If `gh pr create` fails with "error connecting to vzen01.internal.bunnings.com.au", run `proxy-off` first.
+
+---
+
+## Known Issues
+
+### Bunx Cache Corruption (MCP Servers)
+
+**Symptom:** MCP servers fail to start with errors like:
+```
+Cannot find module '@modelcontextprotocol/sdk/server/mcp.js'
+```
+
+**Cause:** Bunx caches packages in temp directories that can become corrupted (missing `package.json` files).
+
+**Fix:** Clear the bunx cache for affected packages:
+```bash
+rm -rf /private/var/folders/_b/*/T/bunx-501-@side-quest/
+```
+
+Then restart the AI tool (Codex, Claude Code, etc.) to re-download packages.

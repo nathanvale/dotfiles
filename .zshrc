@@ -626,8 +626,13 @@ proxy-status() {
   fi
 }
 
-# Default: Proxy OFF
-proxy-off >/dev/null
+# Auto-enable proxy on Bunnings machines when VPN is connected
+# Only runs on machines with hostname starting with "BUN"
+if [[ "$(hostname)" == BUN* ]] && pgrep -q "GlobalProtect" 2>/dev/null; then
+  proxy-on >/dev/null
+else
+  proxy-off >/dev/null
+fi
 
 # ----------------------------------------------------------------------------
 # Direnv (directory-specific env vars)

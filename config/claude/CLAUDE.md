@@ -28,6 +28,7 @@
 - **NEVER use destructive git commands** → No `reset --hard`, `clean -f`, `push --force`
 - **NEVER write exported function without JSDoc** → Document the "why"
 - **NEVER create nested biome.json** → Monorepos use single root config only
+- **NEVER use em dashes (—)** → Use regular dashes (-) or double hyphens (--) instead
 
 ### Obsidian Vault
 

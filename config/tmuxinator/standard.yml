@@ -21,7 +21,7 @@ windows:
         - ccdev
         - sleep 2 && ccdev
         - sleep 4 && ccdev
-        - sleep 6 && ccdev
+        - sleep 6 && codex
   - git:
       panes:
         - lazygit

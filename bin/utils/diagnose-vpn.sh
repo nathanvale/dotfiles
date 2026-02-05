@@ -94,7 +94,7 @@ direct_tls_output=$(openssl s_client -connect "$ANTHROPIC_HOST:443" -servername 
 direct_issuer=$(echo "$direct_tls_output" | grep -m1 "issuer=" | sed 's/.*issuer=//')
 if [[ -n "$direct_issuer" ]]; then
   info "Certificate issuer: $direct_issuer"
-  if echo "$direct_issuer" | grep -qi "zscaler\|palo alto\|bunnings"; then
+  if echo "$direct_issuer" | grep -qi "zscaler\|palo alto\|bunnings\|forward trust"; then
     info "SSL inspection DETECTED - Zscaler/corporate CA is intercepting"
   else
     info "No SSL inspection detected - seeing real Anthropic cert"

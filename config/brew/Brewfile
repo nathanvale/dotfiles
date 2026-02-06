@@ -155,6 +155,7 @@ if profile == "desktop"
   cask "aldente"               # Battery management
   cask "imazing"               # iOS device management
   cask "blackhole-2ch"         # Virtual audio device
+  cask "philips-hue-sync"      # Hue light sync for movies/games
   cask "raspberry-pi-imager"   # SD card imaging
 
   # Work-specific

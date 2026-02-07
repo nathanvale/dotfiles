@@ -273,7 +273,6 @@ function ccdev() {
     --plugin-dir ~/code/side-quest-marketplace/plugins/firecrawl \
     --plugin-dir ~/code/side-quest-plugins/plugins/agent-skills-bridge \
     --plugin-dir ~/code/side-quest-marketplace/plugins/git \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/kit \
     --plugin-dir ~/code/side-quest-marketplace/plugins/mcp-manager \
     --plugin-dir ~/code/side-quest-plugins/plugins/research \
     --plugin-dir ~/code/side-quest-marketplace/plugins/para-obsidian \

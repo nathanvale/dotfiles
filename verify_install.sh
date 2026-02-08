@@ -32,8 +32,9 @@ PASS_COUNT=0
 FAIL_COUNT=0
 WARN_COUNT=0
 
-# Track warning names for recap
+# Track warning and failure names for recap
 WARN_ITEMS=()
+FAIL_ITEMS=()
 
 # Quiet mode
 QUIET=false
@@ -62,6 +63,7 @@ verify() {
         return 0
     else
         FAIL_COUNT=$((FAIL_COUNT + 1))
+        FAIL_ITEMS+=("$name")
         echo -e "${RED}✗${RESET} $name ${RED}FAILED${RESET}"
         return 0  # Don't fail the script, just record the failure
     fi
@@ -194,6 +196,9 @@ verify "Zsh config symlink" "[[ -L ~/.zshrc ]]"
 verify "Git config symlink" "[[ -L ~/.gitconfig ]]"
 verify_warn "Tmux config symlink" "[[ -L ~/.tmux.conf ]] || [[ -L ~/.config/tmux/tmux.conf ]]"
 
+# Full Disk Access (needed for Safari prefs)
+verify_warn "Full Disk Access" "plutil -lint /Library/Preferences/com.apple.TimeMachine.plist"
+
 # Profile marker
 verify "Profile saved" "[[ -f '$STATE_DIR/profile' ]]"
 
@@ -228,85 +233,146 @@ echo ""
 if [[ $FAIL_COUNT -eq 0 ]]; then
     echo -e "${GREEN}All critical checks passed!${RESET}"
 else
-    echo -e "${RED}Some checks failed. Review the output above.${RESET}"
-    echo ""
-    echo "To debug with Claude Code:"
-    echo "  claude 'Help me fix the verification failures in my dotfiles setup'"
+    echo -e "${RED}Some checks failed.${RESET}"
 fi
 
 # ============================================================================
-# Actionable recap for warnings and known skips
+# Actionable recap for warnings and failures
 # ============================================================================
-if [[ $WARN_COUNT -gt 0 || $FAIL_COUNT -gt 0 ]]; then
+# Note: Guard array iteration with length check for bash 3.2 compatibility.
+# On bash <4.4, "${arr[@]}" on an empty array triggers "unbound variable"
+# under set -u. Checking ${#arr[@]} first avoids this.
+# ============================================================================
+if [[ $FAIL_COUNT -gt 0 || $WARN_COUNT -gt 0 ]]; then
     echo ""
     echo -e "${YELLOW}--- Action needed ---${RESET}"
-    echo ""
 
-    # Recap each warning with its fix
-    for item in "${WARN_ITEMS[@]}"; do
-        case "$item" in
-            "OrbStack")
-                echo -e "${YELLOW}OrbStack:${RESET} Homebrew xattr error on macOS Tahoe"
-                echo "  Fix: brew install --cask orbstack --no-quarantine"
-                echo "  Or download directly from https://orbstack.dev"
-                echo ""
-                ;;
-            "SSH enabled")
-                echo -e "${YELLOW}SSH:${RESET} Could not verify SSH status (may need sudo)"
-                echo "  Check: sudo systemsetup -getremotelogin"
-                echo "  Fix:   sudo systemsetup -setremotelogin on"
-                echo ""
-                ;;
-            "Screen saver disabled")
-                echo -e "${YELLOW}Screen saver:${RESET} Could not verify screen saver setting"
-                echo "  Check: defaults read com.apple.screensaver idleTime"
-                echo "  Fix:   defaults write com.apple.screensaver idleTime 0"
-                echo ""
-                ;;
-            "VS Code")
-                echo -e "${YELLOW}VS Code:${RESET} Not installed"
-                echo "  Fix: brew install --cask visual-studio-code"
-                echo ""
-                ;;
-            "Slack")
-                echo -e "${YELLOW}Slack:${RESET} Not installed"
-                echo "  Fix: brew install --cask slack"
-                echo ""
-                ;;
-            "Discord")
-                echo -e "${YELLOW}Discord:${RESET} Not installed"
-                echo "  Fix: brew install --cask discord"
-                echo ""
-                ;;
-            "AI rescue marker")
-                echo -e "${YELLOW}AI rescue marker:${RESET} State file missing (harmless)"
-                echo "  This just means setup didn't record the AI rescue checkpoint."
-                echo "  No action needed - Claude Code is installed and working."
-                echo ""
-                ;;
-            "Ollama")
-                echo -e "${YELLOW}Ollama:${RESET} Not installed"
-                echo "  Fix: brew install ollama"
-                echo ""
-                ;;
-            *)
-                echo -e "${YELLOW}${item}:${RESET} Not available"
-                echo ""
-                ;;
-        esac
-    done
-
-    # Check for Safari/FDA skip (not tracked by verify_warn)
-    if ! plutil -lint /Library/Preferences/com.apple.TimeMachine.plist &>/dev/null; then
-        echo -e "${YELLOW}Safari preferences:${RESET} Skipped (no Full Disk Access)"
-        echo "  5 settings not applied: search privacy, suggestions, auto-correct, homepage, safe downloads"
-        echo "  Fix:"
-        echo "    1. System Settings > Privacy & Security > Full Disk Access"
-        echo "    2. Add your terminal app (Ghostty, Terminal, etc.)"
-        echo "    3. Relaunch terminal"
-        echo "    4. Run: ~/code/dotfiles/config/macos/defaults.common.sh --set"
+    # Recap failed items with fix instructions
+    if [[ ${#FAIL_ITEMS[@]} -gt 0 ]]; then
         echo ""
+        for item in "${FAIL_ITEMS[@]}"; do
+            case "$item" in
+                "Homebrew")
+                    echo -e "${RED}Homebrew:${RESET} Not installed"
+                    echo "  Fix: /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
+                    echo ""
+                    ;;
+                "Dotfiles repo")
+                    echo -e "${RED}Dotfiles repo:${RESET} Missing"
+                    echo "  Fix: git clone https://github.com/nathanvale/dotfiles.git ~/code/dotfiles"
+                    echo ""
+                    ;;
+                "Xcode CLT")
+                    echo -e "${RED}Xcode CLT:${RESET} Not installed"
+                    echo "  Fix: xcode-select --install"
+                    echo ""
+                    ;;
+                "Zsh config symlink"|"Git config symlink")
+                    echo -e "${RED}${item}:${RESET} Broken or missing"
+                    echo "  Fix: cd ~/code/dotfiles && bin/dotfiles/symlinks/symlinks_manage.sh --link"
+                    echo ""
+                    ;;
+                "Profile saved")
+                    echo -e "${RED}Profile saved:${RESET} State file missing"
+                    echo "  Fix: echo 'server' > ~/.dotfiles_state/profile  (or 'desktop')"
+                    echo ""
+                    ;;
+                "Sleep disabled"|"Display sleep disabled")
+                    echo -e "${RED}${item}:${RESET} pmset not configured"
+                    echo "  Fix: sudo pmset -a sleep 0 && sudo pmset -a displaysleep 0"
+                    echo ""
+                    ;;
+                *)
+                    echo -e "${RED}${item}:${RESET} Failed"
+                    echo "  Fix: Re-run setup or install manually"
+                    echo ""
+                    ;;
+            esac
+        done
     fi
+
+    # Recap warned items with fix instructions
+    if [[ ${#WARN_ITEMS[@]} -gt 0 ]]; then
+        for item in "${WARN_ITEMS[@]}"; do
+            case "$item" in
+                "OrbStack")
+                    echo -e "${YELLOW}OrbStack:${RESET} Homebrew xattr error on macOS Tahoe"
+                    echo "  Fix: brew install --cask orbstack --no-quarantine"
+                    echo "  Or download directly from https://orbstack.dev"
+                    echo ""
+                    ;;
+                "SSH enabled")
+                    echo -e "${YELLOW}SSH:${RESET} Could not verify (needs sudo)"
+                    echo "  Fix:   sudo systemsetup -setremotelogin on"
+                    echo "  Check: sudo systemsetup -getremotelogin"
+                    echo ""
+                    ;;
+                "Screen saver disabled")
+                    echo -e "${YELLOW}Screen saver:${RESET} Could not verify setting"
+                    echo "  Fix:   defaults write com.apple.screensaver idleTime 0"
+                    echo "  Check: defaults read com.apple.screensaver idleTime"
+                    echo ""
+                    ;;
+                "Full Disk Access")
+                    echo -e "${YELLOW}Full Disk Access:${RESET} Not granted (Safari prefs skipped)"
+                    echo "  5 Safari settings not applied: search privacy, suggestions,"
+                    echo "  auto-correct, homepage, safe downloads"
+                    echo "  Fix:"
+                    echo "    1. System Settings > Privacy & Security > Full Disk Access"
+                    echo "    2. Add your terminal app (Ghostty, Terminal, etc.)"
+                    echo "    3. Relaunch terminal"
+                    echo "    4. Run: ~/code/dotfiles/config/macos/defaults.common.sh --set"
+                    echo ""
+                    ;;
+                "Claude Code")
+                    echo -e "${YELLOW}Claude Code:${RESET} Not installed"
+                    echo "  Fix: brew install --cask claude-code"
+                    echo ""
+                    ;;
+                "Tmux config symlink")
+                    echo -e "${YELLOW}Tmux config:${RESET} Symlink not found"
+                    echo "  Fix: cd ~/code/dotfiles && bin/dotfiles/symlinks/symlinks_manage.sh --link"
+                    echo ""
+                    ;;
+                "VS Code")
+                    echo -e "${YELLOW}VS Code:${RESET} Not installed"
+                    echo "  Fix: brew install --cask visual-studio-code"
+                    echo ""
+                    ;;
+                "Slack")
+                    echo -e "${YELLOW}Slack:${RESET} Not installed"
+                    echo "  Fix: brew install --cask slack"
+                    echo ""
+                    ;;
+                "Discord")
+                    echo -e "${YELLOW}Discord:${RESET} Not installed"
+                    echo "  Fix: brew install --cask discord"
+                    echo ""
+                    ;;
+                "AI rescue marker")
+                    # Harmless -- suppress from action items if Claude Code is installed
+                    if command -v claude &>/dev/null; then
+                        continue
+                    fi
+                    echo -e "${YELLOW}AI rescue:${RESET} Claude Code not available"
+                    echo "  Fix: brew install --cask claude-code"
+                    echo ""
+                    ;;
+                "Ollama")
+                    echo -e "${YELLOW}Ollama:${RESET} Not installed"
+                    echo "  Fix: brew install ollama"
+                    echo ""
+                    ;;
+                *)
+                    echo -e "${YELLOW}${item}:${RESET} Not available"
+                    echo ""
+                    ;;
+            esac
+        done
+    fi
+
+    echo "To debug with Claude Code:"
+    echo "  claude 'Help me fix these failures. Log: ~/.dotfiles_state/setup.log'"
 fi
 
 if [[ $FAIL_COUNT -gt 0 ]]; then

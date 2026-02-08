@@ -232,29 +232,6 @@ set_preferences() {
         run defaults write com.apple.Safari AutoOpenSafeDownloads -bool false                 # No auto-open downloads (CIS benchmark)
     else
         log "$WARNING" "Safari prefs require Full Disk Access (5 settings: privacy, security, homepage)"
-        log "$WARNING" ""
-        log "$WARNING" "To fix:"
-        log "$WARNING" "  1. Open: System Settings > Privacy & Security > Full Disk Access"
-        log "$WARNING" "  2. Add your terminal app (Ghostty, Terminal, etc.)"
-        log "$WARNING" "  3. Relaunch terminal and re-run this script"
-
-        # In interactive mode, offer to pause so the user can go fix it now
-        if [[ -t 0 ]] || [[ -e /dev/tty ]]; then
-            local tty_input="/dev/tty"
-            [[ -t 0 ]] && tty_input="/dev/stdin"
-
-            echo ""
-            log "$WARNING" "You can fix this now or skip and apply Safari prefs later."
-            read -r -p "[p]ause to fix FDA now, or [s]kip? (p/s): " choice < "$tty_input"
-
-            if [[ "$choice" =~ ^[Pp]$ ]]; then
-                log "$INFO" ""
-                log "$INFO" "Paused. Go grant Full Disk Access to your terminal, then relaunch it."
-                log "$INFO" "Resume with: ./defaults.common.sh --set"
-                exit 0
-            fi
-        fi
-
         log "$WARNING" "Skipping Safari prefs for now."
     fi
 
@@ -279,15 +256,23 @@ set_preferences() {
         done
         log "$INFO" ""
         log "$INFO" "============================================"
-        if ! $HAS_FDA; then
-            log "$WARNING" "macOS preferences applied (Safari skipped - no FDA)"
+        if $HAS_FDA; then
+            log "$INFO" "All macOS preferences applied successfully."
+        else
+            log "$WARNING" "macOS preferences applied (Safari SKIPPED)"
             log "$WARNING" ""
-            log "$WARNING" "To apply Safari prefs:"
+            log "$WARNING" "5 Safari settings were not applied:"
+            log "$WARNING" "  - Disable search queries to Apple"
+            log "$WARNING" "  - Disable search suggestions"
+            log "$WARNING" "  - Disable auto-correct in web forms"
+            log "$WARNING" "  - Set homepage to blank"
+            log "$WARNING" "  - Disable auto-open safe downloads (security)"
+            log "$WARNING" ""
+            log "$WARNING" "To apply them later:"
             log "$WARNING" "  1. System Settings > Privacy & Security > Full Disk Access"
             log "$WARNING" "  2. Add your terminal app (Ghostty, Terminal, etc.)"
-            log "$WARNING" "  3. Relaunch terminal, then: ./defaults.common.sh --set"
-        else
-            log "$INFO" "macOS preferences applied successfully."
+            log "$WARNING" "  3. Relaunch terminal"
+            log "$WARNING" "  4. Run: ./defaults.common.sh --set"
         fi
         log "$INFO" "============================================"
     else

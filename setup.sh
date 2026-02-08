@@ -85,6 +85,33 @@ main() {
     }
 
     # ========================================================================
+    # Sudo management
+    # ========================================================================
+    acquire_sudo() {
+        log "Requesting administrator access (you may be prompted for your password)..."
+        if ! sudo -v 2>/dev/null; then
+            log_error "Failed to acquire sudo access. Some phases require administrator privileges."
+            exit 1
+        fi
+        log "Administrator access: OK"
+
+        # Keep sudo alive in background (refresh every 50s, timeout is 5min)
+        while true; do
+            sudo -n true 2>/dev/null
+            sleep 50
+        done &
+        SUDO_KEEPALIVE_PID=$!
+    }
+
+    release_sudo() {
+        if [[ -n "${SUDO_KEEPALIVE_PID:-}" ]]; then
+            kill "$SUDO_KEEPALIVE_PID" 2>/dev/null || true
+            wait "$SUDO_KEEPALIVE_PID" 2>/dev/null || true
+            unset SUDO_KEEPALIVE_PID
+        fi
+    }
+
+    # ========================================================================
     # Profile helpers
     # ========================================================================
     get_profile() {
@@ -325,6 +352,9 @@ main() {
 
         # Store macOS version for later phases (Tahoe compatibility)
         echo "$major_version" > "$STATE_DIR/macos_version"
+
+        # Acquire sudo for subsequent phases (Homebrew install, server prefs)
+        acquire_sudo
 
         log "Preflight: PASSED"
     }
@@ -578,6 +608,9 @@ main() {
     run_full_install() {
         local start_phase="$1"
 
+        # Ensure sudo keep-alive is cleaned up on exit (success or failure)
+        trap 'release_sudo' EXIT
+
         local profile
         profile=$(get_profile)
 
@@ -636,6 +669,9 @@ main() {
             log_section "Running installation verification"
             "$DOTFILES_DIR/verify_install.sh" || true
         fi
+
+        # Release sudo keep-alive before final banner
+        release_sudo
 
         echo ""
         echo -e "${GREEN}════════════════════════════════════════════════════${RESET}"

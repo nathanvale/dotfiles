@@ -244,10 +244,6 @@ log "$INFO" "=== Performance Optimizations ==="
 # Disable Apple Intelligence / Siri (not needed on server)
 run_cmd "defaults write com.apple.assistant.support 'Assistant Enabled' -bool false"
 
-# Reduce Motion & Transparency (less GPU overhead)
-run_cmd "defaults write com.apple.universalaccess reduceMotion -bool true"
-run_cmd "defaults write com.apple.universalaccess reduceTransparency -bool true"
-
 # Disable wallpaper tinting (Aaron Parker recommendation)
 run_cmd "defaults write NSGlobalDomain AppleInterfaceStyleSwitchesAutomatically -bool false"
 

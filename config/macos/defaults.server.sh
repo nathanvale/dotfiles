@@ -13,9 +13,10 @@
 #
 # Run via setup.sh or setup.sh prefs on server profile installations.
 
-set -e
-
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# Track failed commands instead of using set -e (which kills the script silently)
+FAILED_COMMANDS=()
 
 # Source colour_log if available, otherwise define minimal logging
 if [[ -f "$SCRIPT_DIR/../../bin/colour_log.sh" ]]; then
@@ -57,19 +58,45 @@ done
 run_cmd() {
     if $DRY_RUN; then
         log "$INFO" "[DRY-RUN] Would execute: $*"
-    else
-        log "$INFO" "Executing: $*"
-        eval "$@"
+        return 0
+    fi
+
+    log "$INFO" "Executing: $*"
+    if ! eval "$@"; then
+        log "$ERROR" "Command failed: $*"
+        FAILED_COMMANDS+=("$*")
+        return 1
     fi
 }
 
-# Helper for sudo commands
+# Helper for sudo commands with automatic credential recovery
 run_sudo() {
     if $DRY_RUN; then
         log "$INFO" "[DRY-RUN] Would execute (sudo): $*"
-    else
-        log "$INFO" "Executing (sudo): $*"
-        sudo bash -c "$*"
+        return 0
+    fi
+
+    # Re-acquire sudo if credentials have expired
+    if ! sudo -n true 2>/dev/null; then
+        log "$WARNING" "Sudo credentials expired, re-acquiring..."
+        if [[ -e /dev/tty ]]; then
+            sudo -v < /dev/tty 2>&1 || {
+                log "$ERROR" "Failed to re-acquire sudo. Skipping: $*"
+                FAILED_COMMANDS+=("$*")
+                return 1
+            }
+        else
+            log "$ERROR" "No TTY available to re-acquire sudo. Skipping: $*"
+            FAILED_COMMANDS+=("$*")
+            return 1
+        fi
+    fi
+
+    log "$INFO" "Executing (sudo): $*"
+    if ! sudo bash -c "$*"; then
+        log "$ERROR" "Command failed (sudo): $*"
+        FAILED_COMMANDS+=("$*")
+        return 1
     fi
 }
 
@@ -78,6 +105,25 @@ log "$INFO" "Server-specific macOS settings"
 log "$INFO" "============================================"
 if $DRY_RUN; then
     log "$WARNING" "DRY RUN MODE - No changes will be made"
+fi
+
+# Validate sudo access upfront before running any commands
+if ! $DRY_RUN; then
+    if ! sudo -n true 2>/dev/null; then
+        log "$WARNING" "Sudo access required for server settings."
+        log "$WARNING" "You will be prompted for your password."
+        if [[ -e /dev/tty ]]; then
+            sudo -v < /dev/tty 2>&1 || {
+                log "$ERROR" "Cannot acquire sudo. Run with: sudo ./defaults.server.sh"
+                exit 1
+            }
+        else
+            log "$ERROR" "No TTY and no cached sudo credentials."
+            log "$ERROR" "Pre-cache sudo first: sudo -v && ./defaults.server.sh"
+            exit 1
+        fi
+    fi
+    log "$INFO" "Sudo access: OK"
 fi
 
 # ============================================
@@ -267,6 +313,17 @@ if ! $DRY_RUN; then
     # Restart affected services
     killall Dock 2>/dev/null || true
     killall SystemUIServer 2>/dev/null || true
+
+    if [[ ${#FAILED_COMMANDS[@]} -gt 0 ]]; then
+        log "$ERROR" "============================================"
+        log "$ERROR" "${#FAILED_COMMANDS[@]} command(s) failed:"
+        for cmd in "${FAILED_COMMANDS[@]}"; do
+            log "$ERROR" "  - $cmd"
+        done
+        log "$ERROR" "============================================"
+        log "$ERROR" "Re-run with: sudo ./defaults.server.sh"
+        exit 1
+    fi
 
     log "$INFO" "============================================"
     log "$INFO" "Server settings applied successfully!"

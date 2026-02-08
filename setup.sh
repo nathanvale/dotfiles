@@ -89,7 +89,10 @@ main() {
     # ========================================================================
     acquire_sudo() {
         log "Requesting administrator access (you may be prompted for your password)..."
-        if ! sudo -v 2>/dev/null; then
+
+        # Use /dev/tty for password prompt - required for curl | bash flow
+        # where stdin is the pipe, not the terminal
+        if ! sudo -v < /dev/tty 2>&1; then
             log_error "Failed to acquire sudo access. Some phases require administrator privileges."
             exit 1
         fi

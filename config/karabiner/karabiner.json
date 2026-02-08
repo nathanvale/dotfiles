@@ -127,7 +127,7 @@
                         ]
                     },
                     {
-                        "description": "HyperFlow - Control+1-5 (primary apps) and Hyper+1-5,S,F (secondary apps)",
+                        "description": "HyperFlow - Control+1-5 (primary apps) and Hyper+3-5,S,F,E,C (secondary apps)",
                         "manipulators": [
                             {
                                 "from": {
@@ -171,22 +171,6 @@
                             },
                             {
                                 "from": {
-                                    "key_code": "1",
-                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
-                                },
-                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow H1" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "2",
-                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
-                                },
-                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow H2" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
                                     "key_code": "3",
                                     "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
                                 },
@@ -207,6 +191,22 @@
                                     "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
                                 },
                                 "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow H5" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "e",
+                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
+                                },
+                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow E" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "c",
+                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
+                                },
+                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow C" }],
                                 "type": "basic"
                             },
                             {
@@ -244,6 +244,27 @@
                         ]
                     },
                     {
+                        "description": "Monitor Input Switching: Hyper+1 for MacBook Pro (TB4), Hyper+2 for Mac Mini (DP)",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "1",
+                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
+                                },
+                                "to": [{ "shell_command": "/opt/homebrew/bin/m1ddc set input 27" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "2",
+                                    "modifiers": { "mandatory": ["control", "option", "command", "shift"] }
+                                },
+                                "to": [{ "shell_command": "/opt/homebrew/bin/m1ddc set input 15" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "SuperWhisper Daily Note: Right Shift + Option + Space",
                         "manipulators": [
                             {
@@ -257,7 +278,7 @@
                         ]
                     },
                     {
-                        "description": "Additional shortcuts: Ctrl+Command+M for Messages, Ctrl+Command+C for Claude, Ctrl+Command+D for Docker, Ctrl+Command+P for Podcasts",
+                        "description": "Additional shortcuts: Ctrl+Cmd+M Messages, Ctrl+Cmd+C Claude, Ctrl+Cmd+D Docker, Ctrl+Cmd+P Podcasts, Ctrl+Cmd+RShift+C ChatGPT",
                         "manipulators": [
                             {
                                 "from": {
@@ -289,6 +310,14 @@
                                     "modifiers": { "mandatory": ["control", "command"] }
                                 },
                                 "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow P" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "c",
+                                    "modifiers": { "mandatory": ["control", "command", "right_shift"] }
+                                },
+                                "to": [{ "shell_command": "~/code/dotfiles/bin/hyperflow G" }],
                                 "type": "basic"
                             }
                         ]

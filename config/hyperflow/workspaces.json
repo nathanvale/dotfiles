@@ -26,8 +26,8 @@
 			"mode": "professional-engineer"
 		},
 		"C": {
-			"apps": ["Claude"],
-			"description": "Claude Desktop",
+			"apps": ["Calendar"],
+			"description": "Apple Calendar",
 			"mode": "default"
 		},
 		"F": {
@@ -73,6 +73,16 @@
 		"M": {
 			"apps": ["Messages"],
 			"description": "Apple Messages",
+			"mode": "default"
+		},
+		"E": {
+			"apps": ["Mail"],
+			"description": "Apple Mail",
+			"mode": "email"
+		},
+		"G": {
+			"apps": ["ChatGPT"],
+			"description": "ChatGPT",
 			"mode": "default"
 		}
 	}

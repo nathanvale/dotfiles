@@ -99,6 +99,7 @@ brew "ghq"                     # Remote repository management
 # UTILITIES (all profiles)
 # =============================================================================
 brew "blueutil"                # Bluetooth CLI control
+brew "m1ddc"                   # DDC monitor control (input switching, brightness)
 brew "poppler"                 # PDF utilities
 brew "grep"                    # GNU grep
 brew "hl"                      # Log highlighter

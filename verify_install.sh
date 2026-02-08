@@ -213,8 +213,8 @@ if [[ "$PROFILE" == "server" ]]; then
     verify "Sleep disabled" "[[ \$(pmset -g | grep ' sleep' | awk '{print \$2}') == '0' ]]"
     verify "Display sleep disabled" "[[ \$(pmset -g | grep 'displaysleep' | awk '{print \$2}') == '0' ]]"
 
-    # Check SSH
-    verify_warn "SSH enabled" "systemsetup -getremotelogin 2>/dev/null | grep -q On"
+    # Check SSH (nc doesn't need sudo, unlike systemsetup -getremotelogin)
+    verify_warn "SSH enabled" "nc -z localhost 22"
 
     # Check screen saver
     verify_warn "Screen saver disabled" "[[ \$(defaults read com.apple.screensaver idleTime 2>/dev/null) == '0' ]]"

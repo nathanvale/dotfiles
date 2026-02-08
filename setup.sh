@@ -585,6 +585,18 @@ main() {
         log "Installing packages for profile: $profile"
         log "This may take 10-15 minutes for a full install..."
 
+        # Pre-cleanup: Remove orphaned cask apps not managed by Homebrew
+        # On macOS Tahoe, Homebrew fails with "xattr: Operation not permitted" when
+        # it tries to "adopt" an existing app and write kMDItemAlternateNames metadata
+        # inside a signed app bundle. Removing the orphan lets Homebrew do a clean install.
+        local orphan_casks=("OrbStack")
+        for app_name in "${orphan_casks[@]}"; do
+            if [[ -d "/Applications/${app_name}.app" ]] && ! brew list --cask "${app_name,,}" &>/dev/null 2>&1; then
+                log "Removing orphaned ${app_name}.app (not managed by Homebrew)..."
+                rm -rf "/Applications/${app_name}.app"
+            fi
+        done
+
         # Run brew bundle with profile environment variable
         # NOTE: Must use HOMEBREW_ prefix for env vars to pass through to Brewfile Ruby context
         # Regular env vars are filtered out by Homebrew for security/isolation

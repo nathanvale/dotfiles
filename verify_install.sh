@@ -345,9 +345,9 @@ if [[ $FAIL_COUNT -gt 0 || $WARN_COUNT -gt 0 ]]; then
         for item in "${WARN_ITEMS[@]}"; do
             case "$item" in
                 "OrbStack")
-                    action "$YELLOW" "OrbStack" "Homebrew xattr error on macOS Tahoe" \
-                        "Fix: brew install --cask orbstack --no-quarantine" \
-                        "Or download directly from https://orbstack.dev"
+                    action "$YELLOW" "OrbStack" "not installed (may be an orphaned app issue)" \
+                        "Fix: rm -rf /Applications/OrbStack.app && brew install --cask orbstack" \
+                        "Or re-run: setup.sh --server (pre-cleanup handles this automatically)"
                     ;;
                 "SSH enabled")
                     action "$YELLOW" "SSH" "could not verify (needs sudo)" \

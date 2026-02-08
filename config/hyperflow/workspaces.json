@@ -26,8 +26,8 @@
 			"mode": "professional-engineer"
 		},
 		"C": {
-			"apps": ["Calendar"],
-			"description": "Apple Calendar",
+			"apps": ["Claude"],
+			"description": "Claude",
 			"mode": "default"
 		},
 		"F": {
@@ -53,6 +53,11 @@
 		"H4": {
 			"apps": ["Podcasts"],
 			"description": "Apple Podcasts",
+			"mode": "default"
+		},
+		"H5": {
+			"apps": ["Calendar"],
+			"description": "Apple Calendar",
 			"mode": "default"
 		},
 		"S": {

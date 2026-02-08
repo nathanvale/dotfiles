@@ -265,6 +265,7 @@ function ccdev() {
     --plugin-dir ~/code/side-quest-plugins/plugins/bun-runner \
     --plugin-dir ~/code/side-quest-marketplace/plugins/bun-starter \
     --plugin-dir ~/code/side-quest-plugins/plugins/bun-typescript-starter \
+    --plugin-dir ~/code/side-quest-plugins/plugins/claude-code \
     --plugin-dir ~/code/side-quest-plugins/plugins/dell-u4025qw \
     --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-claude-md \
     --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-docs \

@@ -32,6 +32,9 @@ PASS_COUNT=0
 FAIL_COUNT=0
 WARN_COUNT=0
 
+# Track warning names for recap
+WARN_ITEMS=()
+
 # Quiet mode
 QUIET=false
 
@@ -77,6 +80,7 @@ verify_warn() {
         return 0
     else
         WARN_COUNT=$((WARN_COUNT + 1))
+        WARN_ITEMS+=("$name")
         echo -e "${YELLOW}⚠${RESET} $name ${YELLOW}(optional)${RESET}"
         return 0
     fi
@@ -223,14 +227,89 @@ echo ""
 
 if [[ $FAIL_COUNT -eq 0 ]]; then
     echo -e "${GREEN}All critical checks passed!${RESET}"
-    if [[ $WARN_COUNT -gt 0 ]]; then
-        echo -e "${YELLOW}Some optional items may need attention.${RESET}"
-    fi
-    exit 0
 else
     echo -e "${RED}Some checks failed. Review the output above.${RESET}"
     echo ""
     echo "To debug with Claude Code:"
     echo "  claude 'Help me fix the verification failures in my dotfiles setup'"
+fi
+
+# ============================================================================
+# Actionable recap for warnings and known skips
+# ============================================================================
+if [[ $WARN_COUNT -gt 0 || $FAIL_COUNT -gt 0 ]]; then
+    echo ""
+    echo -e "${YELLOW}--- Action needed ---${RESET}"
+    echo ""
+
+    # Recap each warning with its fix
+    for item in "${WARN_ITEMS[@]}"; do
+        case "$item" in
+            "OrbStack")
+                echo -e "${YELLOW}OrbStack:${RESET} Homebrew xattr error on macOS Tahoe"
+                echo "  Fix: brew install --cask orbstack --no-quarantine"
+                echo "  Or download directly from https://orbstack.dev"
+                echo ""
+                ;;
+            "SSH enabled")
+                echo -e "${YELLOW}SSH:${RESET} Could not verify SSH status (may need sudo)"
+                echo "  Check: sudo systemsetup -getremotelogin"
+                echo "  Fix:   sudo systemsetup -setremotelogin on"
+                echo ""
+                ;;
+            "Screen saver disabled")
+                echo -e "${YELLOW}Screen saver:${RESET} Could not verify screen saver setting"
+                echo "  Check: defaults read com.apple.screensaver idleTime"
+                echo "  Fix:   defaults write com.apple.screensaver idleTime 0"
+                echo ""
+                ;;
+            "VS Code")
+                echo -e "${YELLOW}VS Code:${RESET} Not installed"
+                echo "  Fix: brew install --cask visual-studio-code"
+                echo ""
+                ;;
+            "Slack")
+                echo -e "${YELLOW}Slack:${RESET} Not installed"
+                echo "  Fix: brew install --cask slack"
+                echo ""
+                ;;
+            "Discord")
+                echo -e "${YELLOW}Discord:${RESET} Not installed"
+                echo "  Fix: brew install --cask discord"
+                echo ""
+                ;;
+            "AI rescue marker")
+                echo -e "${YELLOW}AI rescue marker:${RESET} State file missing (harmless)"
+                echo "  This just means setup didn't record the AI rescue checkpoint."
+                echo "  No action needed - Claude Code is installed and working."
+                echo ""
+                ;;
+            "Ollama")
+                echo -e "${YELLOW}Ollama:${RESET} Not installed"
+                echo "  Fix: brew install ollama"
+                echo ""
+                ;;
+            *)
+                echo -e "${YELLOW}${item}:${RESET} Not available"
+                echo ""
+                ;;
+        esac
+    done
+
+    # Check for Safari/FDA skip (not tracked by verify_warn)
+    if ! plutil -lint /Library/Preferences/com.apple.TimeMachine.plist &>/dev/null; then
+        echo -e "${YELLOW}Safari preferences:${RESET} Skipped (no Full Disk Access)"
+        echo "  5 settings not applied: search privacy, suggestions, auto-correct, homepage, safe downloads"
+        echo "  Fix:"
+        echo "    1. System Settings > Privacy & Security > Full Disk Access"
+        echo "    2. Add your terminal app (Ghostty, Terminal, etc.)"
+        echo "    3. Relaunch terminal"
+        echo "    4. Run: ~/code/dotfiles/config/macos/defaults.common.sh --set"
+        echo ""
+    fi
+fi
+
+if [[ $FAIL_COUNT -gt 0 ]]; then
     exit 1
 fi
+exit 0

@@ -90,13 +90,19 @@ main() {
     acquire_sudo() {
         log "Requesting administrator access (you may be prompted for your password)..."
 
-        # Use /dev/tty for password prompt - required for curl | bash flow
-        # where stdin is the pipe, not the terminal
-        if ! sudo -v < /dev/tty 2>&1; then
+        # Try non-interactive first (cached credentials or NOPASSWD)
+        if sudo -n true 2>/dev/null; then
+            log "Administrator access: OK (cached)"
+        # Fall back to /dev/tty for password prompt (required for curl | bash
+        # where stdin is the pipe, not the terminal)
+        elif [[ -e /dev/tty ]] && sudo -v < /dev/tty 2>&1; then
+            log "Administrator access: OK"
+        else
             log_error "Failed to acquire sudo access. Some phases require administrator privileges."
+            log_error "If running via curl | bash over SSH, pre-cache sudo first:"
+            log_error "  echo <password> | sudo -S true && curl ... | bash -s -- --server"
             exit 1
         fi
-        log "Administrator access: OK"
 
         # Keep sudo alive in background (refresh every 50s, timeout is 5min)
         while true; do

@@ -261,7 +261,6 @@ function ccdev() {
   COREPACK_ENABLE_STRICT=0 claude --dangerously-skip-permissions \
     --plugin-dir ~/code/side-quest-marketplace/plugins/atuin \
     --plugin-dir ~/code/side-quest-plugins/plugins/biome-runner \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/bookmarks \
     --plugin-dir ~/code/side-quest-plugins/plugins/bun-runner \
     --plugin-dir ~/code/side-quest-marketplace/plugins/bun-starter \
     --plugin-dir ~/code/side-quest-plugins/plugins/bun-typescript-starter \

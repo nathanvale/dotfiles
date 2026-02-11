@@ -270,13 +270,18 @@ function ccdev() {
     --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-docs \
     --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-skill-expert \
     --plugin-dir ~/code/side-quest-marketplace/plugins/clipboard \
+    --plugin-dir ~/code/side-quest-plugins/plugins/claude-code \
     --plugin-dir ~/code/side-quest-marketplace/plugins/dev-toolkit \
     --plugin-dir ~/code/side-quest-marketplace/plugins/firecrawl \
     --plugin-dir ~/code/side-quest-plugins/plugins/agent-skills-bridge \
+    --plugin-dir ~/code/side-quest-plugins/plugins/agentic-orchestration \
     --plugin-dir ~/code/side-quest-marketplace/plugins/git \
     --plugin-dir ~/code/side-quest-plugins/plugins/git \
     --plugin-dir ~/code/side-quest-marketplace/plugins/kit \
+    --plugin-dir ~/code/side-quest-plugins/plugins/kit \
     --plugin-dir ~/code/side-quest-marketplace/plugins/mcp-manager \
+    --plugin-dir ~/code/side-quest-plugins/plugins/macos-settings \
+    --plugin-dir ~/code/side-quest-plugins/plugins/node-cert \
     --plugin-dir ~/code/side-quest-plugins/plugins/research \
     --plugin-dir ~/code/side-quest-marketplace/plugins/para-obsidian \
     --plugin-dir ~/code/side-quest-marketplace/plugins/plugin-template \

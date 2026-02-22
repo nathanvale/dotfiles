@@ -259,38 +259,40 @@ alias cc="claude --dangerously-skip-permissions"
 # "This project is configured to use yarn" errors when starting in non-pnpm projects
 function ccdev() {
   COREPACK_ENABLE_STRICT=0 claude --dangerously-skip-permissions \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/atuin \
-    --plugin-dir ~/code/side-quest-plugins/plugins/biome-runner \
-    --plugin-dir ~/code/side-quest-plugins/plugins/bun-runner \
-    --plugin-dir ~/code/side-quest-plugins/plugins/bun-typescript-starter \
-    --plugin-dir ~/code/side-quest-plugins/plugins/dell-u4025qw \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-claude-md \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-docs \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-skill-expert \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/clipboard \
-    --plugin-dir ~/code/side-quest-plugins/plugins/claude-code \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/dev-toolkit \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/firecrawl \
-    --plugin-dir ~/code/side-quest-plugins/plugins/agent-skills-bridge \
-    --plugin-dir ~/code/side-quest-plugins/plugins/agentic-orchestration \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/git \
+    --plugin-dir ~/code/side-quest-plugins-backup/plugins/agentic-orchestration \
+    --plugin-dir ~/code/side-quest-plugins-backup/plugins/biome-runner \
+    --plugin-dir ~/code/side-quest-plugins-backup/plugins/bun-runner \
+    --plugin-dir ~/code/side-quest-plugins-backup/plugins/tsc-runner \
     --plugin-dir ~/code/side-quest-plugins/plugins/git \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/kit \
-    --plugin-dir ~/code/side-quest-plugins/plugins/kit \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/mcp-manager \
-    --plugin-dir ~/code/side-quest-plugins/plugins/macos-settings \
-    --plugin-dir ~/code/side-quest-plugins/plugins/node-cert \
-    --plugin-dir ~/code/side-quest-plugins/plugins/research \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/para-obsidian \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/plugin-template \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/scraper-toolkit \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/teams-scrape \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/terminal \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/the-cinema-bandit \
-    --plugin-dir ~/code/side-quest-plugins/plugins/tsc-runner \
-    --plugin-dir ~/code/side-quest-plugins/plugins/utm-testing \
-    --plugin-dir ~/code/side-quest-marketplace/plugins/validate-plugin \
-    --plugin-dir ~/code/side-quest-plugins/plugins/x-api \
+    --plugin-dir ~/code/side-quest-plugins/plugins/newsroom \
+    --plugin-dir ~/code/side-quest-plugins/plugins/enterprise \
+    --plugin-dir ~/code/side-quest-plugins-backup/plugins/bun-typescript-starter \
+    --plugin-dir ~/code/side-quest-plugins-backup/plugins/tools \
+    # --plugin-dir ~/code/side-quest-marketplace/plugins/atuin \
+    # --plugin-dir ~/code/side-quest-plugins/plugins/dell-u4025qw \
+    # --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-claude-md \
+    # --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-docs \
+    # --plugin-dir ~/code/side-quest-marketplace/plugins/claude-code-skill-expert \
+    # --plugin-dir ~/code/side-quest-marketplace/plugins/clipboard \
+    # --plugin-dir ~/code/side-quest-plugins/plugins/claude-code \
+    # --plugin-dir ~/code/side-quest-marketplace/plugins/dev-toolkit \
+    --plugin-dir ~/code/side-quest-marketplace/plugins/firecrawl \
+    # --plugin-dir ~/code/side-quest-plugins/plugins/agent-skills-bridge \
+    # --plugin-dir ~/code/side-quest-marketplace/plugins/kit \
+    # --plugin-dir ~/code/side-quest-plugins/plugins/kit \
+    # --plugin-dir ~/code/side-quest-marketplace/plugins/mcp-manager \
+    # --plugin-dir ~/code/side-quest-plugins/plugins/macos-settings \
+    # --plugin-dir ~/code/side-quest-plugins/plugins/node-cert \
+    # --plugin-dir ~/code/side-quest-plugins/plugins/research \
+    # --plugin-dir ~/code/side-quest-marketplace/plugins/para-obsidian \
+    # --plugin-dir ~/code/side-quest-marketplace/plugins/plugin-template \
+    # --plugin-dir ~/code/side-quest-marketplace/plugins/scraper-toolkit \
+    # --plugin-dir ~/code/side-quest-marketplace/plugins/teams-scrape \
+    # --plugin-dir ~/code/side-quest-marketplace/plugins/terminal \
+    # --plugin-dir ~/code/side-quest-marketplace/plugins/the-cinema-bandit \
+    # --plugin-dir ~/code/side-quest-plugins/plugins/utm-testing \
+    # --plugin-dir ~/code/side-quest-marketplace/plugins/validate-plugin \
+    --plugin-dir ~/code/side-quest-plugins-backup/plugins/x-api \
     "$@"
 }
 alias cct="npx @mariozechner/claude-trace"

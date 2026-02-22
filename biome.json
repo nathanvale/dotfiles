@@ -1,5 +1,19 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
+	"files": {
+		"includes": [
+			"**",
+			"!config/tmuxinator/*.yml",
+			"!config/opencode/",
+			"!config/superwhisper/",
+			"!config/para-obsidian/",
+			"!config/vault-manager/",
+			"!config/vscode/",
+			"!misc/",
+			"!pnpm-lock.yaml",
+			"!PROJECT_INDEX.json"
+		]
+	},
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",

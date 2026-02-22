@@ -16,12 +16,10 @@ startup_pane: 1
 
 windows:
   - ai:
-      layout: tiled
+      layout: even-horizontal
       panes:
         - ccdev
-        - sleep 2 && ccdev
-        - sleep 4 && ccdev
-        - sleep 6 && codex
+        - sleep 2 && codex
   - git:
       panes:
         - lazygit

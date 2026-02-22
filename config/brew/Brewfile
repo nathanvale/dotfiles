@@ -104,6 +104,7 @@ brew "poppler"                 # PDF utilities
 brew "grep"                    # GNU grep
 brew "hl"                      # Log highlighter
 brew "ffmpeg"                  # Media processing
+brew "pandoc"                  # Document format converter
 
 # =============================================================================
 # CASKS - SHARED (all profiles)
@@ -118,6 +119,7 @@ cask "obsidian"                # Knowledge management
 cask "codex"                   # OpenAI Codex CLI
 cask "steipete/tap/codexbar"   # Codex menubar app
 cask "gcloud-cli"              # Google Cloud CLI
+cask "visual-studio-code"    # Code editor
 
 # =============================================================================
 # DESKTOP PROFILE - GUI apps, communication, development
@@ -136,14 +138,11 @@ if profile == "desktop"
 
   # Development
   cask "visual-studio-code"    # Code editor
-  cask "postman"               # API testing
-  cask "docker-desktop"        # Container management
-  cask "iterm2"                # Backup terminal
+  # cask "postman"               # API testing
+  # cask "docker-desktop"        # Container management
 
   # Productivity
   cask "notion"                # Documentation/wiki
-  cask "notion-calendar"       # Calendar integration
-  cask "superhuman"            # Fast email client
 
   # AI Desktop Apps (GUI-based)
   cask "chatgpt"               # OpenAI ChatGPT app
@@ -154,17 +153,13 @@ if profile == "desktop"
   cask "cleanmymac"            # System cleanup
   cask "aldente"               # Battery management
   cask "imazing"               # iOS device management
-  cask "blackhole-2ch"         # Virtual audio device
   cask "philips-hue-sync"      # Hue light sync for movies/games
   cask "raspberry-pi-imager"   # SD card imaging
 
   # Work-specific
   brew "jira-cli"              # Interactive Jira CLI
   brew "yarn"                  # Package manager (legacy projects)
-  brew "docker"                # Docker CLI
-  brew "colima"                # Lightweight container VM
-  brew "docker-compose"        # Multi-container orchestration
-  cask "ollama-app"            # Ollama GUI wrapper
+
 end
 
 # =============================================================================
@@ -176,6 +171,11 @@ if profile == "server"
   # - Native ARM64 performance
   # - Built-in Kubernetes
   cask "orbstack"
+
+  # cask "ollama-app"            # Ollama GUI wrapper
+  # brew "docker"                # Docker CLI
+  # brew "colima"                # Lightweight container VM
+  # brew "docker-compose"        # Multi-container orchestration
 
   # AI / LLM (native Homebrew for Metal GPU access)
   # Docker-based Ollama cannot access GPU acceleration

@@ -116,3 +116,5 @@
 [credential "https://gist.github.com"]
 	helper = 
 	helper = !/opt/homebrew/bin/gh auth git-credential
+[coderabbit]
+	machineId = cli/41fd6d2b1ee549dda5d34fbda65468cd

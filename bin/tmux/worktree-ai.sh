@@ -39,6 +39,14 @@ BOLD='\033[1m'
 DIM='\033[2m'
 NC='\033[0m'
 
+# --- SideQuest CLI integration ---
+COMMON="$(dirname "${BASH_SOURCE[0]}")/sidequest-common.sh"
+if [[ -f "$COMMON" ]]; then
+    source "$COMMON" || { USE_SIDEQUEST=0; echo "[worktree] sidequest-common.sh failed to source, falling back to native" >&2; }
+else
+    USE_SIDEQUEST=0
+fi
+
 # ============================================================================
 # HELPER FUNCTIONS
 # ============================================================================
@@ -456,6 +464,13 @@ should_run_install() {
     return 1
 }
 
+# List existing worktrees via SideQuest CLI (excluding main)
+list_for_picker_cli() {
+    local json_output
+    json_output=$($SIDEQUEST_GIT_CMD worktree list --json 2>/dev/null) || return 1
+    echo "$json_output" | jq -r '.[] | select(.isMain == false) | "\(.branch)\t\(.path)\t\(.status // "unknown")"'
+}
+
 # List existing worktrees (excluding main)
 list_worktrees() {
     local repo_root
@@ -546,9 +561,90 @@ prompt_new_branch() {
     REPLY=$(echo "$REPLY" | sed 's/[^a-zA-Z0-9._/-]/-/g')
 }
 
+# Create or get worktree path via SideQuest CLI
+# Args: $1 = new branch name, $2 = base branch (optional)
+ensure_worktree_cli() {
+    local branch="$1"
+    local base_branch="${2:-}"
+    local stderr_file
+    stderr_file=$(mktemp)
+
+    # Build args array
+    local -a args=("worktree" "create" "$branch" "--no-fetch" "--no-install" "--json")
+    if [[ -n "$base_branch" ]]; then
+        args+=("--base" "$base_branch")
+    fi
+
+    local repo_root
+    repo_root=$(get_repo_root)
+    local sanitized_branch="${branch//\//-}"
+    local worktree_path="${repo_root}/.worktrees/${sanitized_branch}"
+
+    # Check if worktree already exists before creating
+    if sidequest_check_worktree_exists "$worktree_path"; then
+        info "Worktree already exists at $worktree_path, skipping creation"
+        echo "$worktree_path"
+        return 0
+    fi
+
+    # Run create via CLI
+    local json_output exit_code
+    json_output=$($SIDEQUEST_GIT_CMD "${args[@]}" 2>"$stderr_file")
+    exit_code=$?
+
+    if [[ $exit_code -ne 0 ]]; then
+        local err_msg
+        err_msg=$(jq -r '.error // "unknown error"' <<< "$(cat "$stderr_file")" 2>/dev/null || cat "$stderr_file")
+        sidequest_error "create" "$err_msg" "$SIDEQUEST_GIT_CMD ${args[*]}" "git worktree remove --force \"$worktree_path\""
+        sidequest_log "cli" "create" "$branch" "$exit_code" "$err_msg"
+        sidequest_recover_create "$worktree_path"
+        rm -f "$stderr_file"
+        return 1
+    fi
+
+    # Parse path from JSON output
+    local created_path
+    created_path=$(jq -r '.path' <<< "$json_output")
+    sidequest_log "cli" "create" "$branch" "0"
+
+    # Install sequence: switch node -> verify -> install
+    if [[ -d "$created_path" ]]; then
+        switch_node_version "$created_path"
+        sidequest_verify_node
+
+        # Run install via CLI
+        local install_output install_exit
+        install_output=$($SIDEQUEST_GIT_CMD worktree install "$created_path" --json 2>"$stderr_file")
+        install_exit=$?
+
+        if [[ $install_exit -ne 0 ]]; then
+            local install_err
+            install_err=$(jq -r '.error // "unknown error"' <<< "$(cat "$stderr_file")" 2>/dev/null || cat "$stderr_file")
+            sidequest_error "install" "$install_err" "$SIDEQUEST_GIT_CMD worktree install \"$created_path\" --json" "cd \"$created_path\" && npm install"
+            sidequest_log "cli" "install" "$created_path" "$install_exit" "$install_err"
+            # Keep worktree, open session anyway (unbootstrapped)
+            warning "Install failed - worktree created but packages not installed"
+        else
+            sidequest_log "cli" "install" "$created_path" "0"
+        fi
+    fi
+
+    rm -f "$stderr_file"
+    echo "$created_path"
+    return 0
+}
+
 # Create or get worktree path for a branch
 # Args: $1 = new branch name, $2 = base branch (optional)
 ensure_worktree() {
+    # SideQuest CLI dispatch
+    if [[ "${USE_SIDEQUEST:-0}" == "1" ]]; then
+        sidequest_preflight
+        if [[ "${USE_SIDEQUEST:-0}" == "1" ]]; then
+            ensure_worktree_cli "$@"
+            return $?
+        fi
+    fi
     local branch="$1"
     local base="${2:-}"
     local repo_root

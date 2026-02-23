@@ -45,10 +45,6 @@ symlinks=(
 	# Tmux (doesn't follow XDG, needs explicit symlink)
 	"${HOME}/.tmux.conf|${DOTFILES}/config/tmux/tmux.conf"
 
-	# Claude Code (personal settings)
-	"${HOME}/.claude/CLAUDE.md|${DOTFILES}/config/claude/CLAUDE.md"
-	"${HOME}/.claude/context|${DOTFILES}/config/claude/context"
-
 	# VS Code
 	"${VSCODE_USER}/settings.json|${DOTFILES}/config/vscode/settings.json"
 	"${VSCODE_USER}/tasks.json|${DOTFILES}/config/vscode/tasks.json"

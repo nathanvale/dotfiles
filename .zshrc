@@ -233,21 +233,7 @@ alias ga="git add"
 alias gc="git commit"
 
 # GitHub CLI - account switching
-alias ghwork='gh auth switch -u REDACTED_ACCOUNT'
 alias ghpersonal='gh auth switch -u nathanvale'
-
-# Clone Bunnings repos with correct SSH key
-ghclone-bunnings() {
-  if [ -z "$1" ]; then
-    echo "Usage: ghclone-bunnings <repo-name>"
-    echo "Example: ghclone-bunnings gms.app"
-    return 1
-  fi
-  local repo="$1"
-  local dest="${2:-$HOME/code/$repo}"
-  gh auth switch -u REDACTED_ACCOUNT
-  gh repo clone "REDACTED_ORG/$repo" "$dest" -- --config core.sshCommand="ssh -i ~/.ssh/REDACTED_KEY"
-}
 
 # Utilities
 alias pg="echo 'Pinging Google' && ping www.google.com"
@@ -596,43 +582,8 @@ eval "$(pyenv init -)"
 # PARA Obsidian CLI
 alias para="bun run $HOME/code/side-quest-marketplace/plugins/para-obsidian/src/cli.ts"
 
-# ----------------------------------------------------------------------------
-# Bunnings Proxy Toggle (for VPN on/off)
-# ----------------------------------------------------------------------------
-proxy-on() {
-  export HTTP_PROXY=http://REDACTED_PROXY_HOST:80
-  export http_proxy=http://REDACTED_PROXY_HOST:80
-  export HTTPS_PROXY=http://REDACTED_PROXY_HOST:80
-  export https_proxy=http://REDACTED_PROXY_HOST:80
-  export NO_PROXY=REDACTED_DOMAIN,REDACTED_DOMAIN,REDACTED_DOMAIN,REDACTED_DOMAIN,REDACTED_DOMAIN,REDACTED_DOMAIN,localhost
-  export NODE_EXTRA_CA_CERTS=~/CAFile.pem
-  echo "🔒 Proxy ON (Bunnings VPN)"
-}
-
-proxy-off() {
-  unset HTTP_PROXY http_proxy HTTPS_PROXY https_proxy NO_PROXY NODE_EXTRA_CA_CERTS
-  echo "🔓 Proxy OFF"
-}
-
-proxy-status() {
-  if [[ -n "${HTTP_PROXY:-}" ]]; then
-    echo "🔒 Proxy: ON -> $HTTP_PROXY"
-    if [[ -f "${NODE_EXTRA_CA_CERTS:-}" ]]; then
-      local cn=$(openssl x509 -in "$NODE_EXTRA_CA_CERTS" -noout -subject 2>/dev/null | sed 's/.*CN *= *//')
-      echo "   CA: $cn"
-    fi
-  else
-    echo "🔓 Proxy: OFF"
-  fi
-}
-
-# Auto-enable proxy on Bunnings machines when VPN is connected
-# Only runs on machines with hostname starting with "BUN"
-if [[ "$(hostname)" == BUN* ]] && pgrep -q "GlobalProtect" 2>/dev/null; then
-  proxy-on >/dev/null
-else
-  proxy-off >/dev/null
-fi
+# Work-specific config (proxy, clone helpers) - kept outside repo
+[[ -f ~/.zshrc.work ]] && source ~/.zshrc.work
 
 # ----------------------------------------------------------------------------
 # Direnv (directory-specific env vars)

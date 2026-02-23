@@ -1,4 +1,9 @@
+# Mac system files
 .DS_Store
+Thumbs.db
+._*
+.Spotlight-V100
+.Trashes
 config/fish/fish_variables
 config/iterm2/
 config/raycast/
@@ -8,8 +13,8 @@ config/claude/mcp.json
 config/gcloud/
 config/google-chrome-devtools
 .vault-id
-.env
-.env.1password
+*.env
+*.env.*
 
 # Claude Code - ignore ephemeral/cache files
 .claude/debug/
@@ -45,6 +50,11 @@ config/para-obsidian/voice-state.json
 # Credentials (sensitive)
 config/the-cinema-bandit/
 config/teams-scrape/
+
+# Work-specific config (sensitive - internal hostnames, team info)
+config/claude/
+*.zshrc.work
+*.zshrc.bunnings
 
 # Work-specific scripts (not for public dotfiles)
 bin/kgp

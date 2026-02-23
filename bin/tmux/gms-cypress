@@ -1,0 +1,107 @@
+#!/bin/bash
+
+# gms-cypress
+# Automates GMS Cypress test setup: kills stale processes, starts dev server,
+# waits for HTTPS ready, then runs Cypress tests.
+#
+# Usage: Run from within any GMS worktree or the main repo.
+# Tmux binding: prefix + C
+
+set -e
+
+# ----------------------------------------------------------------------------
+# Logging
+# ----------------------------------------------------------------------------
+LOG_FILE="/tmp/gms-cypress.log"
+
+log() {
+  local level="$1"
+  local msg="$2"
+  local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+  echo "[$timestamp] [$level] $msg" >> "$LOG_FILE"
+}
+
+log_info() { log "INFO" "$1"; }
+log_warn() { log "WARN" "$1"; }
+log_error() { log "ERROR" "$1"; }
+
+# Start fresh log for this run
+echo "=== gms-cypress started at $(date) ===" > "$LOG_FILE"
+log_info "Script invoked from: $(pwd)"
+
+# ----------------------------------------------------------------------------
+# Detect GMS app root
+# ----------------------------------------------------------------------------
+APP_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+if [[ -z "$APP_ROOT" ]]; then
+  log_error "Not in a git repository"
+  tmux display-message "Not in a git repository"
+  exit 1
+fi
+log_info "Detected app root: $APP_ROOT"
+
+# Verify this is actually gms.app (check for expected structure)
+if [[ ! -d "$APP_ROOT/test" ]] || [[ ! -f "$APP_ROOT/package.json" ]]; then
+  log_error "Not in GMS app directory (missing test/ or package.json)"
+  tmux display-message "Not in GMS app directory (missing test/ or package.json)"
+  exit 1
+fi
+log_info "Verified GMS structure: test/ and package.json exist"
+
+# ----------------------------------------------------------------------------
+# Cleanup: Kill stale processes
+# ----------------------------------------------------------------------------
+log_info "Killing processes on port 44389..."
+PORT_PIDS=$(lsof -ti:44389 2>/dev/null || true)
+if [[ -n "$PORT_PIDS" ]]; then
+  echo "$PORT_PIDS" | xargs kill -9 2>/dev/null || true
+  log_info "Killed PIDs on port 44389: $PORT_PIDS"
+else
+  log_info "No processes found on port 44389"
+fi
+
+log_info "Killing Cypress processes..."
+CYPRESS_PIDS=$(pgrep -f cypress 2>/dev/null || true)
+if [[ -n "$CYPRESS_PIDS" ]]; then
+  pkill -9 -f cypress 2>/dev/null || true
+  log_info "Killed Cypress PIDs: $CYPRESS_PIDS"
+else
+  log_info "No Cypress processes found"
+fi
+
+# Give processes time to die
+sleep 0.5
+log_info "Cleanup complete"
+
+# ----------------------------------------------------------------------------
+# Setup tmux panes
+# ----------------------------------------------------------------------------
+log_info "Setting up tmux panes..."
+
+# Get current pane ID before splitting
+ORIGINAL_PANE=$(tmux display-message -p '#{pane_id}')
+log_info "Original pane: $ORIGINAL_PANE"
+
+# Split horizontally (top/bottom) - creates bottom pane and switches to it
+tmux split-window -v -c "$APP_ROOT"
+log_info "Split window horizontally"
+
+# Bottom pane (current after split): Will run Cypress after server is ready
+CYPRESS_PANE=$(tmux display-message -p '#{pane_id}')
+log_info "Cypress pane: $CYPRESS_PANE"
+
+# Send the wait-and-run command to the Cypress pane
+# Uses a loop to check for HTTPS server readiness
+log_info "Sending Cypress command to pane $CYPRESS_PANE"
+tmux send-keys -t "$CYPRESS_PANE" "echo '⏳ Waiting for dev server on https://localhost:44389...' && while ! curl -sk https://localhost:44389 > /dev/null 2>&1; do sleep 2; done && echo '✅ Server ready!' && cd \"$APP_ROOT/test\" && npm run test-local" Enter
+
+# Switch back to original pane and start the dev server
+tmux select-pane -t "$ORIGINAL_PANE"
+log_info "Sending yarn start to pane $ORIGINAL_PANE (dir: $APP_ROOT)"
+tmux send-keys -t "$ORIGINAL_PANE" "cd \"$APP_ROOT\" && yarn start" Enter
+
+log_info "Setup complete - dev server (top), Cypress (bottom)"
+log_info "Log file: $LOG_FILE"
+
+# Notify user
+tmux display-message "🚀 GMS Cypress: Starting (log: $LOG_FILE)"
